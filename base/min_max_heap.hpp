@@ -73,7 +73,7 @@ namespace prudens{
             }
 
             std::size_t fix_node = data_.size() - 1;
-            while ( true )
+            for ( ;; )
             {
                 auto it = std::find_if( data_.begin(), data_.end(), func );
                 if ( it != data_.end() )
@@ -97,7 +97,7 @@ namespace prudens{
         {
             Cmp less;
             size_t size = data_.size();
-            while ( true )
+            for ( ;; )
             {
                 index l = left( node );
                 index r = right( node );
@@ -126,7 +126,6 @@ namespace prudens{
         void adjustup( index node )
         {
             Cmp less;
-            size_t size = data_.size();
             while ( node>0 )
             {
                 index p = parent( node );

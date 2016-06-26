@@ -17,9 +17,9 @@ namespace prudens
         }
         void Run()
         {
-            while ( true )
+            for ( ;; )
             {
-                while ( true )
+                for ( ;; )
                 {
                     if ( _stop )
                     {
