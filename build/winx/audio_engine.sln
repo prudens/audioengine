@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audio_device", "audio_device.vcxproj", "{30837D62-4B2F-41DC-8204-376064311D73}"
 EndProject
@@ -20,6 +20,11 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audio_codec", "audio_codec.vcxproj", "{0654BEA5-1434-45BD-80AF-1D1595AABB71}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wave_generate", "wave_generate.vcxproj", "{4156F605-1D81-4896-ACD7-80FFDB02C59A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audio_device_unit_test", "..\..\unittest\audio_device_unit_test.vcxproj", "{A2E42C7C-0394-490A-9B3B-358FBB7ABD25}"
+	ProjectSection(ProjectDependencies) = postProject
+		{30837D62-4B2F-41DC-8204-376064311D73} = {30837D62-4B2F-41DC-8204-376064311D73}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +68,10 @@ Global
 		{4156F605-1D81-4896-ACD7-80FFDB02C59A}.Debug|Win32.Build.0 = Debug|Win32
 		{4156F605-1D81-4896-ACD7-80FFDB02C59A}.Release|Win32.ActiveCfg = Release|Win32
 		{4156F605-1D81-4896-ACD7-80FFDB02C59A}.Release|Win32.Build.0 = Release|Win32
+		{A2E42C7C-0394-490A-9B3B-358FBB7ABD25}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A2E42C7C-0394-490A-9B3B-358FBB7ABD25}.Debug|Win32.Build.0 = Debug|Win32
+		{A2E42C7C-0394-490A-9B3B-358FBB7ABD25}.Release|Win32.ActiveCfg = Release|Win32
+		{A2E42C7C-0394-490A-9B3B-358FBB7ABD25}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

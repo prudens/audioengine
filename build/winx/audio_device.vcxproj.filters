@@ -8,4 +8,20 @@
       <UniqueIdentifier>{440d4ade-d679-4d4d-9a15-78a0d35513e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\device\winx\windows_core_audio.cpp">
+      <Filter>include</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\device\winx\windows_core_audio.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\device\include\audio_device.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\device\winx\media_buffer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>
