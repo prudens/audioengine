@@ -4,5 +4,33 @@
     <Filter Include="3d">
       <UniqueIdentifier>{16eac8c9-37c4-4b70-8d36-205947fdf90e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="3d\source">
+      <UniqueIdentifier>{4aba4b05-a976-4ffa-8e1f-019185f8e368}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3d\include">
+      <UniqueIdentifier>{cd39cb05-3e2a-4aff-83b2-331d68a53a51}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\effect\3d\include\mit_hrtf_lib.h">
+      <Filter>3d\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\effect\3d\include\complex.h">
+      <Filter>3d\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\effect\3d\include\fft.h">
+      <Filter>3d\include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\effect\3d\source\mit_hrtf_lib.c">
+      <Filter>3d\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\effect\3d\source\complex.cpp">
+      <Filter>3d\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\effect\3d\source\fft.cpp">
+      <Filter>3d\source</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

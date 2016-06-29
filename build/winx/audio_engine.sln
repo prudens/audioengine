@@ -24,6 +24,7 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audio_device_unit_test", "..\..\unittest\audio_device_unit_test.vcxproj", "{A2E42C7C-0394-490A-9B3B-358FBB7ABD25}"
 	ProjectSection(ProjectDependencies) = postProject
 		{30837D62-4B2F-41DC-8204-376064311D73} = {30837D62-4B2F-41DC-8204-376064311D73}
+		{4161C664-D484-4EFE-A0E4-62AD8DB3C755} = {4161C664-D484-4EFE-A0E4-62AD8DB3C755}
 	EndProjectSection
 EndProject
 Global
