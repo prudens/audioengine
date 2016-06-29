@@ -1,6 +1,6 @@
 #pragma once
 #include "../include/audio_device.h"
-
+#include <vector>
 #include <dmo.h>
 #include <Mmsystem.h>
 #include <objbase.h>
@@ -57,8 +57,9 @@ typedef struct
     wchar_t szDeviceName[MAX_STR_LEN];
     wchar_t szDeviceID[MAX_STR_LEN];
     bool bIsMicArrayDevice;
+    bool bDefaultDevice;
 } AUDIO_DEVICE_INFO, *PAUDIO_DEVICE_INFO;
-
+typedef std::vector<AUDIO_DEVICE_INFO>  AUDIO_DEVICE_INFO_LIST;
 
 // Utility class which initializes COM in the constructor (STA or MTA),
 // and uninitializes COM in the destructor.
@@ -109,25 +110,25 @@ public:
 
     WindowsCoreAudio();
     virtual ~WindowsCoreAudio();
-    virtual bool Init();
+    virtual bool Initialize();
     virtual void Terminate();
     virtual size_t GetRecordingDeviceNum()const;
     virtual size_t GetPlayoutDeviceNum()const;
 
     virtual bool GetPlayoutDeviceName(
-        uint16_t index,
+        int16_t index,
         wchar_t name[kAdmMaxDeviceNameSize],
-        wchar_t guid[kAdmMaxGuidSize] )const;
+        wchar_t guid[kAdmMaxGuidSize] );
     virtual bool RecordingDeviceName(
-        uint16_t index,
+        int16_t index,
         wchar_t name[kAdmMaxDeviceNameSize],
-        wchar_t guid[kAdmMaxGuidSize] )const;
+        wchar_t guid[kAdmMaxGuidSize] );
 
-    virtual bool SetPlayoutDevice( uint16_t index );
-    virtual bool SetRecordingDevice( uint16_t index );
+    virtual bool SetPlayoutDevice( int16_t index );
+    virtual bool SetRecordingDevice( int16_t index );
 
-    virtual bool IsRecordingFormatSupported( uint32_t nSampleRate, uint16_t nChannels )const;
-    virtual bool IsPlayoutFormatSupported( uint32_t nSampleRate, uint16_t nChannels )const;
+    virtual bool IsRecordingFormatSupported( uint32_t nSampleRate, uint16_t nChannels );
+    virtual bool IsPlayoutFormatSupported( uint32_t nSampleRate, uint16_t nChannels );
 
     virtual bool SetRecordingFormat( uint32_t nSampleRate, uint16_t nChannels );
     virtual bool SetPlayoutFormat( uint32_t nSampleRate, uint16_t nChannels );
@@ -147,59 +148,59 @@ public:
     virtual void SetAudioBufferCallback( AudioBufferProc* pCallback );
 private:
     HRESULT DeviceBindTo( EDataFlow eDataFlow, /* eCapture/eRender */
-                          INT iDevIdx, /* Device Index. -1 - default device. */
+                          int16_t iDevIdx, /* Device Index. -1 - default device. */
                           IAudioClient **ppAudioClient, /* pointer pointer to IAudioClient interface */
                           IAudioEndpointVolume **ppEndpointVolume,
                           WCHAR** ppszEndpointDeviceId ); // Device ID. Need to be freed in caller with CoTaskMemoryFree if it is not NULL;
     HRESULT GetDeviceNum( EDataFlow eDataFlow, UINT &uDevCount )const;
-    HRESULT EnumDevice( EDataFlow eDataFlow, UINT uNumElements, AUDIO_DEVICE_INFO *pDevicInfo )const;
+    HRESULT EnumDevice( EDataFlow eDataFlow, AUDIO_DEVICE_INFO_LIST& devices )const;
     HRESULT DeviceIsMicArray( wchar_t szDeviceId[], bool &bIsMicArray )const;
     HRESULT EndpointIsMicArray( IMMDevice* pEndpoint, bool & isMicrophoneArray )const;
     HRESULT GetJackSubtypeForEndpoint( IMMDevice* pEndpoint, GUID* pgSubtype )const;
     HRESULT GetInputJack( IMMDevice* pDevice, CComPtr<IPart>& spPart );
     HRESULT GetMicArrayGeometry( wchar_t szDeviceId[], KSAUDIO_MIC_ARRAY_GEOMETRY** ppGeometry, ULONG& cbSize );
-    HRESULT SelectDevice( EDataFlow eDataFlow, UINT index, CComPtr<IMMDevice>&spDevice );
-    HRESULT ActiveClient( CComPtr<IMMDevice> spDevice, CComPtr<IAudioClient>& spAudioClient );
     HRESULT SetDMOProperties();
     HRESULT SetBoolProperty( IPropertyStore* ptrPS, REFPROPERTYKEY key, VARIANT_BOOL value );
     HRESULT SetVtI4Property( IPropertyStore* ptrPS, REFPROPERTYKEY key, LONG value );
-    bool InitRecordingDMO();
     HRESULT InitRecordingMedia();
+    bool    InitRecordingDMO();
+    HANDLE  SetThreadPriority( const char* thread_name );
+    void    RevertThreadPriority( HANDLE hMmTask );
+    bool    IsFormatSupported( CComPtr<IAudioClient> audioClient, DWORD nSampleRate, WORD nChannels );
+
     static DWORD WINAPI WSAPIRenderThread( LPVOID context );
     static DWORD WINAPI WSAPICaptureThreadPollDMO( LPVOID context );
+    static DWORD WINAPI WSAPICaptureThread( LPVOID context );
     DWORD DoRenderThread();
     DWORD DoCaptureThreadPollDMO();
-    HANDLE SetThreadPriority( const char* thread_name );
-    void RevertThreadPriority( HANDLE hMmTask );
-    static DWORD WINAPI WSAPICaptureThread( LPVOID context );
     DWORD DoCaptureThread();
 private:
-    ScopedCOMInitializer  m_comInit;
-    // DirectX Media Object (DMO) for the built-in AEC.
-    CComPtr<IMediaObject> m_dmo;
-    CComPtr<IMediaBuffer> m_mediaBuffer;
-    CComPtr<IMMDevice>    m_spDeviceIn;
-    CComPtr<IMMDevice>    m_spDeviceOut;
-    CComPtr<IAudioClient> m_spClientIn;
-    CComPtr<IAudioClient> m_spClientOut;
-    CComPtr<IAudioRenderClient> m_spRenderClient;
-    CComPtr<IAudioCaptureClient> m_spCaptureClient;
-    CComPtr<IMediaBuffer>      m_pMediaBuffer;
+    ScopedCOMInitializer                    m_comInit;
+    std::mutex                              m_audiolock;
+    CComPtr<IMediaObject>                   m_dmo;// DirectX Media Object (DMO) for the built-in AEC.
+    CComPtr<IMediaBuffer>                   m_mediaBuffer;
+    CComPtr<IAudioClient>                   m_spClientIn;
+    CComPtr<IAudioClient>                   m_spClientOut;
+    CComPtr<IAudioRenderClient>             m_spRenderClient;
+    CComPtr<IAudioCaptureClient>            m_spCaptureClient;
+    CComPtr<IMediaBuffer>                   m_pMediaBuffer;
 
-    AudioBufferProc*      m_pBufferProc;
-    size_t                m_recSampleRate;
-    size_t                m_plySampleRate;
-    uint16_t               m_recChannels;
-    uint16_t               m_plyChannels;
-    uint16_t              m_inDevIndex;
-    uint16_t              m_outDevIndex;
+    AudioBufferProc*                        m_pBufferProc;
+    size_t                                  m_recSampleRate;
+    size_t                                  m_plySampleRate;
+    uint16_t                                m_recChannels;
+    uint16_t                                m_plyChannels;
+    int16_t                                 m_inDevIndex;
+    int16_t                                 m_outDevIndex;
+    int16_t                                 m_inDefaultDevIndex;
+    int16_t                                 m_outDetaultDevIndex;
 
-
-    bool                  m_bUseDMO;
-    bool                  m_DMOIsAvailble;
-    bool                  m_recIsInitialized;
-    bool                  m_playIsInitialized;
-    bool                                    m_initialized;
+    bool                                    m_bUseDMO;
+    bool                                    m_DMOIsAvailble;
+   
+    bool                                    m_bInitialize;
+    bool                                    m_recIsInitialized;
+    bool                                    m_playIsInitialized;
     bool                                    m_recording;
     bool                                    m_playing;
 
@@ -214,5 +215,13 @@ private:
     HANDLE                                  m_hCaptureStartedEvent;
     HANDLE                                  m_hShutdownCaptureEvent;
 
-    std::mutex                              m_renderlock;
+
+  
+
+
+    AUDIO_DEVICE_INFO_LIST                  m_CaptureDeviceList;
+    AUDIO_DEVICE_INFO_LIST                  m_RenderDeviceList;
+
+
+
 };

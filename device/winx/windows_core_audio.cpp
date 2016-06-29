@@ -42,7 +42,13 @@ WindowsCoreAudio::WindowsCoreAudio()
     : m_pBufferProc(nullptr)
     , m_pMediaBuffer(nullptr)
     , m_DMOIsAvailble(false)
-    , m_comInit( ScopedCOMInitializer::kMTA )
+    , m_comInit( /*ScopedCOMInitializer::kMTA*/ )
+    , m_inDevIndex( 0 )
+    , m_outDevIndex( 0 )
+    , m_bInitialize(false)
+    , m_playIsInitialized(false)
+    , m_recIsInitialized(false)
+    , m_bUseDMO(false)
 {
     m_hRenderSamplesReadyEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
     m_hCaptureSamplesReadyEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
@@ -57,9 +63,26 @@ WindowsCoreAudio::WindowsCoreAudio()
                                    reinterpret_cast<void**>( &m_dmo ) );
     if ( FAILED( hr ) || !m_dmo )
     {
-        // Since we check that _dmo is non-NULL in EnableBuiltInAEC(), the
-        // feature is prevented from being enabled.
-        m_DMOIsAvailble = false;
+        m_DMOIsAvailble = false; // audio effect such as aec ns etc.
+    }
+
+    hr = EnumDevice( eCapture, m_CaptureDeviceList );
+    hr = EnumDevice( eRender, m_RenderDeviceList );
+    int16_t size = (int16_t)m_CaptureDeviceList.size();
+    for ( int16_t i = 0; i < size; i++ )
+    {
+        if ( m_CaptureDeviceList[i].bDefaultDevice )
+        {
+            m_inDevIndex = i;
+        }
+    }
+    size = (int16_t)m_RenderDeviceList.size();
+    for ( int16_t i = 0; i < size; i++ )
+    {
+        if ( m_RenderDeviceList[i].bDefaultDevice )
+        {
+            m_outDevIndex = i;
+        }
     }
 }
 
@@ -72,187 +95,149 @@ WindowsCoreAudio::~WindowsCoreAudio()
     RELEASE_HANDLE( m_hShutdownCaptureEvent );
     RELEASE_HANDLE( m_hRenderStartedEvent );
     RELEASE_HANDLE( m_hCaptureStartedEvent );
+
+    m_dmo.Release();
 }
 
-bool WindowsCoreAudio::Init()
+bool WindowsCoreAudio::Initialize()
 {
-    lock_guard lg(m_renderlock);
-
-
+    lock_guard lg(m_audiolock);
+    if ( m_bInitialize )
+    {
+        return true;
+    }
+    DeviceBindTo( eCapture, m_inDevIndex, &m_spClientIn, nullptr, nullptr );
+    DeviceBindTo( eRender, m_outDevIndex, &m_spClientOut, nullptr, nullptr );
+    if (!m_spClientIn || !m_spClientOut )
+    {
+        return false;
+    }
+    m_bInitialize = true;
     return true;
 }
 
 void WindowsCoreAudio::Terminate()
 {
-
+    lock_guard lg( m_audiolock );
+    if (!m_bInitialize)
+    {
+        return;
+    }
+    m_spClientIn.Release();
+    m_spClientOut.Release();
+    m_inDevIndex = 0;
+    m_outDevIndex = 0;
+    m_bInitialize = false;
 }
 
 size_t WindowsCoreAudio::GetRecordingDeviceNum() const
 {
-    UINT uDevCount = 0;
-    HRESULT hr;
-    hr = GetDeviceNum( eCapture, uDevCount );
-    if ( FAILED(hr) )
-    {
-        if ( m_pBufferProc )
-        {
-            m_pBufferProc->ErrorOccurred( AE_UNSUPPORTED );
-        }
-    }
-    return uDevCount;
+    return m_CaptureDeviceList.size();
 }
 
 size_t WindowsCoreAudio::GetPlayoutDeviceNum() const
 {
-    UINT uDevCount = 0;
-    HRESULT hr;
-    hr = GetDeviceNum( eRender, uDevCount );
-    if ( FAILED( hr ) )
-    {
-        if ( m_pBufferProc )
-        {
-            m_pBufferProc->ErrorOccurred( AE_UNSUPPORTED );
-        }
-    }
-    return uDevCount;
+    return m_RenderDeviceList.size();
 }
 
-bool WindowsCoreAudio::GetPlayoutDeviceName( uint16_t index, wchar_t name[kAdmMaxDeviceNameSize], wchar_t guid[kAdmMaxGuidSize] ) const
+bool WindowsCoreAudio::GetPlayoutDeviceName( int16_t index, wchar_t name[kAdmMaxDeviceNameSize], wchar_t guid[kAdmMaxGuidSize] )
 {
-    size_t uCapDevCount = GetPlayoutDeviceNum();
-    if (uCapDevCount == 0)
+    lock_guard lg( m_audiolock );
+
+    if ( index >= (int16_t)m_RenderDeviceList.size() )
     {
         return false;
     }
-    if (index <= uCapDevCount)
+    if ( index  < 0)
     {
-        return false;
-    }
-    AUDIO_DEVICE_INFO *pCaptureDeviceInfo = new AUDIO_DEVICE_INFO[uCapDevCount];
-    HRESULT hr = EnumDevice(eRender, uCapDevCount, pCaptureDeviceInfo );
-    if (FAILED(hr))
-    {
-        return false;
+        index = m_outDevIndex;
     }
 
-    StringCchCopyW( name, kAdmMaxGuidSize - 1, pCaptureDeviceInfo[index].szDeviceName );
-    StringCchCopyW( guid, kAdmMaxGuidSize - 1, pCaptureDeviceInfo[index].szDeviceID );
-    delete[] pCaptureDeviceInfo;
+    StringCchCopyW( name, kAdmMaxGuidSize - 1, m_RenderDeviceList[index].szDeviceName );
+    StringCchCopyW( guid, kAdmMaxGuidSize - 1, m_RenderDeviceList[index].szDeviceID );
     return true;
 }
 
 
-bool WindowsCoreAudio::RecordingDeviceName( uint16_t index, wchar_t name[kAdmMaxDeviceNameSize], wchar_t guid[kAdmMaxGuidSize] ) const
+bool WindowsCoreAudio::RecordingDeviceName( int16_t index, wchar_t name[kAdmMaxDeviceNameSize], wchar_t guid[kAdmMaxGuidSize] )
 {
+    lock_guard lg( m_audiolock );
 
-    size_t uCapDevCount = GetPlayoutDeviceNum();
-    if ( uCapDevCount == 0 )
+    if ( index <= (int16_t)m_CaptureDeviceList.size() )
     {
         return false;
     }
-    if ( index <= uCapDevCount )
+    if ( index < 0 )
     {
-        return false;
+        index = m_inDevIndex;
     }
-
-    AUDIO_DEVICE_INFO *pCaptureDeviceInfo = new AUDIO_DEVICE_INFO[uCapDevCount];
-    HRESULT hr = EnumDevice( eCapture, uCapDevCount, pCaptureDeviceInfo );
-    if ( FAILED( hr ) )
-    {
-        return false;
-    }
-
-    StringCchCopyW( name, kAdmMaxGuidSize - 1, pCaptureDeviceInfo[index].szDeviceName );
-    StringCchCopyW( guid, kAdmMaxGuidSize - 1, pCaptureDeviceInfo[index].szDeviceID );
-    delete[] pCaptureDeviceInfo;
+    StringCchCopyW( name, kAdmMaxGuidSize - 1, m_CaptureDeviceList[index].szDeviceName );
+    StringCchCopyW( guid, kAdmMaxGuidSize - 1, m_CaptureDeviceList[index].szDeviceID );
     return true;
 }
 
 
-bool WindowsCoreAudio::SetPlayoutDevice( uint16_t index )
+bool WindowsCoreAudio::SetPlayoutDevice( int16_t index )
 {
-    HRESULT hr = SelectDevice( eRender, index, m_spDeviceOut );
-    if (FAILED(hr))
+    lock_guard lg( m_audiolock );
+    if (m_bInitialize)
     {
         return false;
     }
-    ActiveClient( m_spDeviceOut, m_spClientOut );
+    if ( index <= (int16_t)m_RenderDeviceList.size() )
+    {
+        return false;
+    }
+
+    m_outDevIndex = index;
     return true;
 }
 
-bool WindowsCoreAudio::SetRecordingDevice( uint16_t index )
+bool WindowsCoreAudio::SetRecordingDevice( int16_t index )
 {
-    HRESULT hr = SelectDevice( eCapture, index, m_spDeviceIn );
-    if ( FAILED( hr ) )
+    lock_guard lg( m_audiolock );
+    if (m_bInitialize)
     {
         return false;
     }
-    hr = ActiveClient( m_spDeviceIn, m_spClientIn );
-    if (FAILED(hr))
+    if ( index <= (int16_t)m_CaptureDeviceList.size() )
     {
         return false;
     }
+
+    m_inDevIndex = index;
     return true;
 }
 
-bool WindowsCoreAudio::IsRecordingFormatSupported( uint32_t nSampleRate, uint16_t nChannels ) const
+bool WindowsCoreAudio::IsRecordingFormatSupported( uint32_t nSampleRate, uint16_t nChannels )
 {
-    if ( !m_spClientIn )
+    lock_guard lg( m_audiolock );
+    if ( !m_bInitialize )
     {
         return false;
     }
 
-    HRESULT hr = S_OK;
-    WAVEFORMATEX Wfx = WAVEFORMATEX();
-    WAVEFORMATEX* pWfxClosestMatch = NULL;
-    // Set wave format
-    Wfx.wFormatTag = WAVE_FORMAT_PCM;
-    Wfx.wBitsPerSample = 16;
-    Wfx.cbSize = 0;
-    Wfx.nChannels = static_cast<WORD>(nChannels);
-    Wfx.nSamplesPerSec = nSampleRate;
-    Wfx.nBlockAlign = Wfx.nChannels * Wfx.wBitsPerSample / 8;
-    Wfx.nAvgBytesPerSec = Wfx.nSamplesPerSec * Wfx.nBlockAlign;
-    hr = m_spClientIn->IsFormatSupported(
-        AUDCLNT_SHAREMODE_SHARED,
-        &Wfx,
-        &pWfxClosestMatch );
-        
-    CoTaskMemFree( pWfxClosestMatch );
-    return SUCCEEDED(hr);
+    return IsFormatSupported( m_spClientIn, nSampleRate, nChannels );
 }
 
-bool WindowsCoreAudio::IsPlayoutFormatSupported( uint32_t nSampleRate, uint16_t nChannels ) const
+bool WindowsCoreAudio::IsPlayoutFormatSupported( uint32_t nSampleRate, uint16_t nChannels )
 {
-    if ( !m_spClientOut )
+    lock_guard lg( m_audiolock );
+    if ( !m_bInitialize )
     {
         return false;
     }
-
-    HRESULT hr = S_OK;
-    WAVEFORMATEX Wfx = WAVEFORMATEX();
-    WAVEFORMATEX* pWfxClosestMatch = NULL;
-    // Set wave format
-    Wfx.wFormatTag = WAVE_FORMAT_PCM;
-    Wfx.wBitsPerSample = 16;
-    Wfx.cbSize = 0;
-    Wfx.nChannels = static_cast<WORD>( nChannels );
-    Wfx.nSamplesPerSec = nSampleRate;
-    Wfx.nBlockAlign = Wfx.nChannels * Wfx.wBitsPerSample / 8;
-    Wfx.nAvgBytesPerSec = Wfx.nSamplesPerSec * Wfx.nBlockAlign;
-    hr = m_spClientOut->IsFormatSupported(
-        AUDCLNT_SHAREMODE_SHARED,
-        &Wfx,
-        &pWfxClosestMatch );
-
-    CoTaskMemFree( pWfxClosestMatch );
-    return SUCCEEDED( hr );
-
+    return IsFormatSupported( m_spClientOut, nSampleRate, nChannels );
 }
 
 bool WindowsCoreAudio::SetRecordingFormat( uint32_t nSampleRate, uint16_t nChannels )
 {
-    if (IsRecordingFormatSupported(nSampleRate,nChannels))
+    lock_guard lg( m_audiolock );
+    if ( !m_bInitialize )
+    {
+        return false;
+    }
+    if ( IsFormatSupported(m_spClientIn, nSampleRate, nChannels) )
     {
         m_recSampleRate = nSampleRate;
         m_recChannels = static_cast<uint8_t>( nChannels );
@@ -264,7 +249,12 @@ bool WindowsCoreAudio::SetRecordingFormat( uint32_t nSampleRate, uint16_t nChann
 
 bool WindowsCoreAudio::SetPlayoutFormat( uint32_t nSampleRate, uint16_t nChannels )
 {
-    if ( IsPlayoutFormatSupported( nSampleRate, nChannels ) )
+    lock_guard lg( m_audiolock );
+    if (!m_bInitialize)
+    {
+        return false;
+    }
+    if ( IsFormatSupported( m_spClientOut, nSampleRate, nChannels ) )
     {
         m_plySampleRate = nSampleRate;
         m_plyChannels = static_cast<uint8_t>( nChannels);
@@ -276,6 +266,11 @@ bool WindowsCoreAudio::SetPlayoutFormat( uint32_t nSampleRate, uint16_t nChannel
 
 bool WindowsCoreAudio::GetRecordingFormat( uint32_t& nSampleRate, uint16_t& nChannels )
 {
+    lock_guard lg( m_audiolock );
+    if (!m_bInitialize)
+    {
+        return false;
+    }
     if (m_recSampleRate == 0 || m_recChannels == 0)
     {
         return false;
@@ -288,6 +283,12 @@ bool WindowsCoreAudio::GetRecordingFormat( uint32_t& nSampleRate, uint16_t& nCha
 
 bool WindowsCoreAudio::GetPlayoutFormat( uint32_t& nSampleRate, uint16_t& nChannels )
 {
+    lock_guard lg( m_audiolock );
+    if ( !m_bInitialize )
+    {
+        return false;
+    }
+
     if ( m_plySampleRate == 0 || m_plyChannels == 0 )
     {
         return false;
@@ -300,6 +301,11 @@ bool WindowsCoreAudio::GetPlayoutFormat( uint32_t& nSampleRate, uint16_t& nChann
 
 bool WindowsCoreAudio::InitPlayout()
 {
+    lock_guard lg( m_audiolock );
+    if (!m_bInitialize)
+    {
+        return false;
+    }
     if ( m_playIsInitialized )
     {
         return true;
@@ -351,7 +357,8 @@ bool WindowsCoreAudio::InitPlayout()
         // read by GetBufferSize() and it is 20ms on most machines.
         hnsBufferDuration = 30 * 10000;
     }
-
+    m_spClientOut.Release();
+    DeviceBindTo( eRender, m_outDevIndex, &m_spClientOut, nullptr, nullptr );
     HRESULT hr = S_OK;
     hr = m_spClientOut->Initialize(
         AUDCLNT_SHAREMODE_SHARED,             // share Audio Engine with other applications
@@ -360,14 +367,16 @@ bool WindowsCoreAudio::InitPlayout()
         0,                                    // periodicity
         &Wfx,                                 // selected wave format
         NULL );                                // session GUID
-    IF_FAILED_JUMP( hr,EXIT );
+
+    IF_FAILED_JUMP( hr, EXIT );
+    
 
     hr = m_spClientOut->SetEventHandle(
         m_hRenderSamplesReadyEvent );
     IF_FAILED_JUMP( hr, EXIT );
 
     // Get an IAudioRenderClient interface.
-
+    m_spRenderClient.Release();// 有可能上次没释放成功
     hr = m_spClientOut->GetService(
         __uuidof( IAudioRenderClient ),
         (void**)&m_spRenderClient );
@@ -384,6 +393,12 @@ EXIT:
 
 bool WindowsCoreAudio::InitRecording()
 {
+    lock_guard lg( m_audiolock );
+    if (!m_bInitialize)
+    {
+        return false;
+    }
+
     if ( m_bUseDMO )
     {
         return InitRecordingDMO();
@@ -403,16 +418,16 @@ bool WindowsCoreAudio::StartPlayout()
 
     if ( m_hPlayThread != NULL )
     {
-        return 0;
+        return true;
     }
 
     if ( m_playing )
     {
-        return 0;
+        return true;
     }
 
     {
-        std::lock_guard<std::mutex> lg(m_renderlock);
+        std::lock_guard<std::mutex> lg(m_audiolock);
         // Create thread which will drive the rendering.
         m_hPlayThread = CreateThread(
             NULL,
@@ -433,7 +448,6 @@ bool WindowsCoreAudio::StartPlayout()
     DWORD ret = WaitForSingleObject( m_hRenderStartedEvent, 1000 );
     if ( ret != WAIT_OBJECT_0 )
     {
-
         return false;
     }
 
@@ -450,12 +464,11 @@ bool WindowsCoreAudio::StopPlayout()
     }
 
     {
-        std::lock_guard<std::mutex> lg( m_renderlock );
+        std::lock_guard<std::mutex> lg( m_audiolock );
 
         if ( m_hPlayThread == NULL )
         {
             printf("no rendering stream is active => close down WASAPI only" );
-            m_spClientOut.Release();
             m_spRenderClient.Release();
             m_playIsInitialized = false;
             m_playing = false;
@@ -479,7 +492,7 @@ bool WindowsCoreAudio::StopPlayout()
     }
 
     {
-        std::lock_guard<std::mutex> lg( m_renderlock );
+        std::lock_guard<std::mutex> lg( m_audiolock );
         printf("windows_core_audio_render_thread is now closed" );
 
         // to reset this event manually at each time we finish with it,
@@ -487,7 +500,6 @@ bool WindowsCoreAudio::StopPlayout()
         // this event might be caught by the new render thread within same VoE instance.
         ResetEvent( m_hShutdownRenderEvent );
 
-        m_spClientOut.Release();
         m_spRenderClient.Release();
         m_playIsInitialized = false;
         m_playing = false;
@@ -534,7 +546,7 @@ bool WindowsCoreAudio::StartRecording()
     }
 
     {
-        std::lock_guard<std::mutex> lg(m_renderlock);
+        std::lock_guard<std::mutex> lg(m_audiolock);
 
         // Create thread which will drive the capturing
         LPTHREAD_START_ROUTINE lpStartAddress = WSAPICaptureThread;
@@ -593,26 +605,25 @@ bool WindowsCoreAudio::StopRecording()
         return 0;
     }
 
-    m_renderlock.lock();
-
-    if ( m_hRecThread == NULL )
+    
     {
-        printf( "no capturing stream is active => close down WASAPI only" );
-        m_spClientIn.Release();
-        m_spCaptureClient.Release();
+        lock_guard lg( m_audiolock );
+        if ( m_hRecThread == NULL )
+        {
+            printf( "no capturing stream is active => close down WASAPI only" );
+            m_spCaptureClient.Release();
 
-        m_recIsInitialized = false;
-        m_recording = false;
-        m_renderlock.unlock();
-        return 0;
+            m_recIsInitialized = false;
+            m_recording = false;
+            return 0;
+        }
+
+        // Stop the driving thread...
+        printf( "closing down the webrtc_core_audio_capture_thread..." );
+        // Manual-reset event; it will remain signalled to stop all capture threads.
+        SetEvent( m_hShutdownCaptureEvent );
     }
 
-    // Stop the driving thread...
-    printf("closing down the webrtc_core_audio_capture_thread..." );
-    // Manual-reset event; it will remain signalled to stop all capture threads.
-    SetEvent( m_hShutdownCaptureEvent );
-
-    m_renderlock.unlock();
     DWORD ret = WaitForSingleObject( m_hRecThread, 2000 );
     if ( ret != WAIT_OBJECT_0 )
     {
@@ -624,12 +635,11 @@ bool WindowsCoreAudio::StopRecording()
         printf("webrtc_core_audio_capture_thread is now closed" );
     }
 
-    m_renderlock.lock();
+    lock_guard lg( m_audiolock );
 
     ResetEvent( m_hShutdownCaptureEvent ); // Must be manually reset.
     // Ensure that the thread has released these interfaces properly.
-    assert( err == false || m_spClientIn == NULL );
-    assert( err == false || m_spCaptureClient == NULL );
+
 
     m_recIsInitialized = false;
     m_recording = false;
@@ -650,8 +660,6 @@ bool WindowsCoreAudio::StopRecording()
             err = false;
         }
     }
-
-    m_renderlock.unlock();
 
     return err;
 
@@ -689,7 +697,7 @@ void WindowsCoreAudio::SetAudioBufferCallback( AudioBufferProc* pCallback )
 ///////////////////////////////////////////////////////////////////////////////
 HRESULT WindowsCoreAudio::DeviceBindTo(
     EDataFlow eDataFlow,    // eCapture/eRender
-    INT iDevIdx,        // Device Index. -1 - default device. 
+    int16_t iDevIdx,        // Device Index. -1 - default device. 
     IAudioClient **ppAudioClient,    // pointer pointer to IAudioClient interface
     IAudioEndpointVolume **ppEndpointVolume,
     WCHAR** ppszEndpointDeviceId )   // Device ID. Need to be freed in caller with CoTaskMemoryFree if it is not NULL
@@ -804,10 +812,12 @@ HRESULT WindowsCoreAudio::GetDeviceNum( EDataFlow eDataFlow, UINT &uDevCount )co
 //      S_OK if successful
 //
 ///////////////////////////////////////////////////////////////////////////////
-HRESULT WindowsCoreAudio::EnumDevice( EDataFlow eDataFlow, UINT uNumElements, AUDIO_DEVICE_INFO *pDevicInfo )const
+HRESULT WindowsCoreAudio::EnumDevice( EDataFlow eDataFlow, AUDIO_DEVICE_INFO_LIST& devices )const
 {
+    devices.clear();
     HRESULT hResult = S_OK;
     WCHAR* pszDeviceId = NULL;
+    WCHAR* pszDefaultDeviceID = nullptr;
     PROPVARIANT value;
     UINT index, dwCount;
     bool IsMicArrayDevice;
@@ -815,8 +825,17 @@ HRESULT WindowsCoreAudio::EnumDevice( EDataFlow eDataFlow, UINT uNumElements, AU
     CComPtr<IMMDeviceEnumerator> spEnumerator;
     CComPtr<IMMDeviceCollection> spEndpoints;
 
+    CComPtr<IMMDevice> spDevice;
+
+
     hResult = spEnumerator.CoCreateInstance( __uuidof( MMDeviceEnumerator ) );
     IF_FAILED_JUMP( hResult, Exit );
+
+    hResult = spEnumerator->GetDefaultAudioEndpoint( eDataFlow, eCommunications, &spDevice );
+    IF_FAILED_JUMP( hResult, Exit );
+    spDevice->GetId( &pszDefaultDeviceID );
+    IF_FAILED_JUMP( hResult, Exit );
+    spDevice.Release();
 
     hResult = spEnumerator->EnumAudioEndpoints( eDataFlow, DEVICE_STATE_ACTIVE, &spEndpoints );
     IF_FAILED_JUMP( hResult, Exit );
@@ -824,10 +843,7 @@ HRESULT WindowsCoreAudio::EnumDevice( EDataFlow eDataFlow, UINT uNumElements, AU
     hResult = spEndpoints->GetCount( &dwCount );
     IF_FAILED_JUMP( hResult, Exit );
 
-    if ( dwCount != uNumElements )
-        return E_INVALIDARG;
-
-    ZeroMemory( pDevicInfo, sizeof( AUDIO_DEVICE_INFO )*uNumElements );
+    devices.resize( dwCount );
 
     for ( index = 0; index < dwCount; index++ )
     {
@@ -850,16 +866,23 @@ HRESULT WindowsCoreAudio::EnumDevice( EDataFlow eDataFlow, UINT uNumElements, AU
 
         EndpointIsMicArray( spDevice, IsMicArrayDevice );
 
-        StringCchCopyW( pDevicInfo[index].szDeviceID, MAX_STR_LEN - 1, pszDeviceId );
-        StringCchCopyW( pDevicInfo[index].szDeviceName, MAX_STR_LEN - 1, value.pwszVal );
-        pDevicInfo[index].bIsMicArrayDevice = IsMicArrayDevice;
+        StringCchCopyW( devices[index].szDeviceID, MAX_STR_LEN - 1, pszDeviceId );
+        StringCchCopyW( devices[index].szDeviceName, MAX_STR_LEN - 1, value.pwszVal );
+        devices[index].bIsMicArrayDevice = IsMicArrayDevice;
+        devices[index].bDefaultDevice = !wcscmp( pszDeviceId, pszDefaultDeviceID );
 
         PropVariantClear( &value );
         CoTaskMemFree( pszDeviceId );
         pszDeviceId = NULL;
+
+
     }
 
 Exit:
+    if (pszDefaultDeviceID)
+    {
+        CoTaskMemFree( pszDefaultDeviceID );
+    }
     return hResult;
 }
 
@@ -1123,44 +1146,6 @@ Exit:
     return hr;
 }//GetMicArrayGeometry()
 
-HRESULT WindowsCoreAudio::SelectDevice( EDataFlow eDataFlow, UINT index, CComPtr<IMMDevice>&spDevice )
-{
-    HRESULT hResult = S_OK;
-    UINT dwCount = 0;
-
-    CComPtr<IMMDeviceEnumerator> spEnumerator;
-    CComPtr<IMMDeviceCollection> spEndpoints;
-
-    hResult = spEnumerator.CoCreateInstance( __uuidof( MMDeviceEnumerator ) );
-    IF_FAILED_JUMP( hResult, Exit );
-
-    hResult = spEnumerator->EnumAudioEndpoints( eDataFlow, DEVICE_STATE_ACTIVE, &spEndpoints );
-    IF_FAILED_JUMP( hResult, Exit );
-
-    hResult = spEndpoints->GetCount( &dwCount );
-    IF_FAILED_JUMP( hResult, Exit );
-
-    if ( dwCount < index - 1 )
-    {
-        return E_BOUNDS;
-    }
-
-    hResult = spEndpoints->Item( index, &spDevice );
-    IF_FAILED_JUMP( hResult, Exit );
-Exit:
-    return hResult;
-}
-
-HRESULT WindowsCoreAudio::ActiveClient( CComPtr<IMMDevice> spDevice, CComPtr<IAudioClient>& spAudioClient )
-{
-    HRESULT hr = spDevice->Activate(
-        __uuidof( IAudioClient ),
-        CLSCTX_ALL,
-        NULL,
-        (void**)&spAudioClient );
-    return hr;
-}
-
 
 HRESULT WindowsCoreAudio::SetDMOProperties()
 {
@@ -1346,8 +1331,8 @@ HRESULT WindowsCoreAudio::InitRecordingMedia()
     Wfx.nSamplesPerSec = m_recSampleRate;
     Wfx.nBlockAlign = Wfx.nChannels * Wfx.wBitsPerSample / 8;
     Wfx.nAvgBytesPerSec = Wfx.nSamplesPerSec * Wfx.nBlockAlign;
-
-
+    m_spClientIn.Release();
+    DeviceBindTo( eCapture, m_inDevIndex, &m_spClientIn, nullptr, nullptr );
     // Create a capturing stream.
     HRESULT hr = S_OK;
     hr = m_spClientIn->Initialize(
@@ -1367,6 +1352,7 @@ HRESULT WindowsCoreAudio::InitRecordingMedia()
     IF_FAILED_RETURN( hr );
 
     // Get an IAudioCaptureClient interface.
+    m_spCaptureClient.Release();// 防止上次没有释放
     hr = m_spClientIn->GetService(
         __uuidof( IAudioCaptureClient ),
         (void**)&m_spCaptureClient );
@@ -1405,7 +1391,7 @@ DWORD WindowsCoreAudio::DoRenderThread()
 
     HANDLE hMmTask = SetThreadPriority( "windows_core_audio_render_thread" );
 
-    m_renderlock.lock();
+    m_audiolock.lock();
 
     // Get size of rendering buffer (length is expressed as the number of audio frames the buffer can hold).
     // This value is fixed during the rendering session.
@@ -1414,7 +1400,8 @@ DWORD WindowsCoreAudio::DoRenderThread()
     hr = m_spClientOut->GetBufferSize( &bufferLength );
     IF_FAILED_JUMP( hr,Exit );
    
-    const size_t playBlockSize = 2* m_plyChannels;
+    const size_t playBlockSize = m_plySampleRate / 100;
+    const size_t playFrameSize = 2 * m_plyChannels;
     const double endpointBufferSizeMS = 10.0 * ( (double)bufferLength / (double)playBlockSize );
 
     // Before starting the stream, fill the rendering buffer with silence.
@@ -1430,7 +1417,7 @@ DWORD WindowsCoreAudio::DoRenderThread()
     hr = m_spClientOut->Start();
     IF_FAILED_JUMP( hr, Exit );
 
-    m_renderlock.unlock();
+    m_audiolock.unlock();
 
     // Set event which will ensure that the calling thread modifies the playing state to true.
     SetEvent( m_hRenderStartedEvent );
@@ -1457,14 +1444,14 @@ DWORD WindowsCoreAudio::DoRenderThread()
 
         while ( keepPlaying )
         {
-            m_renderlock.lock();
+            m_audiolock.lock();
 
             // Sanity check to ensure that essential states are not modified
             // during the unlocked period.
             if ( !m_spRenderClient || !m_spClientOut )
             {
-                m_renderlock.unlock();
-                printf( "output state has been modified during unlocked period" );
+                m_audiolock.unlock();
+                printf( "output state has been modified during unlocked period\n" );
                 goto Exit;
             }
 
@@ -1481,7 +1468,7 @@ DWORD WindowsCoreAudio::DoRenderThread()
             if ( framesAvailable < playBlockSize )
             {
                 // Not enough space in render buffer to store next render packet.
-                m_renderlock.unlock();
+                m_audiolock.unlock();
                 break;
             }
 
@@ -1495,30 +1482,30 @@ DWORD WindowsCoreAudio::DoRenderThread()
 
                 if ( m_pBufferProc )
                 {
-                    m_renderlock.unlock();
-                    int32_t nSamples = m_pBufferProc->NeedMorePlayoutData( (int16_t*)pData, playBlockSize*m_plyChannels );
-                
+                    m_audiolock.unlock();
+                    int32_t nSamples = m_pBufferProc->NeedMorePlayoutData( (int16_t*)pData, playBlockSize*playFrameSize );
+                    nSamples /= playFrameSize;
                     // Request data to be played out (#bytes = _playBlockSize*_audioFrameSize)
                     
-                    m_renderlock.lock();
+                    m_audiolock.lock();
 
                     if ( nSamples == -1 )
                     {
-                        m_renderlock.unlock();
-                        printf( "failed to read data from render client" );
+                        m_audiolock.unlock();
+                        printf( "failed to read data from render client\n" );
                         goto Exit;
                     }
 
                     // Sanity check to ensure that essential states are not modified during the unlocked period
-                    if ( m_spRenderClient == NULL || m_spClientOut == NULL )
+                    if ( !m_spRenderClient || !m_spClientOut )
                     {
-                        m_renderlock.unlock();
-                        printf( "output state has been modified during unlocked period" );
+                        m_audiolock.unlock();
+                        printf( "output state has been modified during unlocked period\n" );
                         goto Exit;
                     }
                     if ( nSamples != static_cast<int32_t>( playBlockSize ) )
                     {
-                        printf("nSamples(%d) != _playBlockSize(%d)", nSamples, playBlockSize );
+                        printf("nSamples(%d) != _playBlockSize(%d)\n", nSamples, playBlockSize );
                     }
                 }
 
@@ -1529,7 +1516,7 @@ DWORD WindowsCoreAudio::DoRenderThread()
                 IF_FAILED_JUMP( hr,Exit );
             }
 
-            m_renderlock.unlock();
+            m_audiolock.unlock();
         }
     }
 
@@ -1542,16 +1529,16 @@ Exit:
     if ( FAILED( hr ) )
     {
         m_spClientOut->Stop();
-        m_renderlock.unlock();
+        m_audiolock.unlock();
     }
 
     RevertThreadPriority( hMmTask );
 
-    m_renderlock.lock();
+    m_audiolock.lock();
 
     if ( keepPlaying )
     {
-        if ( !m_spClientOut )
+        if ( m_spClientOut )
         {
             hr = m_spClientOut->Stop();
             m_spClientOut->Reset();
@@ -1564,7 +1551,7 @@ Exit:
         printf( "_Rendering thread is now terminated properly" );
     }
 
-    m_renderlock.unlock();
+    m_audiolock.unlock();
 
     return (DWORD)hr;
 }
@@ -1609,7 +1596,7 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
 
         while ( keepRecording )
         {
-            m_renderlock.lock();
+            m_audiolock.lock();
 
             DWORD dwStatus = 0;
             {
@@ -1653,13 +1640,13 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
                 // we fail to call it frequently enough.
 
 
-                m_renderlock.unlock();  // Release lock while making the callback.
-                m_renderlock.unlock();
+                m_audiolock.unlock();  // Release lock while making the callback.
+                m_audiolock.unlock();
                 if ( m_pBufferProc )
                 {
                     m_pBufferProc->RecordingDataIsAvailable( (int16_t*)data, kSamplesProduced );
                 }
-                m_renderlock.lock();
+                m_audiolock.lock();
             }
 
             // Reset length to indicate buffer availability.
@@ -1769,13 +1756,13 @@ DWORD WindowsCoreAudio::DoCaptureThread()
     ScopedCOMInitializer comInit( ScopedCOMInitializer::kMTA );
     if ( !comInit.succeeded() )
     {
-        printf( "failed to initialize COM in capture thread" );
+        printf( "failed to initialize COM in capture thread\n" );
         return 1;
     }
 
     HANDLE hMmTask = this->SetThreadPriority("windows_core_audio_capture_thread");
 
-    m_renderlock.lock();
+    m_audiolock.lock();
 
     // Get size of capturing buffer (length is expressed as the number of audio frames the buffer can hold).
     // This value is fixed during the capturing session.
@@ -1798,18 +1785,18 @@ DWORD WindowsCoreAudio::DoCaptureThread()
     {
         return (DWORD)E_POINTER;
     }
-    printf( "[CAPT] size of sync buffer  : %u [bytes]", syncBufferSize );
-    const size_t _recBlockSize = m_recSampleRate / 100;
-    const size_t _recAudioFrameSize = 2 * m_recChannels;
-    const double endpointBufferSizeMS = 10.0 * ( (double)bufferLength / (double)_recAudioFrameSize );
-    printf( "[CAPT] endpointBufferSizeMS : %3.2f", endpointBufferSizeMS );
+    printf( "[CAPT] size of sync buffer  : %u [bytes]\n", syncBufferSize );
+    const size_t recBlockSize = m_recSampleRate / 100;
+    const size_t recAudioFrameSize = 2 * m_recChannels;
+    const double endpointBufferSizeMS = 10.0 * ( (double)bufferLength / (double)recAudioFrameSize );
+    printf( "[CAPT] endpointBufferSizeMS : %3.2f\n", endpointBufferSizeMS );
 
     // Start up the capturing stream.
     //
     hr = m_spClientIn->Start();
     IF_FAILED_JUMP( hr,Exit );
 
-    m_renderlock.unlock();
+    m_audiolock.unlock();
 
     // Set event which will ensure that the calling thread modifies the recording state to true.
     //
@@ -1829,10 +1816,10 @@ DWORD WindowsCoreAudio::DoCaptureThread()
         case WAIT_OBJECT_0 + 1:        // _hCaptureSamplesReadyEvent
             break;
         case WAIT_TIMEOUT:            // timeout notification
-            printf( "capture event timed out after 0.5 seconds" );
+            printf( "capture event timed out after 0.5 seconds\n" );
             goto Exit;
         default:                    // unexpected error
-            printf( "unknown wait termination on capture side" );
+            printf( "unknown wait termination on capture side\n" );
             goto Exit;
         }
 
@@ -1844,14 +1831,14 @@ DWORD WindowsCoreAudio::DoCaptureThread()
             UINT64 recTime = 0;
             UINT64 recPos = 0;
 
-            m_renderlock.lock();
+            m_audiolock.lock();
 
             // Sanity check to ensure that essential states are not modified
             // during the unlocked period.
             if ( !m_spCaptureClient  || !m_spClientIn )
             {
-                m_renderlock.unlock();
-                printf("input state has been modified during unlocked period" );
+                m_audiolock.unlock();
+                printf("input state has been modified during unlocked period\n" );
                 goto Exit;
             }
 
@@ -1868,14 +1855,14 @@ DWORD WindowsCoreAudio::DoCaptureThread()
                 if ( AUDCLNT_S_BUFFER_EMPTY == hr )
                 {
                     // Buffer was empty => start waiting for a new capture notification event
-                    m_renderlock.unlock();
+                    m_audiolock.unlock();
                     break;
                 }
 
                 if ( flags & AUDCLNT_BUFFERFLAGS_SILENT )
                 {
                     // Treat all of the data in the packet as silence and ignore the actual data values.
-                    printf("AUDCLNT_BUFFERFLAGS_SILENT" );
+                    printf("AUDCLNT_BUFFERFLAGS_SILENT\n" );
                     pData = NULL;
                 }
 
@@ -1883,13 +1870,13 @@ DWORD WindowsCoreAudio::DoCaptureThread()
 
                 if ( pData )
                 {
-                    CopyMemory( &syncBuffer[syncBufIndex*_recAudioFrameSize], pData, framesAvailable*_recAudioFrameSize );
+                    CopyMemory( &syncBuffer[syncBufIndex*recAudioFrameSize], pData, framesAvailable*recAudioFrameSize );
                 }
                 else
                 {
-                    ZeroMemory( &syncBuffer[syncBufIndex*_recAudioFrameSize], framesAvailable*_recAudioFrameSize );
+                    ZeroMemory( &syncBuffer[syncBufIndex*recAudioFrameSize], framesAvailable*recAudioFrameSize );
                 }
-                assert( syncBufferSize >= ( syncBufIndex*_recAudioFrameSize ) + framesAvailable*_recAudioFrameSize );
+                assert( syncBufferSize >= ( syncBufIndex*recAudioFrameSize ) + framesAvailable*recAudioFrameSize );
 
                 // Release the capture buffer
                 //
@@ -1898,28 +1885,25 @@ DWORD WindowsCoreAudio::DoCaptureThread()
 
                 syncBufIndex += framesAvailable;
 
-                
-
-
-                while ( syncBufIndex >= _recBlockSize )
+                while ( syncBufIndex >= recBlockSize )
                 {
-                    m_renderlock.unlock();
+                    m_audiolock.unlock();
                     if (m_pBufferProc)
                     {
-                        m_pBufferProc->RecordingDataIsAvailable( (const int16_t*)syncBuffer, _recBlockSize );
+                        m_pBufferProc->RecordingDataIsAvailable( (const int16_t*)syncBuffer, recBlockSize*recAudioFrameSize );
                     }
-                    m_renderlock.lock();
+                    m_audiolock.lock();
                     // Sanity check to ensure that essential states are not modified during the unlocked period
                     if ( !m_spCaptureClient || !m_spClientIn )
                     {
-                        m_renderlock.unlock();
-                        printf( "input state has been modified during unlocked period" );
+                        m_audiolock.unlock();
+                        printf( "input state has been modified during unlocked period\n" );
                         goto Exit;
                     }
 
                     // store remaining data which was not able to deliver as 10ms segment
-                    MoveMemory( &syncBuffer[0], &syncBuffer[_recBlockSize*_recAudioFrameSize], ( syncBufIndex - _recBlockSize )*_recAudioFrameSize );
-                    syncBufIndex -= _recBlockSize;
+                    MoveMemory( &syncBuffer[0], &syncBuffer[recBlockSize*recAudioFrameSize], ( syncBufIndex - recBlockSize )*recAudioFrameSize );
+                    syncBufIndex -= recBlockSize;
                 }
             }
             else
@@ -1929,11 +1913,11 @@ DWORD WindowsCoreAudio::DoCaptureThread()
                 // of the failed GetBuffer calls. If GetBuffer returns this error repeatedly, the client
                 // can start a new processing loop after shutting down the current client by calling
                 // IAudioClient::Stop, IAudioClient::Reset, and releasing the audio client.
-                printf( "IAudioCaptureClient::GetBuffer returned AUDCLNT_E_BUFFER_ERROR, hr = 0x%08X", hr );
+                printf( "IAudioCaptureClient::GetBuffer returned AUDCLNT_E_BUFFER_ERROR, hr = 0x%08X\n", hr );
                 goto Exit;
             }
 
-            m_renderlock.unlock();
+            m_audiolock.unlock();
         }
     }
 
@@ -1948,33 +1932,32 @@ Exit:
     if ( FAILED( hr ) )
     {
         m_spClientIn->Stop();
-        m_renderlock.unlock();
+        m_audiolock.unlock();
     }
 
     RevertThreadPriority(hMmTask);
 
-    m_renderlock.lock();
+    m_audiolock.lock();
 
     if ( keepRecording )
     {
-        if ( !m_spClientIn )
+        if ( m_spClientIn )
         {
             hr = m_spClientIn->Stop();
             m_spClientIn->Reset();
         }
 
         // Trigger callback from module process thread
-        printf("kRecordingError message posted: capturing thread has ended pre-maturely" );
+        printf("kRecordingError message posted: capturing thread has ended pre-maturely\n" );
     }
     else
     {
-        printf( "_Capturing thread is now terminated properly" );
+        printf( "_Capturing thread is now terminated properly\n" );
     }
 
-    m_spClientIn.Release();
     m_spCaptureClient.Release();
 
-    m_renderlock.unlock();
+    m_audiolock.unlock();
 
     if ( syncBuffer )
     {
@@ -1982,4 +1965,30 @@ Exit:
     }
 
     return (DWORD)hr;
+}
+
+bool WindowsCoreAudio::IsFormatSupported(CComPtr<IAudioClient> audioClient, DWORD nSampleRate, WORD nChannels )
+{
+    if (!audioClient)
+    {
+        return false;
+    }
+    HRESULT hr = S_OK;
+    WAVEFORMATEX Wfx = WAVEFORMATEX();
+    WAVEFORMATEX* pWfxClosestMatch = NULL;
+    // Set wave format
+    Wfx.wFormatTag = WAVE_FORMAT_PCM;
+    Wfx.wBitsPerSample = 16;
+    Wfx.cbSize = 0;
+    Wfx.nChannels = nChannels;
+    Wfx.nSamplesPerSec = nSampleRate;
+    Wfx.nBlockAlign = Wfx.nChannels * Wfx.wBitsPerSample / 8;
+    Wfx.nAvgBytesPerSec = Wfx.nSamplesPerSec * Wfx.nBlockAlign;
+    hr = audioClient->IsFormatSupported(
+        AUDCLNT_SHAREMODE_SHARED,
+        &Wfx,
+        &pWfxClosestMatch );
+
+    CoTaskMemFree( pWfxClosestMatch );
+    return hr == S_OK;
 }
