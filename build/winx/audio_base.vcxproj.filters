@@ -15,6 +15,12 @@
     <ClCompile Include="..\..\base\asyntask.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\base\audio_util.cc">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\fft.cpp">
+      <Filter>include</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\base\asyntask.h">
@@ -30,6 +36,12 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\base\time_cvt.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\audio_util.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\fft.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

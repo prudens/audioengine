@@ -14,36 +14,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <limits>
-typedef std::numeric_limits<int16_t> limits_int16;
-static inline int16_t FloatS16ToS16( float v )
-{
-    static const float kMaxRound = limits_int16::max() - 0.5f;
-    static const float kMinRound = limits_int16::min() + 0.5f;
-    if ( v > 0 )
-        return v >= kMaxRound ? limits_int16::max()
-        : static_cast<int16_t>( v + 0.5f );
-    return v <= kMinRound ? limits_int16::min() : static_cast<int16_t>( v - 0.5f );
-}
-void FloatS16ToS16( const float* src, size_t size, int16_t* dest );
-// Put this in the declarations for a class to be unassignable.
-#define RTC_DISALLOW_ASSIGN(TypeName) \
-  void operator=(const TypeName&) = delete
-
-// A macro to disallow the copy constructor and operator= functions. This should
-// be used in the declarations for a class.
-#define RTC_DISALLOW_COPY_AND_ASSIGN(TypeName) \
-  TypeName(const TypeName&) = delete;          \
-  RTC_DISALLOW_ASSIGN(TypeName)
-
-// A macro to disallow all the implicit constructors, namely the default
-// constructor, copy constructor and operator= functions.
-//
-// This should be used in the declarations for a class that wants to prevent
-// anyone from instantiating it. This is especially useful for classes
-// containing only static methods.
-#define RTC_DISALLOW_IMPLICIT_CONSTRUCTORS(TypeName) \
-  TypeName() = delete;                               \
-  RTC_DISALLOW_COPY_AND_ASSIGN(TypeName)
 
 static const size_t kWavHeaderSize = 44;
 

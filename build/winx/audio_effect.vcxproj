@@ -71,13 +71,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\effect\3d\include\complex.h" />
-    <ClInclude Include="..\..\effect\3d\include\fft.h" />
     <ClInclude Include="..\..\effect\3d\include\mit_hrtf_lib.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\effect\3d\source\complex.cpp" />
-    <ClCompile Include="..\..\effect\3d\source\fft.cpp" />
     <ClCompile Include="..\..\effect\3d\source\mit_hrtf_lib.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

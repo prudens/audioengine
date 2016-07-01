@@ -15,6 +15,7 @@
 #include <sstream>
 #include <cassert>
 #include "wav_header.h"
+#include "base/audio_util.h"
 
 #define RTC_CHECK(p) assert(p) 
 #define RTC_CHECK_EQ(p,q) assert(p == q)

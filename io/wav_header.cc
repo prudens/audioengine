@@ -19,6 +19,8 @@
 #include <limits>
 #include <string>
 
+#include "base/audio_util.h"
+
 namespace {
 
 struct ChunkHeader {
@@ -234,10 +236,3 @@ bool ReadWavHeader(ReadableWav* readable,
   return CheckWavParameters(*num_channels, *sample_rate, *format,
                             *bytes_per_sample, *num_samples);
 }
-
-void FloatS16ToS16( const float* src, size_t size, int16_t* dest )
-{
-    for ( size_t i = 0; i < size; ++i )
-        dest[i] = FloatS16ToS16( src[i] );
-}
-

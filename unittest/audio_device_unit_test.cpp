@@ -2,15 +2,20 @@
 #include <list>
 #include <mutex>
 #include <algorithm>
-#include "../device/include/audio_device.h"
-#include "../effect/3d/include/mit_hrtf_lib.h"
-#include "../effect/3d/include/fft.h"
-#include "../io/wav_file.h"
-#include <assert.h>
+#include <cassert>
+#include <complex>
+
+#include "base/fft.h"
+#include "base/audio_util.h"
+#include "device/include/audio_device.h"
+#include "effect/3d/include/mit_hrtf_lib.h"
+#include "io/wav_file.h"
+
 
 #pragma comment(lib,"../build/winx/Debug/audio_device.lib")
 #pragma comment(lib,"../build/winx/Debug/audio_effect.lib")
 #pragma comment(lib,"../build/winx/Debug/audio_io.lib")
+#pragma comment(lib,"../build/winx/Debug/audio_base.lib")
 #pragma comment(lib, "ws2_32")
 #pragma comment(lib, "strmiids")
 #pragma comment(lib, "msdmo")
@@ -19,6 +24,8 @@
 using namespace std;
 typedef lock_guard<mutex> lockguard;
 
+#define  complex std::complex<float>
+//typedef std::complex<float> complex;
 // 卷积公式
 //y(n)=sum(x(k)h(n-k)), 其中 n-k>0,0<n<N,0<k<M
 // 参见《信号与系统》第50页
@@ -30,8 +37,6 @@ void conv( T *x, T* h, T *y, size_t xn, size_t hn, size_t yn )
         for ( size_t j = 0; j < xn; j++ )
             if ( n -j >= 0 && n - j < hn )
                 y[n] += x[j] * h[n - j];
-
-
 }
 
 //#define TEST_CONV
@@ -57,7 +62,7 @@ void convolution( const float*input, complex*irc, float *output, int nFFT, int n
     {
         if ( i < nSig )
         {
-            inc[i] = complex( (double)input[i] );
+            inc[i] = complex( (float)input[i] );
         }
         else
         {
@@ -69,22 +74,19 @@ void convolution( const float*input, complex*irc, float *output, int nFFT, int n
     outc = new complex[nFFT];
     for ( int i = 0; i < nFFT; i++ )
     {
-        outc[i] = complex( (double)( inc[i].re() * irc[i].re() -
-                           inc[i].im() * irc[i].im() ),
-                           (double)( inc[i].re() * irc[i].im() +
-                           inc[i].im() * irc[i].re() ));
+        outc[i] = inc[i] * irc[i];
     }
 
     CFFT::Inverse( outc, nFFT );
 
     for ( int i = 0; i < nFFT; i++ )
     {
-        output[i] = (float)( outc[i].re() );
+        output[i] = (float)( outc[i].real() );
     }
     delete[] inc;
     delete[] outc;
 }
-
+#include <complex>
 class AudioSampleBuffer
 {
 public:
@@ -172,8 +174,8 @@ public:
                 {
                     if ( i < nFil )
                     {
-                        irLc[i] = complex( (double)irL_[i] );
-                        irRc[i] = complex( (double)irR_[i] );
+                        irLc[i] = complex( (float)irL_[i] );
+                        irRc[i] = complex( (float)irR_[i] );
                     }
                     else
                     {
@@ -317,7 +319,7 @@ void test_conv()
     for ( int i = 0; i < 3; i++ )
     {
        // cout << data[i].re() << ",";
-        assert( data[i].re() == i+1 );
+        assert( data[i].real() == i+1 );
     }
 
 
@@ -361,8 +363,8 @@ void test_hrtf( int nAzimuth, int nElevation, const char* inputfile, const char*
     int16_t *irR_ = nullptr;
     if ( nFil )
     {
-        int16_t *irL_ = nullptr; new int16_t[nFil];
-        int16_t *irR_ = nullptr; new int16_t[nFil];
+        irL_ = new int16_t[nFil];
+        irR_ = new int16_t[nFil];
         nFil = mit_hrtf_get( &nAzimuth, &nElevation, reader.sample_rate(), 0, irL_, irR_ );
     }
     else
@@ -370,28 +372,26 @@ void test_hrtf( int nAzimuth, int nElevation, const char* inputfile, const char*
         return;
     }
     int len = reader.num_samples();
-    int16_t *pSrc = new int16_t[len];
-    reader.ReadSamples( len, pSrc );
-    double* fData = new double[len];
-    for ( int i = 0; i < len; i++ )
-    {
-        fData[i] = (double)pSrc[i] / 32768;
-    }
-
-    double* foutputR = new double[nFil + len];
-    double* ffilterR = new double[nFil];
-    for ( int i = 0; i < nFil; i++ )
-    {
-        ffilterR[i] = (double)irR_[i] / 32768;
-    }
+    len = 100;
+    int16_t *pSrc = new int16_t[len+nFil];
+    len = reader.ReadSamples( len, pSrc );
+    float* fData = new float[len];
+    S16ToFloat(pSrc,len,fData);
+    float* foutputR = new float[nFil +len];
+    float* ffilterR = new float[nFil];
+    S16ToFloat( irR_, nFil, ffilterR );
     conv( fData, ffilterR, foutputR, len, nFil, nFil + len );
-    for ( int i = 0; i < nFil + len; i++ )
-    {
-        pSrc[i] = static_cast<int16_t>( foutputR[i] * 32768 );
-    }
-
+    FloatToS16( foutputR, nFil + len, pSrc );
     WavWriter writer( outputfile, reader.sample_rate(), 1 );
     writer.WriteSamples( pSrc, nFil + len + 1 );
+    for ( int i = 0; i < len; i++ )
+    {
+        cout << pSrc[i] << '\n';
+    }
+    delete[] irL_;
+    delete[] irR_;
+    delete[] pSrc;
+    delete[] fData;
 }
 
 void test_real_time_3d()
@@ -427,6 +427,7 @@ int main( int argc, char** argv )
    // test_windows_core_audio();
    // test_conv();
     test_hrtf(45,0,"D:/audio-48000-1.wav","D:/pro-48000-1.wav");
+
     system( "pause" );
     return 0;
 
