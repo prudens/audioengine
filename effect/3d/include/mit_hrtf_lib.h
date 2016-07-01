@@ -16,10 +16,6 @@
 #ifndef _MIT_HRTF_LIB_H_
 #define _MIT_HRTF_LIB_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "../source/mit_hrtf_filter.h"
 
 
@@ -78,10 +74,6 @@ unsigned int mit_hrtf_availability(int azimuth, int elevation, unsigned int samp
 	was an error.
 */
 unsigned int mit_hrtf_get(int* pAzimuth, int* pElevation, unsigned int samplerate, unsigned int diffused, short* psLeft, short* psRight);
-
-
-#ifdef __cplusplus
-} 
-#endif
+unsigned int mit_hrtf_get( int* pAzimuth, int* pElevation, unsigned int samplerate, unsigned int diffused, float* psLeft, float* psRight );
 
 #endif // _MIT_HRTF_LIB_H_

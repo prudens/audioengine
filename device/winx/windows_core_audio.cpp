@@ -118,11 +118,14 @@ bool WindowsCoreAudio::Initialize()
 
 void WindowsCoreAudio::Terminate()
 {
-    lock_guard lg( m_audiolock );
+
     if (!m_bInitialize)
     {
         return;
     }
+    StopRecording();
+    StopPlayout();
+    lock_guard lg( m_audiolock );
     m_spClientIn.Release();
     m_spClientOut.Release();
     m_inDevIndex = 0;

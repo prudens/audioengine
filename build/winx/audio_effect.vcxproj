@@ -74,7 +74,7 @@
     <ClInclude Include="..\..\effect\3d\include\mit_hrtf_lib.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\effect\3d\source\mit_hrtf_lib.c" />
+    <ClCompile Include="..\..\effect\3d\source\mit_hrtf_lib.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

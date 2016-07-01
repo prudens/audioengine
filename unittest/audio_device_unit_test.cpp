@@ -99,8 +99,8 @@ public:
         {
             for ( int i = 0; i < nSamples; i++ )
             {
-                m_pData[0][i] = pData[i * 2];
-                m_pData[1][i] = pData[i * 2 + 1];
+                m_pData[0][i] = S16ToFloat(pData[i * 2]);
+                m_pData[1][i] = S16ToFloat(pData[i * 2 + 1]);
             }
         }
         else
@@ -109,7 +109,11 @@ public:
             memset( m_pData[1], 0, nSamples*sizeof( float ) );
         }
     }
-    ~AudioSampleBuffer() {}
+    ~AudioSampleBuffer() {
+        delete[] m_pData[0];
+        delete[] m_pData[1];
+
+    }
     const float* getReadPointer( int index )
     {
         return m_pData[index];
@@ -132,11 +136,13 @@ private:
 class CAudioBufferProc : public  AudioBufferProc
 {
     bool m_processhrtf;
-    short* irL_;
-    short* irR_;
+    float* irL_;
+    float* irR_;
     int16_t* pBigData;
     WavWriter* writer_48000_1;;
     WavWriter* writer_48000_2;
+    short* m_pLeft;
+    short* m_pRight;
 public:
     ~CAudioBufferProc()
     {
@@ -145,37 +151,44 @@ public:
         delete writer;
         delete writer_48000_1;
         delete writer_48000_2;
+        delete[] m_pLeft;
+        delete[] m_pRight;
     }
     CAudioBufferProc(bool processhrtf) :m_processhrtf(processhrtf), proBuf(nullptr,480)
     {
-        std::string filename = "D:/audio-48000.wav";
-        writer = new WavWriter(filename,48000,2);
-        filename = "D:/audio-48000-1.wav";
-        writer_48000_1 = new WavWriter( filename, 48000, 1 );
-        filename = "D:/audio-48000-2.wav";
-        writer_48000_2 = new WavWriter( filename, 48000, 2 );
+         std::string filename = "D:/audio-48000.wav";
+         writer = new WavWriter(filename,48000,2);
+//         filename = "D:/audio-48000-1.wav";
+//         writer_48000_1 = new WavWriter( filename, 48000, 1 );
+         filename = "D:/audio-48000-2.wav";
+         writer_48000_2 = new WavWriter( filename, 48000, 2 );
 
         if (m_processhrtf)
         {
-            nFFT = 480 * 2;
+            m_pLeft = new short[480];
+            m_pRight = new short[480];
+                nFFT = 480 * 2;
             int nAzimuth = 45;
             int nElevation = 90;
-            nFil = mit_hrtf_availability( nAzimuth, nElevation, 48000, 1 );
+            nFil = mit_hrtf_availability( nAzimuth, nElevation, 48000, 0 );
             if ( nFil )
             {
-                irL_ = new short[nFil];
-                irR_ = new short[nFil];
+                irL_ = new float[nFil];
+                irR_ = new float[nFil];
                 irLc = new complex[nFFT];
                 irRc = new complex[nFFT];
 
-                nFil = mit_hrtf_get( &nAzimuth, &nElevation, 48000, 1, irL_, irR_ );
-
+                nFil = mit_hrtf_get( &nAzimuth, &nElevation, 48000, 0, irL_, irR_ );
+                for ( int i = 0; i < nFil; i++ )
+                {
+                    cout << irL_[i] << endl;
+                }
                 for ( int i = 0; i < nFFT; i++ )
                 {
                     if ( i < nFil )
                     {
-                        irLc[i] = complex( (float)irL_[i] );
-                        irRc[i] = complex( (float)irR_[i] );
+                        irLc[i] = complex( irL_[i] );
+                        irLc[i] = complex( irR_[i] );
                     }
                     else
                     {
@@ -185,6 +198,8 @@ public:
                 }
                 CFFT::Forward( irLc, nFFT );
                 CFFT::Forward( irRc, nFFT );
+                delete[] irL_;
+                delete[] irR_;
             }
         }
 
@@ -195,43 +210,24 @@ public:
         int16_t* pData = ( int16_t* )new char[samples];
         if (m_processhrtf)
         {
-            AudioSampleBuffer buffer( (short*)data, samples/4 );
-            processBlock( buffer );
-            const float *outL = buffer.getReadPointer( 0 );
-            const float *outR = buffer.getReadPointer( 1 );
-            for ( size_t i = 0; i < samples / 4; i++ )
+            AudioSampleBuffer buffer( (int16_t*)data, samples/4 );
+            //processBlock( buffer );
+            const float*pLeft = buffer.getReadPointer( 0 );
+            const float*pRight = buffer.getReadPointer( 1 );
+            
+            for ( size_t i = 0; i < samples / 4;i++ )
             {
-                pData[i * 2] = static_cast<int16_t>(outL[i]);
-                pData[i * 2 + 1] = static_cast<int16_t>( outR[i] );
-                //std::cout << pData[i]<<",";
+                pData[i * 2] = FloatToS16( pLeft[i] );
+                pData[i * 2 + 1] = FloatToS16( pRight[i] );
+             //   cout << pData[i * 2] << "," << pData[i * 2 + 1] << endl;
             }
-
-            int16_t* pTmp = new int16_t[samples/4];
-          //  int16_t* outputL = new int16_t[samples/2];
-          //  int16_t* outputR = new int16_t[samples / 2];
-            for ( size_t i = 0; i < samples/4;i++ )
-            {
-                pTmp[i] = ((int16_t*)data)[i * 2];
-            }
-            writer_48000_1->WriteSamples( pTmp, 480 );
-        //    conv( pTmp, irL_, outputL, samples/4, nFil, samples / 2 );
-       //     conv( pTmp, irR_, outputR, samples/4, nFil, samples / 2 );
-//             for ( size_t i = 0; i < samples / 4;i++ )
-//             {
-//                 pData[i * 2] = outputL[i];
-//                 pData[i * 2 + 1] = outputR[i];
-//             }
-
-            delete[] pTmp;
-          //  delete[] outputL;
-          //  delete[] outputR;
         }
         else
         {
             memcpy( pData, data, samples );
         }
-        writer_48000_2->WriteSamples( (int16_t*)data, 960 );
-        writer->WriteSamples( pData, 480*2 );
+         writer_48000_2->WriteSamples( (int16_t*)data, 960 );
+         writer->WriteSamples( pData, 480*2 );
         lockguard lg( m_lock );
         m_list.push_back((char*)pData);
     }
@@ -412,12 +408,6 @@ void test_real_time_3d()
 
     pWinDevice->StopRecording();
     pWinDevice->StopPlayout();
-    system( "pause" );
-    pWinDevice->InitPlayout();
-    pWinDevice->InitRecording();
-    pWinDevice->StartPlayout();
-    pWinDevice->StartRecording();
-    system( "pause" );
     pWinDevice->Terminate();
     pWinDevice->Release();
 }
@@ -426,8 +416,8 @@ int main( int argc, char** argv )
 {
    // test_windows_core_audio();
    // test_conv();
-    test_hrtf(45,0,"D:/audio-48000-1.wav","D:/pro-48000-1.wav");
-
+  //  test_hrtf(45,0,"D:/audio-48000-1.wav","D:/pro-48000-1.wav");
+    test_real_time_3d();
     system( "pause" );
     return 0;
 

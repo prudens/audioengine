@@ -17,7 +17,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\effect\3d\source\mit_hrtf_lib.c">
+    <ClCompile Include="..\..\effect\3d\source\mit_hrtf_lib.cpp">
       <Filter>3d\source</Filter>
     </ClCompile>
   </ItemGroup>
