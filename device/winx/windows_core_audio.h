@@ -1,57 +1,33 @@
 #pragma once
-#include "../include/audio_device.h"
+#include <mutex>
 #include <vector>
+#include <conio.h>
+#include <atlbase.h>
+#include <ATLComCli.h>
+#include <uuids.h>
+
 #include <dmo.h>
 #include <Mmsystem.h>
 #include <objbase.h>
 #include <mediaobj.h>
-#include <uuids.h>
 #include <propidl.h>
 #include <wmcodecdsp.h>
-
-#include <atlbase.h>
-#include <ATLComCli.h>
 #include <audioclient.h>
 #include <MMDeviceApi.h>
 #include <AudioEngineEndPoint.h>
 #include <DeviceTopology.h>
 #include <propkey.h>
-#include <strsafe.h>
-#include <conio.h>
 #include <MMDeviceApi.h>
 #include <AudioEngineEndPoint.h>
 #include <DeviceTopology.h>
 #include <EndpointVolume.h>
+#include <avrt.h>            // Avrt
 
 #include "media_buffer.h"
-#include <avrt.h>            // Avrt
-#include <mutex>
-// Use Multimedia Class Scheduler Service (MMCSS) to boost the thread priority
-#pragma comment( lib, "avrt.lib" )
-// AVRT function pointers
-typedef BOOL( WINAPI *PAvRevertMmThreadCharacteristics )( HANDLE );
-typedef HANDLE( WINAPI *PAvSetMmThreadCharacteristicsA )( LPCSTR, LPDWORD );
-typedef BOOL( WINAPI *PAvSetMmThreadPriority )( HANDLE, AVRT_PRIORITY );
+#include "device/include/audio_device.h"
 
 
-typedef struct
-{
-    KSPROPERTY KsProperty;
-    BOOLEAN bEndpointFlag;
-    ULONG ulEntityId;
-    union {
-        ULONG ulEndpoint;
-        ULONG ulInterface;
-    };
-    ULONG ulOffset;
-} USBAUDIO_MEMORY_PROPERTY, *PUSBAUDIO_MEMORY_PROPERTY;
-
-static const GUID USB_AUDIO_PROP_SET_GUID =
-{ 0xC3FA16D7, 0x274E, 0x4f2b,
-{ 0xA6, 0x3B, 0xD5, 0xE1, 0x09, 0x55, 0xFA, 0x27 } };
-const DWORD USBAUDIO_PROPERTY_GETSET_MEM = 0;
-
-#define MAX_STR_LEN 512
+#define MAX_STR_LEN 256
 typedef struct
 {
     wchar_t szDeviceName[MAX_STR_LEN];
@@ -106,8 +82,6 @@ class WindowsCoreAudio:public AudioDevice
 {
     typedef std::lock_guard<std::mutex> lock_guard;
 public:
-
-
     WindowsCoreAudio();
     virtual ~WindowsCoreAudio();
     virtual bool Initialize();
@@ -147,6 +121,13 @@ public:
 
     virtual void SetAudioBufferCallback( AudioBufferProc* pCallback );
 private:
+    static DWORD WINAPI WSAPIRenderThread( LPVOID context );
+    static DWORD WINAPI WSAPICaptureThreadPollDMO( LPVOID context );
+    static DWORD WINAPI WSAPICaptureThread( LPVOID context );
+    DWORD DoRenderThread();
+    DWORD DoCaptureThreadPollDMO();
+    DWORD DoCaptureThread();
+
     HRESULT DeviceBindTo( EDataFlow eDataFlow, /* eCapture/eRender */
                           int16_t iDevIdx, /* Device Index. -1 - default device. */
                           IAudioClient **ppAudioClient, /* pointer pointer to IAudioClient interface */
@@ -168,36 +149,27 @@ private:
     void    RevertThreadPriority( HANDLE hMmTask );
     bool    IsFormatSupported( CComPtr<IAudioClient> audioClient, DWORD nSampleRate, WORD nChannels );
 
-    static DWORD WINAPI WSAPIRenderThread( LPVOID context );
-    static DWORD WINAPI WSAPICaptureThreadPollDMO( LPVOID context );
-    static DWORD WINAPI WSAPICaptureThread( LPVOID context );
-    DWORD DoRenderThread();
-    DWORD DoCaptureThreadPollDMO();
-    DWORD DoCaptureThread();
 private:
     ScopedCOMInitializer                    m_comInit;
     std::mutex                              m_audiolock;
-    CComPtr<IMediaObject>                   m_dmo;// DirectX Media Object (DMO) for the built-in AEC.
-    CComPtr<IMediaBuffer>                   m_mediaBuffer;
+    CComPtr<IMediaObject>                   m_spDmo;// DirectX Media Object (DMO) for the built-in AEC.
     CComPtr<IAudioClient>                   m_spClientIn;
     CComPtr<IAudioClient>                   m_spClientOut;
     CComPtr<IAudioRenderClient>             m_spRenderClient;
     CComPtr<IAudioCaptureClient>            m_spCaptureClient;
-    CComPtr<IMediaBuffer>                   m_pMediaBuffer;
+    CComPtr<IMediaBuffer>                   m_spMediaBuffer;
 
     AudioBufferProc*                        m_pBufferProc;
+
     size_t                                  m_recSampleRate;
     size_t                                  m_plySampleRate;
     uint16_t                                m_recChannels;
     uint16_t                                m_plyChannels;
-    int16_t                                 m_inDevIndex;
-    int16_t                                 m_outDevIndex;
-    int16_t                                 m_inDefaultDevIndex;
-    int16_t                                 m_outDetaultDevIndex;
+    int16_t                                 m_recDevIndex;
+    int16_t                                 m_plyDevIndex;
 
     bool                                    m_bUseDMO;
     bool                                    m_DMOIsAvailble;
-   
     bool                                    m_bInitialize;
     bool                                    m_recIsInitialized;
     bool                                    m_playIsInitialized;
@@ -215,13 +187,6 @@ private:
     HANDLE                                  m_hCaptureStartedEvent;
     HANDLE                                  m_hShutdownCaptureEvent;
 
-
-  
-
-
-    AUDIO_DEVICE_INFO_LIST                  m_CaptureDeviceList;
-    AUDIO_DEVICE_INFO_LIST                  m_RenderDeviceList;
-
-
-
+    AUDIO_DEVICE_INFO_LIST                  m_CaptureDevices;
+    AUDIO_DEVICE_INFO_LIST                  m_RenderDevices;
 };

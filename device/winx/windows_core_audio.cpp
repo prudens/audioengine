@@ -3,6 +3,12 @@
 #include "functiondiscoverykeys.h"           // PKEY_Device_FriendlyName
 #include "strsafe.h"
 #include <assert.h>
+
+// AVRT function pointers
+typedef BOOL( WINAPI *PAvRevertMmThreadCharacteristics )( HANDLE );
+typedef HANDLE( WINAPI *PAvSetMmThreadCharacteristicsA )( LPCSTR, LPDWORD );
+typedef BOOL( WINAPI *PAvSetMmThreadPriority )( HANDLE, AVRT_PRIORITY );
+
 #ifndef IF_FAILED_RETURN
 #define IF_FAILED_RETURN(hr) if(FAILED(hr)) return hr;
 #endif 
@@ -40,11 +46,11 @@ AudioDevice* AudioDevice::Create()
 
 WindowsCoreAudio::WindowsCoreAudio()
     : m_pBufferProc(nullptr)
-    , m_pMediaBuffer(nullptr)
+    , m_spMediaBuffer(nullptr)
     , m_DMOIsAvailble(false)
     , m_comInit( /*ScopedCOMInitializer::kMTA*/ )
-    , m_inDevIndex( 0 )
-    , m_outDevIndex( 0 )
+    , m_recDevIndex( 0 )
+    , m_plyDevIndex( 0 )
     , m_bInitialize(false)
     , m_playIsInitialized(false)
     , m_recIsInitialized(false)
@@ -60,28 +66,28 @@ WindowsCoreAudio::WindowsCoreAudio()
                                    NULL,
                                    CLSCTX_INPROC_SERVER,
                                    IID_IMediaObject,
-                                   reinterpret_cast<void**>( &m_dmo ) );
-    if ( FAILED( hr ) || !m_dmo )
+                                   reinterpret_cast<void**>( &m_spDmo ) );
+    if ( FAILED( hr ) || !m_spDmo )
     {
         m_DMOIsAvailble = false; // audio effect such as aec ns etc.
     }
 
-    hr = EnumDevice( eCapture, m_CaptureDeviceList );
-    hr = EnumDevice( eRender, m_RenderDeviceList );
-    int16_t size = (int16_t)m_CaptureDeviceList.size();
+    hr = EnumDevice( eCapture, m_CaptureDevices );
+    hr = EnumDevice( eRender, m_RenderDevices );
+    int16_t size = (int16_t)m_CaptureDevices.size();
     for ( int16_t i = 0; i < size; i++ )
     {
-        if ( m_CaptureDeviceList[i].bDefaultDevice )
+        if ( m_CaptureDevices[i].bDefaultDevice )
         {
-            m_inDevIndex = i;
+            m_recDevIndex = i;
         }
     }
-    size = (int16_t)m_RenderDeviceList.size();
+    size = (int16_t)m_RenderDevices.size();
     for ( int16_t i = 0; i < size; i++ )
     {
-        if ( m_RenderDeviceList[i].bDefaultDevice )
+        if ( m_RenderDevices[i].bDefaultDevice )
         {
-            m_outDevIndex = i;
+            m_plyDevIndex = i;
         }
     }
 }
@@ -96,7 +102,7 @@ WindowsCoreAudio::~WindowsCoreAudio()
     RELEASE_HANDLE( m_hRenderStartedEvent );
     RELEASE_HANDLE( m_hCaptureStartedEvent );
 
-    m_dmo.Release();
+    m_spDmo.Release();
 }
 
 bool WindowsCoreAudio::Initialize()
@@ -106,8 +112,8 @@ bool WindowsCoreAudio::Initialize()
     {
         return true;
     }
-    DeviceBindTo( eCapture, m_inDevIndex, &m_spClientIn, nullptr, nullptr );
-    DeviceBindTo( eRender, m_outDevIndex, &m_spClientOut, nullptr, nullptr );
+    DeviceBindTo( eCapture, m_recDevIndex, &m_spClientIn, nullptr, nullptr );
+    DeviceBindTo( eRender, m_plyDevIndex, &m_spClientOut, nullptr, nullptr );
     if (!m_spClientIn || !m_spClientOut )
     {
         return false;
@@ -128,36 +134,36 @@ void WindowsCoreAudio::Terminate()
     lock_guard lg( m_audiolock );
     m_spClientIn.Release();
     m_spClientOut.Release();
-    m_inDevIndex = 0;
-    m_outDevIndex = 0;
+    m_recDevIndex = 0;
+    m_plyDevIndex = 0;
     m_bInitialize = false;
 }
 
 size_t WindowsCoreAudio::GetRecordingDeviceNum() const
 {
-    return m_CaptureDeviceList.size();
+    return m_CaptureDevices.size();
 }
 
 size_t WindowsCoreAudio::GetPlayoutDeviceNum() const
 {
-    return m_RenderDeviceList.size();
+    return m_RenderDevices.size();
 }
 
 bool WindowsCoreAudio::GetPlayoutDeviceName( int16_t index, wchar_t name[kAdmMaxDeviceNameSize], wchar_t guid[kAdmMaxGuidSize] )
 {
     lock_guard lg( m_audiolock );
 
-    if ( index >= (int16_t)m_RenderDeviceList.size() )
+    if ( index >= (int16_t)m_RenderDevices.size() )
     {
         return false;
     }
     if ( index  < 0)
     {
-        index = m_outDevIndex;
+        index = m_plyDevIndex;
     }
 
-    StringCchCopyW( name, kAdmMaxGuidSize - 1, m_RenderDeviceList[index].szDeviceName );
-    StringCchCopyW( guid, kAdmMaxGuidSize - 1, m_RenderDeviceList[index].szDeviceID );
+    StringCchCopyW( name, kAdmMaxGuidSize - 1, m_RenderDevices[index].szDeviceName );
+    StringCchCopyW( guid, kAdmMaxGuidSize - 1, m_RenderDevices[index].szDeviceID );
     return true;
 }
 
@@ -166,16 +172,16 @@ bool WindowsCoreAudio::RecordingDeviceName( int16_t index, wchar_t name[kAdmMaxD
 {
     lock_guard lg( m_audiolock );
 
-    if ( index <= (int16_t)m_CaptureDeviceList.size() )
+    if ( index <= (int16_t)m_CaptureDevices.size() )
     {
         return false;
     }
     if ( index < 0 )
     {
-        index = m_inDevIndex;
+        index = m_recDevIndex;
     }
-    StringCchCopyW( name, kAdmMaxGuidSize - 1, m_CaptureDeviceList[index].szDeviceName );
-    StringCchCopyW( guid, kAdmMaxGuidSize - 1, m_CaptureDeviceList[index].szDeviceID );
+    StringCchCopyW( name, kAdmMaxGuidSize - 1, m_CaptureDevices[index].szDeviceName );
+    StringCchCopyW( guid, kAdmMaxGuidSize - 1, m_CaptureDevices[index].szDeviceID );
     return true;
 }
 
@@ -187,12 +193,12 @@ bool WindowsCoreAudio::SetPlayoutDevice( int16_t index )
     {
         return false;
     }
-    if ( index <= (int16_t)m_RenderDeviceList.size() )
+    if ( index <= (int16_t)m_RenderDevices.size() )
     {
         return false;
     }
 
-    m_outDevIndex = index;
+    m_plyDevIndex = index;
     return true;
 }
 
@@ -203,12 +209,12 @@ bool WindowsCoreAudio::SetRecordingDevice( int16_t index )
     {
         return false;
     }
-    if ( index <= (int16_t)m_CaptureDeviceList.size() )
+    if ( index <= (int16_t)m_CaptureDevices.size() )
     {
         return false;
     }
 
-    m_inDevIndex = index;
+    m_recDevIndex = index;
     return true;
 }
 
@@ -361,7 +367,7 @@ bool WindowsCoreAudio::InitPlayout()
         hnsBufferDuration = 30 * 10000;
     }
     m_spClientOut.Release();
-    DeviceBindTo( eRender, m_outDevIndex, &m_spClientOut, nullptr, nullptr );
+    DeviceBindTo( eRender, m_plyDevIndex, &m_spClientOut, nullptr, nullptr );
     HRESULT hr = S_OK;
     hr = m_spClientOut->Initialize(
         AUDCLNT_SHAREMODE_SHARED,             // share Audio Engine with other applications
@@ -654,10 +660,10 @@ bool WindowsCoreAudio::StopRecording()
 
     if ( m_bUseDMO )
     {
-        assert( m_dmo );
+        assert( m_spDmo );
         // This is necessary. Otherwise the DMO can generate garbage render
         // audio even after rendering has stopped.
-        HRESULT hr = m_dmo->FreeStreamingResources();
+        HRESULT hr = m_spDmo->FreeStreamingResources();
         if ( FAILED( hr ) )
         {
             err = false;
@@ -1153,10 +1159,10 @@ Exit:
 HRESULT WindowsCoreAudio::SetDMOProperties()
 {
     HRESULT hr = S_OK;
-    assert( m_dmo != NULL );
+    assert( m_spDmo != NULL );
 
     CComPtr<IPropertyStore> ps;
-    hr = m_dmo->QueryInterface( IID_IPropertyStore,
+    hr = m_spDmo->QueryInterface( IID_IPropertyStore,
                                 reinterpret_cast<void**>( &ps ) );
     IF_FAILED_RETURN( hr );
 
@@ -1208,8 +1214,8 @@ HRESULT WindowsCoreAudio::SetDMOProperties()
     // Set the devices selected by VoE. If using a default device, we need to
     // search for the device index.
 
-    DWORD devIndex = static_cast<uint32_t>( m_outDevIndex << 16 ) +
-        static_cast<uint32_t>( 0x0000ffff & m_inDevIndex );
+    DWORD devIndex = static_cast<uint32_t>( m_plyDevIndex << 16 ) +
+        static_cast<uint32_t>( 0x0000ffff & m_recDevIndex );
     hr = SetVtI4Property( ps,
                           MFPKEY_WMAAECMA_DEVICE_INDEXES,
                           devIndex );
@@ -1252,7 +1258,7 @@ HRESULT WindowsCoreAudio::SetVtI4Property( IPropertyStore* ptrPS,
 // Reference: http://msdn.microsoft.com/en-us/library/ff819492(v=vs.85).aspx
 bool WindowsCoreAudio::InitRecordingDMO()
 {
-    if ( !m_bUseDMO || !m_dmo )
+    if ( !m_bUseDMO || !m_spDmo )
     {
         return false;
     }
@@ -1294,13 +1300,13 @@ bool WindowsCoreAudio::InitRecordingDMO()
     // Set the VoE format equal to the AEC output format.
     m_recSampleRate = ptrWav->nSamplesPerSec;
     m_recChannels = ptrWav->nChannels;
-    hr = CMediaBuffer::Create(ptrWav->nBlockAlign * ptrWav->nSamplesPerSec, (IMediaBuffer**)&m_pMediaBuffer );
+    hr = CMediaBuffer::Create(ptrWav->nBlockAlign * ptrWav->nSamplesPerSec, (IMediaBuffer**)&m_spMediaBuffer );
     if ( FAILED( hr ) )
     {
         return false;
     }
     // Set the DMO output format parameters.
-    hr = m_dmo->SetOutputType( 0, &mt, 0 );
+    hr = m_spDmo->SetOutputType( 0, &mt, 0 );
     MoFreeMediaType( &mt );
     if ( FAILED( hr ) )
     {
@@ -1308,7 +1314,7 @@ bool WindowsCoreAudio::InitRecordingDMO()
     }
 
     // Optional, but if called, must be after media types are set.
-    hr = m_dmo->AllocateStreamingResources();
+    hr = m_spDmo->AllocateStreamingResources();
     if ( FAILED( hr ) )
     {
         return false;
@@ -1335,7 +1341,7 @@ HRESULT WindowsCoreAudio::InitRecordingMedia()
     Wfx.nBlockAlign = Wfx.nChannels * Wfx.wBitsPerSample / 8;
     Wfx.nAvgBytesPerSec = Wfx.nSamplesPerSec * Wfx.nBlockAlign;
     m_spClientIn.Release();
-    DeviceBindTo( eCapture, m_inDevIndex, &m_spClientIn, nullptr, nullptr );
+    DeviceBindTo( eCapture, m_recDevIndex, &m_spClientIn, nullptr, nullptr );
     // Create a capturing stream.
     HRESULT hr = S_OK;
     hr = m_spClientIn->Initialize(
@@ -1604,13 +1610,13 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
             DWORD dwStatus = 0;
             {
                 DMO_OUTPUT_DATA_BUFFER dmoBuffer = { 0 };
-                dmoBuffer.pBuffer = m_pMediaBuffer;
+                dmoBuffer.pBuffer = m_spMediaBuffer;
                 dmoBuffer.pBuffer->AddRef();
 
                 // Poll the DMO for AEC processed capture data. The DMO will
                 // copy available data to |dmoBuffer|, and should only return
                 // 10 ms frames. The value of |dwStatus| should be ignored.
-                hr = m_dmo->ProcessOutput( 0, 1, &dmoBuffer, &dwStatus );
+                hr = m_spDmo->ProcessOutput( 0, 1, &dmoBuffer, &dwStatus );
                 dmoBuffer.pBuffer->Release();
                 dwStatus = dmoBuffer.dwStatus;
             }
@@ -1625,7 +1631,7 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
             BYTE* data;
             // Get a pointer to the data buffer. This should be valid until
             // the next call to ProcessOutput.
-            hr = m_pMediaBuffer->GetBufferAndLength( &data, &bytesProduced );
+            hr = m_spMediaBuffer->GetBufferAndLength( &data, &bytesProduced );
             if ( FAILED( hr ) )
             {
                 keepRecording = false;
@@ -1653,7 +1659,7 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
             }
 
             // Reset length to indicate buffer availability.
-            hr = m_pMediaBuffer->SetLength( 0 );
+            hr = m_spMediaBuffer->SetLength( 0 );
             if ( FAILED( hr ) )
             {
                 keepRecording = false;
@@ -1726,7 +1732,7 @@ void WindowsCoreAudio::RevertThreadPriority( HANDLE hMmTask )
         return;
     }
     // Get handle to the Avrt DLL module.
-    HMODULE  avrtLibrary = LoadLibrary( TEXT( "Avrt.dll" ) );
+    HMODULE  avrtLibrary = ::LoadLibrary( TEXT( "Avrt.dll" ) );
     if ( avrtLibrary )
     {
         // Handle is valid (should only happen if OS larger than vista & win7).
@@ -1736,7 +1742,7 @@ void WindowsCoreAudio::RevertThreadPriority( HANDLE hMmTask )
         {
             AvRevertMmThreadCharacteristics(hMmTask);
         }
-        FreeLibrary( avrtLibrary );
+        ::FreeLibrary( avrtLibrary );
     }
 }
 
