@@ -11,8 +11,18 @@ static const int kAdmMaxPlayoutBufferSizeMs = 250;
 enum AudioError
 {
     AE_OK,
-    AE_UNSUPPORTED,
+    AE_FEATRURE_UNSUPPORTED,
+    AE_RECORD_FORMAT_CHANGE, // you can call relative function to get new format 
 };
+enum AudioPropertyID
+{
+    ID_ENABLE_AEC,                  // enable build in aec
+    ID_ENBALE_AGC,                  // enable build in agc
+    ID_ENBALE_VAD,                  // enable build in vad
+    ID_ENBALE_NS,                   // enable build in ns
+    ID_VOLUME,                      // modfiy audio volume
+};
+
 
 class AudioBufferProc
 {
@@ -28,7 +38,7 @@ class AudioDevice
 {
 public:
     static AudioDevice* Create();
-    void Release() { delete this; }
+    virtual void Release()=0;
     virtual bool Initialize() = 0;
     virtual void Terminate() = 0;
 
@@ -64,6 +74,8 @@ public:
     virtual bool StopRecording() = 0;
     virtual bool Recording() const = 0;
     virtual void SetAudioBufferCallback( AudioBufferProc* pCallback ) = 0;
+    virtual bool SetPropertie( AudioPropertyID id, void* ) = 0;
+    virtual bool GetProperty( AudioPropertyID id, void* ) = 0;
 protected:
-    virtual ~AudioDevice() {}
+    ~AudioDevice() {}
 };
