@@ -84,6 +84,7 @@
     <ClInclude Include="..\..\base\asyntask.h" />
     <ClInclude Include="..\..\base\audio_util.h" />
     <ClInclude Include="..\..\base\circular_buffer.hpp" />
+    <ClInclude Include="..\..\base\common_defines.h" />
     <ClInclude Include="..\..\base\fft.h" />
     <ClInclude Include="..\..\base\min_max_heap.hpp" />
     <ClInclude Include="..\..\base\rgba.h" />

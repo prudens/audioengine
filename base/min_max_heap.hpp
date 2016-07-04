@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <vector>
 
-namespace prudens{
+namespace {
     template<class T, class Cmp = std::less<T>>
     class max_min_heap
     {

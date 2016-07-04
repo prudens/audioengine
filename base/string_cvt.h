@@ -14,8 +14,6 @@
 #error "should use C++11 implementation"
 #endif
 #endif//
-
-namespace prudens{
     /*convert unicode string to mbcs*/
     std::string wstombs( const std::wstring& src )
     {
@@ -61,4 +59,3 @@ namespace prudens{
     {
         return wstombs( utf8tows( src_utf8 ) );
     }
-}

@@ -47,5 +47,8 @@
     <ClInclude Include="..\..\base\circular_buffer.hpp">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\base\common_defines.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

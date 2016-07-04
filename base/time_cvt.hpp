@@ -17,7 +17,6 @@
 #endif
 #endif//
 
-namespace prudens{
     using namespace std::chrono;
   inline  uint64_t timestamp()
     {
@@ -91,6 +90,5 @@ namespace prudens{
         time_point<high_resolution_clock> m_begin;
     };
 
-}
 
 #endif
