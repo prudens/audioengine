@@ -1,43 +1,10 @@
 #include "windows_core_audio.h"
-
 #include "functiondiscoverykeys.h"           // PKEY_Device_FriendlyName
-#include "strsafe.h"
-#include <assert.h>
-
-// AVRT function pointers
-typedef BOOL( WINAPI *PAvRevertMmThreadCharacteristics )( HANDLE );
-typedef HANDLE( WINAPI *PAvSetMmThreadCharacteristicsA )( LPCSTR, LPDWORD );
-typedef BOOL( WINAPI *PAvSetMmThreadPriority )( HANDLE, AVRT_PRIORITY );
-
-#ifndef IF_FAILED_RETURN
-#define IF_FAILED_RETURN(hr) if(FAILED(hr)) return hr;
-#endif 
-
-#ifndef IF_FAILED_JUMP
-#define IF_FAILED_JUMP(hr, label) if(FAILED(hr)) goto label;
-#endif 
+#include <strsafe.h>
+#include <cassert>
 
 #define PARTID_MASK 0x0000ffff //HQH 增加一行
 
-#define RELEASE_HANDLE(handle) if(handle != 0) {CloseHandle(handle); handle=nullptr;}
-void SetCurrentThreadName( const char* name )
-{
-    struct {
-        DWORD dwType;
-        LPCSTR szName;
-        DWORD dwThreadID;
-        DWORD dwFlags;
-    } threadname_info = { 0x1000, name, static_cast<DWORD>( -1 ), 0 };
-
-    __try
-    {
-        ::RaiseException( 0x406D1388, 0, sizeof( threadname_info ) / sizeof( DWORD ),
-                          reinterpret_cast<ULONG_PTR*>( &threadname_info ) );
-    }
-    __except ( EXCEPTION_EXECUTE_HANDLER )
-    {
-    }
-}
 
 AudioDevice* AudioDevice::Create()
 {
@@ -45,23 +12,13 @@ AudioDevice* AudioDevice::Create()
 }
 
 WindowsCoreAudio::WindowsCoreAudio()
-    : m_pBufferProc(nullptr)
-    , m_spMediaBuffer(nullptr)
-    , m_DMOIsAvailble(false)
-    , m_comInit( /*ScopedCOMInitializer::kMTA*/ )
-    , m_recDevIndex( 0 )
-    , m_plyDevIndex( 0 )
-    , m_bInitialize(false)
-    , m_playIsInitialized(false)
-    , m_recIsInitialized(false)
-    , m_bUseDMO(false)
 {
-    m_hRenderSamplesReadyEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
-    m_hCaptureSamplesReadyEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
-    m_hShutdownRenderEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
-    m_hShutdownCaptureEvent = CreateEvent( NULL, TRUE, FALSE, NULL );
-    m_hRenderStartedEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
-    m_hCaptureStartedEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
+    m_hRenderSamplesReadyEvent = ::CreateEvent( NULL, FALSE, FALSE, NULL );
+    m_hCaptureSamplesReadyEvent = ::CreateEvent( NULL, FALSE, FALSE, NULL );
+    m_hShutdownRenderEvent = ::CreateEvent( NULL, FALSE, FALSE, NULL );
+    m_hShutdownCaptureEvent = ::CreateEvent( NULL, TRUE, FALSE, NULL );
+    m_hRenderStartedEvent = ::CreateEvent( NULL, FALSE, FALSE, NULL );
+    m_hCaptureStartedEvent = ::CreateEvent( NULL, FALSE, FALSE, NULL );
     HRESULT hr = CoCreateInstance( CLSID_CWMAudioAEC,
                                    NULL,
                                    CLSCTX_INPROC_SERVER,
@@ -80,6 +37,7 @@ WindowsCoreAudio::WindowsCoreAudio()
         if ( m_CaptureDevices[i].bDefaultDevice )
         {
             m_recDevIndex = i;
+            break;
         }
     }
     size = (int16_t)m_RenderDevices.size();
@@ -88,6 +46,7 @@ WindowsCoreAudio::WindowsCoreAudio()
         if ( m_RenderDevices[i].bDefaultDevice )
         {
             m_plyDevIndex = i;
+            break;
         }
     }
 }
@@ -105,6 +64,10 @@ WindowsCoreAudio::~WindowsCoreAudio()
     m_spDmo.Release();
 }
 
+void WindowsCoreAudio::Release()
+{
+    delete this;
+}
 bool WindowsCoreAudio::Initialize()
 {
     lock_guard lg(m_audiolock);
@@ -137,6 +100,7 @@ void WindowsCoreAudio::Terminate()
     m_recDevIndex = 0;
     m_plyDevIndex = 0;
     m_bInitialize = false;
+    m_setEffect.reset();
 }
 
 size_t WindowsCoreAudio::GetRecordingDeviceNum() const
@@ -246,6 +210,7 @@ bool WindowsCoreAudio::SetRecordingFormat( uint32_t nSampleRate, uint16_t nChann
     {
         return false;
     }
+
     if ( IsFormatSupported(m_spClientIn, nSampleRate, nChannels) )
     {
         m_recSampleRate = nSampleRate;
@@ -302,6 +267,7 @@ bool WindowsCoreAudio::GetPlayoutFormat( uint32_t& nSampleRate, uint16_t& nChann
     {
         return false;
     }
+
     nSampleRate = m_plySampleRate;
     nChannels = m_plyChannels;
     return true;
@@ -684,521 +650,128 @@ void WindowsCoreAudio::SetAudioBufferCallback( AudioBufferProc* pCallback )
     m_pBufferProc = pCallback;
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// Function:
-//      DeviceBindTo
-//
-// Description:
-//      Bind device to an IAudioClient interface.
-//
-//  Parameters:
-//      eDataFlow: eRender for render device, eCapture for capture device
-//      iDevIdx: Index of device in the enumeration list. If it is -1, use default device 
-//      ppVoid: pointer pointer to IAudioClient interface.
-//      ppszEndpointDeviceId: Device ID. Caller is responsible for freeing memeory
-//              using CoTaskMemoryFree. If can be NULL if called doesn't need this info.
-//
-// Return:
-//      S_OK if successful
-//
-///////////////////////////////////////////////////////////////////////////////
-HRESULT WindowsCoreAudio::DeviceBindTo(
-    EDataFlow eDataFlow,    // eCapture/eRender
-    int16_t iDevIdx,        // Device Index. -1 - default device. 
-    IAudioClient **ppAudioClient,    // pointer pointer to IAudioClient interface
-    IAudioEndpointVolume **ppEndpointVolume,
-    WCHAR** ppszEndpointDeviceId )   // Device ID. Need to be freed in caller with CoTaskMemoryFree if it is not NULL
+bool WindowsCoreAudio::SetPropertie( AudioPropertyID id, void*value )
 {
-    HRESULT hResult;
-
-    CComPtr<IMMDeviceEnumerator> spEnumerator;
-    CComPtr<IMMDeviceCollection> spEndpoints;
-    CComPtr<IMMDevice> spDevice;
-    WCHAR *pszDeviceId = NULL;
-
-    if ( ppAudioClient == NULL )
-        return E_POINTER;
-
-    *ppAudioClient = NULL;
-
-    hResult = spEnumerator.CoCreateInstance( __uuidof( MMDeviceEnumerator ) );
-    IF_FAILED_JUMP( hResult, Exit );
-
-    // use default device
-    if ( iDevIdx < 0 )
+    switch ( id )
     {
-        hResult = spEnumerator->GetDefaultAudioEndpoint( eDataFlow, eCommunications, &spDevice );
-        IF_FAILED_JUMP( hResult, Exit );
+    case ID_ENABLE_AEC:
+    case ID_ENBALE_AGC:
+    case ID_ENBALE_NS:
+    case ID_ENBALE_VAD:
+    {
+        if ( !m_DMOIsAvailble )
+        {
+            return false;
+        }
+        bool var = *(int32_t*)value != 0;
+        m_setEffect.set( ID_ENABLE_AEC, var );     
+        {
+            m_setEffect.set( id, var );
+        }
+    }
+    break;
+    }
+
+    if (m_setEffect.to_ulong() & (ID_ENABLE_AEC | ID_ENBALE_AGC | ID_ENBALE_NS | ID_ENBALE_VAD) )
+    {
+        m_bUseDMO = true;
     }
     else
     {
-        // User selected device
-        hResult = spEnumerator->EnumAudioEndpoints( eDataFlow, DEVICE_STATE_ACTIVE, &spEndpoints );
-        IF_FAILED_JUMP( hResult, Exit );
-
-        hResult = spEndpoints->Item( iDevIdx, &spDevice );
-        IF_FAILED_JUMP( hResult, Exit );
+        m_bUseDMO = false;
     }
-
-    // get device ID and format
-    hResult = spDevice->GetId( &pszDeviceId );
-    IF_FAILED_JUMP( hResult, Exit );
-
-    // Active device
-    hResult = spDevice->Activate( __uuidof( IAudioClient ), CLSCTX_INPROC_SERVER, NULL, (void**)ppAudioClient );
-    IF_FAILED_JUMP( hResult, Exit );
-
-    if ( ppEndpointVolume )
-    {
-        hResult = spDevice->Activate( __uuidof( IAudioEndpointVolume ), CLSCTX_INPROC_SERVER, NULL, (void **)ppEndpointVolume );
-        IF_FAILED_JUMP( hResult, Exit );
-    }
-
-Exit:
-    if ( ppszEndpointDeviceId )
-        *ppszEndpointDeviceId = pszDeviceId;
-    else if ( pszDeviceId )
-        CoTaskMemFree( pszDeviceId );
-
-    return hResult;
+    return true;
 }
 
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// Function:
-//      GetDeviceNum
-//
-// Description:
-//      Enumerate audio device and return the device information.
-//
-//  Parameters:
-//      eDataFlow: eRender for render device, eCapture for capture device
-//      uDevCount: Number of device
-//
-// Return:
-//      S_OK if successful
-//
-///////////////////////////////////////////////////////////////////////////////
-HRESULT WindowsCoreAudio::GetDeviceNum( EDataFlow eDataFlow, UINT &uDevCount )const
+bool WindowsCoreAudio::GetProperty( AudioPropertyID id, void*value )
 {
-    HRESULT hResult = S_OK;
-
-    CComPtr<IMMDeviceEnumerator> spEnumerator;
-    CComPtr<IMMDeviceCollection> spEndpoints;
-
-    hResult = spEnumerator.CoCreateInstance( __uuidof( MMDeviceEnumerator ) );
-    IF_FAILED_RETURN( hResult );
-
-    hResult = spEnumerator->EnumAudioEndpoints( eDataFlow, DEVICE_STATE_ACTIVE, &spEndpoints );
-    IF_FAILED_RETURN( hResult );
-
-    hResult = spEndpoints->GetCount( &uDevCount );
-    IF_FAILED_RETURN( hResult );
-
-    return hResult;
-
+    if ( !m_bUseDMO )
+    {
+        return false;
+    }
+    *(int32_t*)value = m_setEffect.test( id ) ? 1 : 0;
+    return true;
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// Function:
-//      EnumDevice
-//
-// Description:
-//      Enumerate audio device and return the device information.
-//
-//  Parameters:
-//      eDataFlow: eRender for render device, eCapture for capture device
-//      uNumElements: Size of audio device info structure array.
-//      pDevicInfo: device info structure array. Caller is responsible to allocate and free
-//                  memory. The array size is specified by uNumElements.
-//
-// Return:
-//      S_OK if successful
-//
-///////////////////////////////////////////////////////////////////////////////
-HRESULT WindowsCoreAudio::EnumDevice( EDataFlow eDataFlow, AUDIO_DEVICE_INFO_LIST& devices )const
+bool WindowsCoreAudio::IsFormatSupported( CComPtr<IAudioClient> audioClient, DWORD nSampleRate, WORD nChannels )
 {
-    devices.clear();
-    HRESULT hResult = S_OK;
-    WCHAR* pszDeviceId = NULL;
-    WCHAR* pszDefaultDeviceID = nullptr;
-    PROPVARIANT value;
-    UINT index, dwCount;
-    bool IsMicArrayDevice;
-
-    CComPtr<IMMDeviceEnumerator> spEnumerator;
-    CComPtr<IMMDeviceCollection> spEndpoints;
-
-    CComPtr<IMMDevice> spDevice;
-
-
-    hResult = spEnumerator.CoCreateInstance( __uuidof( MMDeviceEnumerator ) );
-    IF_FAILED_JUMP( hResult, Exit );
-
-    hResult = spEnumerator->GetDefaultAudioEndpoint( eDataFlow, eCommunications, &spDevice );
-    IF_FAILED_JUMP( hResult, Exit );
-    spDevice->GetId( &pszDefaultDeviceID );
-    IF_FAILED_JUMP( hResult, Exit );
-    spDevice.Release();
-
-    hResult = spEnumerator->EnumAudioEndpoints( eDataFlow, DEVICE_STATE_ACTIVE, &spEndpoints );
-    IF_FAILED_JUMP( hResult, Exit );
-
-    hResult = spEndpoints->GetCount( &dwCount );
-    IF_FAILED_JUMP( hResult, Exit );
-
-    devices.resize( dwCount );
-
-    for ( index = 0; index < dwCount; index++ )
+    if ( !audioClient )
     {
-        CComPtr<IMMDevice> spDevice;
-        CComPtr<IPropertyStore> spProperties;
-
-        PropVariantInit( &value );
-
-        hResult = spEndpoints->Item( index, &spDevice );
-        IF_FAILED_JUMP( hResult, Exit );
-
-        hResult = spDevice->GetId( &pszDeviceId );
-        IF_FAILED_JUMP( hResult, Exit );
-
-        hResult = spDevice->OpenPropertyStore( STGM_READ, &spProperties );
-        IF_FAILED_JUMP( hResult, Exit );
-
-        hResult = spProperties->GetValue( PKEY_Device_FriendlyName, &value );
-        IF_FAILED_JUMP( hResult, Exit );
-
-        EndpointIsMicArray( spDevice, IsMicArrayDevice );
-
-        StringCchCopyW( devices[index].szDeviceID, MAX_STR_LEN - 1, pszDeviceId );
-        StringCchCopyW( devices[index].szDeviceName, MAX_STR_LEN - 1, value.pwszVal );
-        devices[index].bIsMicArrayDevice = IsMicArrayDevice;
-        devices[index].bDefaultDevice = !wcscmp( pszDeviceId, pszDefaultDeviceID );
-
-        PropVariantClear( &value );
-        CoTaskMemFree( pszDeviceId );
-        pszDeviceId = NULL;
-
-
+        return false;
     }
+    HRESULT hr = S_OK;
+    WAVEFORMATEX Wfx = WAVEFORMATEX();
+    WAVEFORMATEX* pWfxClosestMatch = NULL;
+    // Set wave format
+    Wfx.wFormatTag = WAVE_FORMAT_PCM;
+    Wfx.wBitsPerSample = 16;
+    Wfx.cbSize = 0;
+    Wfx.nChannels = nChannels;
+    Wfx.nSamplesPerSec = nSampleRate;
+    Wfx.nBlockAlign = Wfx.nChannels * Wfx.wBitsPerSample / 8;
+    Wfx.nAvgBytesPerSec = Wfx.nSamplesPerSec * Wfx.nBlockAlign;
+    hr = audioClient->IsFormatSupported(
+        AUDCLNT_SHAREMODE_SHARED,
+        &Wfx,
+        &pWfxClosestMatch );
 
-Exit:
-    if (pszDefaultDeviceID)
-    {
-        CoTaskMemFree( pszDefaultDeviceID );
-    }
-    return hResult;
+    CoTaskMemFree( pWfxClosestMatch );
+    return hr == S_OK;
 }
 
-
-///////////////////////////////////////////////////////////////////////////////
-// Function:
-//      DeviceIsMicArray
-//
-// Description:
-//      Determines if a given IMMDevice is a microphone array by device ID
-//
-// Returns:
-//      S_OK on success
-///////////////////////////////////////////////////////////////////////////////
-HRESULT WindowsCoreAudio::DeviceIsMicArray( wchar_t szDeviceId[], bool &bIsMicArray )const
-{
-    HRESULT hr = S_OK;
-
-    if ( szDeviceId == NULL )
-        return E_INVALIDARG;
-
-    CComPtr<IMMDeviceEnumerator> spEnumerator;
-    CComPtr<IMMDevice> spDevice;
-
-    hr = spEnumerator.CoCreateInstance( __uuidof( MMDeviceEnumerator ) );
-    IF_FAILED_RETURN( hr );
-
-    hr = spEnumerator->GetDevice( szDeviceId, &spDevice );
-    IF_FAILED_RETURN( hr );
-
-    hr = EndpointIsMicArray( spDevice, bIsMicArray );
-
-    return hr;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// Function:
-//      EndpointIsMicArray
-//
-// Description:
-//      Determines if a given IMMDevice is a microphone array by Endpoint pointer
-//
-// Returns:
-//      S_OK on success
-///////////////////////////////////////////////////////////////////////////////
-HRESULT WindowsCoreAudio::EndpointIsMicArray( IMMDevice* pEndpoint, bool & isMicrophoneArray )const
-{
-    if ( pEndpoint == NULL )
-        return E_POINTER;
-
-    GUID subType = { 0 };
-
-    HRESULT hr = GetJackSubtypeForEndpoint( pEndpoint, &subType );
-
-    isMicrophoneArray = ( subType == KSNODETYPE_MICROPHONE_ARRAY ) ? true : false;
-
-    return hr;
-}// EndpointIsMicArray()
-
-
-///////////////////////////////////////////////////////////////////////////////
-// Function:
-//      GetJackSubtypeForEndpoint
-//
-// Description:
-//      Gets the subtype of the jack that the specified endpoint device
-//      is plugged into.  e.g. if the endpoint is for an array mic, then
-//      we would expect the subtype of the jack to be 
-//      KSNODETYPE_MICROPHONE_ARRAY
-//
-// Return:
-//      S_OK if successful
-//
-///////////////////////////////////////////////////////////////////////////////
-HRESULT WindowsCoreAudio::GetJackSubtypeForEndpoint( IMMDevice* pEndpoint, GUID* pgSubtype )const
-{
-    HRESULT hr = S_OK;
-
-    if ( pEndpoint == NULL )
-        return E_POINTER;
-
-    CComPtr<IDeviceTopology>    spEndpointTopology;
-    CComPtr<IConnector>         spPlug;
-    CComPtr<IConnector>         spJack;
-    CComQIPtr<IPart>            spJackAsPart;
-
-    // Get the Device Topology interface
-    hr = pEndpoint->Activate( __uuidof( IDeviceTopology ), CLSCTX_INPROC_SERVER,
-                              NULL, (void**)&spEndpointTopology );
-    IF_FAILED_JUMP( hr, Exit );
-
-    hr = spEndpointTopology->GetConnector( 0, &spPlug );
-    IF_FAILED_JUMP( hr, Exit );
-
-    hr = spPlug->GetConnectedTo( &spJack );
-    IF_FAILED_JUMP( hr, Exit );
-
-    spJackAsPart = spJack;
-
-    hr = spJackAsPart->GetSubType( pgSubtype );
-
-Exit:
-    return hr;
-}//GetJackSubtypeForEndpoint()
-
-
-///////////////////////////////////////////////////////////////////////////////
-// GetInputJack() -- Gets the IPart interface for the input jack on the
-//                   specified device.
-///////////////////////////////////////////////////////////////////////////////
-HRESULT WindowsCoreAudio::GetInputJack( IMMDevice* pDevice, CComPtr<IPart>& spPart )
-{
-    HRESULT hr = S_OK;
-
-    if ( pDevice == NULL )
-        return E_POINTER;
-
-    CComPtr<IDeviceTopology>    spTopology;
-    CComPtr<IConnector>         spPlug;
-    CComPtr<IConnector>         spJack = NULL;
-
-    // Get the Device Topology interface
-    hr = pDevice->Activate( __uuidof( IDeviceTopology ),
-                            CLSCTX_INPROC_SERVER, NULL,
-                            reinterpret_cast<void**>( &spTopology ) );
-    IF_FAILED_RETURN( hr );
-
-    hr = spTopology->GetConnector( 0, &spPlug );
-    IF_FAILED_RETURN( hr );
-
-    hr = spPlug->GetConnectedTo( &spJack );
-    IF_FAILED_RETURN( hr );
-
-    // QI for the part
-    spPart = spJack;
-    if ( spPart == NULL )
-        return E_NOINTERFACE;
-
-    return hr;
-}// GetInputJack()
-
-
-///////////////////////////////////////////////////////////////////////////////
-// Function:
-//      GetMicArrayGeometry()
-//
-// Description:
-//      Obtains the geometry for the specified mic array.
-//
-// Parameters:  szDeviceId -- The requested device ID, which can be obtained
-//                            from calling EnumAudioCaptureDevices()
-//              
-//              ppGeometry -- Address of the pointer to the mic-array gemometry.  
-//                            Caller is ressponsible for calling CoTaskMemFree()
-//                            if the call is successfull.
-//
-//              cbSize -- size of the geometry structure
-//
-// Returns:     S_OK on success
-///////////////////////////////////////////////////////////////////////////////
-HRESULT WindowsCoreAudio::GetMicArrayGeometry( wchar_t szDeviceId[], KSAUDIO_MIC_ARRAY_GEOMETRY** ppGeometry, ULONG& cbSize )
-{
-    HRESULT hr = S_OK;
-
-    if ( szDeviceId == NULL )
-        return E_INVALIDARG;
-    if ( ppGeometry == NULL )
-        return E_POINTER;
-
-    cbSize = 0;
-    CComPtr<IMMDeviceEnumerator> spEnumerator;
-    CComPtr<IMMDevice>           spDevice;
-    CComQIPtr<IPart>             spPart;
-    bool bIsMicArray;
-
-    hr = spEnumerator.CoCreateInstance( __uuidof( MMDeviceEnumerator ) );
-    IF_FAILED_RETURN( hr );
-
-    hr = spEnumerator->GetDevice( szDeviceId, &spDevice );
-    IF_FAILED_RETURN( hr );
-
-    hr = EndpointIsMicArray( spDevice, bIsMicArray );
-    IF_FAILED_RETURN( hr );
-
-    if ( !bIsMicArray )
-        return E_FAIL;
-
-    UINT nPartId = 0;
-    hr = GetInputJack( spDevice, spPart );
-    IF_FAILED_RETURN( hr );
-
-    hr = spPart->GetLocalId( &nPartId );
-    IF_FAILED_RETURN( hr );
-
-    CComPtr<IDeviceTopology>     spTopology;
-    CComPtr<IMMDeviceEnumerator> spEnum;
-    CComPtr<IMMDevice>           spJackDevice;
-    CComPtr<IKsControl>          spKsControl;
-    wchar_t *                    pwstrDevice = 0;
-
-    // Get the topology object for the part
-    hr = spPart->GetTopologyObject( &spTopology );
-    IF_FAILED_RETURN( hr );
-
-    // Get the id of the IMMDevice that this topology object describes.
-    hr = spTopology->GetDeviceId( &pwstrDevice );
-    IF_FAILED_RETURN( hr );
-
-    // Get an IMMDevice pointer using the ID
-    hr = spEnum.CoCreateInstance( __uuidof( MMDeviceEnumerator ) );
-    IF_FAILED_JUMP( hr, Exit );
-
-    hr = spEnum->GetDevice( pwstrDevice, &spJackDevice );
-    IF_FAILED_JUMP( hr, Exit );
-
-    // Activate IKsControl on the IMMDevice
-    hr = spJackDevice->Activate( __uuidof( IKsControl ), CLSCTX_INPROC_SERVER,
-                                 NULL, reinterpret_cast<void**>( &spKsControl ) );
-    IF_FAILED_JUMP( hr, Exit );
-
-    // At this point we can use IKsControl just as we would use DeviceIoControl
-    KSP_PIN ksp;
-    ULONG   cbGeometry = 0;
-
-    // Inititialize the pin property
-    ::ZeroMemory( &ksp, sizeof( ksp ) );
-    ksp.Property.Set = KSPROPSETID_Audio;
-    ksp.Property.Id = KSPROPERTY_AUDIO_MIC_ARRAY_GEOMETRY;
-    ksp.Property.Flags = KSPROPERTY_TYPE_GET;
-    ksp.PinId = nPartId & PARTID_MASK;
-
-    // Get data size by passing NULL
-    hr = spKsControl->KsProperty( reinterpret_cast<PKSPROPERTY>( &ksp ),
-                                  sizeof( ksp ), NULL, 0, &cbGeometry );
-    IF_FAILED_JUMP( hr, Exit );
-
-    // Allocate memory for the microphone array geometry
-    *ppGeometry = reinterpret_cast<KSAUDIO_MIC_ARRAY_GEOMETRY*>
-        ( ::CoTaskMemAlloc( cbGeometry ) );
-
-    if ( *ppGeometry == 0 )
-    {
-        hr = E_OUTOFMEMORY;
-    }
-    IF_FAILED_JUMP( hr, Exit );
-
-    // Now retriev the mic-array structure...
-    DWORD cbOut = 0;
-    hr = spKsControl->KsProperty( reinterpret_cast<PKSPROPERTY>( &ksp ),
-                                  sizeof( ksp ), *ppGeometry, cbGeometry,
-                                  &cbOut );
-    IF_FAILED_JUMP( hr, Exit );
-    cbSize = cbGeometry;
-
-Exit:
-    if ( pwstrDevice != 0 )
-    {
-        ::CoTaskMemFree( pwstrDevice );
-    }
-    return hr;
-}//GetMicArrayGeometry()
-
-
-HRESULT WindowsCoreAudio::SetDMOProperties()
+bool WindowsCoreAudio::SetDMOProperties()
 {
     HRESULT hr = S_OK;
     assert( m_spDmo != NULL );
 
     CComPtr<IPropertyStore> ps;
     hr = m_spDmo->QueryInterface( IID_IPropertyStore,
-                                reinterpret_cast<void**>( &ps ) );
-    IF_FAILED_RETURN( hr );
+                                  reinterpret_cast<void**>( &ps ) );
+    IF_FAILED_EXIT( hr );
 
     // Set the AEC system mode.
     // SINGLE_CHANNEL_AEC - AEC processing only.
+    bool var = m_setEffect.test( ID_ENABLE_AEC );
     hr = SetVtI4Property( ps,
                           MFPKEY_WMAAECMA_SYSTEM_MODE,
-                          SINGLE_CHANNEL_AEC );
-    IF_FAILED_RETURN( hr );
+                          var ? SINGLE_CHANNEL_AEC: SINGLE_CHANNEL_NSAGC );
+    IF_FAILED_EXIT( hr );
+
 
     // Set the AEC source mode.
     // VARIANT_TRUE - Source mode (we poll the AEC for captured data).
     hr = SetBoolProperty( ps,
                           MFPKEY_WMAAECMA_DMO_SOURCE_MODE,
                           VARIANT_TRUE );
-    IF_FAILED_RETURN( hr );
+    IF_FAILED_EXIT( hr );
 
     // Enable the feature mode.
     // This lets us override all the default processing settings below.
+
     hr = SetBoolProperty( ps,
                           MFPKEY_WMAAECMA_FEATURE_MODE,
                           VARIANT_TRUE );
-    IF_FAILED_RETURN( hr );
-
+    IF_FAILED_EXIT( hr );
+    var = m_setEffect.test( ID_ENBALE_AGC );
     // Disable analog AGC (default enabled).
     hr = SetBoolProperty( ps,
                           MFPKEY_WMAAECMA_MIC_GAIN_BOUNDER,
-                          VARIANT_FALSE );
-    IF_FAILED_RETURN( hr );
+                          var ? VARIANT_TRUE : VARIANT_FALSE );
+    IF_FAILED_EXIT( hr );
 
     // Disable noise suppression (default enabled).
     // 0 - Disabled, 1 - Enabled
+    var = m_setEffect.test( ID_ENBALE_NS );
     hr = SetVtI4Property( ps,
                           MFPKEY_WMAAECMA_FEATR_NS,
-                          0 );
-    IF_FAILED_RETURN( hr );
+                          var ? 1 : 0 );
+    IF_FAILED_EXIT( hr );
+
+    var = m_setEffect.test( ID_ENBALE_VAD );
+    hr = SetVtI4Property( ps,
+                          MFPKEY_WMAAECMA_FEATR_VAD,
+                          var ? 1 : 0 );
+    IF_FAILED_EXIT( hr );
 
     // Relevant parameters to leave at default settings:
     // MFPKEY_WMAAECMA_FEATR_AGC - Digital AGC (disabled).
@@ -1219,36 +792,56 @@ HRESULT WindowsCoreAudio::SetDMOProperties()
     hr = SetVtI4Property( ps,
                           MFPKEY_WMAAECMA_DEVICE_INDEXES,
                           devIndex );
-    IF_FAILED_RETURN( hr );
 
-    return S_OK;
+Exit:
+    return  SUCCEEDED( hr );
 }
 
-
-HRESULT WindowsCoreAudio::SetBoolProperty( IPropertyStore* ptrPS,
-                                             REFPROPERTYKEY key,
-                                             VARIANT_BOOL value )
+bool WindowsCoreAudio::InitRecordingMedia()
 {
-    PROPVARIANT pv;
-    PropVariantInit( &pv );
-    pv.vt = VT_BOOL;
-    pv.boolVal = value;
-    HRESULT hr = ptrPS->SetValue( key, pv );
-    PropVariantClear( &pv );
-    return hr;
-}
+    if ( m_recIsInitialized )
+    {
+        return true;
+    }
+    // Set wave format
+    WAVEFORMATEX Wfx;
+    Wfx.wFormatTag = WAVE_FORMAT_PCM;
+    Wfx.wBitsPerSample = 16;
+    Wfx.cbSize = 0;
+    Wfx.nChannels = m_recChannels;
+    Wfx.nSamplesPerSec = m_recSampleRate;
+    Wfx.nBlockAlign = Wfx.nChannels * Wfx.wBitsPerSample / 8;
+    Wfx.nAvgBytesPerSec = Wfx.nSamplesPerSec * Wfx.nBlockAlign;
+    m_spClientIn.Release();
+    DeviceBindTo( eCapture, m_recDevIndex, &m_spClientIn, nullptr, nullptr );
+    // Create a capturing stream.
+    HRESULT hr = S_OK;
+    hr = m_spClientIn->Initialize(
+        AUDCLNT_SHAREMODE_SHARED,             // share Audio Engine with other applications
+        AUDCLNT_STREAMFLAGS_EVENTCALLBACK |   // processing of the audio buffer by the client will be event driven
+        AUDCLNT_STREAMFLAGS_NOPERSIST,        // volume and mute settings for an audio session will not persist across system restarts
+        0,                                    // required for event-driven shared mode
+        0,                                    // periodicity
+        &Wfx,                                 // selected wave format
+        NULL );                                // session GUID
+    IF_FAILED_EXIT( hr );
 
-HRESULT WindowsCoreAudio::SetVtI4Property( IPropertyStore* ptrPS,
-                                             REFPROPERTYKEY key,
-                                             LONG value )
-{
-    PROPVARIANT pv;
-    PropVariantInit( &pv );
-    pv.vt = VT_I4;
-    pv.lVal = value;
-    HRESULT hr = ptrPS->SetValue( key, pv );
-    PropVariantClear( &pv );
-    return hr;
+    // Set the event handle that the system signals when an audio buffer is ready
+    // to be processed by the client.
+    hr = m_spClientIn->SetEventHandle(
+        m_hCaptureSamplesReadyEvent );
+    IF_FAILED_EXIT( hr );
+
+    // Get an IAudioCaptureClient interface.
+    m_spCaptureClient.Release();// 防止上次没有释放
+    hr = m_spClientIn->GetService(
+        __uuidof( IAudioCaptureClient ),
+        (void**)&m_spCaptureClient );
+    IF_FAILED_EXIT( hr );
+    m_recIsInitialized = true;
+    return true;
+Exit:
+    return false;
 }
 
 
@@ -1267,7 +860,7 @@ bool WindowsCoreAudio::InitRecordingDMO()
         return true;
     }
 
-    if ( SetDMOProperties() == -1 )
+    if ( !SetDMOProperties() )
     {
         return false;
     }
@@ -1298,16 +891,24 @@ bool WindowsCoreAudio::InitRecordingDMO()
     ptrWav->cbSize = 0;
 
     // Set the VoE format equal to the AEC output format.
+    if (m_recChannels != ptrWav->nChannels &&
+         m_recSampleRate != ptrWav->nSamplesPerSec )
+    {
+        if ( m_pBufferProc )
+        {
+            m_pBufferProc->ErrorOccurred( AE_RECORD_FORMAT_CHANGE );
+        }
+    }
     m_recSampleRate = ptrWav->nSamplesPerSec;
     m_recChannels = ptrWav->nChannels;
-    hr = CMediaBuffer::Create(ptrWav->nBlockAlign * ptrWav->nSamplesPerSec, (IMediaBuffer**)&m_spMediaBuffer );
+    hr = CMediaBuffer::Create( ptrWav->nBlockAlign * ptrWav->nSamplesPerSec, (IMediaBuffer**)&m_spMediaBuffer );
     if ( FAILED( hr ) )
     {
         return false;
     }
     // Set the DMO output format parameters.
     hr = m_spDmo->SetOutputType( 0, &mt, 0 );
-    MoFreeMediaType( &mt );
+    ::MoFreeMediaType( &mt );
     if ( FAILED( hr ) )
     {
         return false;
@@ -1324,65 +925,6 @@ bool WindowsCoreAudio::InitRecordingDMO()
 
     return true;
 }
-
-HRESULT WindowsCoreAudio::InitRecordingMedia()
-{
-    if (m_recIsInitialized)
-    {
-        return S_OK;
-    }
-    // Set wave format
-    WAVEFORMATEX Wfx;
-    Wfx.wFormatTag = WAVE_FORMAT_PCM;
-    Wfx.wBitsPerSample = 16;
-    Wfx.cbSize = 0;
-    Wfx.nChannels = m_recChannels;
-    Wfx.nSamplesPerSec = m_recSampleRate;
-    Wfx.nBlockAlign = Wfx.nChannels * Wfx.wBitsPerSample / 8;
-    Wfx.nAvgBytesPerSec = Wfx.nSamplesPerSec * Wfx.nBlockAlign;
-    m_spClientIn.Release();
-    DeviceBindTo( eCapture, m_recDevIndex, &m_spClientIn, nullptr, nullptr );
-    // Create a capturing stream.
-    HRESULT hr = S_OK;
-    hr = m_spClientIn->Initialize(
-        AUDCLNT_SHAREMODE_SHARED,             // share Audio Engine with other applications
-        AUDCLNT_STREAMFLAGS_EVENTCALLBACK |   // processing of the audio buffer by the client will be event driven
-        AUDCLNT_STREAMFLAGS_NOPERSIST,        // volume and mute settings for an audio session will not persist across system restarts
-        0,                                    // required for event-driven shared mode
-        0,                                    // periodicity
-        &Wfx,                                 // selected wave format
-        NULL );                                // session GUID
-    IF_FAILED_RETURN( hr );
-
-    // Set the event handle that the system signals when an audio buffer is ready
-    // to be processed by the client.
-    hr = m_spClientIn->SetEventHandle(
-        m_hCaptureSamplesReadyEvent );
-    IF_FAILED_RETURN( hr );
-
-    // Get an IAudioCaptureClient interface.
-    m_spCaptureClient.Release();// 防止上次没有释放
-    hr = m_spClientIn->GetService(
-        __uuidof( IAudioCaptureClient ),
-        (void**)&m_spCaptureClient );
-    IF_FAILED_RETURN( hr );
-
-    m_recIsInitialized = true;
-    return hr;
-}
-
-DWORD WINAPI WindowsCoreAudio::WSAPIRenderThread( LPVOID context )
-{
-    return reinterpret_cast<WindowsCoreAudio*>( context )->
-        DoRenderThread();
-}
-
-DWORD WINAPI WindowsCoreAudio::WSAPICaptureThreadPollDMO( LPVOID context )
-{
-    return reinterpret_cast<WindowsCoreAudio*>( context )->
-        DoCaptureThreadPollDMO();
-}
-
 
 DWORD WindowsCoreAudio::DoRenderThread()
 {
@@ -1606,7 +1148,6 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
         while ( keepRecording )
         {
             m_audiolock.lock();
-
             DWORD dwStatus = 0;
             {
                 DMO_OUTPUT_DATA_BUFFER dmoBuffer = { 0 };
@@ -1650,7 +1191,6 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
 
 
                 m_audiolock.unlock();  // Release lock while making the callback.
-                m_audiolock.unlock();
                 if ( m_pBufferProc )
                 {
                     m_pBufferProc->RecordingDataIsAvailable( (int16_t*)data, kSamplesProduced );
@@ -1679,78 +1219,11 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
     // ---------------------------- THREAD LOOP ---------------------------- <<
 
     RevertThreadPriority( hMmTask );
-
+    m_audiolock.unlock();
     return hr;
 }
 
 
-HANDLE WindowsCoreAudio::SetThreadPriority(const char* thread_name)
-{
-    SetCurrentThreadName( thread_name /*"windows_core_audio_capture_thread"*/ );
-
-    HANDLE hMmTask = NULL;
-
-    // Try to load the Avrt DLL
-    // Get handle to the Avrt DLL module.
-    HMODULE avrtLibrary = LoadLibrary( TEXT( "Avrt.dll" ) );
-    if ( avrtLibrary )
-    {
-        // Handle is valid (should only happen if OS larger than vista & win7).
-        // Try to get the function addresses.
-
-        auto AvSetMmThreadCharacteristicsA = (PAvSetMmThreadCharacteristicsA)GetProcAddress( avrtLibrary, "AvSetMmThreadCharacteristicsA" );
-        auto AvSetMmThreadPriority = (PAvSetMmThreadPriority)GetProcAddress( avrtLibrary, "AvSetMmThreadPriority" );
-        if (  AvSetMmThreadCharacteristicsA && AvSetMmThreadPriority )
-        {
-            DWORD taskIndex( 0 );
-            hMmTask = AvSetMmThreadCharacteristicsA( "Pro Audio", &taskIndex );
-            if ( hMmTask )
-            {
-                if ( !AvSetMmThreadPriority( hMmTask, AVRT_PRIORITY_CRITICAL ) )
-                {
-                    printf( "failed to boost rec-thread using MMCSS" );
-                }
-                printf( "%s is now registered with MMCSS (taskIndex=%d)",
-                        thread_name, taskIndex );
-            }
-            else
-            {
-                printf( "failed to enable MMCSS on capture thread (err=%d)",
-                        GetLastError() );
-            }
-        }
-        FreeLibrary( avrtLibrary );
-    }
-    return hMmTask;
-}
-
-
-void WindowsCoreAudio::RevertThreadPriority( HANDLE hMmTask )
-{
-    if (hMmTask == NULL)
-    {
-        return;
-    }
-    // Get handle to the Avrt DLL module.
-    HMODULE  avrtLibrary = ::LoadLibrary( TEXT( "Avrt.dll" ) );
-    if ( avrtLibrary )
-    {
-        // Handle is valid (should only happen if OS larger than vista & win7).
-        // Try to get the function addresses.
-        auto AvRevertMmThreadCharacteristics = (PAvRevertMmThreadCharacteristics)GetProcAddress( avrtLibrary, "AvRevertMmThreadCharacteristics" );
-        if ( AvRevertMmThreadCharacteristics )
-        {
-            AvRevertMmThreadCharacteristics(hMmTask);
-        }
-        ::FreeLibrary( avrtLibrary );
-    }
-}
-
-DWORD WINAPI WindowsCoreAudio::WSAPICaptureThread( LPVOID context )
-{
-    return reinterpret_cast<WindowsCoreAudio*>( context )->
-        DoCaptureThread();
-}
 
 DWORD WindowsCoreAudio::DoCaptureThread()
 {
@@ -1769,7 +1242,7 @@ DWORD WindowsCoreAudio::DoCaptureThread()
         return 1;
     }
 
-    HANDLE hMmTask = this->SetThreadPriority("windows_core_audio_capture_thread");
+    HANDLE hMmTask = SetThreadPriority("windows_core_audio_capture_thread");
 
     m_audiolock.lock();
 
@@ -1976,28 +1449,25 @@ Exit:
     return (DWORD)hr;
 }
 
-bool WindowsCoreAudio::IsFormatSupported(CComPtr<IAudioClient> audioClient, DWORD nSampleRate, WORD nChannels )
-{
-    if (!audioClient)
-    {
-        return false;
-    }
-    HRESULT hr = S_OK;
-    WAVEFORMATEX Wfx = WAVEFORMATEX();
-    WAVEFORMATEX* pWfxClosestMatch = NULL;
-    // Set wave format
-    Wfx.wFormatTag = WAVE_FORMAT_PCM;
-    Wfx.wBitsPerSample = 16;
-    Wfx.cbSize = 0;
-    Wfx.nChannels = nChannels;
-    Wfx.nSamplesPerSec = nSampleRate;
-    Wfx.nBlockAlign = Wfx.nChannels * Wfx.wBitsPerSample / 8;
-    Wfx.nAvgBytesPerSec = Wfx.nSamplesPerSec * Wfx.nBlockAlign;
-    hr = audioClient->IsFormatSupported(
-        AUDCLNT_SHAREMODE_SHARED,
-        &Wfx,
-        &pWfxClosestMatch );
 
-    CoTaskMemFree( pWfxClosestMatch );
-    return hr == S_OK;
+
+DWORD WINAPI WindowsCoreAudio::WSAPIRenderThread( LPVOID context )
+{
+    return reinterpret_cast<WindowsCoreAudio*>( context )->
+        DoRenderThread();
 }
+
+DWORD WINAPI WindowsCoreAudio::WSAPICaptureThreadPollDMO( LPVOID context )
+{
+    return reinterpret_cast<WindowsCoreAudio*>( context )->
+        DoCaptureThreadPollDMO();
+}
+
+
+DWORD WINAPI WindowsCoreAudio::WSAPICaptureThread( LPVOID context )
+{
+    return reinterpret_cast<WindowsCoreAudio*>( context )->
+        DoCaptureThread();
+}
+
+
