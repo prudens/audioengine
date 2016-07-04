@@ -44,5 +44,8 @@
     <ClInclude Include="..\..\base\fft.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\base\circular_buffer.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
