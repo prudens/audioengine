@@ -10,7 +10,7 @@
 #include "device/include/audio_device.h"
 #include "effect/3d/include/mit_hrtf_lib.h"
 #include "io/wav_file.h"
-
+#include "base/circular_buffer.hpp"
 
 #pragma comment(lib,"../build/winx/Debug/audio_device.lib")
 #pragma comment(lib,"../build/winx/Debug/audio_effect.lib")
@@ -39,7 +39,7 @@ void conv( T *x, T* h, T *y, size_t xn, size_t hn, size_t yn )
                 y[n] += x[j] * h[n - j];
 }
 
-//#define TEST_CONV
+#define TEST_CONV
 void convolution( const float*input, complex*irc, float *output, int nFFT, int nFil, int nSig )
 {
 #ifdef TEST_CONV
@@ -56,6 +56,7 @@ void convolution( const float*input, complex*irc, float *output, int nFFT, int n
     }
     return;
 #endif
+
     complex*inc, *outc;
     inc = new complex[nFFT];
     for ( int i = 0; i < nFFT; i++ )
@@ -135,119 +136,113 @@ private:
 
 class CAudioBufferProc : public  AudioBufferProc
 {
+    AudioSampleBuffer proBuf;
     bool m_processhrtf;
-    float* irL_;
-    float* irR_;
-    int16_t* pBigData;
-    WavWriter* writer_48000_1;;
-    WavWriter* writer_48000_2;
-    short* m_pLeft;
-    short* m_pRight;
+    CircularAudioBuffer m_audio_buffer;
+    CircularAudioBuffer m_audio_buffer_out;
+    static const int nFFT = 1024;
+    complex m_fltl[nFFT];
+    complex m_fltr[nFFT];
+    list<char*> m_list;
+    mutex   m_lock;
+
+    int nFil;
+    int nSig;
+    WavWriter writer_pro;
+    WavWriter writer_src;
 public:
     ~CAudioBufferProc()
     {
-        delete[] irLc;
-        delete[] irRc;
-        delete writer;
-        delete writer_48000_1;
-        delete writer_48000_2;
-        delete[] m_pLeft;
-        delete[] m_pRight;
     }
-    CAudioBufferProc(bool processhrtf) :m_processhrtf(processhrtf), proBuf(nullptr,480)
+    CAudioBufferProc(bool processhrtf) :m_processhrtf(processhrtf), proBuf(nullptr,nFFT/2)
+        ,m_audio_buffer(nFFT*2)
+        , m_audio_buffer_out(nFFT*2)
+        ,writer_pro(("D:/pro-48000-2.wav"),48000,2)
+        , writer_src("D:/src-48000-2.wav",48000,2)
     {
-         std::string filename = "D:/audio-48000.wav";
-         writer = new WavWriter(filename,48000,2);
-//         filename = "D:/audio-48000-1.wav";
-//         writer_48000_1 = new WavWriter( filename, 48000, 1 );
-         filename = "D:/audio-48000-2.wav";
-         writer_48000_2 = new WavWriter( filename, 48000, 2 );
-
+         int nAzimuth = 90;
+         int nElevation = 0;
         if (m_processhrtf)
         {
-            m_pLeft = new short[480];
-            m_pRight = new short[480];
-                nFFT = 480 * 2;
-            int nAzimuth = 45;
-            int nElevation = 90;
-            nFil = mit_hrtf_availability( nAzimuth, nElevation, 48000, 0 );
-            if ( nFil )
+            float pLeft[nFFT] = { 0 };
+            float pRight[nFFT] = { 0 };
+            int nFil = mit_hrtf_get( &nAzimuth, &nElevation, 48000, 0, pLeft, pRight );
+            if ( nFil == 0 ) throw std::invalid_argument( "nAzimuth and nElevation is invalid!" );
+            for ( int i = 0; i < nFFT; i++ )
             {
-                irL_ = new float[nFil];
-                irR_ = new float[nFil];
-                irLc = new complex[nFFT];
-                irRc = new complex[nFFT];
-
-                nFil = mit_hrtf_get( &nAzimuth, &nElevation, 48000, 0, irL_, irR_ );
-                for ( int i = 0; i < nFil; i++ )
+                if (i < nFil)
                 {
-                    cout << irL_[i] << endl;
+                    m_fltl[i] = complex( pLeft[i] );
+                    m_fltr[i] = complex( pRight[i] );
                 }
-                for ( int i = 0; i < nFFT; i++ )
+                else
                 {
-                    if ( i < nFil )
-                    {
-                        irLc[i] = complex( irL_[i] );
-                        irLc[i] = complex( irR_[i] );
-                    }
-                    else
-                    {
-                        irLc[i] = complex( 0 );
-                        irRc[i] = complex( 0 );
-                    }
+                    m_fltl[i] = complex( 0 );
+                    m_fltr[i] = complex( 0 );
                 }
-                CFFT::Forward( irLc, nFFT );
-                CFFT::Forward( irRc, nFFT );
-                delete[] irL_;
-                delete[] irR_;
             }
+            CFFT::Forward( m_fltl, nFFT );
+            CFFT::Forward( m_fltr, nFFT );
         }
-
     }
 
     virtual void RecordingDataIsAvailable( const void*data, size_t samples )
     {
-        int16_t* pData = ( int16_t* )new char[samples];
+        lockguard lg( m_lock );
+        int16_t* pData = ( int16_t* )new int16_t[nFFT];
         if (m_processhrtf)
         {
-            AudioSampleBuffer buffer( (int16_t*)data, samples/4 );
-            //processBlock( buffer );
+            m_audio_buffer.write( (int16_t*)data, samples/2);
+            if ( m_audio_buffer.readSizeRemaining() < nFFT )
+            {
+                return;
+            }
+            int16_t buf[nFFT];
+            size_t readlen = m_audio_buffer.read( (int16_t*)buf, nFFT );
+            assert( readlen == nFFT );
+            AudioSampleBuffer buffer( buf, readlen/2 );
+            processBlock( buffer );
             const float*pLeft = buffer.getReadPointer( 0 );
             const float*pRight = buffer.getReadPointer( 1 );
             
-            for ( size_t i = 0; i < samples / 4;i++ )
+            for ( size_t i = 0; i < readlen / 2; i++ )
             {
                 pData[i * 2] = FloatToS16( pLeft[i] );
                 pData[i * 2 + 1] = FloatToS16( pRight[i] );
-             //   cout << pData[i * 2] << "," << pData[i * 2 + 1] << endl;
             }
         }
         else
         {
             memcpy( pData, data, samples );
         }
-         writer_48000_2->WriteSamples( (int16_t*)data, 960 );
-         writer->WriteSamples( pData, 480*2 );
-        lockguard lg( m_lock );
+
         m_list.push_back((char*)pData);
     }
 
     virtual size_t NeedMorePlayoutData( void* data, size_t samples )
     {
         lockguard lg( m_lock );
-        if (m_list.size() < 50)
+
+        for ( ;; )
         {
-            memset( data, 0, samples );
-        }
-        else
-        {
+            if ( samples / 2 < m_audio_buffer_out.readSizeRemaining() )
+            {
+                assert(samples/2 == m_audio_buffer_out.read( (int16_t*)data, samples / 2 ));
+                return samples;
+            }
+            if ( m_list.size() < 50 )
+            {
+                memset( data, 0, samples );
+                return samples;
+            }
             char* p = m_list.front();
-            memcpy( data, p, samples );
             m_list.pop_front();
+            m_audio_buffer_out.write( (int16_t*)p, nFFT );
             delete[] p;
         }
         return samples;
     }
+
     virtual void ErrorOccurred(AudioError aeCode) {}
 
     void processBlock( AudioSampleBuffer & buffer )
@@ -264,12 +259,11 @@ public:
         float *proWtL = proBuf.getWritePointer( 0 );
         float *proWtR = proBuf.getWritePointer( 1 );
 
-        nFFT = 2 * bufSize;
         nSig = bufSize;
         float *outLp = new float[nFFT];
         float *outRp = new float[nFFT];
-        convolution( inL, irLc, outLp, nFFT, nFil, nSig );
-        convolution( inR, irRc, outRp, nFFT, nFil, nSig );
+        convolution( inL, m_fltl, outLp, nFFT, nFil, nSig );
+        convolution( inR, m_fltr, outRp, nFFT, nFil, nSig );
         for ( int i = 0; i < bufSize; i++ )
         {
             outL[i] = ( outLp[i] + proRdL[i] ) / 2;
@@ -281,20 +275,13 @@ public:
         delete[] outRp;
     }
 private:
-    list<char*> m_list;
-    mutex   m_lock;
-    AudioSampleBuffer proBuf;
-    int nFFT;
-    int nFil;
-    int nSig;
-    complex* irLc;
-    complex* irRc;
-    WavWriter *writer;
+
 };
 
 
 void test_conv()
 {
+    // test conv time remains
     int16_t x[3] = { 1, 2, 3 };
     int16_t h[5] = { 1, 3, 5, 7, 9 };
     int16_t y[10] = { 0 };
@@ -308,17 +295,18 @@ void test_conv()
         //std::cout << y[i] << "\t";
     }
     std::cout << endl;
-    complex data[] = { 1, 2, 3 };
-    CFFT::Forward( data, 3 );
-    CFFT::Inverse( data, 3 );
-
-    for ( int i = 0; i < 3; i++ )
+    complex data[] = { 1, 2, 3,4 };
+    bool b = CFFT::Forward( data, 4 );
+    assert( b );
+    b = CFFT::Inverse( data, 4 );
+    assert( b );
+    for ( int i = 0; i < 4; i++ )
     {
        // cout << data[i].re() << ",";
         assert( data[i].real() == i+1 );
     }
 
-
+    //test convolution
 
 }
 
@@ -354,40 +342,37 @@ void test_hrtf( int nAzimuth, int nElevation, const char* inputfile, const char*
 {
 
     WavReader reader( inputfile );
-    int nFil = mit_hrtf_availability( nAzimuth, nElevation, reader.sample_rate(), 0 );
-    int16_t *irL_ = nullptr; 
-    int16_t *irR_ = nullptr;
-    if ( nFil )
-    {
-        irL_ = new int16_t[nFil];
-        irR_ = new int16_t[nFil];
-        nFil = mit_hrtf_get( &nAzimuth, &nElevation, reader.sample_rate(), 0, irL_, irR_ );
-    }
-    else
-    {
-        return;
-    }
     int len = reader.num_samples();
-    len = 100;
-    int16_t *pSrc = new int16_t[len+nFil];
-    len = reader.ReadSamples( len, pSrc );
-    float* fData = new float[len];
-    S16ToFloat(pSrc,len,fData);
-    float* foutputR = new float[nFil +len];
-    float* ffilterR = new float[nFil];
-    S16ToFloat( irR_, nFil, ffilterR );
-    conv( fData, ffilterR, foutputR, len, nFil, nFil + len );
-    FloatToS16( foutputR, nFil + len, pSrc );
-    WavWriter writer( outputfile, reader.sample_rate(), 1 );
-    writer.WriteSamples( pSrc, nFil + len + 1 );
-    for ( int i = 0; i < len; i++ )
+
+    const int nFFT = 4096;
+    float pLeft[nFFT] = {0};
+    float pRight[nFFT] = { 0 };
+    int nFil = mit_hrtf_get( &nAzimuth, &nElevation, reader.sample_rate(), 0, pLeft, pRight );
+    if ( nFil == 0 ) return;
+    complex flt[nFFT] = { 0 };
+    for ( int i = 0; i < nFil;i++ )
     {
-        cout << pSrc[i] << '\n';
+        flt[i] = complex(pLeft[i]);
+
     }
-    delete[] irL_;
-    delete[] irR_;
-    delete[] pSrc;
-    delete[] fData;
+    CFFT::Forward( flt, nFFT );
+
+    WavWriter writer( outputfile, reader.sample_rate(), 1 );
+
+    int16_t pSrc[nFFT*2];
+    reader.ReadSamples( nFFT*reader.num_channels(), pSrc );
+    reader.ReadSamples( nFFT*reader.num_channels(), pSrc );
+    reader.ReadSamples( nFFT*reader.num_channels(), pSrc );
+    int16_t pMono[nFFT];
+    DownmixInterleavedToMono(pSrc,nFFT,reader.num_channels(),pMono);
+    writer.WriteSamples( pMono, nFFT );
+    float pData[nFFT];
+    S16ToFloat(pMono,nFFT,pData);
+    float output[nFFT];
+    convolution(pData,flt,output,nFFT,nFil,nFFT);
+    FloatToS16( output, nFFT,pSrc );
+
+    writer.WriteSamples( pSrc, nFFT );
 }
 
 void test_real_time_3d()
@@ -412,12 +397,78 @@ void test_real_time_3d()
     pWinDevice->Release();
 }
 
+
+void test_mit_hrtf_get()
+{
+    int nAzimuth = 0;
+    int nElevation = 0;
+    int nFil = mit_hrtf_availability( nAzimuth, nElevation, 48000, 0 );
+    int16_t *irL_ = nullptr;
+    int16_t *irR_ = nullptr;
+    float* fl = nullptr;
+    float* fr = nullptr;
+    if ( nFil )
+    {
+        irL_ = new int16_t[nFil];
+        irR_ = new int16_t[nFil];
+        fl = new float[nFil];
+        fr = new float[nFil];
+        nFil = mit_hrtf_get( &nAzimuth, &nElevation, 48000, 0, irL_, irR_ );
+        nFil = mit_hrtf_get( &nAzimuth, &nElevation, 48000, 0, fl, fr );
+        short* flt = new short[nFil];
+        short* frt = new short[nFil];
+//         S16ToFloat( irL_, nFil, flt );
+//         S16ToFloat( irR_, nFil, frt );
+        FloatToS16( fl, nFil, flt );
+        FloatToS16( fr, nFil, frt );
+
+        for ( int i = 0; i < nFil; i++ )
+        {
+            //cout << flt[i] << "---" << fl[i] << '\n';
+            //cout << frt[i] << "---" << fr[i] << '\n';
+            assert( flt[i] == irL_[i] && frt[i] == irR_[i] );
+        }
+        delete[] irR_;
+        delete[] irL_;
+        delete[] fl;
+        delete[] fr;
+        delete[] flt;
+        delete[] frt;
+    }
+    else
+    {
+        return;
+    }
+}
+
+void test_circular_buffer()
+{
+    const int capacity = 10;
+    CircularAudioBuffer buffer(capacity);
+    assert(0 == buffer.readSizeRemaining());
+    assert( 10 == buffer.writeSizeRemaining() );
+    int16_t data[4] = { 1, 2, 3, 4 };
+    assert(4 == buffer.write(data,4));
+    assert( 6 == buffer.writeSizeRemaining() );
+    assert( 4 == buffer.readSizeRemaining() );
+    int16_t ReadData[4] = { 0 };
+    assert( 4 == buffer.read( ReadData, 4 ) );
+    assert( !memcmp( ReadData, data, 4 * sizeof( int16_t ) ) );
+    assert( 0 == buffer.read( ReadData, 3 ) );
+    int16_t data10[10] = {1,2,3,4,5,6,7,8,9,10};
+    assert( 10 == buffer.write( data10, 10 ) );
+    assert( 0 == buffer.write( data, 4 ) );
+}
+
+
 int main( int argc, char** argv )
 {
    // test_windows_core_audio();
    // test_conv();
-  //  test_hrtf(45,0,"D:/audio-48000-1.wav","D:/pro-48000-1.wav");
+   // test_hrtf(45,0,"C:/Users/zhangnaigan/Desktop/3D_test_Audio/es01.wav","D:/pro-48000-1.wav");
     test_real_time_3d();
+ //   test_mit_hrtf_get();
+    test_circular_buffer();
     system( "pause" );
     return 0;
 
