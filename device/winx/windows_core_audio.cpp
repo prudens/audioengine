@@ -277,7 +277,7 @@ bool WindowsCoreAudio::GetPlayoutFormat( uint32_t& nSampleRate, uint16_t& nChann
 bool WindowsCoreAudio::InitPlayout()
 {
     lock_guard lg( m_audiolock );
-    if (!m_bInitialize)
+    if ( !m_bInitialize )
     {
         return false;
     }
@@ -286,7 +286,7 @@ bool WindowsCoreAudio::InitPlayout()
         return true;
     }
 
-    if ( m_bUseDMO && m_recIsInitialized)
+    if ( m_bUseDMO && m_recIsInitialized )
     {
         // Ensure the correct render device is configured in case
         // InitRecording() was called before InitPlayout().
@@ -296,14 +296,6 @@ bool WindowsCoreAudio::InitPlayout()
         }
     }
 
-    WAVEFORMATEX Wfx;
-    Wfx.wFormatTag = WAVE_FORMAT_PCM;
-    Wfx.wBitsPerSample = 16;
-    Wfx.cbSize = 0;
-    Wfx.nChannels = m_plyChannels;
-    Wfx.nSamplesPerSec = m_plySampleRate;
-    Wfx.nBlockAlign = Wfx.nChannels * Wfx.wBitsPerSample / 8;
-    Wfx.nAvgBytesPerSec = Wfx.nSamplesPerSec * Wfx.nBlockAlign;
 
     // Create a rendering stream.
     //
@@ -332,9 +324,29 @@ bool WindowsCoreAudio::InitPlayout()
         // read by GetBufferSize() and it is 20ms on most machines.
         hnsBufferDuration = 30 * 10000;
     }
-    m_spClientOut.Release();
-    DeviceBindTo( eRender, m_plyDevIndex, &m_spClientOut, nullptr, nullptr );
     HRESULT hr = S_OK;
+    m_spClientOut.Release();
+
+    DeviceBindTo( eRender, m_plyDevIndex, &m_spClientOut, nullptr, nullptr );
+    if ( m_plySampleRate == 0 || m_plyChannels == 0 )
+    {
+        WAVEFORMATEX* pWfxOut = NULL;
+        hr = m_spClientOut->GetMixFormat( &pWfxOut );
+        m_plySampleRate = pWfxOut->nSamplesPerSec;
+        m_plyChannels = pWfxOut->nChannels;
+        ::CoTaskMemFree( pWfxOut );
+    }
+
+
+    WAVEFORMATEX Wfx;
+    Wfx.wFormatTag = WAVE_FORMAT_PCM;
+    Wfx.wBitsPerSample = 16;
+    Wfx.cbSize = 0;
+    Wfx.nChannels = m_plyChannels;
+    Wfx.nSamplesPerSec = m_plySampleRate;
+    Wfx.nBlockAlign = Wfx.nChannels * Wfx.wBitsPerSample / 8;
+    Wfx.nAvgBytesPerSec = Wfx.nSamplesPerSec * Wfx.nBlockAlign;
+
     hr = m_spClientOut->Initialize(
         AUDCLNT_SHAREMODE_SHARED,             // share Audio Engine with other applications
         AUDCLNT_STREAMFLAGS_EVENTCALLBACK,    // processing of the audio buffer by the client will be event driven
@@ -343,24 +355,24 @@ bool WindowsCoreAudio::InitPlayout()
         &Wfx,                                 // selected wave format
         NULL );                                // session GUID
 
-    IF_FAILED_JUMP( hr, EXIT );
+    IF_FAILED_EXIT( hr );
     
 
     hr = m_spClientOut->SetEventHandle(
         m_hRenderSamplesReadyEvent );
-    IF_FAILED_JUMP( hr, EXIT );
+    IF_FAILED_EXIT( hr );
 
     // Get an IAudioRenderClient interface.
     m_spRenderClient.Release();// 有可能上次没释放成功
     hr = m_spClientOut->GetService(
         __uuidof( IAudioRenderClient ),
         (void**)&m_spRenderClient );
-    IF_FAILED_JUMP( hr, EXIT );
+    IF_FAILED_EXIT( hr );
 
     m_playIsInitialized = true;
     return true;
 
-EXIT:
+Exit:
     m_spRenderClient.Release();
     return false;
 
@@ -803,6 +815,20 @@ bool WindowsCoreAudio::InitRecordingMedia()
     {
         return true;
     }
+
+    m_spClientIn.Release();
+    DeviceBindTo( eCapture, m_recDevIndex, &m_spClientIn, nullptr, nullptr );
+    HRESULT hr = S_OK;
+    if ( m_recSampleRate == 0 || m_recChannels == 0 )
+    {
+        WAVEFORMATEX* pWfxIn = NULL;
+        hr = m_spClientOut->GetMixFormat( &pWfxIn );
+        IF_FAILED_EXIT( hr );
+        m_plySampleRate = pWfxIn->nSamplesPerSec;
+        m_plyChannels = pWfxIn->nChannels;
+        ::CoTaskMemFree( pWfxIn );
+    }
+
     // Set wave format
     WAVEFORMATEX Wfx;
     Wfx.wFormatTag = WAVE_FORMAT_PCM;
@@ -812,10 +838,9 @@ bool WindowsCoreAudio::InitRecordingMedia()
     Wfx.nSamplesPerSec = m_recSampleRate;
     Wfx.nBlockAlign = Wfx.nChannels * Wfx.wBitsPerSample / 8;
     Wfx.nAvgBytesPerSec = Wfx.nSamplesPerSec * Wfx.nBlockAlign;
-    m_spClientIn.Release();
-    DeviceBindTo( eCapture, m_recDevIndex, &m_spClientIn, nullptr, nullptr );
+
     // Create a capturing stream.
-    HRESULT hr = S_OK;
+
     hr = m_spClientIn->Initialize(
         AUDCLNT_SHAREMODE_SHARED,             // share Audio Engine with other applications
         AUDCLNT_STREAMFLAGS_EVENTCALLBACK |   // processing of the audio buffer by the client will be event driven

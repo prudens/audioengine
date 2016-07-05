@@ -3,7 +3,7 @@
 #include <cassert>
 #include <locale>
 #include <codecvt>
-
+#include "common_defines.h"
 
 #if defined(WIN32) || defined(_WIN32)
 #if _MSC_VER < 1800

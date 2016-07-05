@@ -12,6 +12,9 @@
     <ClCompile Include="..\..\device\winx\windows_core_audio.cpp">
       <Filter>include</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\device\winx\windows_audio_device_helper.cpp">
+      <Filter>include</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\device\winx\windows_core_audio.h">
@@ -21,6 +24,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\device\winx\media_buffer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\device\winx\windows_audio_device_helper.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

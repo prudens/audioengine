@@ -44,8 +44,8 @@ public:
     
     //Define write audio data to circular buffer
     size_t write(T *dataPtr, size_t samples);
-    size_t writeSizeRemaining();
-    size_t readSizeRemaining();
+    size_t writeSizeRemaining()const;
+    size_t readSizeRemaining()const;
     template <class V>
     size_t read(V *dataPtr, size_t samples);
     
@@ -83,13 +83,13 @@ size_t CircularBuffer<T>::write(T *dataPtr, size_t samples)
 }
 
 template <class T>
-size_t CircularBuffer<T>::writeSizeRemaining()
+size_t CircularBuffer<T>::writeSizeRemaining()const
 {
     return (_capacity - _size);
 }
 
 template <class T>
-size_t CircularBuffer<T>::readSizeRemaining()
+size_t CircularBuffer<T>::readSizeRemaining()const
 {
     return _size;
 }

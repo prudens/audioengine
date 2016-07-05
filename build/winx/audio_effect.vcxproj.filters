@@ -15,9 +15,15 @@
     <ClInclude Include="..\..\effect\3d\include\mit_hrtf_lib.h">
       <Filter>3d\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\effect\3d\include\mixer3d.h">
+      <Filter>3d\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\effect\3d\source\mit_hrtf_lib.cpp">
+      <Filter>3d\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\effect\3d\source\mixer3d.cpp">
       <Filter>3d\source</Filter>
     </ClCompile>
   </ItemGroup>

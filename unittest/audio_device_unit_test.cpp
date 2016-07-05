@@ -4,6 +4,9 @@
 #include <algorithm>
 #include <cassert>
 #include <complex>
+#include <thread>
+#include <conio.h>
+#include <algorithm>
 
 #include "base/fft.h"
 #include "base/audio_util.h"
@@ -11,6 +14,7 @@
 #include "effect/3d/include/mit_hrtf_lib.h"
 #include "io/wav_file.h"
 #include "base/circular_buffer.hpp"
+#include "effect/3d/include/mixer3d.h"
 
 #pragma comment(lib,"../build/winx/Debug/audio_device.lib")
 #pragma comment(lib,"../build/winx/Debug/audio_effect.lib")
@@ -25,6 +29,25 @@ using namespace std;
 typedef lock_guard<mutex> lockguard;
 
 #define  complex std::complex<float>
+void DeleteCurrentLine()
+{
+    printf( "\r\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
+            "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
+            "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
+            "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
+            "\b\b\b\b\b\b\b"
+            );
+    return;
+}
+void OverwriteCurrentLine()
+{
+    printf( "                                        "
+            "                                        "
+            );
+    return;
+}
+
+
 //typedef std::complex<float> complex;
 // 卷积公式
 //y(n)=sum(x(k)h(n-k)), 其中 n-k>0,0<n<N,0<k<M
@@ -87,195 +110,73 @@ void convolution( const float*input, complex*irc, float *output, int nFFT, int n
     delete[] inc;
     delete[] outc;
 }
-#include <complex>
-class AudioSampleBuffer
-{
-public:
-    AudioSampleBuffer(short*pData,int nSamples)
-    {
-        NumSamples = nSamples;
-        m_pData[0] = new float[nSamples];
-        m_pData[1] = new float[nSamples];
-        if (pData)
-        {
-            for ( int i = 0; i < nSamples; i++ )
-            {
-                m_pData[0][i] = S16ToFloat(pData[i * 2]);
-                m_pData[1][i] = S16ToFloat(pData[i * 2 + 1]);
-            }
-        }
-        else
-        {
-            memset( m_pData[0], 0, nSamples*sizeof( float ) );
-            memset( m_pData[1], 0, nSamples*sizeof( float ) );
-        }
-    }
-    ~AudioSampleBuffer() {
-        delete[] m_pData[0];
-        delete[] m_pData[1];
 
-    }
-    const float* getReadPointer( int index )
-    {
-        return m_pData[index];
-    }
-    float* getWritePointer( int index ) 
-    {
-        return m_pData[index];
-    }
-
-    int getNumSamples()
-    {
-        return NumSamples;
-    }
-private:
-    float* m_pData[2];
-    int NumSamples;
-};
 
 
 class CAudioBufferProc : public  AudioBufferProc
 {
-    AudioSampleBuffer proBuf;
     bool m_processhrtf;
-    CircularAudioBuffer m_audio_buffer;
-    CircularAudioBuffer m_audio_buffer_out;
-    static const int nFFT = 1024;
-    complex m_fltl[nFFT];
-    complex m_fltr[nFFT];
     list<char*> m_list;
     mutex   m_lock;
-
-    int nFil;
-    int nSig;
-    WavWriter writer_pro;
-    WavWriter writer_src;
+    Mixer3D m_Mixer3D;
 public:
-    ~CAudioBufferProc()
-    {
-    }
-    CAudioBufferProc(bool processhrtf) :m_processhrtf(processhrtf), proBuf(nullptr,nFFT/2)
-        ,m_audio_buffer(nFFT*2)
-        , m_audio_buffer_out(nFFT*2)
-        ,writer_pro(("D:/pro-48000-2.wav"),48000,2)
-        , writer_src("D:/src-48000-2.wav",48000,2)
+    CAudioBufferProc(bool processhrtf) :m_processhrtf(processhrtf), m_Mixer3D(48000)
     {
          int nAzimuth = 90;
          int nElevation = 0;
-        if (m_processhrtf)
-        {
-            float pLeft[nFFT] = { 0 };
-            float pRight[nFFT] = { 0 };
-            int nFil = mit_hrtf_get( &nAzimuth, &nElevation, 48000, 0, pLeft, pRight );
-            if ( nFil == 0 ) throw std::invalid_argument( "nAzimuth and nElevation is invalid!" );
-            for ( int i = 0; i < nFFT; i++ )
-            {
-                if (i < nFil)
-                {
-                    m_fltl[i] = complex( pLeft[i] );
-                    m_fltr[i] = complex( pRight[i] );
-                }
-                else
-                {
-                    m_fltl[i] = complex( 0 );
-                    m_fltr[i] = complex( 0 );
-                }
-            }
-            CFFT::Forward( m_fltl, nFFT );
-            CFFT::Forward( m_fltr, nFFT );
-        }
+         m_Mixer3D.updateAngles( nAzimuth, nElevation );
     }
 
     virtual void RecordingDataIsAvailable( const void*data, size_t samples )
     {
         lockguard lg( m_lock );
-        int16_t* pData = ( int16_t* )new int16_t[nFFT];
+
+        
         if (m_processhrtf)
         {
-            m_audio_buffer.write( (int16_t*)data, samples/2);
-            if ( m_audio_buffer.readSizeRemaining() < nFFT )
+            m_Mixer3D.AddProcessData( (int16_t*)data, samples / 2 );
+            for ( ;; )
             {
-                return;
-            }
-            int16_t buf[nFFT];
-            size_t readlen = m_audio_buffer.read( (int16_t*)buf, nFFT );
-            assert( readlen == nFFT );
-            AudioSampleBuffer buffer( buf, readlen/2 );
-            processBlock( buffer );
-            const float*pLeft = buffer.getReadPointer( 0 );
-            const float*pRight = buffer.getReadPointer( 1 );
-            
-            for ( size_t i = 0; i < readlen / 2; i++ )
-            {
-                pData[i * 2] = FloatToS16( pLeft[i] );
-                pData[i * 2 + 1] = FloatToS16( pRight[i] );
+                char* pData = new char[samples];
+                size_t readsample = m_Mixer3D.GetProcessData( (int16_t*)pData, samples / 2 );
+                if (readsample == 0)
+                {
+                    delete[] pData;
+                    return;
+                }
+               
+                m_list.push_back( (char*)pData );
             }
         }
         else
         {
+            char* pData = new char[samples];
             memcpy( pData, data, samples );
+            m_list.push_back( (char*)pData );
         }
-
-        m_list.push_back((char*)pData);
     }
 
     virtual size_t NeedMorePlayoutData( void* data, size_t samples )
     {
-        lockguard lg( m_lock );
 
-        for ( ;; )
+        lockguard lg( m_lock );
+        if (m_list.size()<50)
         {
-            if ( samples / 2 < m_audio_buffer_out.readSizeRemaining() )
-            {
-                assert(samples/2 == m_audio_buffer_out.read( (int16_t*)data, samples / 2 ));
-                return samples;
-            }
-            if ( m_list.size() < 50 )
-            {
-                memset( data, 0, samples );
-                return samples;
-            }
-            char* p = m_list.front();
-            m_list.pop_front();
-            m_audio_buffer_out.write( (int16_t*)p, nFFT );
-            delete[] p;
+            return samples;
         }
-        return samples;
+        
+         char* p = m_list.front();
+         m_list.pop_front();
+       memcpy( data, p, samples );
+         delete p;
+         return samples;
     }
 
     virtual void ErrorOccurred(AudioError aeCode) {}
-
-    void processBlock( AudioSampleBuffer & buffer )
+    void UpdateAngles( int nAzimuth, int nElevation )
     {
-        const float*inL = buffer.getReadPointer( 0 );
-        const float*inR = buffer.getReadPointer( 1 );
-        float *outL = buffer.getWritePointer( 0 );
-        float *outR = buffer.getWritePointer( 1 );
-
-        int bufSize = buffer.getNumSamples();
-
-        const float *proRdL = proBuf.getReadPointer( 0 );
-        const float * proRdR = proBuf.getReadPointer( 1 );
-        float *proWtL = proBuf.getWritePointer( 0 );
-        float *proWtR = proBuf.getWritePointer( 1 );
-
-        nSig = bufSize;
-        float *outLp = new float[nFFT];
-        float *outRp = new float[nFFT];
-        convolution( inL, m_fltl, outLp, nFFT, nFil, nSig );
-        convolution( inR, m_fltr, outRp, nFFT, nFil, nSig );
-        for ( int i = 0; i < bufSize; i++ )
-        {
-            outL[i] = ( outLp[i] + proRdL[i] ) / 2;
-            outR[i] = ( outRp[i] + proRdR[i] ) / 2;
-            proWtL[i] = outLp[i + bufSize];
-            proWtR[i] = outRp[i + bufSize];
-        }
-        delete[] outLp;
-        delete[] outRp;
+        m_Mixer3D.updateAngles( nAzimuth, nElevation );
     }
-private:
-
 };
 
 
@@ -295,7 +196,7 @@ void test_conv()
         //std::cout << y[i] << "\t";
     }
     std::cout << endl;
-    complex data[] = { 1, 2, 3,4 };
+    complex data[] = { 1, 2, 3, 4 };
     bool b = CFFT::Forward( data, 4 );
     assert( b );
     b = CFFT::Inverse( data, 4 );
@@ -377,6 +278,7 @@ void test_hrtf( int nAzimuth, int nElevation, const char* inputfile, const char*
 
 void test_real_time_3d()
 {
+    int nAzimuth = 0; int nElevation = 0;
     AudioDevice* pWinDevice = AudioDevice::Create();
     pWinDevice->Initialize();
     pWinDevice->SetRecordingFormat( 48000, 2 );
@@ -384,12 +286,45 @@ void test_real_time_3d()
     pWinDevice->InitPlayout();
     pWinDevice->InitRecording();
 
-    CAudioBufferProc cb( true );
+    CAudioBufferProc cb( true);
     pWinDevice->SetAudioBufferCallback( &cb );
     pWinDevice->StartPlayout();
     pWinDevice->StartRecording();
+    char ch = '\n';
+    printf( "\n" );
+    do
+    {
+        std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
+        if ( _kbhit() )
+        {
+            
+            ch = _getch();
+            switch ( ch )
+            {
+            case 'a':
+                nAzimuth -= 15;
+                break;
+            case 'd':
+                nAzimuth += 15;
+                break;
+            case 'w':
+                nElevation += 10;
+                break;
+            case 's':
+                nElevation -= 10;
+                break;
+            default:
+                printf( "invalid argment:%c",ch );
+            }
+            nAzimuth = std::min( std::max( nAzimuth, -180 ), 180 );
+            nElevation = std::min( std::max( nElevation, -40 ), 90 );
+            cb.UpdateAngles( nAzimuth, nElevation );
+            
+            printf( "nAzimuth:%d,nElevation:%d\r", nAzimuth, nElevation );
+        }
 
-    system( "pause" );
+
+    } while ( ( ch != 'Q' ) && ( ch != 'q' ) );
 
     pWinDevice->StopRecording();
     pWinDevice->StopPlayout();
@@ -417,8 +352,6 @@ void test_mit_hrtf_get()
         nFil = mit_hrtf_get( &nAzimuth, &nElevation, 48000, 0, fl, fr );
         short* flt = new short[nFil];
         short* frt = new short[nFil];
-//         S16ToFloat( irL_, nFil, flt );
-//         S16ToFloat( irR_, nFil, frt );
         FloatToS16( fl, nFil, flt );
         FloatToS16( fr, nFil, frt );
 
@@ -468,7 +401,7 @@ int main( int argc, char** argv )
    // test_hrtf(45,0,"C:/Users/zhangnaigan/Desktop/3D_test_Audio/es01.wav","D:/pro-48000-1.wav");
     test_real_time_3d();
  //   test_mit_hrtf_get();
-    test_circular_buffer();
+    //test_circular_buffer();
     system( "pause" );
     return 0;
 
