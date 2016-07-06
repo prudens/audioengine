@@ -40,7 +40,7 @@ LOCAL_CFLAGS := -std=c++11\
 				-fpermissive
                 
 LOCAL_MODULE        :=audio_processing
-MY_CLIENT_PATH      :=../../src
+MY_CLIENT_PATH      :=../../../processing/src
 MY_SRC_PATH         :=$(MY_CLIENT_PATH)##
 LOCAL_CPP_EXTENSION :=.cpp .cc .c
 LOCAL_C_INCLUDES    :=$(LOCAL_PATH)/../../src/ \

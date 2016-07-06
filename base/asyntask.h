@@ -34,9 +34,9 @@ namespace
 
             bool operator < ( const Task& other )const
             {
-                return this->elapsed < other.elapsed 
-                    || this->elapsed == other.elapsed
-                    && this->id < other.id;
+                return this->elapsed < other.elapsed ||
+                    ( this->elapsed == other.elapsed
+                    && this->id < other.id );
             }
         };
 
