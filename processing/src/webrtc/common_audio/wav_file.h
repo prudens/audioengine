@@ -89,7 +89,7 @@ class WavReader final : public WavFile {
   size_t num_samples_;  // Total number of samples in the file.
   size_t num_samples_remaining_;
   FILE* file_handle_;  // Input file, owned by this class.
-
+  bool init_;
   RTC_DISALLOW_COPY_AND_ASSIGN(WavReader);
 };
 

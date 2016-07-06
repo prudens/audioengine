@@ -4,7 +4,7 @@
 
 #include <algorithm>
 #include <vector>
-
+#define _NOEXCEPT
 namespace {
     template<class T, class Cmp = std::less<T>>
     class max_min_heap

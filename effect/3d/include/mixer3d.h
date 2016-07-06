@@ -1,4 +1,13 @@
 #pragma once
+/*
+ * @file mixer3d.h
+ * @date 2016/07/06 13:14
+ *
+ * @author zhangnaigan
+ * @contact zhangng@snailgame.net
+ * @brief 对mit-hrtf库的简单封装
+ * @note
+ */
 #include <complex>
 #include <cstdint>
 #include <mutex>
@@ -6,51 +15,7 @@
 #include "base/audio_util.h"
 #include "base/circular_buffer.hpp"
 
-class AudioSampleBuffer
-{
-public:
-    AudioSampleBuffer( int16_t*pData, size_t nSamples )
-    {
-        m_nSample = nSamples;
-        m_pData[0] = new float[nSamples];
-        m_pData[1] = new float[nSamples];
-        if ( pData )
-        {
-            for ( size_t i = 0; i < nSamples; i++ )
-            {
-                m_pData[0][i] = S16ToFloat( pData[i * 2] );
-                m_pData[1][i] = S16ToFloat( pData[i * 2 + 1] );
-            }
-        }
-        else
-        {
-            memset( m_pData[0], 0, nSamples*sizeof( float ) );
-            memset( m_pData[1], 0, nSamples*sizeof( float ) );
-        }
-    }
-    ~AudioSampleBuffer()
-    {
-        delete[] m_pData[0];
-        delete[] m_pData[1];
 
-    }
-    const float* getReadPointer( int index )
-    {
-        return m_pData[index];
-    }
-    float* getWritePointer( int index )
-    {
-        return m_pData[index];
-    }
-
-    int getNumSamples()
-    {
-        return m_nSample;
-    }
-private:
-    float* m_pData[2];
-    size_t m_nSample;
-};
 
 
 class Mixer3D
@@ -59,6 +24,22 @@ class Mixer3D
     using Complex = std::complex<value_type>;
     using lockguard = std::lock_guard<std::mutex>;
     static const int nFFT = 1024;
+    class AudioSampleBuffer
+    {
+    public:
+        AudioSampleBuffer( int16_t*pData, size_t nSamples );
+        ~AudioSampleBuffer();
+        const float* getReadPointer( int index );
+        float* getWritePointer( int index )
+        {
+            return m_pData[index];
+        }
+
+        int getNumSamples();
+    private:
+        float* m_pData[2];
+        size_t m_nSample;
+    };
 public:
     Mixer3D();
     Mixer3D( size_t samplerate );
@@ -70,15 +51,29 @@ public:
     size_t GetProcessData(int16_t*pData, size_t samples);
 private:
     void ProcessBlock( AudioSampleBuffer &buffer);
+    /**
+     * @brief     卷积函数，fft性能较差，有待改进，nfft必须是2的N阶
+     * @return    void
+     * @param     const float * input
+     * @param     Complex * irc
+     * @param     float * output
+     * @param     int nFFT
+     * @param     int nSig
+     */
     void convolution( const float*input, Complex*irc, float *output, int nFFT, int nSig );
 private:
 
-    AudioSampleBuffer m_prevBuf;
-    CircularAudioBuffer m_audio_buffer_in;
-    CircularAudioBuffer m_audio_buffer_out;
+    AudioSampleBuffer                    m_prevBuffer;
+    CircularAudioBuffer                  m_audio_buffer_in;
+    CircularAudioBuffer                  m_audio_buffer_out;
 
-    Complex m_fltl[nFFT];
-    Complex m_fltr[nFFT];
-    std::mutex   m_lock;
-    size_t m_nSamplerate;
+    Complex                              m_cFilterL[nFFT];
+    Complex                              m_cFilterR[nFFT];
+    Complex                              m_cInput[nFFT];
+    Complex                              m_cOutput[nFFT];
+    float                                m_foutL[nFFT];
+    float                                m_foutR[nFFT];
+
+    std::mutex                           m_lock;
+    size_t                               m_nSamplerate;
 };

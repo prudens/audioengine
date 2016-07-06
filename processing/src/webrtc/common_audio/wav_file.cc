@@ -53,11 +53,11 @@ WavReader::WavReader(const std::string& filename)
   ReadableWavFile readable(file_handle_);
   WavFormat format;
   size_t bytes_per_sample;
-  RTC_CHECK(ReadWavHeader(&readable, &num_channels_, &sample_rate_, &format,
-                          &bytes_per_sample, &num_samples_));
+  init_ = ReadWavHeader(&readable, &num_channels_, &sample_rate_, &format,
+                          &bytes_per_sample, &num_samples_);
   num_samples_remaining_ = num_samples_;
-  RTC_CHECK_EQ(kWavFormat, format);
-  RTC_CHECK_EQ(kBytesPerSample, bytes_per_sample);
+ // RTC_CHECK_EQ(kWavFormat, format);
+ // RTC_CHECK_EQ(kBytesPerSample, bytes_per_sample);
 }
 
 WavReader::~WavReader() {
@@ -68,6 +68,10 @@ size_t WavReader::ReadSamples(size_t num_samples, int16_t* samples) {
 #ifndef WEBRTC_ARCH_LITTLE_ENDIAN
 #error "Need to convert samples to big-endian when reading from WAV file"
 #endif
+    if ( !init_ )
+    {
+        return 0;
+    }
   // There could be metadata after the audio; ensure we don't read it.
   num_samples = std::min(num_samples, num_samples_remaining_);
   const size_t read =
@@ -80,6 +84,10 @@ size_t WavReader::ReadSamples(size_t num_samples, int16_t* samples) {
 }
 
 size_t WavReader::ReadSamples(size_t num_samples, float* samples) {
+    if ( !init_ )
+    {
+        return 0;
+    }
   static const size_t kChunksize = 4096 / sizeof(uint16_t);
   size_t read = 0;
   for (size_t i = 0; i < num_samples; i += kChunksize) {

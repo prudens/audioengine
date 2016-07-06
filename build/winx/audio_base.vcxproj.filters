@@ -19,7 +19,7 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\base\fft.cpp">
-      <Filter>include</Filter>
+      <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

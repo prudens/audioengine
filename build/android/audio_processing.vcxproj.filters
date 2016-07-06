@@ -1,0 +1,631 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\processing\src\webrtc\base\timeutils.cc">
+      <Filter>base\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\base\thread_checker_impl.cc">
+      <Filter>base\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\base\systeminfo.cc">
+      <Filter>base\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\base\stringutils.cc">
+      <Filter>base\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\base\stringencode.cc">
+      <Filter>base\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\base\platform_thread.cc">
+      <Filter>base\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\base\platform_file.cc">
+      <Filter>base\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\base\event_tracer.cc">
+      <Filter>base\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\base\criticalsection.cc">
+      <Filter>base\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\base\common.cc">
+      <Filter>base\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\base\checks.cc">
+      <Filter>base\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\base\base_logging.cc">
+      <Filter>base\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\base\base_event.cc">
+      <Filter>base\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\trace_posix.cc">
+      <Filter>system_wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\trace_impl.cc">
+      <Filter>system_wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\tick_util.cc">
+      <Filter>system_wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\sort.cc">
+      <Filter>system_wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\sleep.cc">
+      <Filter>system_wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\rw_lock_posix.cc">
+      <Filter>system_wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\rw_lock.cc">
+      <Filter>system_wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\metrics_default.cc">
+      <Filter>system_wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\logging.cc">
+      <Filter>system_wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\file_impl.cc">
+      <Filter>system_wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\field_trial_default.cc">
+      <Filter>system_wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\event_timer_posix.cc">
+      <Filter>system_wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\event.cc">
+      <Filter>system_wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\cpu_info.cc">
+      <Filter>system_wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\cpu_features.cc">
+      <Filter>system_wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\aligned_malloc.cc">
+      <Filter>system_wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\vad\vad.cc">
+      <Filter>common_audio\vad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\vad\vad_core.c">
+      <Filter>common_audio\vad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\vad\vad_filterbank.c">
+      <Filter>common_audio\vad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\vad\vad_gmm.c">
+      <Filter>common_audio\vad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\vad\vad_sp.c">
+      <Filter>common_audio\vad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\vad\webrtc_vad.c">
+      <Filter>common_audio\vad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\auto_corr_to_refl_coef.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\auto_correlation.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\complex_bit_reverse.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\complex_fft.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\copy_set_operations.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\cross_correlation.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\cross_correlation_neon.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\division_operations.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\dot_product_with_scale.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\downsample_fast.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\downsample_fast_neon.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\energy.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\filter_ar.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\filter_ar_fast_q12.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\filter_ma_fast_q12.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\get_hanning_window.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\get_scaling_square.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\ilbc_specific_functions.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\levinson_durbin.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\lpc_to_refl_coef.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\min_max_operations.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\min_max_operations_neon.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\randomization_functions.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\real_fft.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\refl_coef_to_lpc.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\resample.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\resample_48khz.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\resample_by_2.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\resample_by_2_internal.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\resample_fractional.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\spl_init.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\spl_splitting_filter.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\spl_sqrt.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\spl_sqrt_floor.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\sqrt_of_one_minus_x_squared.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\vector_scaling_operations.c">
+      <Filter>common_audio\signal_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\resampler\push_resampler.cc">
+      <Filter>common_audio\resampler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\resampler\push_sinc_resampler.cc">
+      <Filter>common_audio\resampler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\resampler\resampler.cc">
+      <Filter>common_audio\resampler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\resampler\sinc_resampler.cc">
+      <Filter>common_audio\resampler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\resampler\sinc_resampler_neon.cc">
+      <Filter>common_audio\resampler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\resampler\sinusoidal_linear_chirp_source.cc">
+      <Filter>common_audio\resampler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\window_generator.cc">
+      <Filter>common_audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\wav_header.cc">
+      <Filter>common_audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\wav_file.cc">
+      <Filter>common_audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\sparse_fir_filter.cc">
+      <Filter>common_audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\real_fourier_ooura.cc">
+      <Filter>common_audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\real_fourier.cc">
+      <Filter>common_audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\lapped_transform.cc">
+      <Filter>common_audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\fir_filter_neon.cc">
+      <Filter>common_audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\channel_buffer.cc">
+      <Filter>common_audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\blocker.cc">
+      <Filter>common_audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\audio_util.cc">
+      <Filter>common_audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\audio_ring_buffer.cc">
+      <Filter>common_audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\audio_converter.cc">
+      <Filter>common_audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\fft4g.c">
+      <Filter>common_audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_core.c">
+      <Filter>audio_processing\aec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_core_neon.c">
+      <Filter>audio_processing\aec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_rdft.c">
+      <Filter>audio_processing\aec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_rdft_neon.c">
+      <Filter>audio_processing\aec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_resampler.c">
+      <Filter>audio_processing\aec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\echo_cancellation.c">
+      <Filter>audio_processing\aec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aecm\aecm_core.c">
+      <Filter>audio_processing\aecm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aecm\aecm_core_c.c">
+      <Filter>audio_processing\aecm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aecm\aecm_core_neon.c">
+      <Filter>audio_processing\aecm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aecm\echo_control_mobile.c">
+      <Filter>audio_processing\aecm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\agc\agc.cc">
+      <Filter>audio_processing\agc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\agc\agc_manager_direct.cc">
+      <Filter>audio_processing\agc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\agc\histogram.cc">
+      <Filter>audio_processing\agc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\agc\utility.cc">
+      <Filter>audio_processing\agc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\agc\legacy\analog_agc.c">
+      <Filter>audio_processing\agc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\agc\legacy\digital_agc.c">
+      <Filter>audio_processing\agc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\beamformer\array_util.cc">
+      <Filter>audio_processing\beamformer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\beamformer\covariance_matrix_generator.cc">
+      <Filter>audio_processing\beamformer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\beamformer\nonlinear_beamformer.cc">
+      <Filter>audio_processing\beamformer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\intelligibility\intelligibility_enhancer.cc">
+      <Filter>audio_processing\intelligibility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\intelligibility\intelligibility_utils.cc">
+      <Filter>audio_processing\intelligibility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\logging\aec_logging_file_handling.cc">
+      <Filter>audio_processing\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\gmm.cc">
+      <Filter>audio_processing\vad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\pitch_based_vad.cc">
+      <Filter>audio_processing\vad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\pitch_internal.cc">
+      <Filter>audio_processing\vad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\pole_zero_filter.cc">
+      <Filter>audio_processing\vad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\standalone_vad.cc">
+      <Filter>audio_processing\vad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\vad_audio_proc.cc">
+      <Filter>audio_processing\vad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\vad_circular_buffer.cc">
+      <Filter>audio_processing\vad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\voice_activity_detector.cc">
+      <Filter>audio_processing\vad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\utility\delay_estimator.c">
+      <Filter>audio_processing\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\utility\delay_estimator_wrapper.c">
+      <Filter>audio_processing\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\ns\noise_suppression.c">
+      <Filter>audio_processing\ns</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\ns\noise_suppression_x.c">
+      <Filter>audio_processing\ns</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\ns\ns_core.c">
+      <Filter>audio_processing\ns</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\ns\nsx_core.c">
+      <Filter>audio_processing\ns</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\ns\nsx_core_c.c">
+      <Filter>audio_processing\ns</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\ns\nsx_core_neon.c">
+      <Filter>audio_processing\ns</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\click_annotate.cc">
+      <Filter>audio_processing\transient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\file_utils.cc">
+      <Filter>audio_processing\transient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\moving_moments.cc">
+      <Filter>audio_processing\transient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\transient_detector.cc">
+      <Filter>audio_processing\transient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\transient_suppressor.cc">
+      <Filter>audio_processing\transient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\wpd_node.cc">
+      <Filter>audio_processing\transient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\wpd_tree.cc">
+      <Filter>audio_processing\transient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\voice_detection_impl.cc">
+      <Filter>audio_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\typing_detection.cc">
+      <Filter>audio_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\three_band_filter_bank.cc">
+      <Filter>audio_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\splitting_filter.cc">
+      <Filter>audio_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\rms_level.cc">
+      <Filter>audio_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\processing_component.cc">
+      <Filter>audio_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\noise_suppression_impl.cc">
+      <Filter>audio_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\level_estimator_impl.cc">
+      <Filter>audio_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\high_pass_filter_impl.cc">
+      <Filter>audio_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\gain_control_impl.cc">
+      <Filter>audio_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\gain_control_for_experimental_agc.cc">
+      <Filter>audio_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\echo_control_mobile_impl.cc">
+      <Filter>audio_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\echo_cancellation_impl.cc">
+      <Filter>audio_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\audio_processing_impl.cc">
+      <Filter>audio_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\audio_buffer.cc">
+      <Filter>audio_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\fir_filter.cc">
+      <Filter>common_audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\cpu_features_android.c">
+      <Filter>system_wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\cpu-features.c">
+      <Filter>system_wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\ring_buffer.c">
+      <Filter>common_audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\arith_routines.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\arith_routines_hist.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\arith_routines_logist.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\bandwidth_estimator.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\crc.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\decode.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\decode_bwe.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\encode.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\encode_lpc_swb.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\entropy_coding.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\fft.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\filter_functions.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\filterbank_tables.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\filterbanks.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\intialize.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\isac.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\lattice.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\lpc_analysis.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\lpc_gain_swb_tables.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\lpc_shape_swb12_tables.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\lpc_shape_swb16_tables.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\lpc_tables.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\pitch_estimator.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\pitch_filter.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\pitch_gain_tables.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\pitch_lag_tables.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\spectrum_ar_model_tables.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\transform.c">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\audio_decoder_isac.cc">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\audio_encoder_isac.cc">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\locked_bandwidth_info.cc">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\audio_decoder.cc">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\audio_encoder.cc">
+      <Filter>isac\src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="base">
+      <UniqueIdentifier>{4fce8707-e553-4b23-876c-83036775767c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common_audio">
+      <UniqueIdentifier>{5ea4d487-74be-4eb3-9514-1075630e7b85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system_wrappers">
+      <UniqueIdentifier>{e0e7c9e6-f7b1-4dd4-882d-833d5de52e79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio_processing">
+      <UniqueIdentifier>{071ef630-3c78-433c-8615-af29a8167a8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="isac">
+      <UniqueIdentifier>{fb691230-466a-4eb4-83e8-6f7239845410}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\src">
+      <UniqueIdentifier>{c2c81604-1226-46fc-8d8f-12081a635bcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="isac\src">
+      <UniqueIdentifier>{1872f0cb-4f56-4200-904c-261e172a9b24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common_audio\resampler">
+      <UniqueIdentifier>{bb905ccc-1832-45ed-96d6-af66ee169090}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common_audio\signal_processing">
+      <UniqueIdentifier>{adac8ccf-cd71-45f1-b93b-e77e3066bdcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common_audio\vad">
+      <UniqueIdentifier>{a520839f-f254-4225-a0e7-e37515ec3b96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio_processing\aec">
+      <UniqueIdentifier>{de682f7f-1614-4981-874a-fad1abc88aef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio_processing\aecm">
+      <UniqueIdentifier>{1030a35d-ea2b-43cc-9481-0a736987f060}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio_processing\agc">
+      <UniqueIdentifier>{d07d7a2a-a52a-4133-9b4b-981f870280de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio_processing\beamformer">
+      <UniqueIdentifier>{75ab262d-6b40-4fba-878c-5157b7b7010d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio_processing\intelligibility">
+      <UniqueIdentifier>{a8eb4535-81fe-44aa-a584-5f344998014c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio_processing\logging">
+      <UniqueIdentifier>{f6a4daac-a408-4c0a-8654-5ceddef95776}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio_processing\transient">
+      <UniqueIdentifier>{0849af2d-b1b4-4df6-bff7-73f630dd526a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio_processing\ns">
+      <UniqueIdentifier>{6b9cdb01-c9ae-4210-90f4-c316a5a53b40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio_processing\utility">
+      <UniqueIdentifier>{482cec74-0e88-4ff5-bd39-265d0c89a5b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio_processing\vad">
+      <UniqueIdentifier>{105e9225-9065-4495-8469-25eedafd57b9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

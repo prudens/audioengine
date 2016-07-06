@@ -15,11 +15,17 @@
 #include "io/wav_file.h"
 #include "base/circular_buffer.hpp"
 #include "effect/3d/include/mixer3d.h"
-
+#ifdef _DEBUG
 #pragma comment(lib,"../build/winx/Debug/audio_device.lib")
 #pragma comment(lib,"../build/winx/Debug/audio_effect.lib")
 #pragma comment(lib,"../build/winx/Debug/audio_io.lib")
 #pragma comment(lib,"../build/winx/Debug/audio_base.lib")
+#else
+#pragma comment(lib,"../build/winx/Release/audio_device.lib")
+#pragma comment(lib,"../build/winx/Release/audio_effect.lib")
+#pragma comment(lib,"../build/winx/Release/audio_io.lib")
+#pragma comment(lib,"../build/winx/Release/audio_base.lib")
+#endif
 #pragma comment(lib, "ws2_32")
 #pragma comment(lib, "strmiids")
 #pragma comment(lib, "msdmo")

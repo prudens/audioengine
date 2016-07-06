@@ -5,9 +5,17 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -19,60 +27,668 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectName)$(Configuration)\</IntDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>.\lib_win64\$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectName)$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>.\lib_win64\$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <SDLCheck>false</SDLCheck>
+      <AdditionalOptions>/D "_CRT_SECURE_NO_WARNINGS" %(AdditionalOptions)</AdditionalOptions>
+      <PreprocessorDefinitions>_DEBUG;V8_DEPRECATION_WARNINGS;CLD_VERSION=2;_WIN32_WINNT=0x0A00;WINVER=0x0A00;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=259396-1;USE_AURA=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;FIELDTRIAL_TESTING_ENABLED;NO_TCMALLOC;ALLOCATOR_SHIM;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x0A000000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PDF=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;BORINGSSL_IMPLEMENTATION;BORINGSSL_NO_STATIC_INITIALIZER;OPENSSL_SMALL;USE_LIBPCI=1;USE_OPENSSL=0;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;EXPAT_RELATIVE_PATH;WEBRTC_WIN;WEBRTC_INCLUDE_INTERNAL_AUDIO_DEVICE;LOGGING=1;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;WEBRTC_NS_FLOAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./..\..\processing\src/;./..\..\processing\src/webrtc/common_audio/signal_processing/include;./..\..\processing\src/webrtc/modules/audio_coding/codecs/isac/main/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Secur32.lib;Iphlpapi.lib;Wininet.lib;Winmm.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>false</SDLCheck>
+      <AdditionalOptions>/D "_CRT_SECURE_NO_WARNINGS" %(AdditionalOptions)</AdditionalOptions>
+      <PreprocessorDefinitions>_DEBUG;V8_DEPRECATION_WARNINGS;CLD_VERSION=2;WINVER=0x0A00;WIN64;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=259396-1;USE_AURA=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;FIELDTRIAL_TESTING_ENABLED;NO_TCMALLOC;ALLOCATOR_SHIM;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x0A000000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PDF=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;BORINGSSL_IMPLEMENTATION;BORINGSSL_NO_STATIC_INITIALIZER;OPENSSL_SMALL;USE_LIBPCI=1;USE_OPENSSL=0;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;EXPAT_RELATIVE_PATH;WEBRTC_WIN;WEBRTC_INCLUDE_INTERNAL_AUDIO_DEVICE;LOGGING=1;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;WEBRTC_NS_FLOAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./..\..\processing\src/;./..\..\processing\src/webrtc/common_audio/signal_processing/include;./..\..\processing\src/webrtc/modules/audio_coding/codecs/isac/main/include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Secur32.lib;Iphlpapi.lib;Wininet.lib;Winmm.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <SDLCheck>false</SDLCheck>
+      <AdditionalIncludeDirectories>./..\..\processing\src/;./..\..\processing\src/webrtc/common_audio/signal_processing/include;./..\..\processing\src/webrtc/modules/audio_coding/codecs/isac/main/include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>V8_DEPRECATION_WARNINGS;CLD_VERSION=2;_WIN32_WINNT=0x0A00;WINVER=0x0A00;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=259396-1;ENABLE_WEBRTC=1;ENABLE_HIDPI=1;FIELDTRIAL_TESTING_ENABLED;NO_TCMALLOC;ALLOCATOR_SHIM;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x0A000000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;EXPAT_RELATIVE_PATH;WEBRTC_WIN;WEBRTC_INCLUDE_INTERNAL_AUDIO_DEVICE;LOGGING=1;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;WEBRTC_NS_FLOAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Secur32.lib;Iphlpapi.lib;Wininet.lib;Winmm.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>false</SDLCheck>
+      <AdditionalIncludeDirectories>./..\..\processing\src/;./..\..\processing\src/webrtc/common_audio/signal_processing/include;./..\..\processing\src/webrtc/modules/audio_coding/codecs/isac/main/include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>V8_DEPRECATION_WARNINGS;CLD_VERSION=2;WINVER=0x0A00;_WIN64;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=259396-1;ENABLE_WEBRTC=1;ENABLE_HIDPI=1;FIELDTRIAL_TESTING_ENABLED;NO_TCMALLOC;ALLOCATOR_SHIM;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x0A000000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;EXPAT_RELATIVE_PATH;WEBRTC_WIN;WEBRTC_INCLUDE_INTERNAL_AUDIO_DEVICE;LOGGING=1;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;WEBRTC_NS_FLOAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Secur32.lib;Iphlpapi.lib;Wininet.lib;Winmm.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\processing\src\webrtc\base\arraysize.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\array_view.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\asyncfile.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\asyncinvoker-inl.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\asyncpacketsocket.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\asyncresolverinterface.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\atomicops.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\base64.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\basictypes.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\bind.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\bitbuffer.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\buffer.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\bufferqueue.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\bytebuffer.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\byteorder.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\callback.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\checks.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\common.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\constructormagic.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\crc32.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\criticalsection.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\cryptstring.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\dscp.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\event.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\event_tracer.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\exp_filter.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\flags.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\format_macros.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\gtest_prod_util.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\gunit.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\gunit_prod.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\helpers.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\ifaddrs_converter.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\keep_ref_until_done.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\linked_ptr.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\linuxfdwalk.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\logging.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\macasyncsocket.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\mathutils.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\nullsocketserver.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\optional.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\pathutils.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\platform_file.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\platform_thread.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\platform_thread_types.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\profiler.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\random.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\ratelimiter.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\ratetracker.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\refcount.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\referencecountedsingletonfactory.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\rollingaccumulator.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\rtccertificate.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\safe_conversions.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\safe_conversions_impl.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\scopedptrcollection.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\scoped_autorelease_pool.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\scoped_ptr.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\scoped_ref_ptr.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\sec_buffer.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\sha1digest.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\sharedexclusivelock.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\sslconfig.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\sslfingerprint.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\sslidentity.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\sslroots.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\sslstreamadapter.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\stringencode.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\stringutils.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\systeminfo.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\task.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\taskparent.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\taskrunner.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\template_util.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\thread_annotations.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\thread_checker.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\thread_checker_impl.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\timeutils.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\timing.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\trace_event.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\urlencode.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\versionparsing.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\win32.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\win32regkey.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\win32window.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\win32windowpicker.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\window.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\windowpicker.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\windowpickerfactory.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\base\winfirewall.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\audio_converter.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\audio_ring_buffer.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\blocker.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\channel_buffer.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\fft4g.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\fir_filter.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\fir_filter_neon.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\fir_filter_sse.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\include\audio_util.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\lapped_transform.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\real_fourier.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\real_fourier_ooura.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\resampler\include\push_resampler.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\resampler\include\resampler.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\resampler\push_sinc_resampler.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\resampler\sinc_resampler.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\resampler\sinusoidal_linear_chirp_source.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\ring_buffer.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\signal_processing\complex_fft_tables.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\signal_processing\include\real_fft.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\signal_processing\include\signal_processing_library.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\signal_processing\include\spl_inl.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\signal_processing\include\spl_inl_armv7.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\signal_processing\include\spl_inl_mips.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\signal_processing\resample_by_2_internal.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\sparse_fir_filter.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\swap_queue.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\vad\include\vad.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\vad\include\webrtc_vad.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\vad\vad_core.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\vad\vad_filterbank.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\vad\vad_gmm.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\vad\vad_sp.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\wav_file.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\wav_header.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\common_audio\window_generator.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\include\audio_decoder_isac.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\include\audio_encoder_isac.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\include\isac.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\aecm\aecm_core.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\aecm\aecm_defines.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\aecm\echo_control_mobile.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_common.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_core.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_core_internal.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_rdft.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_resampler.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\aec\echo_cancellation.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\aec\echo_cancellation_internal.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\agc\agc.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\agc\agc_manager_direct.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\agc\gain_map_internal.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\agc\histogram.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\agc\legacy\analog_agc.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\agc\legacy\digital_agc.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\agc\legacy\gain_control.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\agc\mock_agc.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\agc\utility.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\audio_buffer.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\audio_processing_impl.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\beamformer\array_util.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\beamformer\beamformer.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\beamformer\complex_matrix.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\beamformer\covariance_matrix_generator.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\beamformer\matrix.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\beamformer\mock_nonlinear_beamformer.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\beamformer\nonlinear_beamformer.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\common.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\echo_cancellation_impl.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\echo_control_mobile_impl.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\gain_control_for_experimental_agc.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\gain_control_impl.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\high_pass_filter_impl.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\include\audio_processing.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\include\mock_audio_processing.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\intelligibility\intelligibility_enhancer.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\intelligibility\intelligibility_utils.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\level_estimator_impl.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\logging\aec_logging.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\logging\aec_logging_file_handling.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\noise_suppression_impl.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\ns\defines.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\ns\noise_suppression.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\ns\noise_suppression_x.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\ns\nsx_core.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\ns\nsx_defines.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\ns\ns_core.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\ns\windows_private.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\processing_component.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\rms_level.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\splitting_filter.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\three_band_filter_bank.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\transient\common.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\transient\daubechies_8_wavelet_coeffs.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\transient\dyadic_decimator.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\transient\file_utils.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\transient\moving_moments.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\transient\transient_detector.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\transient\transient_suppressor.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\transient\wpd_node.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\transient\wpd_tree.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\typing_detection.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\utility\delay_estimator.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\utility\delay_estimator_internal.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\utility\delay_estimator_wrapper.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\vad\common.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\vad\gmm.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\vad\noise_gmm_tables.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\vad\pitch_based_vad.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\vad\pitch_internal.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\vad\pole_zero_filter.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\vad\standalone_vad.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\vad\vad_audio_proc.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\vad\vad_audio_proc_internal.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\vad\vad_circular_buffer.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\vad\voice_activity_detector.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\vad\voice_gmm_tables.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\voice_detection_impl.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\system_wrappers\include\metrics.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\system_wrappers\include\timestamp_extrapolator.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\system_wrappers\source\condition_variable_event_win.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\system_wrappers\source\event_timer_win.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\system_wrappers\source\file_impl.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\system_wrappers\source\rw_lock_win.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\system_wrappers\source\rw_lock_winxp_win.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\system_wrappers\source\trace_impl.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\system_wrappers\source\trace_win.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\processing\src\webrtc\base\checks.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\common.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\criticalsection.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\base_event.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\event_tracer.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\base_logging.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\platform_file.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\platform_thread.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\stringencode.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\stringutils.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\systeminfo.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\thread_checker_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\timeutils.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\audio_converter.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\audio_ring_buffer.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\audio_util.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\blocker.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\channel_buffer.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\fft4g.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\fir_filter.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\fir_filter_neon.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\fir_filter_sse.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\lapped_transform.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\real_fourier.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\real_fourier_ooura.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\resampler\push_resampler.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\resampler\push_sinc_resampler.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\resampler\resampler.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\resampler\sinc_resampler.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\resampler\sinc_resampler_neon.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\resampler\sinc_resampler_sse.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\resampler\sinusoidal_linear_chirp_source.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\ring_buffer.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\auto_correlation.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\auto_corr_to_refl_coef.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\complex_bit_reverse.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\complex_bit_reverse_mips.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\complex_fft.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\complex_fft_mips.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\copy_set_operations.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\cross_correlation.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\cross_correlation_mips.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\cross_correlation_neon.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\division_operations.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\dot_product_with_scale.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\downsample_fast.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\downsample_fast_mips.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\downsample_fast_neon.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\energy.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\filter_ar.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\filter_ar_fast_q12.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\filter_ar_fast_q12_mips.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\filter_ma_fast_q12.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\get_hanning_window.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\get_scaling_square.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\ilbc_specific_functions.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\levinson_durbin.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\lpc_to_refl_coef.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\min_max_operations.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\min_max_operations_mips.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\min_max_operations_neon.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\randomization_functions.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\real_fft.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\refl_coef_to_lpc.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\resample.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\resample_48khz.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\resample_by_2.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\resample_by_2_internal.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\resample_by_2_mips.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\resample_fractional.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\spl_splitting_filter.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\spl_init.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\spl_sqrt.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\spl_sqrt_floor.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\spl_sqrt_floor_mips.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\sqrt_of_one_minus_x_squared.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\vector_scaling_operations.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\vector_scaling_operations_mips.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\sparse_fir_filter.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\vad\vad.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\vad\vad_core.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\vad\vad_filterbank.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\vad\vad_gmm.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\vad\vad_sp.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\vad\webrtc_vad.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\wav_file.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\wav_header.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\window_generator.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\audio_decoder.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\audio_encoder.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\arith_routines.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\arith_routines_hist.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\arith_routines_logist.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\audio_decoder_isac.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\audio_encoder_isac.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\bandwidth_estimator.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\crc.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\decode.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\decode_bwe.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\encode.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\encode_lpc_swb.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\entropy_coding.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\fft.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\filterbanks.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\filterbank_tables.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\filter_functions.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\intialize.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\isac.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\lattice.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\lpc_analysis.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\lpc_gain_swb_tables.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\lpc_shape_swb12_tables.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\lpc_shape_swb16_tables.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\lpc_tables.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\pitch_estimator.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\pitch_filter.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\pitch_gain_tables.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\pitch_lag_tables.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\spectrum_ar_model_tables.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\transform.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aecm\aecm_core.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aecm\aecm_core_c.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aecm\aecm_core_mips.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aecm\aecm_core_neon.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aecm\echo_control_mobile.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_core.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_core_mips.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_core_neon.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_core_sse2.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_rdft.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_rdft_mips.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_rdft_neon.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_rdft_sse2.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_resampler.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\echo_cancellation.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\agc\agc.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\agc\agc_manager_direct.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\agc\histogram.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\agc\legacy\analog_agc.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\agc\legacy\digital_agc.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\agc\utility.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\audio_buffer.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\audio_processing_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\beamformer\array_util.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\beamformer\covariance_matrix_generator.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\beamformer\nonlinear_beamformer.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\echo_cancellation_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\echo_control_mobile_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\gain_control_for_experimental_agc.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\gain_control_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\high_pass_filter_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\intelligibility\intelligibility_enhancer.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\intelligibility\intelligibility_utils.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\level_estimator_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\logging\aec_logging_file_handling.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\noise_suppression_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\ns\noise_suppression.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\ns\noise_suppression_x.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\ns\nsx_core.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\ns\nsx_core_c.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\ns\nsx_core_mips.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\ns\nsx_core_neon.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\ns\ns_core.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\processing_component.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\rms_level.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\splitting_filter.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\three_band_filter_bank.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\click_annotate.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\file_utils.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\moving_moments.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\transient_detector.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\transient_suppressor.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\wpd_node.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\wpd_tree.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\typing_detection.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\utility\delay_estimator.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\utility\delay_estimator_wrapper.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\gmm.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\pitch_based_vad.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\pitch_internal.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\pole_zero_filter.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\standalone_vad.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\vad_audio_proc.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\vad_circular_buffer.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\voice_activity_detector.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\voice_detection_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\aligned_malloc.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\condition_variable_event_win.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\cpu_features.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\cpu_info.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\event.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\event_timer_win.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\file_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\logging.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\metrics_default.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\rw_lock.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\rw_lock_win.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\rw_lock_winxp_win.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\sleep.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\sort.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\tick_util.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\trace_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\trace_win.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\processing\src\webrtc\common_audio\signal_processing\complex_bit_reverse_arm.S">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\..\processing\src\webrtc\common_audio\signal_processing\filter_ar_fast_q12_armv7.S" />
+    <None Include="..\..\processing\src\webrtc\common_audio\signal_processing\spl_sqrt_floor_arm.S" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>

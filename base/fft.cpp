@@ -12,6 +12,18 @@
 
 namespace CFFTImpl
 {
+    // Ç°ÖÃÉùÃ÷
+    template<class complex>
+    static void Rearrange( const complex *const Input, complex *const Output, const unsigned int N );
+    template<class complex>
+    static void Rearrange( complex *const Data, const unsigned int N );
+    template<class complex>
+    static void Perform( complex *const Data, const unsigned int N, const bool Inverse );
+    template<class complex>
+    static void Perform( complex *const Data, const unsigned int N, const bool Inverse );
+    template<class complex>
+    static void Scale( complex *const Data, const unsigned int N );
+
     template<class complex>
     static bool Forward( const complex *const Input, complex *const Output, const unsigned int N )
     {
@@ -151,7 +163,7 @@ namespace CFFTImpl
             //   Auxiliary sin(delta / 2)
             const double Sine = sin( delta * .5 );
             //   Multiplier for trigonometric recurrence
-            const complex Multiplier( static_cast<complex::value_type>( -2. * Sine * Sine ), static_cast<complex::value_type>( sin( delta ) ) );
+            const complex Multiplier( static_cast<typename complex::value_type>( -2. * Sine * Sine ), static_cast<typename complex::value_type>( sin( delta ) ) );
             //   Start value for transform factor, fi = 0
             complex Factor( 1. );
             //   Iteration through groups of different transform factor
@@ -179,7 +191,7 @@ namespace CFFTImpl
     template<class complex>
     static void Scale( complex *const Data, const unsigned int N )
     {
-        const auto Factor = static_cast<complex::value_type>( 1. / N );
+        const auto Factor = static_cast<typename complex::value_type>( 1. / N );
         //   Scale all data entries
         for ( unsigned int Position = 0; Position < N; ++Position )
             Data[Position] *= Factor;

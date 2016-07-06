@@ -3,7 +3,7 @@
 #include "base/fft.h"
 #include <assert.h>
 #include <algorithm>
-Mixer3D::Mixer3D() :m_prevBuf(nullptr, nFFT / 2)
+Mixer3D::Mixer3D() :m_prevBuffer(nullptr, nFFT / 2)
 ,m_audio_buffer_in(nFFT * 2)
 ,m_audio_buffer_out(nFFT*2)
 {
@@ -11,7 +11,7 @@ Mixer3D::Mixer3D() :m_prevBuf(nullptr, nFFT / 2)
 }
 
 Mixer3D::Mixer3D( size_t samplerate ) : m_nSamplerate( samplerate )
-, m_prevBuf( nullptr, nFFT / 2 )
+, m_prevBuffer( nullptr, nFFT / 2 )
 , m_audio_buffer_in( nFFT * 2 )
 , m_audio_buffer_out( nFFT * 2 )
 {
@@ -41,17 +41,17 @@ bool Mixer3D::updateAngles( int nAzimuth, int nElevation )
     {
         if ( i < nFil )
         {
-            m_fltl[i] = Complex( pLeft[i] );
-            m_fltr[i] = Complex( pRight[i] );
+            m_cFilterL[i] = Complex( pLeft[i] );
+            m_cFilterR[i] = Complex( pRight[i] );
         }
         else
         {
-            m_fltl[i] = Complex( 0 );
-            m_fltr[i] = Complex( 0 );
+            m_cFilterL[i] = Complex( 0 );
+            m_cFilterR[i] = Complex( 0 );
         }
     }
-    CFFT::Forward( m_fltl, nFFT );
-    CFFT::Forward( m_fltr, nFFT );
+    CFFT::Forward( m_cFilterL, nFFT );
+    CFFT::Forward( m_cFilterR, nFFT );
     return true;
 }
 
@@ -109,60 +109,86 @@ void Mixer3D::ProcessBlock( AudioSampleBuffer& buffer )
 
     int bufSize = buffer.getNumSamples();
 
-    const float *proRdL = m_prevBuf.getReadPointer( 0 );
-    const float * proRdR = m_prevBuf.getReadPointer( 1 );
-    float *proWtL = m_prevBuf.getWritePointer( 0 );
-    float *proWtR = m_prevBuf.getWritePointer( 1 );
+    const float *proRdL = m_prevBuffer.getReadPointer( 0 );
+    const float * proRdR = m_prevBuffer.getReadPointer( 1 );
+    float *proWtL = m_prevBuffer.getWritePointer( 0 );
+    float *proWtR = m_prevBuffer.getWritePointer( 1 );
 
     int nSig = bufSize;
-    float *outLp = new float[nFFT];
-    float *outRp = new float[nFFT];
-    convolution( inL, m_fltl, outLp, nFFT, nSig );
-    convolution( inR, m_fltr, outRp, nFFT, nSig );
+
+    convolution( inL, m_cFilterL, m_foutL, nFFT, nSig );
+    convolution( inR, m_cFilterR, m_foutR, nFFT, nSig );
     for ( int i = 0; i < bufSize; i++ )
     {
-        outL[i] = ( outLp[i] + proRdL[i] ) / 2;
-        outR[i] = ( outRp[i] + proRdR[i] ) / 2;
-        proWtL[i] = outLp[i + bufSize];
-        proWtR[i] = outRp[i + bufSize];
+        outL[i] = ( m_foutL[i] + proRdL[i] ) / 2;
+        outR[i] = ( m_foutR[i] + proRdR[i] ) / 2;
+        proWtL[i] = m_foutL[i + bufSize];
+        proWtR[i] = m_foutR[i + bufSize];
     }
-    delete[] outLp;
-    delete[] outRp;
 }
 
 void Mixer3D::convolution( const float*input, Complex*irc, float *output, int nFFT, int nSig )
 {
-
-    Complex*inc, *outc;
-    inc = new Complex[nFFT];
     for ( int i = 0; i < nFFT; i++ )
     {
         if ( i < nSig )
         {
-            inc[i] = Complex( (float)input[i] );
+            m_cInput[i] = Complex( (float)input[i] );
         }
         else
         {
-            inc[i] = Complex( 0 );
+            m_cInput[i] = Complex( 0 );
         }
     }
 
-    CFFT::Forward( inc, nFFT );
-    outc = new Complex[nFFT];
+    CFFT::Forward( m_cInput, nFFT );
     for ( int i = 0; i < nFFT; i++ )
     {
-        outc[i] = inc[i] * irc[i];
+        m_cOutput[i] = m_cInput[i] * irc[i];
     }
 
-    CFFT::Inverse( outc, nFFT );
+    CFFT::Inverse( m_cOutput, nFFT );
 
     for ( int i = 0; i < nFFT; i++ )
     {
-        output[i] = (float)( outc[i].real() );
+        output[i] = (float)( m_cOutput[i].real() );
     }
-    delete[] inc;
-    delete[] outc;
-    
 }
 
 
+
+Mixer3D::AudioSampleBuffer::AudioSampleBuffer( int16_t*pData, size_t nSamples )
+{
+    m_nSample = nSamples;
+    m_pData[0] = new float[nSamples];
+    m_pData[1] = new float[nSamples];
+    if ( pData )
+    {
+        for ( size_t i = 0; i < nSamples; i++ )
+        {
+            m_pData[0][i] = S16ToFloat( pData[i * 2] );
+            m_pData[1][i] = S16ToFloat( pData[i * 2 + 1] );
+        }
+    }
+    else
+    {
+        memset( m_pData[0], 0, nSamples*sizeof( float ) );
+        memset( m_pData[1], 0, nSamples*sizeof( float ) );
+    }
+}
+
+Mixer3D::AudioSampleBuffer::~AudioSampleBuffer()
+{
+    delete[] m_pData[0];
+    delete[] m_pData[1];
+}
+
+const float* Mixer3D::AudioSampleBuffer::getReadPointer( int index )
+{
+    return m_pData[index];
+}
+
+int Mixer3D::AudioSampleBuffer::getNumSamples()
+{
+    return m_nSample;
+}

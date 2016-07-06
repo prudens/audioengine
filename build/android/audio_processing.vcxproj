@@ -1,0 +1,368 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x86">
+      <Configuration>Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x86">
+      <Configuration>Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{6d569838-f841-48f2-809b-9e832add2f82}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>audio_processing</RootNamespace>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
+    <ProjectName>audio_processing</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_3_6</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_3_6</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_3_6</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_3_6</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_3_6</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_3_6</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_3_6</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_3_6</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <UseMultiToolTask>true</UseMultiToolTask>
+    <TargetName>libaudio_processing</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <TargetName>libaudio_processing</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>../../processing/src/;../../processing/src/webrtc/common_audio/signal_processing/include;C:\ProgramData\Microsoft\AndroidNDK\android-ndk-r10e\sources\android\cpufeatures\;../../processing/src/webrtc/modules/audio_coding/codecs/isac/main/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WEBRTC_ANDROID;WEBRTC_POSIX;WEBRTC_ARCH_ARM_V7A;WEBRTC_LINUX;__UCLIBC__;__STDC_FORMAT_MACROS;__STDC_CONSTANT_MACROS;WEBRTC_DETECT_NEON;WEBRTC_NS_FIXED</PreprocessorDefinitions>
+      <CppLanguageStandard>c++11</CppLanguageStandard>
+      <ExceptionHandling>Enabled</ExceptionHandling>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <CompileAs>Default</CompileAs>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <EnableNeonCodegen>true</EnableNeonCodegen>
+    </ClCompile>
+    <Link>
+      <LibraryDependencies>$(StlLibraryName);%(LibraryDependencies);m;log;</LibraryDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>../../processing/src/;../../processing/src/webrtc/modules/audio_coding/codecs/isac/main/include;../../processing/src/webrtc/common_audio/signal_processing/include;$(Sysroot)\usr\include;C:\ProgramData\Microsoft\AndroidNDK\android-ndk-r10e\sources\android\cpufeatures\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WEBRTC_ANDROID;WEBRTC_POSIX;WEBRTC_ARCH_ARM_V7A;WEBRTC_LINUX;__UCLIBC__;__STDC_FORMAT_MACROS;__STDC_CONSTANT_MACROS;WEBRTC_DETECT_NEON;WEBRTC_NS_FIXED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <CppLanguageStandard>c++11</CppLanguageStandard>
+      <ExceptionHandling>Enabled</ExceptionHandling>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\processing\src\webrtc\base\base_event.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\base_logging.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\checks.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\common.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\criticalsection.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\event_tracer.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\platform_file.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\platform_thread.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\stringencode.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\stringutils.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\systeminfo.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\thread_checker_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\base\timeutils.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\audio_converter.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\audio_ring_buffer.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\audio_util.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\blocker.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\channel_buffer.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\fft4g.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\fir_filter.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\fir_filter_neon.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\lapped_transform.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\real_fourier.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\real_fourier_ooura.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\resampler\push_resampler.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\resampler\push_sinc_resampler.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\resampler\resampler.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\resampler\sinc_resampler.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\resampler\sinc_resampler_neon.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\resampler\sinusoidal_linear_chirp_source.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\ring_buffer.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\auto_correlation.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\auto_corr_to_refl_coef.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\complex_bit_reverse.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\complex_fft.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\copy_set_operations.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\cross_correlation.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\cross_correlation_neon.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\division_operations.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\dot_product_with_scale.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\downsample_fast.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\downsample_fast_neon.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\energy.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\filter_ar.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\filter_ar_fast_q12.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\filter_ma_fast_q12.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\get_hanning_window.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\get_scaling_square.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\ilbc_specific_functions.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\levinson_durbin.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\lpc_to_refl_coef.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\min_max_operations.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\min_max_operations_neon.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\randomization_functions.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\real_fft.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\refl_coef_to_lpc.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\resample.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\resample_48khz.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\resample_by_2.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\resample_by_2_internal.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\resample_fractional.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\spl_init.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\spl_splitting_filter.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\spl_sqrt.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\spl_sqrt_floor.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\sqrt_of_one_minus_x_squared.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\vector_scaling_operations.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\sparse_fir_filter.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\vad\vad.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\vad\vad_core.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\vad\vad_filterbank.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\vad\vad_gmm.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\vad\vad_sp.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\vad\webrtc_vad.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\wav_file.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\wav_header.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\common_audio\window_generator.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\audio_decoder.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\audio_encoder.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\locked_bandwidth_info.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\arith_routines.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\arith_routines_hist.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\arith_routines_logist.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\audio_decoder_isac.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\audio_encoder_isac.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\bandwidth_estimator.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\crc.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\decode.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\decode_bwe.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\encode.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\encode_lpc_swb.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\entropy_coding.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\fft.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\filterbanks.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\filterbank_tables.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\filter_functions.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\intialize.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\isac.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\lattice.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\lpc_analysis.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\lpc_gain_swb_tables.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\lpc_shape_swb12_tables.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\lpc_shape_swb16_tables.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\lpc_tables.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\pitch_estimator.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\pitch_filter.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\pitch_gain_tables.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\pitch_lag_tables.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\spectrum_ar_model_tables.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_coding\codecs\isac\main\source\transform.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aecm\aecm_core.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aecm\aecm_core_c.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aecm\aecm_core_neon.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aecm\echo_control_mobile.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_core.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_core_neon.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_rdft.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_rdft_neon.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\aec_resampler.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\aec\echo_cancellation.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\agc\agc.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\agc\agc_manager_direct.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\agc\histogram.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\agc\legacy\analog_agc.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\agc\legacy\digital_agc.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\agc\utility.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\audio_buffer.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\audio_processing_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\beamformer\array_util.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\beamformer\covariance_matrix_generator.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\beamformer\nonlinear_beamformer.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\echo_cancellation_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\echo_control_mobile_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\gain_control_for_experimental_agc.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\gain_control_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\high_pass_filter_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\intelligibility\intelligibility_enhancer.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\intelligibility\intelligibility_utils.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\level_estimator_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\logging\aec_logging_file_handling.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\noise_suppression_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\ns\noise_suppression.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\ns\noise_suppression_x.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\ns\nsx_core.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\ns\nsx_core_c.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\ns\nsx_core_neon.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\ns\ns_core.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\processing_component.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\rms_level.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\splitting_filter.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\three_band_filter_bank.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\click_annotate.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\file_utils.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\moving_moments.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\transient_detector.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\transient_suppressor.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\wpd_node.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\transient\wpd_tree.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\typing_detection.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\utility\delay_estimator.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\utility\delay_estimator_wrapper.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\gmm.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\pitch_based_vad.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\pitch_internal.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\pole_zero_filter.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\standalone_vad.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\vad_audio_proc.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\vad_circular_buffer.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\vad\voice_activity_detector.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\modules\audio_processing\voice_detection_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\aligned_malloc.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\cpu-features.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\cpu_features.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\cpu_features_android.c" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\cpu_info.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\event.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\event_timer_posix.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\field_trial_default.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\file_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\logging.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\metrics_default.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\rw_lock.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\rw_lock_posix.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\sleep.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\sort.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\tick_util.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\trace_impl.cc" />
+    <ClCompile Include="..\..\processing\src\webrtc\system_wrappers\source\trace_posix.cc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

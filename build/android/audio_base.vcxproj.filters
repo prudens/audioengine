@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="audio_device.vcxproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="header">
+      <UniqueIdentifier>{0ac3087f-9ef3-4a25-a9c7-06b803e09229}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source">
+      <UniqueIdentifier>{115349a7-fd9f-43ee-8401-f1f677607038}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\base\rgba.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\fft.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\audio_util.cc">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\asyntask.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\base\asyntask.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\audio_util.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\circular_buffer.hpp">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\common_defines.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\fft.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\min_max_heap.hpp">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\rgba.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\string_cvt.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\time_cvt.hpp">
+      <Filter>header</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

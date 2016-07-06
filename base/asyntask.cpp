@@ -57,7 +57,7 @@ namespace
                 {
                     return;
                 }
-                int32_t sleep_time = std::numeric_limits<int32_t>::max MAX_MACRO_COMPILE_SUPPORT();//列表为空的时候就睡眠30ms
+                int32_t sleep_time = std::numeric_limits<int32_t>::max MAX_MACRO_COMPILE_SUPPORT();
 
                 std::unique_lock <std::mutex> lck( _lock );
                 if ( !_tasks.empty() )

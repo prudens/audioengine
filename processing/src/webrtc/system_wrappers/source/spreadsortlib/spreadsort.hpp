@@ -24,6 +24,7 @@ Scott McMurray
 namespace boost {
   namespace detail {
   	//This only works on unsigned data types
+#undef getchar
   	template <typename T>
   	inline unsigned 
   	rough_log_2_size(const T& input) 
@@ -1682,6 +1683,8 @@ namespace boost {
   		++last;
   		detail::reverse_string_sort(first, last, getchar, length, comp, *first, getchar((*first), 0));
   	}
+
+#define	getchar()	getc(stdin)
   }
 }
 
