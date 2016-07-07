@@ -15,22 +15,27 @@
 #include "io/wav_file.h"
 #include "base/circular_buffer.hpp"
 #include "effect/3d/include/mixer3d.h"
+#include "audio_effect.h"
+
 #ifdef _DEBUG
 #pragma comment(lib,"../build/winx/Debug/audio_device.lib")
 #pragma comment(lib,"../build/winx/Debug/audio_effect.lib")
 #pragma comment(lib,"../build/winx/Debug/audio_io.lib")
 #pragma comment(lib,"../build/winx/Debug/audio_base.lib")
+#pragma comment(lib,"../build/winx/Debug/audio_processing.lib")
 #else
 #pragma comment(lib,"../build/winx/Release/audio_device.lib")
 #pragma comment(lib,"../build/winx/Release/audio_effect.lib")
 #pragma comment(lib,"../build/winx/Release/audio_io.lib")
 #pragma comment(lib,"../build/winx/Release/audio_base.lib")
+#pragma comment(lib,"../build/winx/Release/audio_processing.lib")
 #endif
 #pragma comment(lib, "ws2_32")
 #pragma comment(lib, "strmiids")
 #pragma comment(lib, "msdmo")
 #pragma comment(lib, "dmoguids")
 #pragma comment(lib, "wmcodecdspuuid")
+#pragma comment(lib,"winmm.lib")
 using namespace std;
 typedef lock_guard<mutex> lockguard;
 
@@ -125,19 +130,22 @@ class CAudioBufferProc : public  AudioBufferProc
     list<char*> m_list;
     mutex   m_lock;
     Mixer3D m_Mixer3D;
+    AudioEffect* pEffect;
 public:
     CAudioBufferProc(bool processhrtf) :m_processhrtf(processhrtf), m_Mixer3D(48000)
     {
          int nAzimuth = 90;
          int nElevation = 0;
          m_Mixer3D.updateAngles( nAzimuth, nElevation );
+         pEffect = new AudioEffect;
+         pEffect->Init( 44100, 2, 44100, 2 );
     }
 
     virtual void RecordingDataIsAvailable( const void*data, size_t samples )
     {
         lockguard lg( m_lock );
 
-        
+        pEffect->ProcessCaptureStream( (int16_t*)data, samples );
         if (m_processhrtf)
         {
             m_Mixer3D.AddProcessData( (int16_t*)data, samples / 2 );
@@ -220,9 +228,10 @@ void test_conv()
 void test_windows_core_audio()
 {
     AudioDevice* pWinDevice = AudioDevice::Create();
+
     pWinDevice->Initialize();
-    pWinDevice->SetRecordingFormat( 48000, 2 );
-    pWinDevice->SetPlayoutFormat( 48000, 2 );
+    pWinDevice->SetRecordingFormat( 44100, 2 );
+    pWinDevice->SetPlayoutFormat( 44100, 2 );
     pWinDevice->InitPlayout();
     pWinDevice->InitRecording();
 
@@ -322,8 +331,9 @@ void test_real_time_3d()
             default:
                 printf( "invalid argment:%c",ch );
             }
-            nAzimuth = std::min( std::max( nAzimuth, -180 ), 180 );
-            nElevation = std::min( std::max( nElevation, -40 ), 90 );
+#define fuck
+            nAzimuth = std::min fuck( std::max fuck ( nAzimuth, -180 ), 180 );
+            nElevation = std::min fuck( std::max fuck ( nElevation, -40 ), 90 );
             cb.UpdateAngles( nAzimuth, nElevation );
             
             printf( "nAzimuth:%d,nElevation:%d\r", nAzimuth, nElevation );
@@ -402,10 +412,10 @@ void test_circular_buffer()
 
 int main( int argc, char** argv )
 {
-   // test_windows_core_audio();
+    test_windows_core_audio();
    // test_conv();
    // test_hrtf(45,0,"C:/Users/zhangnaigan/Desktop/3D_test_Audio/es01.wav","D:/pro-48000-1.wav");
-    test_real_time_3d();
+   // test_real_time_3d();
  //   test_mit_hrtf_get();
     //test_circular_buffer();
     system( "pause" );

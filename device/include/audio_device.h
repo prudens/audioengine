@@ -14,6 +14,7 @@ enum AudioError
     AE_FEATRURE_UNSUPPORTED,
     AE_RECORD_FORMAT_CHANGE, // you can call relative function to get new format 
 };
+
 enum AudioPropertyID
 {
     ID_ENABLE_AEC,                  // enable build in aec
