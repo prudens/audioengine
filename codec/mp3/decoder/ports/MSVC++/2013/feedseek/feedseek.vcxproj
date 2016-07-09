@@ -22,6 +22,9 @@
       <Project>{67caa87b-7cf1-4f93-bb67-21c513f40803}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\src\libmpg123\mpg123.h.in" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{AE56D9D0-ECBA-44CD-943A-E530F6C46E15}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

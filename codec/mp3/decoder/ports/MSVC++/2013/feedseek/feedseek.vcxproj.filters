@@ -3,4 +3,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\examples\feedseek.c" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\src\libmpg123\mpg123.h.in" />
+  </ItemGroup>
 </Project>
