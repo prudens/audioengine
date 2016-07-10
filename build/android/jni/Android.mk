@@ -57,14 +57,19 @@ LOCAL_CFLAGS := \
 				-mthumb\
 				-mfloat-abi=softfp\
 				-mfpu=neon
-                
+
+ifndef $(NDK_ROOT)
+NDK_ROOT            :=C:/ProgramData/Microsoft/AndroidNDK/android-ndk-r10e#
+endif
+               
 LOCAL_MODULE        :=audio_processing
 MY_CLIENT_PATH      :=../../../processing/src
 MY_SRC_PATH         :=$(MY_CLIENT_PATH)##
 #LOCAL_CPP_EXTENSION :=.cpp .cc .c
 LOCAL_C_INCLUDES    :=$(LOCAL_PATH)/../../../processing/src/ \
-                      C:/ProgramData/Microsoft/AndroidNDK64/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include\
-					  C:/ProgramData/Microsoft\AndroidNDK64/android-ndk-r10e/platforms/android-21/arch-arm/usr/include\
+                      $(NDK_ROOT)/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include\
+					  $(NDK_ROOT)/sources/cxx-stl/gnu-libstdc++/4.9/include\
+					  $(NDK_ROOT)/platforms/android-21/arch-arm/usr/include\
 					  $(LOCAL_PATH)/../../../processing/src/webrtc/common_audio/signal_processing/include\
 					  $(LOCAL_PATH)/../../../processing/src/webrtc/system_wrappers/source/ \
 					  $(LOCAL_PATH)/../../../processing/src/webrtc/modules/audio_coding/codecs/isac/main/include

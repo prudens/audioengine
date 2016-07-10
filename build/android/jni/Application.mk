@@ -1,4 +1,4 @@
-APP_PROJECT_PATH := ./
+#APP_PROJECT_PATH := ..
 APP_MODULES := audio_processing
 APP_OPTIM := release
 APP_ABI :=armeabi-v7a
