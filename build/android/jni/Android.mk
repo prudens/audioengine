@@ -16,7 +16,7 @@
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
-LOCAL_CFLAGS := -std=c++11\
+LOCAL_CPPFLAGS := -std=c++11\
                 -DWEBRTC_ANDROID\
 				-DWEBRTC_POSIX\
 				-DWEBRTC_ARCH_ARM_V7A\
@@ -38,17 +38,36 @@ LOCAL_CFLAGS := -std=c++11\
 				-mfloat-abi=softfp\
 				-mfpu=neon\
 				-fpermissive
+LOCAL_CFLAGS := \
+                -DWEBRTC_ANDROID\
+				-DWEBRTC_POSIX\
+				-DWEBRTC_ARCH_ARM_V7A\
+				-DWEBRTC_LINUX\
+				-DNOMINMAX\
+				-DENABLE_WEBRTC=1\
+				-DNO_TCMALLOC\
+				-DALLOCATOR_SHIM\
+				-D__STD_C\
+				-DWEBRTC_NS_FIXED\
+				-D__STDC_FORMAT_MACROS\
+				-D__STDC_CONSTANT_MACROS\
+				-D__UCLIBC__\
+				-DWEBRTC_DETECT_NEON\
+				-fno-omit-frame-pointer\
+				-mthumb\
+				-mfloat-abi=softfp\
+				-mfpu=neon
                 
 LOCAL_MODULE        :=audio_processing
 MY_CLIENT_PATH      :=../../../processing/src
 MY_SRC_PATH         :=$(MY_CLIENT_PATH)##
-LOCAL_CPP_EXTENSION :=.cpp .cc .c
-LOCAL_C_INCLUDES    :=$(LOCAL_PATH)/../../src/ \
+#LOCAL_CPP_EXTENSION :=.cpp .cc .c
+LOCAL_C_INCLUDES    :=$(LOCAL_PATH)/../../../processing/src/ \
                       C:/ProgramData/Microsoft/AndroidNDK64/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include\
 					  C:/ProgramData/Microsoft\AndroidNDK64/android-ndk-r10e/platforms/android-21/arch-arm/usr/include\
-					  $(LOCAL_PATH)/../../src/webrtc/common_audio/signal_processing/include\
-					  $(LOCAL_PATH)/../../src/webrtc/system_wrappers/source/ \
-					  $(LOCAL_PATH)/../../src/webrtc/modules/audio_coding/codecs/isac/main/include
+					  $(LOCAL_PATH)/../../../processing/src/webrtc/common_audio/signal_processing/include\
+					  $(LOCAL_PATH)/../../../processing/src/webrtc/system_wrappers/source/ \
+					  $(LOCAL_PATH)/../../../processing/src/webrtc/modules/audio_coding/codecs/isac/main/include
 
 
 SRC_WEBRTC_BASE     :=$(MY_SRC_PATH)/webrtc/base
@@ -138,7 +157,7 @@ MY_SRC_FILES :=$(SRC_WEBRTC_BASE)/timeutils.cc\
 			   $(SRC_WEBRTC_SYSTEM_SWRAPPERS)/trace_impl.cc\
 			   $(SRC_WEBRTC_SYSTEM_SWRAPPERS)/trace_posix.cc\
 			   $(SRC_WEBRTC_ISAC)/../audio_encoder.cc\
-			   $(SRC_WEBRTC_ISAC)/../audio_encoder.cc\
+			   $(SRC_WEBRTC_ISAC)/../audio_decoder.cc\
 			   $(SRC_WEBRTC_ISAC)/main/source/arith_routines.c\
 			   $(SRC_WEBRTC_ISAC)/main/source/arith_routines_hist.c\
 			   $(SRC_WEBRTC_ISAC)/main/source/arith_routines_logist.c\

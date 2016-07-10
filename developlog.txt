@@ -1,2 +1,5 @@
 ﻿2016-6-30 主要调试hrtf库的使用，昨天之所以效果不行，主要原因是精度没控制好，现在通过转换为double就ok了。
 2016-7-06 添加对android的支持，hrtf调试完毕。更新vs2015 update3，clang 3.8
+2016-7-10 需改了audio_processing 的ndk-build 编译脚本，之前编译的时候一直出一大堆重复编译目标的warning，
+          今天通过禁用LOCAL_CPP_EXTENSION选项并添加LOCAL_CFLAGS 以支持C程序，可以减少很多warning。
+          添加MP3的支持。
