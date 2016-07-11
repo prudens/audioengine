@@ -31,7 +31,7 @@ public:
     virtual ~AudioBufferProc() {};
     virtual void RecordingDataIsAvailable(const void*data, size_t size_in_byte) = 0;
     virtual size_t NeedMorePlayoutData( void*data, size_t size_in_byte ) = 0;
-    virtual void ErrorOccurred(AudioError aeCode) = 0;
+    virtual void ErrorOccurred( AudioError /*aeCode*/ ) {};
 };
 
 

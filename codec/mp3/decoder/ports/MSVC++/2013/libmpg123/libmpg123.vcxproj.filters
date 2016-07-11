@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\src\libmpg123\compat.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\dct64.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\dct64_i386.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\dct64_i486.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\equalizer.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\feature.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\format.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\frame.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\icy.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\icy2utf8.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\id3.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\index.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\layer1.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\layer2.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\layer3.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\libmpg123.c" />
+    <ClCompile Include="..\..\msvc.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\ntom.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\optimize.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\parse.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\readers.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\stringbuf.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\synth.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\synth_8bit.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\synth_i486.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\synth_real.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\synth_s32.c" />
+    <ClCompile Include="..\..\..\..\src\libmpg123\tabinit.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\src\libmpg123\compat.h" />
+    <ClInclude Include="..\..\config.h" />
+    <ClInclude Include="..\..\..\..\src\libmpg123\debug.h" />
+    <ClInclude Include="..\..\..\..\src\libmpg123\decode.h" />
+    <ClInclude Include="..\..\..\..\src\libmpg123\frame.h" />
+    <ClInclude Include="..\..\..\..\src\libmpg123\getbits.h" />
+    <ClInclude Include="..\..\..\..\src\libmpg123\getcpuflags.h" />
+    <ClInclude Include="..\..\..\..\src\libmpg123\huffman.h" />
+    <ClInclude Include="..\..\..\..\src\libmpg123\icy.h" />
+    <ClInclude Include="..\..\..\..\src\libmpg123\icy2utf8.h" />
+    <ClInclude Include="..\..\..\..\src\libmpg123\id3.h" />
+    <ClInclude Include="..\..\..\..\src\libmpg123\index.h" />
+    <ClInclude Include="..\..\..\..\src\libmpg123\l2tables.h" />
+    <ClInclude Include="..\..\..\..\src\libmpg123\mangle.h" />
+    <ClInclude Include="..\..\mpg123.h" />
+    <ClInclude Include="..\..\..\..\src\libmpg123\mpg123lib_intern.h" />
+    <ClInclude Include="..\..\..\..\src\libmpg123\optimize.h" />
+    <ClInclude Include="..\..\..\..\src\libmpg123\parse.h" />
+    <ClInclude Include="..\..\..\..\src\libmpg123\reader.h" />
+    <ClInclude Include="..\..\..\..\src\libmpg123\sample.h" />
+    <ClInclude Include="..\..\..\..\src\libmpg123\synth.h" />
+    <ClInclude Include="..\..\..\..\src\libmpg123\true.h" />
+    <ClInclude Include="..\..\..\..\src\libmpg123\mpg123.h.in" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="asm">
+      <UniqueIdentifier>{9eb72bb5-e31d-4ea3-a961-1b4887d888d2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <assemble Include="asm\dct36_3dnow.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\dct36_3dnowext.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\dct36_sse.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\dct64_3dnow.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\dct64_3dnowext.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\dct64_mmx.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\dct64_sse.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\dct64_sse_float.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\equalizer_3dnow.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\getcpuflags.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\synth_3dnow.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\synth_3dnowext.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\synth_i586.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\synth_mmx.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\synth_sse.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\synth_sse_accurate.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\synth_sse_float.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\synth_sse_s32.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\synth_stereo_sse_accurate.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\synth_stereo_sse_float.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\synth_stereo_sse_s32.asm">
+      <Filter>asm</Filter>
+    </assemble>
+    <assemble Include="asm\tabinit_mmx.asm">
+      <Filter>asm</Filter>
+    </assemble>
+  </ItemGroup>
+</Project>
