@@ -131,6 +131,10 @@ public:
         lockguard lg( m_lock );
 
         pEffect->ProcessCaptureStream( (int16_t*)data, samples );
+        if (!pEffect->HasVoice())
+        {
+            //printf( "cur frame is silent\n" );
+        }
         if (m_processhrtf)
         {
             m_Mixer3D.AddProcessData( (int16_t*)data, samples / 2 );
@@ -150,7 +154,14 @@ public:
         else
         {
             char* pData = new char[samples];
-            memcpy( pData, data, samples );
+            if (!pEffect->HasVoice())
+            {
+                memset( pData, 0, samples );
+            }
+            else
+            {
+                memcpy( pData, data, samples );
+            }
             m_list.push_back( (char*)pData );
         }
     }
@@ -410,10 +421,14 @@ public:
     virtual void RecordingDataIsAvailable( const void*data, size_t size_in_byte ) {};
     virtual size_t NeedMorePlayoutData( void*data, size_t size_in_byte )
     {
-        float buf[441 * 4];
-        pMp3Reader->ReadSamples( size_in_byte / 2, buf );
-        FloatToS16(buf,size_in_byte/2,(int16_t*)data);
-        pMp3Reader->ReadSamples( size_in_byte / 2, (int16_t*)data );
+//        float buf[441 * 4];
+//        pMp3Reader->ReadSamples( size_in_byte / 2, buf );
+//        FloatToS16(buf,size_in_byte/2,(int16_t*)data);
+        int len = pMp3Reader->ReadSamples( size_in_byte / 2, (int16_t*)data );
+        if (len == 0)
+        {
+            pMp3Reader->SeekTime( 0 );
+        }
         return size_in_byte;
     }
 };
@@ -424,8 +439,6 @@ void test_play_mp3()
 {
     AudioDevice* pWinDevice = AudioDevice::Create();
     pWinDevice->Initialize();
-//     pWinDevice->SetRecordingFormat( 48000, 2 );
-//     pWinDevice->SetPlayoutFormat( 48000, 2 );
     pWinDevice->InitPlayout();
     pWinDevice->InitRecording();
 
@@ -440,13 +453,13 @@ void test_play_mp3()
 
 int main( int argc, char** argv )
 {
-    //test_windows_core_audio();
+    test_windows_core_audio();
    // test_conv();
    // test_hrtf(45,0,"C:/Users/zhangnaigan/Desktop/3D_test_Audio/es01.wav","D:/pro-48000-1.wav");
    // test_real_time_3d();
  //   test_mit_hrtf_get();
     //test_circular_buffer();
-    test_play_mp3();
+  //  test_play_mp3();
     system( "pause" );
     return 0;
 

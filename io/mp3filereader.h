@@ -13,16 +13,20 @@ public:
     };
     Mp3FileReader( const char* filename );
     ~Mp3FileReader();
-    virtual void Destroy()override;
-    virtual int SampleRate() const override;
+    virtual void   Destroy()override;
+    virtual int    SampleRate() const override;
     virtual size_t NumChannels() const override;
     virtual size_t NumSamples() const override;
     virtual size_t ReadSamples( size_t num_samples, float* samples ) override;
     virtual size_t ReadSamples( size_t num_samples, int16_t* samples ) override;
+    virtual size_t RemainSamples()const override;
+    virtual bool   SeekSamples( size_t pos ) override;
+    virtual bool   SeekTime( double time ) override;
 private:
     bool OpenFile( const char*filename, bool m_bFloatFormat );
-    bool Close();
+    void Close();
     void InitWavFormat(int enc);
+private:
     mpg123_handle *m_hFile = nullptr;
     long m_nSamplerate = 0;
     int m_nChannels = 0;

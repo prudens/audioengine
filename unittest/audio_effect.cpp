@@ -29,6 +29,7 @@ AudioEffect::AudioEffect()
 
     m_apm->noise_suppression()->set_level( webrtc::NoiseSuppression::kLow );
     m_apm->voice_detection()->set_likelihood( VoiceDetection::kLowLikelihood );
+    m_apm->level_estimator()->Enable( true );
     m_bEnable = true;
     m_nCheckVad = 0;
     m_stream_delay = kAecTotalDelayMs;
@@ -65,6 +66,13 @@ void AudioEffect::ProcessCaptureStream( int16_t* audio_samples, size_t frame_byt
     {
         return;
     }
+
+    bool b441 = false;
+    if ( frame_byte_size / 2 / m_recChannel == 441 )
+    {
+        frame_byte_size = 440 * m_recChannel * 2;
+        b441 = true;
+    }
     AudioFrame af;
     size_t outLen = 0;
     int err = 0;
@@ -81,7 +89,7 @@ void AudioEffect::ProcessCaptureStream( int16_t* audio_samples, size_t frame_byt
                     AudioFrame::kNormalSpeech,
                     AudioFrame::kVadUnknown,
                     m_recChannel );
-//     m_apm->set_stream_delay_ms( m_stream_delay );
+    m_apm->set_stream_delay_ms( m_stream_delay );
     if ( 0 != (err = m_apm->ProcessStream( &af )) )
     {
         return;
@@ -92,9 +100,22 @@ void AudioEffect::ProcessCaptureStream( int16_t* audio_samples, size_t frame_byt
         return;
     }
      
-
-    if (!m_apm->voice_detection()->stream_has_voice())
+    if ( b441 )
     {
+        if ( m_recChannel == 1 )
+        {
+            audio_samples[440] = audio_samples[439];
+        }
+        else
+        {
+            audio_samples[880] = audio_samples[878];
+            audio_samples[880 + 1] = audio_samples[879];
+        }
+    }
+    //printf( "level:%d\n", m_apm->level_estimator()->RMS() );
+    if (/*!m_apm->voice_detection()->stream_has_voice()*/m_apm->level_estimator()->RMS()>25 )
+    {
+        
         m_nCheckVad++;
     }
     else
@@ -113,6 +134,11 @@ void AudioEffect::ProcessRenderStream( int16_t*  audio_samples, size_t frame_byt
     if ( !m_bEnable )
     {
         return;
+    }
+
+    if ( frame_byte_size / 2 / m_recChannel == 441 )
+    {
+        frame_byte_size = 440 * m_recChannel * 2;
     }
 
     size_t outLen;
@@ -180,7 +206,7 @@ void AudioEffect::EnableAudioEffect( bool bEnable )
 
 bool AudioEffect::HasVoice() const
 {
-    return m_nCheckVad < 100; // 1s
+    return m_nCheckVad < 2; // 1s
 }
 
 bool AudioEffect::HadProcessingVoice()

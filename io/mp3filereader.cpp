@@ -28,6 +28,7 @@ Mp3FileReader::~Mp3FileReader()
 
 void Mp3FileReader::Destroy()
 {
+    Close();
     delete this;
 }
 
@@ -274,11 +275,14 @@ void Mp3FileReader::InitWavFormat(int enc)
     }
 }
 
-bool Mp3FileReader::Close()
+void Mp3FileReader::Close()
 {
-    int ret;
-    ret = mpg123_close( m_hFile );
-    CHECK_FAIL( ret );
+    if (!m_bInit)
+    {
+        return ;
+    }
+
+    mpg123_close( m_hFile );
     mpg123_delete( m_hFile );
     m_hFile = nullptr;
     m_bInit = false;
@@ -286,7 +290,31 @@ bool Mp3FileReader::Close()
     m_fcirbuf = nullptr;
     delete m_cirbuf;
     m_cirbuf = nullptr;
-    return true;
+}
+
+bool Mp3FileReader::SeekSamples( size_t pos )
+{
+    if ( !m_hFile )
+    {
+        return false;
+    }
+    off_t frame = mpg123_seek( m_hFile, (off_t)pos, SEEK_SET);
+    return mpg123_seek_frame( m_hFile, frame, SEEK_SET ) > 0;
+}
+
+bool Mp3FileReader::SeekTime( double time )
+{
+    if (!m_hFile)
+    {
+        return false;
+    }
+    off_t frame = mpg123_timeframe( m_hFile, time );
+    return mpg123_seek_frame( m_hFile, frame, SEEK_SET ) > 0;
+}
+
+size_t Mp3FileReader::RemainSamples() const
+{
+    return m_SampleRemain;
 }
 
 

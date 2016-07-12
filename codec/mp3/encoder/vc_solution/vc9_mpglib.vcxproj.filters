@@ -2,11 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source">
-      <UniqueIdentifier>{2e127414-8ca3-4fa0-8e64-c2222158a891}</UniqueIdentifier>
+      <UniqueIdentifier>{096b7bad-261b-4040-8867-1488d0b1dbd5}</UniqueIdentifier>
       <Extensions>c</Extensions>
     </Filter>
     <Filter Include="Include">
-      <UniqueIdentifier>{a33e027a-5ce5-43ba-84d5-917240eacb1c}</UniqueIdentifier>
+      <UniqueIdentifier>{c3d0f47b-17b3-49dd-be33-8fb7a495f24c}</UniqueIdentifier>
       <Extensions>h</Extensions>
     </Filter>
   </ItemGroup>
