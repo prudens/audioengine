@@ -412,6 +412,7 @@ public:
     Mp3ReadProc()
     {
         pMp3Reader = AudioReader::Create("E:/CloudMusic/Mariage.mp3",AFT_MP3);
+        pMp3Reader->SetSpeed( 2 );
 //        pMp3Reader->TrytoFormat( 48000, 2, false );
     }
     ~Mp3ReadProc()
@@ -453,13 +454,13 @@ void test_play_mp3()
 
 int main( int argc, char** argv )
 {
-    test_windows_core_audio();
+    //test_windows_core_audio();
    // test_conv();
    // test_hrtf(45,0,"C:/Users/zhangnaigan/Desktop/3D_test_Audio/es01.wav","D:/pro-48000-1.wav");
    // test_real_time_3d();
  //   test_mit_hrtf_get();
     //test_circular_buffer();
-  //  test_play_mp3();
+    test_play_mp3();
     system( "pause" );
     return 0;
 

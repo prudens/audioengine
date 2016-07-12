@@ -199,7 +199,10 @@ bool Mp3FileReader::OpenFile( const char*filename, bool m_bFloatFormat )
         fprintf( stderr, "mpg123_param failed: %s\n", mpg123_plain_strerror( ret ) );
         return false;
     }
-
+    if (m_Speed != 0)
+    {
+        SetSpeed( m_Speed );
+    }
     if ( m_bFloatFormat )
     {
         ret = mpg123_format_none(m_hFile);
@@ -315,6 +318,34 @@ bool Mp3FileReader::SeekTime( double time )
 size_t Mp3FileReader::RemainSamples() const
 {
     return m_SampleRemain;
+}
+
+bool Mp3FileReader::SetSpeed( double times )
+{
+    if (m_hFile == nullptr)
+    {
+        m_Speed = times;
+        return true;
+    }
+    if (times> 1)
+    {
+        int ret = mpg123_param( m_hFile, MPG123_UPSPEED, (int)times, 0 );
+        if ( ret != MPG123_OK )
+        {
+            fprintf( stderr, "mpg123_param  MPG123_UPSPEED failed: %s\n", mpg123_plain_strerror( ret ) );
+            return false;
+        }
+    }
+    else
+    {
+        int ret = mpg123_param( m_hFile, MPG123_DOWNSPEED, (int)(1./times), 0 );
+        if ( ret != MPG123_OK )
+        {
+            fprintf( stderr, "mpg123_param  MPG123_DOWNSPEED failed: %s\n", mpg123_plain_strerror( ret ) );
+            return false;
+        }
+    }
+    return true;
 }
 
 

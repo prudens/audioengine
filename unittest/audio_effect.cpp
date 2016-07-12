@@ -206,7 +206,7 @@ void AudioEffect::EnableAudioEffect( bool bEnable )
 
 bool AudioEffect::HasVoice() const
 {
-    return m_nCheckVad < 2; // 1s
+    return m_nCheckVad < 10; // 1s
 }
 
 bool AudioEffect::HadProcessingVoice()

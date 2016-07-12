@@ -22,6 +22,7 @@ public:
     virtual size_t RemainSamples()const override;
     virtual bool   SeekSamples( size_t pos ) override;
     virtual bool   SeekTime( double time ) override;
+    virtual bool   SetSpeed( double times ) override;
 private:
     bool OpenFile( const char*filename, bool m_bFloatFormat );
     void Close();
@@ -39,4 +40,5 @@ private:
     CircularBuffer<float>* m_fcirbuf;
     bool m_bInit = false;
     std::string m_filename;
+    double m_Speed;
 };
