@@ -35,11 +35,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\device\android\android_opensl.h" />
+    <ClInclude Include="..\..\device\android\com_snail_audio_device.h" />
+    <ClInclude Include="..\..\device\android\java_wrapper_device.h" />
+    <ClInclude Include="..\..\device\android\opensl_device.h" />
     <ClInclude Include="..\..\device\include\audio_device.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\device\android\android_opensl.cpp" />
+    <ClCompile Include="..\..\device\android\java_wrapper_device.cpp" />
+    <ClCompile Include="..\..\device\android\opensl_device.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\device\android\java\com\audioengine\audio\AudioDevice.java" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{021f8e24-71ca-4f4b-b913-f0b485c899ea}</ProjectGuid>

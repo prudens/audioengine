@@ -12,13 +12,27 @@
     <ClInclude Include="..\..\device\include\audio_device.h">
       <Filter>header</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\device\android\android_opensl.h">
+    <ClInclude Include="..\..\device\android\com_snail_audio_device.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\device\android\opensl_device.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\device\android\java_wrapper_device.h">
       <Filter>source</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\device\android\android_opensl.cpp">
+    <ClCompile Include="..\..\device\android\opensl_device.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\device\android\java_wrapper_device.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\device\android\java\com\audioengine\audio\AudioDevice.java">
+      <Filter>source</Filter>
+    </None>
   </ItemGroup>
 </Project>

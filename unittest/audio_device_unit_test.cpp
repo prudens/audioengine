@@ -123,7 +123,7 @@ public:
          int nElevation = 0;
          m_Mixer3D.updateAngles( nAzimuth, nElevation );
          pEffect = new AudioEffect;
-         pEffect->Init( 44100, 2, 44100, 2 );
+         pEffect->Init( 48000, 2, 48000, 2 );
     }
 
     virtual void RecordingDataIsAvailable( const void*data, size_t samples )
@@ -226,8 +226,8 @@ void test_windows_core_audio()
     AudioDevice* pWinDevice = AudioDevice::Create();
 
     pWinDevice->Initialize();
-    pWinDevice->SetRecordingFormat( 44100, 2 );
-    pWinDevice->SetPlayoutFormat( 44100, 2 );
+     pWinDevice->SetRecordingFormat( 48000, 2 );
+     pWinDevice->SetPlayoutFormat( 48000, 2 );
     pWinDevice->InitPlayout();
     pWinDevice->InitRecording();
 
@@ -454,13 +454,13 @@ void test_play_mp3()
 
 int main( int argc, char** argv )
 {
-    //test_windows_core_audio();
+    test_windows_core_audio();
    // test_conv();
    // test_hrtf(45,0,"C:/Users/zhangnaigan/Desktop/3D_test_Audio/es01.wav","D:/pro-48000-1.wav");
    // test_real_time_3d();
- //   test_mit_hrtf_get();
+   // test_mit_hrtf_get();
     //test_circular_buffer();
-    test_play_mp3();
+   // test_play_mp3();
     system( "pause" );
     return 0;
 

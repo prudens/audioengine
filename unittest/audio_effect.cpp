@@ -28,7 +28,7 @@ AudioEffect::AudioEffect()
     m_apm->high_pass_filter()->Enable( false );
 
     m_apm->noise_suppression()->set_level( webrtc::NoiseSuppression::kLow );
-    m_apm->voice_detection()->set_likelihood( VoiceDetection::kLowLikelihood );
+    m_apm->voice_detection()->set_likelihood( VoiceDetection::kVeryLowLikelihood );
     m_apm->level_estimator()->Enable( true );
     m_bEnable = true;
     m_nCheckVad = 0;
@@ -99,7 +99,13 @@ void AudioEffect::ProcessCaptureStream( int16_t* audio_samples, size_t frame_byt
     {
         return;
     }
-     
+    
+
+    if (!m_apm->voice_detection()->stream_has_voice())
+    {
+        memset( audio_samples, 0, frame_byte_size );
+    }
+
     if ( b441 )
     {
         if ( m_recChannel == 1 )
@@ -112,8 +118,8 @@ void AudioEffect::ProcessCaptureStream( int16_t* audio_samples, size_t frame_byt
             audio_samples[880 + 1] = audio_samples[879];
         }
     }
-    //printf( "level:%d\n", m_apm->level_estimator()->RMS() );
-    if (/*!m_apm->voice_detection()->stream_has_voice()*/m_apm->level_estimator()->RMS()>25 )
+
+    if (false)
     {
         
         m_nCheckVad++;
