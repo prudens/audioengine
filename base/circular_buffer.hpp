@@ -10,6 +10,7 @@
 #define _CircularBuffer_h
 
 #include <cstdint>
+#include <algorithm>
 
 template <class T>
 class CircularBuffer{
@@ -31,8 +32,8 @@ public:
        CircularBuffer(size_t capacity)
     :   _begIndex(0)
     ,   _endIndex(0)
-    ,   _size(0)
     ,   _capacity(capacity)
+    ,   _size( 0 )
     {
         _data = new T[capacity*sizeof(T)];
     }

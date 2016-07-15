@@ -129,8 +129,8 @@ public:
     virtual void RecordingDataIsAvailable( const void*data, size_t samples )
     {
         lockguard lg( m_lock );
-
         pEffect->ProcessCaptureStream( (int16_t*)data, samples );
+
         if (!pEffect->HasVoice())
         {
             //printf( "cur frame is silent\n" );

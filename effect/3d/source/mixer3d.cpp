@@ -10,10 +10,10 @@ Mixer3D::Mixer3D() :m_prevBuffer(nullptr, nFFT / 2)
 
 }
 
-Mixer3D::Mixer3D( size_t samplerate ) : m_nSamplerate( samplerate )
-, m_prevBuffer( nullptr, nFFT / 2 )
+Mixer3D::Mixer3D( size_t samplerate ) :m_prevBuffer( nullptr, nFFT / 2 )
 , m_audio_buffer_in( nFFT * 2 )
 , m_audio_buffer_out( nFFT * 2 )
+, m_nSamplerate( samplerate )
 {
 
 }

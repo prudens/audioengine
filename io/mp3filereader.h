@@ -12,7 +12,7 @@ public:
         WAVE_FORMAT_IEEE_FLOAT              =   0x0003, /* Microsoft Corporation */
     };
     Mp3FileReader( const char* filename );
-    ~Mp3FileReader();
+    virtual ~Mp3FileReader();
     virtual void   Destroy()override;
     virtual int    SampleRate() const override;
     virtual size_t NumChannels() const override;

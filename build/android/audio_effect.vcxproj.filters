@@ -1,2 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" />
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\..\effect\3d\include\mit_hrtf_lib.h" />
+    <ClInclude Include="..\..\effect\3d\include\mixer3d.h" />
+    <ClInclude Include="..\..\effect\3d\source\mit_hrtf_filter.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\effect\3d\source\mit_hrtf_lib.cpp" />
+    <ClCompile Include="..\..\effect\3d\source\mixer3d.cpp" />
+  </ItemGroup>
+</Project>

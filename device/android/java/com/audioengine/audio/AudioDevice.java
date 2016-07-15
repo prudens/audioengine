@@ -1,4 +1,4 @@
-package com.snail.audio;
+package com.audioengine.audio;
 
 import java.nio.ByteBuffer;
 
@@ -14,32 +14,7 @@ import android.os.Build;
 
 public class AudioDevice { 
 	
-	private class device_info
-	{
-		public int               source = 0;
-		public int               minbufsize = 0;
-		public int               channel = 0;
-		public int               samprate = 0;   
-		public int               frame_time = 0;
-	}
-	//error_code
-	public static final int ERR_OK = 0; 
-	public static final int ERR_NOT_FOUND_RECORD_DEVICE = ERR_OK+1;
-	public static final int ERR_NOT_FOUND_PLAYOUT_DEVICE = ERR_NOT_FOUND_RECORD_DEVICE+1;
-	public static final int ERR_ALLOC_MEMORY_FAILED = ERR_NOT_FOUND_PLAYOUT_DEVICE+1; 
-	public static final int ERR_OPEN_RECORD_DEVICE_FAILED = ERR_ALLOC_MEMORY_FAILED+1;
-	public static final int ERR_OPEN_PLAYOUT_DEVICE_FAILED = ERR_OPEN_RECORD_DEVICE_FAILED+1; 
-	public static final int ERR_INIT_RECORD_DEVICE_FAILED = ERR_OPEN_PLAYOUT_DEVICE_FAILED+1;
-	public static final int ERR_INIT_PLAYOUT_DEVICE_FAILED = ERR_INIT_RECORD_DEVICE_FAILED+1;
-	public static final int ERR_START_RECORD_FAILED = ERR_INIT_PLAYOUT_DEVICE_FAILED+1;
-	public static final int ERR_STOP_RECORD_FAILED = ERR_START_RECORD_FAILED+1; 
-	public static final int ERR_START_PLAYOUT_FAILED = ERR_STOP_RECORD_FAILED+1;
-	public static final int ERR_STOP_PLAYOUT_FAILED = ERR_START_PLAYOUT_FAILED+1;
-	public static final int ERR_READ_RECORD_DATA_FAILED = ERR_STOP_PLAYOUT_FAILED+1;
-	public static final int ERR_WRITE_PLAYOUT_DATA_FAILED = ERR_READ_RECORD_DATA_FAILED+1;
-	
 	final private int  bitrate = AudioFormat.ENCODING_PCM_16BIT; 
-	
 	
 	private obj_audio_info    m_info = new obj_audio_info();
     private device_info       m_rec_params = new device_info();

@@ -1,2 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" />
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\io\mp3filereader.cpp" />
+    <ClCompile Include="..\..\io\wav_file.cc" />
+    <ClCompile Include="..\..\io\wav_header.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\io\mp3filereader.h" />
+    <ClInclude Include="..\..\io\wav_file.h" />
+    <ClInclude Include="..\..\io\wav_header.h" />
+  </ItemGroup>
+</Project>

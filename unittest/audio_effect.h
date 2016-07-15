@@ -34,6 +34,7 @@ public:
         kTargetPlySampleRate = 16000,
         kAecTotalDelayMs     = 150,
     };
+    int GetRMS();
     void Init(size_t recSampleRate,size_t recChannel,size_t plySampleRate,size_t plyChannel);
     void ProcessCaptureStream( int16_t*  audio_samples, size_t frame_byte_size );
     void ProcessRenderStream( int16_t*  audio_samples, size_t frame_byte_size );//for aec
@@ -64,4 +65,5 @@ private:
     int32_t m_nCheckVad;
     int32_t m_stream_delay;
     int32_t m_nNormalVoice;
+    int m_rms;
 };

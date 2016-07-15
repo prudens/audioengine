@@ -17,6 +17,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_CPPFLAGS := -std=c++11\
+                -DHAVE_CONGIG_H
 				-DNOMINMAX\
 				-DNO_TCMALLOC\
 				-DALLOCATOR_SHIM\
@@ -34,7 +35,8 @@ LOCAL_CPPFLAGS := -std=c++11\
                 -DOPT_MULTI\
                 -DOPT_GENERIC\
 				-DOPT_NEON\
-				-DOPT_ARM
+				-DOPT_ARM\
+				-O2
 				
 LOCAL_CFLAGS := \
 				-DNOMINMAX\
@@ -51,7 +53,8 @@ LOCAL_CFLAGS := \
                 -DOPT_MULTI\
                 -DOPT_GENERIC\
 				-DOPT_NEON\
-				-DOPT_ARM
+				-DOPT_ARM\
+				-O2
 
 ifndef $(NDK_ROOT)
 NDK_ROOT            :=C:/ProgramData/Microsoft/AndroidNDK/android-ndk-r10e#
@@ -102,6 +105,8 @@ MY_SRC_FILES := \
 			   $(SRC_BASE)/dct64_neon.S\
 			   $(SRC_BASE)/dct36_neon.S\
 			   $(SRC_BASE)/check_neon.S\
+			   $(SRC_BASE)/getcpuflags_arm.c\
+			   $(SRC_BASE)/synth_arm.S
 			   
 LOCAL_SRC_FILES   :=$(MY_SRC_FILES)
 

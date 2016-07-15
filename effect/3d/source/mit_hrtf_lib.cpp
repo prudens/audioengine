@@ -23,7 +23,7 @@
 #include "normal/mit_hrtf_normal_96000.h"
 #include "diffuse/mit_hrtf_diffuse_96000.h"
 #include <limits>
-
+#include <cstdlib>
 
 
 /*	Internal functions for handling the indexing of the -/+40 degree elevation 

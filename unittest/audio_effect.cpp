@@ -100,7 +100,7 @@ void AudioEffect::ProcessCaptureStream( int16_t* audio_samples, size_t frame_byt
         return;
     }
     
-
+    m_rms = m_apm->level_estimator()->RMS();
     if (!m_apm->voice_detection()->stream_has_voice())
     {
         memset( audio_samples, 0, frame_byte_size );
@@ -223,5 +223,10 @@ bool AudioEffect::HadProcessingVoice()
 
 void AudioEffect::ParseParamNotify( const std::string& /*Param*/ )
 {
+}
+
+int AudioEffect::GetRMS()
+{
+    return m_rms;
 }
 
