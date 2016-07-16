@@ -65,7 +65,7 @@ LOCAL_C_INCLUDES    :=$(LOCAL_PATH)/../../../src/libpmg123 \
                       $(NDK_ROOT)/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include\
 					  $(NDK_ROOT)/sources/cxx-stl/gnu-libstdc++/4.9/include\
 					  $(NDK_ROOT)/platforms/android-21/arch-arm/usr/include\
-
+                      $(LOCAL_PATH)/.. \
 
 SRC_BASE := $(LOCAL_PATH)/../../../src/libmpg123
 MY_SRC_FILES := \

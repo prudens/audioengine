@@ -24,6 +24,7 @@
 #pragma comment(lib,"../build/winx/Debug/audio_base.lib")
 #pragma comment(lib,"../build/winx/Debug/audio_processing.lib")
 #pragma comment(lib,"../build/winx/Debug/libmpg123.lib")
+#pragma comment(lib,"../build/winx/Debug/libmp3lame.lib")
 #else
 #pragma comment(lib,"../build/winx/Release/audio_device.lib")
 #pragma comment(lib,"../build/winx/Release/audio_effect.lib")
@@ -31,6 +32,7 @@
 #pragma comment(lib,"../build/winx/Release/audio_base.lib")
 #pragma comment(lib,"../build/winx/Release/audio_processing.lib")
 #pragma comment(lib,"../build/winx/Release/libmpg123.lib")
+#pragma comment(lib,"../build/winx/Release/libmp3lame.lib")
 #endif
 #pragma comment(lib, "ws2_32")
 #pragma comment(lib, "strmiids")
@@ -405,21 +407,28 @@ void test_circular_buffer()
     assert( 0 == buffer.write( data, 4 ) );
 }
 #include "io/include/audioreader.h"
+#include "io/include/audiowriter.h"
+
 class Mp3ReadProc : public  AudioBufferProc
 {
     AudioReader* pMp3Reader;
+    AudioWriter* pMp3Writer;
 public:
     Mp3ReadProc()
     {
         pMp3Reader = AudioReader::Create("E:/CloudMusic/Mariage.mp3",AFT_MP3);
         pMp3Reader->SetSpeed( 2 );
-//        pMp3Reader->TrytoFormat( 48000, 2, false );
+        pMp3Writer = AudioWriter::Create( "D:/myvoice.mp3",44100,2, AFT_MP3 );
     }
     ~Mp3ReadProc()
     {
         pMp3Reader->Destroy();
+        pMp3Writer->Destroy();
     }
-    virtual void RecordingDataIsAvailable( const void*data, size_t size_in_byte ) {};
+    virtual void RecordingDataIsAvailable( const void*data, size_t size_in_byte )
+    {
+        pMp3Writer->WriteSamples( (int16_t*)data, size_in_byte );
+    };
     virtual size_t NeedMorePlayoutData( void*data, size_t size_in_byte )
     {
 //        float buf[441 * 4];
@@ -445,22 +454,24 @@ void test_play_mp3()
 
     Mp3ReadProc cb;
     pWinDevice->SetAudioBufferCallback( &cb );
-    pWinDevice->StartPlayout();
+  //  pWinDevice->StartPlayout();
+    pWinDevice->StartRecording();
     system( "pause" );
-    pWinDevice->StartPlayout();
+    pWinDevice->StopPlayout();
+    pWinDevice->StopRecording();
     pWinDevice->Terminate();
     pWinDevice->Release();
 }
 
 int main( int argc, char** argv )
 {
-    test_windows_core_audio();
+   // test_windows_core_audio();
    // test_conv();
    // test_hrtf(45,0,"C:/Users/zhangnaigan/Desktop/3D_test_Audio/es01.wav","D:/pro-48000-1.wav");
    // test_real_time_3d();
    // test_mit_hrtf_get();
     //test_circular_buffer();
-   // test_play_mp3();
+    test_play_mp3();
     system( "pause" );
     return 0;
 

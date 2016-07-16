@@ -824,8 +824,8 @@ bool WindowsCoreAudio::InitRecordingMedia()
         WAVEFORMATEX* pWfxIn = NULL;
         hr = m_spClientOut->GetMixFormat( &pWfxIn );
         IF_FAILED_EXIT( hr );
-        m_plySampleRate = pWfxIn->nSamplesPerSec;
-        m_plyChannels = pWfxIn->nChannels;
+        m_recSampleRate = pWfxIn->nSamplesPerSec;
+        m_recChannels = pWfxIn->nChannels;
         ::CoTaskMemFree( pWfxIn );
     }
 

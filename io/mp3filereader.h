@@ -1,6 +1,10 @@
 #pragma once
 #include "io/include/audioreader.h"
-#include "mpg123.h"
+#ifdef _WIN32
+#include "codec/mp3/decoder/ports/MSVC++/mpg123.h"
+#else
+#include "codec/mp3/decoder/src/libmpg123/mpg123.h"
+#endif
 #include "base/circular_buffer.hpp"
 #include <string>
 class Mp3FileReader : public AudioReader
