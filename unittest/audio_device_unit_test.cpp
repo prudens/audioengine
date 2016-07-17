@@ -16,6 +16,7 @@
 #include "base/circular_buffer.hpp"
 #include "effect/3d/include/mixer3d.h"
 #include "audio_effect.h"
+#include "base/time_cvt.hpp"
 
 #ifdef _DEBUG
 #pragma comment(lib,"../build/winx/Debug/audio_device.lib")
@@ -125,7 +126,7 @@ public:
          int nElevation = 0;
          m_Mixer3D.updateAngles( nAzimuth, nElevation );
          pEffect = new AudioEffect;
-         pEffect->Init( 48000, 2, 48000, 2 );
+         pEffect->Init( 44100, 2, 44100, 2 );
     }
 
     virtual void RecordingDataIsAvailable( const void*data, size_t samples )
@@ -228,8 +229,8 @@ void test_windows_core_audio()
     AudioDevice* pWinDevice = AudioDevice::Create();
 
     pWinDevice->Initialize();
-     pWinDevice->SetRecordingFormat( 48000, 2 );
-     pWinDevice->SetPlayoutFormat( 48000, 2 );
+     pWinDevice->SetRecordingFormat( 44100, 2 );
+     pWinDevice->SetPlayoutFormat( 44100, 2 );
     pWinDevice->InitPlayout();
     pWinDevice->InitRecording();
 
@@ -413,21 +414,26 @@ class Mp3ReadProc : public  AudioBufferProc
 {
     AudioReader* pMp3Reader;
     AudioWriter* pMp3Writer;
+    int64_t   m_ts = 0;
 public:
     Mp3ReadProc()
     {
         pMp3Reader = AudioReader::Create("E:/CloudMusic/Mariage.mp3",AFT_MP3);
         pMp3Reader->SetSpeed( 2 );
         pMp3Writer = AudioWriter::Create( "D:/myvoice.mp3",44100,2, AFT_MP3 );
+        std::cout << timestamp() << std::endl;
+        m_ts = timestamp();
     }
     ~Mp3ReadProc()
     {
         pMp3Reader->Destroy();
         pMp3Writer->Destroy();
+        auto ts = timestamp();
+        std::cout << ts - m_ts << std::endl;
     }
     virtual void RecordingDataIsAvailable( const void*data, size_t size_in_byte )
     {
-        pMp3Writer->WriteSamples( (int16_t*)data, size_in_byte );
+        pMp3Writer->WriteSamples( (int16_t*)data, size_in_byte/2 );
     };
     virtual size_t NeedMorePlayoutData( void*data, size_t size_in_byte )
     {
