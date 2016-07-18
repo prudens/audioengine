@@ -21,8 +21,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audio_base", "audio_base.vc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audio_device", "audio_device.vcxproj", "{021F8E24-71CA-4F4B-B913-F0B485C899EA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmpg123", "..\..\codec\mp3\decoder\ports\android\libmpg123\libmpg123.vcxproj", "{BC68A482-D473-417D-8487-2D4DC7A22CA1}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -179,22 +177,6 @@ Global
 		{021F8E24-71CA-4F4B-B913-F0B485C899EA}.Release|x64.Build.0 = Release|x64
 		{021F8E24-71CA-4F4B-B913-F0B485C899EA}.Release|x86.ActiveCfg = Release|x86
 		{021F8E24-71CA-4F4B-B913-F0B485C899EA}.Release|x86.Build.0 = Release|x86
-		{BC68A482-D473-417D-8487-2D4DC7A22CA1}.Debug|ARM.ActiveCfg = Debug|ARM
-		{BC68A482-D473-417D-8487-2D4DC7A22CA1}.Debug|ARM.Build.0 = Debug|ARM
-		{BC68A482-D473-417D-8487-2D4DC7A22CA1}.Debug|ARM64.ActiveCfg = Debug|ARM64
-		{BC68A482-D473-417D-8487-2D4DC7A22CA1}.Debug|ARM64.Build.0 = Debug|ARM64
-		{BC68A482-D473-417D-8487-2D4DC7A22CA1}.Debug|x64.ActiveCfg = Debug|x64
-		{BC68A482-D473-417D-8487-2D4DC7A22CA1}.Debug|x64.Build.0 = Debug|x64
-		{BC68A482-D473-417D-8487-2D4DC7A22CA1}.Debug|x86.ActiveCfg = Debug|x86
-		{BC68A482-D473-417D-8487-2D4DC7A22CA1}.Debug|x86.Build.0 = Debug|x86
-		{BC68A482-D473-417D-8487-2D4DC7A22CA1}.Release|ARM.ActiveCfg = Release|ARM
-		{BC68A482-D473-417D-8487-2D4DC7A22CA1}.Release|ARM.Build.0 = Release|ARM
-		{BC68A482-D473-417D-8487-2D4DC7A22CA1}.Release|ARM64.ActiveCfg = Release|ARM64
-		{BC68A482-D473-417D-8487-2D4DC7A22CA1}.Release|ARM64.Build.0 = Release|ARM64
-		{BC68A482-D473-417D-8487-2D4DC7A22CA1}.Release|x64.ActiveCfg = Release|x64
-		{BC68A482-D473-417D-8487-2D4DC7A22CA1}.Release|x64.Build.0 = Release|x64
-		{BC68A482-D473-417D-8487-2D4DC7A22CA1}.Release|x86.ActiveCfg = Release|x86
-		{BC68A482-D473-417D-8487-2D4DC7A22CA1}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

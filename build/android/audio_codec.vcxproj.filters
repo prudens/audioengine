@@ -1,2 +1,578 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" />
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="mp3">
+      <UniqueIdentifier>{131c6ed7-3cd6-4aac-820f-8493045f9b3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mp3\decoder">
+      <UniqueIdentifier>{d18dc782-9a0b-42d8-bc1f-8201b529c865}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mp3\encoder">
+      <UniqueIdentifier>{50a7138b-e985-4fc3-8b34-04ffe7ae78fa}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\abi_align.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\compat.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\debug.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\decode.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\dither.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\frame.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\gapless.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\getbits.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\getcpuflags.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\huffman.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\icy.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\icy2utf8.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\id3.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\index.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\intsym.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\l2tables.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\l3_integer_tables.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\l12_integer_tables.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\mangle.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\mpeghead.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\mpg123lib_intern.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\newhuffman.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\optimize.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\parse.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\reader.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\sample.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\synth.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\synth_8bit.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\synth_mono.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\synth_ntom.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\synth_sse3d.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\synths.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\true.h">
+      <Filter>mp3\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\bitstream.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\encoder.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\fft.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\gain_analysis.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\id3tag.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\l3side.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\lame_global_flags.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\lame-analysis.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\lameerror.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\machine.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\newmdct.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\psymodel.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\quantize.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\quantize_pvt.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\reservoir.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\set_get.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\tables.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\util.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\vbrquantize.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\VbrTag.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\version.h">
+      <Filter>mp3\encoder</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\check_neon.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct36_3dnow.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct36_3dnowext.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct36_avx.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct36_neon.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct36_neon64.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct36_sse.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct36_x86_64.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_3dnow.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_3dnowext.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_avx.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_avx_float.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_mmx.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_neon.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_neon_float.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_neon64.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_neon64_float.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_sse.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_sse_float.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_x86_64.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_x86_64_float.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\equalizer_3dnow.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\getcpuflags.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\getcpuflags_x86_64.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\libmpg123.sym.in">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\Makefile.am">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\mpg123.h.in">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_3dnow.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_3dnowext.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_arm.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_arm_accurate.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_i586.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_i586_dither.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_mmx.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_neon.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_neon_accurate.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_neon_float.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_neon_s32.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_neon64.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_neon64_accurate.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_neon64_float.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_neon64_s32.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_sse.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_sse_accurate.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_sse_float.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_sse_s32.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_avx.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_avx_accurate.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_avx_float.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_avx_s32.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_neon.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_neon_accurate.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_neon_float.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_neon_s32.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_neon64.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_neon64_accurate.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_neon64_float.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_neon64_s32.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_sse_accurate.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_sse_float.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_sse_s32.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_x86_64.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_x86_64_accurate.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_x86_64_float.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_x86_64_s32.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_x86_64.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_x86_64_accurate.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_x86_64_float.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_x86_64_s32.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\tabinit_mmx.S">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\ports\android\jni\Android.mk">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\decoder\ports\android\jni\Application.mk">
+      <Filter>mp3\decoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\encoder\build\android\jni\Android.mk">
+      <Filter>mp3\encoder</Filter>
+    </None>
+    <None Include="..\..\codec\mp3\encoder\build\android\jni\Application.mk">
+      <Filter>mp3\encoder</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\compat.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\dct64.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_2.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_altivec.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_i386.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_i486.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_vector.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\dither.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\equalizer.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\feature.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\format.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\frame.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\getcpuflags_arm.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\icy.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\icy2utf8.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\id3.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\index.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\layer1.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\layer2.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\layer3.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\lfs_alias.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\lfs_wrap.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\libmpg123.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\ntom.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\optimize.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\parse.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\readers.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\stringbuf.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\synth.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\synth_8bit.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\synth_altivec.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\synth_i486.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\synth_real.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\synth_s32.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\system.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\tabinit.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\testcpu.c">
+      <Filter>mp3\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\bitstream.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\encoder.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\fft.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\gain_analysis.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\id3tag.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\lame.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\mpglib_interface.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\newmdct.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\presets.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\psymodel.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\quantize.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\quantize_pvt.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\reservoir.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\set_get.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\tables.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\takehiro.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\util.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\vbrquantize.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\VbrTag.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\version.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\vector\xmm_quantize_sub.c">
+      <Filter>mp3\encoder</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

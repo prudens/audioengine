@@ -34,6 +34,198 @@
       <Platform>x86</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\abi_align.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\compat.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\debug.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\decode.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\dither.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\frame.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\gapless.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\getbits.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\getcpuflags.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\huffman.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\icy.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\icy2utf8.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\id3.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\index.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\intsym.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\l12_integer_tables.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\l2tables.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\l3_integer_tables.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\mangle.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\mpeghead.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\mpg123lib_intern.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\newhuffman.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\optimize.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\parse.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\reader.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\sample.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\synth.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\synths.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\synth_8bit.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\synth_mono.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\synth_ntom.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\synth_sse3d.h" />
+    <ClInclude Include="..\..\codec\mp3\decoder\src\libmpg123\true.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\bitstream.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\encoder.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\fft.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\gain_analysis.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\id3tag.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\l3side.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\lame-analysis.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\lameerror.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\lame_global_flags.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\machine.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\newmdct.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\psymodel.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\quantize.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\quantize_pvt.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\reservoir.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\set_get.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\tables.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\util.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\vbrquantize.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\VbrTag.h" />
+    <ClInclude Include="..\..\codec\mp3\encoder\libmp3lame\version.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\codec\mp3\decoder\ports\android\jni\Android.mk" />
+    <None Include="..\..\codec\mp3\decoder\ports\android\jni\Application.mk" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\check_neon.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct36_3dnow.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct36_3dnowext.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct36_avx.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct36_neon.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct36_neon64.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct36_sse.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct36_x86_64.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_3dnow.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_3dnowext.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_avx.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_avx_float.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_mmx.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_neon.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_neon64.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_neon64_float.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_neon_float.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_sse.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_sse_float.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_x86_64.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_x86_64_float.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\equalizer_3dnow.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\getcpuflags.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\getcpuflags_x86_64.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\libmpg123.sym.in" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\Makefile.am" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\mpg123.h.in" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_3dnow.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_3dnowext.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_arm.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_arm_accurate.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_i586.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_i586_dither.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_mmx.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_neon.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_neon64.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_neon64_accurate.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_neon64_float.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_neon64_s32.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_neon_accurate.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_neon_float.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_neon_s32.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_sse.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_sse_accurate.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_sse_float.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_sse_s32.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_avx.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_avx_accurate.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_avx_float.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_avx_s32.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_neon.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_neon64.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_neon64_accurate.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_neon64_float.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_neon64_s32.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_neon_accurate.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_neon_float.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_neon_s32.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_sse_accurate.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_sse_float.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_sse_s32.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_x86_64.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_x86_64_accurate.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_x86_64_float.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_stereo_x86_64_s32.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_x86_64.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_x86_64_accurate.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_x86_64_float.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\synth_x86_64_s32.S" />
+    <None Include="..\..\codec\mp3\decoder\src\libmpg123\tabinit_mmx.S" />
+    <None Include="..\..\codec\mp3\encoder\build\android\jni\Android.mk" />
+    <None Include="..\..\codec\mp3\encoder\build\android\jni\Application.mk" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\compat.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\dct64.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_2.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_altivec.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_i386.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_i486.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\dct64_vector.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\dither.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\equalizer.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\feature.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\format.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\frame.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\getcpuflags_arm.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\icy.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\icy2utf8.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\id3.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\index.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\layer1.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\layer2.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\layer3.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\lfs_alias.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\lfs_wrap.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\libmpg123.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\ntom.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\optimize.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\parse.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\readers.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\stringbuf.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\synth.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\synth_8bit.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\synth_altivec.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\synth_i486.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\synth_real.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\synth_s32.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\system.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\tabinit.c" />
+    <ClCompile Include="..\..\codec\mp3\decoder\src\libmpg123\testcpu.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\bitstream.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\encoder.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\fft.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\gain_analysis.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\id3tag.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\lame.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\mpglib_interface.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\newmdct.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\presets.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\psymodel.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\quantize.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\quantize_pvt.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\reservoir.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\set_get.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\tables.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\takehiro.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\util.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\vbrquantize.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\VbrTag.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\vector\xmm_quantize_sub.c" />
+    <ClCompile Include="..\..\codec\mp3\encoder\libmp3lame\version.c" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3b2a5c38-d9b4-41ef-8084-19700601648e}</ProjectGuid>
     <Keyword>Android</Keyword>
@@ -74,7 +266,7 @@
     <PlatformToolset>Clang_3_8</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>Clang_3_8</PlatformToolset>
   </PropertyGroup>
@@ -102,6 +294,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <IntDir>$(ProjectName)$(Platform)\$(Configuration)\</IntDir>
+    <NMakeBuildCommandLine>cd "$(ProjectDir)..\..\codec\mp3\encoder\build\android\jni" &amp;&amp; "$(VS_NdkRoot)\ndk-build.cmd" &amp; cd "$(ProjectDir)..\..\codec\mp3\decoder\ports\android\jni" &amp;&amp; "$(VS_NdkRoot)\ndk-build.cmd"</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>cd "$(ProjectDir)\..\..\codec\mp3\encoder\build\android\jni" &amp;&amp; "$(VS_NdkRoot)\ndk-build.cmd" -B &amp; cd "$(ProjectDir)\..\..\codec\mp3\decoder\ports\android\jni" &amp;&amp; "$(VS_NdkRoot)\ndk-build.cmd" -B</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>cd "$(ProjectDir)\..\..\codec\mp3\encoder\build\android\jni" &amp;&amp; "$(VS_NdkRoot)\ndk-build.cmd" clean &amp; cd "$(ProjectDir)\..\..\codec\mp3\decoder\ports\android\jni" &amp;&amp; "$(VS_NdkRoot)\ndk-build.cmd" clean</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <IntDir>$(ProjectName)$(Platform)\$(Configuration)\</IntDir>
@@ -147,6 +342,9 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
+    <PreBuildEvent>
+      <Command>cd "$(ProjectDir)\codec\mp3\encoder\build\android\jni" &amp;&amp; "$(VS_NdkRoot)\ndk-build.cmd"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>

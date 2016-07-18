@@ -1,4 +1,4 @@
-#APP_PROJECT_PATH := ..
+#APP_PROJECT_PATH := .
 APP_MODULES := mp3lame
 APP_OPTIM := release
 APP_ABI :=armeabi-v7a

@@ -4,10 +4,12 @@
     <ClCompile Include="..\..\io\mp3filereader.cpp" />
     <ClCompile Include="..\..\io\wav_file.cc" />
     <ClCompile Include="..\..\io\wav_header.cc" />
+    <ClCompile Include="..\..\io\mp3filewriter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\io\mp3filereader.h" />
     <ClInclude Include="..\..\io\wav_file.h" />
     <ClInclude Include="..\..\io\wav_header.h" />
+    <ClInclude Include="..\..\io\mp3filewriter.h" />
   </ItemGroup>
 </Project>

@@ -36,11 +36,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\io\mp3filereader.cpp" />
+    <ClCompile Include="..\..\io\mp3filewriter.cpp" />
     <ClCompile Include="..\..\io\wav_file.cc" />
     <ClCompile Include="..\..\io\wav_header.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\io\mp3filereader.h" />
+    <ClInclude Include="..\..\io\mp3filewriter.h" />
     <ClInclude Include="..\..\io\wav_file.h" />
     <ClInclude Include="..\..\io\wav_header.h" />
   </ItemGroup>
@@ -159,7 +161,7 @@
       <CppLanguageStandard>c++11</CppLanguageStandard>
       <ExceptionHandling>Enabled</ExceptionHandling>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <AdditionalIncludeDirectories>../../;../../codec/mp3/decoder/src/libmpg123;$(Sysroot)\usr\include;$(StlIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../;../../codec/mp3/decoder/ports/android;$(Sysroot)\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -169,7 +171,7 @@
       <CppLanguageStandard>c++11</CppLanguageStandard>
       <ExceptionHandling>Enabled</ExceptionHandling>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <AdditionalIncludeDirectories>../../;../../codec/mp3/decoder/src/libmpg123;$(Sysroot)\usr\include;$(StlIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../;../../codec/mp3/decoder/ports/android;$(Sysroot)\usr\include;../../codec/mp3/encoder/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

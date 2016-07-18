@@ -10,10 +10,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\device\winx\windows_core_audio.cpp">
-      <Filter>include</Filter>
+      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\device\winx\windows_audio_device_helper.cpp">
-      <Filter>include</Filter>
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

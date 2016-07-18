@@ -60,7 +60,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../;../processing/src</AdditionalIncludeDirectories>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);DEBUG;WEBRTC_WIN</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);DEBUG;WEBRTC_WIN;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
