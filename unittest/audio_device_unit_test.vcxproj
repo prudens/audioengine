@@ -71,6 +71,7 @@
   <ItemGroup>
     <ClCompile Include="audio_device_unit_test.cpp" />
     <ClCompile Include="audio_effect.cpp" />
+    <ClCompile Include="dispatch_example.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio_effect.h" />

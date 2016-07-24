@@ -17,7 +17,10 @@
 #include "effect/3d/include/mixer3d.h"
 #include "audio_effect.h"
 #include "base/time_cvt.hpp"
+//#include "dispatch_example.cpp"
 
+// Example: main calls myfunc
+extern int test_vcl( int argc, char* argv[] );
 #ifdef _DEBUG
 #pragma comment(lib,"../build/winx/Debug/audio_device.lib")
 #pragma comment(lib,"../build/winx/Debug/audio_effect.lib")
@@ -477,7 +480,9 @@ int main( int argc, char** argv )
    // test_real_time_3d();
    // test_mit_hrtf_get();
     //test_circular_buffer();
-    test_play_mp3();
+    //test_play_mp3();
+    test_vcl( argc, argv );
+    
     system( "pause" );
     return 0;
 

@@ -28,7 +28,7 @@
 
 #include <faac.h>
 #include "resource.h"
-
+#pragma comment(lib,"E:/github/audioengine/codec/aac/encoder/libfaac/Debug/libfaac.lib")
 
 static HINSTANCE hInstance;
 

@@ -36,6 +36,7 @@
 #include "bits.h"
 #include "mp4.h"
 #include "syntax.h"
+#include <string.h>
 
 /* defines if an object type can be decoded by this library or not */
 static uint8_t ObjectTypesTable[32] = {

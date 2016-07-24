@@ -7,6 +7,12 @@
     <Filter Include="source">
       <UniqueIdentifier>{91740921-1103-4f95-ba81-b930aaf20237}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vcl">
+      <UniqueIdentifier>{9b737c7b-760f-4872-a21f-eae217eea37b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vcl\special">
+      <UniqueIdentifier>{d745532d-b263-4687-a12f-c526410b68a5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\base\rgba.cpp">
@@ -20,6 +26,12 @@
     </ClCompile>
     <ClCompile Include="..\..\base\fft.cpp">
       <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\vcl\instrset_detect.cpp">
+      <Filter>vcl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\vcl\special\ranvec1.cpp">
+      <Filter>vcl\special</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -49,6 +61,72 @@
     </ClInclude>
     <ClInclude Include="..\..\base\common_defines.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\instrset.h">
+      <Filter>vcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\vectorclass.h">
+      <Filter>vcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\vectorf128.h">
+      <Filter>vcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\vectorf256.h">
+      <Filter>vcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\vectorf256e.h">
+      <Filter>vcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\vectorf512.h">
+      <Filter>vcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\vectorf512e.h">
+      <Filter>vcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\vectori128.h">
+      <Filter>vcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\vectori256.h">
+      <Filter>vcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\vectori256e.h">
+      <Filter>vcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\vectori512.h">
+      <Filter>vcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\vectori512e.h">
+      <Filter>vcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\vectormath_common.h">
+      <Filter>vcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\vectormath_exp.h">
+      <Filter>vcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\vectormath_hyp.h">
+      <Filter>vcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\vectormath_lib.h">
+      <Filter>vcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\vectormath_trig.h">
+      <Filter>vcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\special\complexvec.h">
+      <Filter>vcl\special</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\special\decimal.h">
+      <Filter>vcl\special</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\special\quaternion.h">
+      <Filter>vcl\special</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\special\ranvec1.h">
+      <Filter>vcl\special</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vcl\special\vector3d.h">
+      <Filter>vcl\special</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

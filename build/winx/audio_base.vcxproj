@@ -53,6 +53,7 @@
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>../../</AdditionalIncludeDirectories>
       <AdditionalOptions>/D_CRT_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4127</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -68,6 +69,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>../../</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4127</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -80,6 +82,8 @@
     <ClCompile Include="..\..\base\audio_util.cc" />
     <ClCompile Include="..\..\base\fft.cpp" />
     <ClCompile Include="..\..\base\rgba.cpp" />
+    <ClCompile Include="..\..\base\vcl\instrset_detect.cpp" />
+    <ClCompile Include="..\..\base\vcl\special\ranvec1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\base\asyntask.h" />
@@ -91,6 +95,28 @@
     <ClInclude Include="..\..\base\rgba.h" />
     <ClInclude Include="..\..\base\string_cvt.h" />
     <ClInclude Include="..\..\base\time_cvt.hpp" />
+    <ClInclude Include="..\..\base\vcl\instrset.h" />
+    <ClInclude Include="..\..\base\vcl\special\complexvec.h" />
+    <ClInclude Include="..\..\base\vcl\special\decimal.h" />
+    <ClInclude Include="..\..\base\vcl\special\quaternion.h" />
+    <ClInclude Include="..\..\base\vcl\special\ranvec1.h" />
+    <ClInclude Include="..\..\base\vcl\special\vector3d.h" />
+    <ClInclude Include="..\..\base\vcl\vectorclass.h" />
+    <ClInclude Include="..\..\base\vcl\vectorf128.h" />
+    <ClInclude Include="..\..\base\vcl\vectorf256.h" />
+    <ClInclude Include="..\..\base\vcl\vectorf256e.h" />
+    <ClInclude Include="..\..\base\vcl\vectorf512.h" />
+    <ClInclude Include="..\..\base\vcl\vectorf512e.h" />
+    <ClInclude Include="..\..\base\vcl\vectori128.h" />
+    <ClInclude Include="..\..\base\vcl\vectori256.h" />
+    <ClInclude Include="..\..\base\vcl\vectori256e.h" />
+    <ClInclude Include="..\..\base\vcl\vectori512.h" />
+    <ClInclude Include="..\..\base\vcl\vectori512e.h" />
+    <ClInclude Include="..\..\base\vcl\vectormath_common.h" />
+    <ClInclude Include="..\..\base\vcl\vectormath_exp.h" />
+    <ClInclude Include="..\..\base\vcl\vectormath_hyp.h" />
+    <ClInclude Include="..\..\base\vcl\vectormath_lib.h" />
+    <ClInclude Include="..\..\base\vcl\vectormath_trig.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
