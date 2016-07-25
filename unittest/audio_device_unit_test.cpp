@@ -29,6 +29,7 @@ extern int test_vcl( int argc, char* argv[] );
 #pragma comment(lib,"../build/winx/Debug/audio_processing.lib")
 #pragma comment(lib,"../build/winx/Debug/libmpg123.lib")
 #pragma comment(lib,"../build/winx/Debug/libmp3lame.lib")
+#pragma comment(lib,"../build/winx/Debug/aac.lib")
 #else
 #pragma comment(lib,"../build/winx/Release/audio_device.lib")
 #pragma comment(lib,"../build/winx/Release/audio_effect.lib")
@@ -37,6 +38,7 @@ extern int test_vcl( int argc, char* argv[] );
 #pragma comment(lib,"../build/winx/Release/audio_processing.lib")
 #pragma comment(lib,"../build/winx/Release/libmpg123.lib")
 #pragma comment(lib,"../build/winx/Release/libmp3lame.lib")
+#pragma comment(lib,"../build/winx/Release/aac.lib")
 #endif
 #pragma comment(lib, "ws2_32")
 #pragma comment(lib, "strmiids")
@@ -129,7 +131,7 @@ public:
          int nElevation = 0;
          m_Mixer3D.updateAngles( nAzimuth, nElevation );
          pEffect = new AudioEffect;
-         pEffect->Init( 44100, 2, 44100, 2 );
+         pEffect->Init( 48000, 2, 48000, 2 );
     }
 
     virtual void RecordingDataIsAvailable( const void*data, size_t samples )
@@ -232,8 +234,6 @@ void test_windows_core_audio()
     AudioDevice* pWinDevice = AudioDevice::Create();
 
     pWinDevice->Initialize();
-     pWinDevice->SetRecordingFormat( 44100, 2 );
-     pWinDevice->SetPlayoutFormat( 44100, 2 );
     pWinDevice->InitPlayout();
     pWinDevice->InitRecording();
 
@@ -472,6 +472,48 @@ void test_play_mp3()
     pWinDevice->Release();
 }
 
+
+void test_audio_processing()
+{
+    WavReader reader( "D:/rec2-5.wav" );
+    WavWriter writer( "d:/1.wav", reader.sample_rate(), reader.num_channels() );
+    AudioEffect ae;
+    ae.Init( reader.sample_rate(), reader.num_channels(), reader.sample_rate(), reader.num_channels() );
+    int frames = reader.sample_rate() / 100 * reader.num_channels();
+    int16_t* buf = new int16_t[frames];
+    for ( ;; )
+    {
+        if ( frames != reader.ReadSamples( frames, buf ))
+             break;
+        ae.ProcessCaptureStream( buf, frames*2 );
+        while (ae.GetRecordingData(buf,frames*2,false))
+        {
+            writer.WriteSamples( buf, frames );
+        }
+    }
+    delete[] buf;
+}
+#include "codec/aac/libAACenc/include/aacenc_lib.h"
+void test_aac()
+{
+    /* encoder handle */
+    HANDLE_AACENCODER hAacEncoder = NULL;
+    AACENC_ERROR ErrorStatus;
+    if ( ( ErrorStatus = aacEncOpen( &hAacEncoder, 0, 0 ) ) != AACENC_OK )
+    {
+        return;
+    }
+    ErrorStatus = aacEncoder_SetParam( hAacEncoder, AACENC_AOT, 29 );
+    ErrorStatus = aacEncoder_SetParam( hAacEncoder, AACENC_BITRATE, 4000 );
+    ErrorStatus = aacEncoder_SetParam( hAacEncoder, AACENC_SAMPLERATE, 48000 );
+    ErrorStatus = aacEncoder_SetParam( hAacEncoder, AACENC_CHANNELMODE, MODE_1 );
+    ErrorStatus = aacEncEncode( hAacEncoder, NULL, NULL, NULL, NULL );
+    AACENC_InfoStruct encInfo;
+    ErrorStatus = aacEncInfo( hAacEncoder, &encInfo );
+    aacEncClose( &hAacEncoder );
+    
+}
+
 int main( int argc, char** argv )
 {
    // test_windows_core_audio();
@@ -481,8 +523,9 @@ int main( int argc, char** argv )
    // test_mit_hrtf_get();
     //test_circular_buffer();
     //test_play_mp3();
-    test_vcl( argc, argv );
-    
+   // test_vcl( argc, argv );
+  //  test_audio_processing();
+    test_aac();
     system( "pause" );
     return 0;
 

@@ -27,6 +27,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audio_processing", "audio_p
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmp3lame", "..\..\codec\mp3\encoder\vc_solution\vc9_libmp3lame.vcxproj", "{20536101-3B0E-43EF-94F9-080D595DAC57}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "aac", "..\..\codec\aac\solution\aac.vcxproj", "{DD1029F2-DF6E-4744-956F-F9C3662F85D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug_Generic_Dll|Win32 = Debug_Generic_Dll|Win32
@@ -577,6 +579,48 @@ Global
 		{20536101-3B0E-43EF-94F9-080D595DAC57}.ReleaseSSE2|Win32.ActiveCfg = ReleaseSSE2|Win32
 		{20536101-3B0E-43EF-94F9-080D595DAC57}.ReleaseSSE2|Win32.Build.0 = ReleaseSSE2|Win32
 		{20536101-3B0E-43EF-94F9-080D595DAC57}.ReleaseSSE2|x64.ActiveCfg = ReleaseSSE2|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Debug_Generic_Dll|Win32.ActiveCfg = Debug|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Debug_Generic_Dll|Win32.Build.0 = Debug|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Debug_Generic_Dll|x64.ActiveCfg = Debug|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Debug_Generic|Win32.ActiveCfg = Debug|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Debug_Generic|Win32.Build.0 = Debug|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Debug_Generic|x64.ActiveCfg = Debug|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Debug_x86_Dll_Minimal|Win32.ActiveCfg = Debug|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Debug_x86_Dll_Minimal|Win32.Build.0 = Debug|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Debug_x86_Dll_Minimal|x64.ActiveCfg = Debug|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Debug_x86_Dll|Win32.ActiveCfg = Debug|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Debug_x86_Dll|Win32.Build.0 = Debug|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Debug_x86_Dll|x64.ActiveCfg = Debug|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Debug_x86|Win32.ActiveCfg = Debug|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Debug_x86|Win32.Build.0 = Debug|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Debug_x86|x64.ActiveCfg = Debug|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Debug|Win32.Build.0 = Debug|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Debug|x64.ActiveCfg = Debug|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Release_Generic_Dll|Win32.ActiveCfg = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Release_Generic_Dll|Win32.Build.0 = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Release_Generic_Dll|x64.ActiveCfg = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Release_Generic|Win32.ActiveCfg = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Release_Generic|Win32.Build.0 = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Release_Generic|x64.ActiveCfg = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Release_x86_Dll_Minimal|Win32.ActiveCfg = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Release_x86_Dll_Minimal|Win32.Build.0 = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Release_x86_Dll_Minimal|x64.ActiveCfg = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Release_x86_Dll|Win32.ActiveCfg = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Release_x86_Dll|Win32.Build.0 = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Release_x86_Dll|x64.ActiveCfg = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Release_x86|Win32.ActiveCfg = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Release_x86|Win32.Build.0 = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Release_x86|x64.ActiveCfg = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Release|Win32.ActiveCfg = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Release|Win32.Build.0 = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.Release|x64.ActiveCfg = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.ReleaseNASM|Win32.ActiveCfg = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.ReleaseNASM|Win32.Build.0 = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.ReleaseNASM|x64.ActiveCfg = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.ReleaseSSE2|Win32.ActiveCfg = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.ReleaseSSE2|Win32.Build.0 = Release|Win32
+		{DD1029F2-DF6E-4744-956F-F9C3662F85D7}.ReleaseSSE2|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

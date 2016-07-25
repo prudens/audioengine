@@ -44,7 +44,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../;../processing/src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../;../processing/src;../codec/aac/libAACenc/include;../codec/aac/;../codec/aac/libFDK/include;../codec/aac/libsys/include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);DEBUG;WEBRTC_WIN;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -58,7 +58,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../;../processing/src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../;../processing/src;../codec/aac/libAACenc/include;../codec/aac/;../codec/aac/libFDK/include;../codec/aac/libsys/include</AdditionalIncludeDirectories>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);DEBUG;WEBRTC_WIN;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
@@ -71,10 +71,14 @@
   <ItemGroup>
     <ClCompile Include="audio_device_unit_test.cpp" />
     <ClCompile Include="audio_effect.cpp" />
+    <ClCompile Include="audio_low_pass_filter.cpp" />
+    <ClCompile Include="audio_voice_check.cpp" />
     <ClCompile Include="dispatch_example.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio_effect.h" />
+    <ClInclude Include="audio_low_pass_filter.h" />
+    <ClInclude Include="audio_voice_check.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
