@@ -57,7 +57,7 @@ template <class T>
 size_t CircularBuffer<T>::write(T *dataPtr, size_t samples)
 {
     size_t capacity = _capacity;
-    size_t samples_to_write = std::min(samples, capacity-_size);
+    size_t samples_to_write = (std::min)(samples, capacity-_size);
     
     _size += samples_to_write;
     //writing to buffer

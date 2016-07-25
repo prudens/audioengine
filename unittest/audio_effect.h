@@ -15,11 +15,14 @@
 
 //system file
 #include <stdint.h>
-
+#include <list>
 //3rd file
 #include "webrtc/modules/audio_processing/include/audio_processing.h"
 #include "webrtc/common_audio/resampler/include/resampler.h"
 
+//project file
+#include "audio_voice_check.h"
+#include "audio_low_pass_filter.h"
 
 using namespace webrtc;
 class AudioEffect
@@ -34,7 +37,6 @@ public:
         kTargetPlySampleRate = 16000,
         kAecTotalDelayMs     = 150,
     };
-    int GetRMS();
     void Init(size_t recSampleRate,size_t recChannel,size_t plySampleRate,size_t plyChannel);
     void ProcessCaptureStream( int16_t*  audio_samples, size_t frame_byte_size );
     void ProcessRenderStream( int16_t*  audio_samples, size_t frame_byte_size );//for aec
@@ -48,9 +50,12 @@ public:
     void EnableAudioEffect( bool bEnable );
     bool HasVoice()const;
     bool HadProcessingVoice();
+    int  GetLevel() { return m_level; }
+    bool GetRecordingData(void* data, size_t size_in_byte,bool bNoCache);
 private:
     //IParseParamNotify
     void ParseParamNotify( const std::string& Param );
+    void UpdateLevelList(bool bsilent,int level);
     bool m_bInit;
     AudioProcessing *m_apm;
     bool m_bEnable;
@@ -64,6 +69,16 @@ private:
     Resampler m_plyReverseResample;
     int32_t m_nCheckVad;
     int32_t m_stream_delay;
-    int32_t m_nNormalVoice;
-    int m_rms;
+    int32_t m_nNormalVoice; 
+	snail::audio::audio_voice_check m_check;
+    int m_level;
+    bool m_bSilent;
+    struct LevelInfo
+    {
+        int level;
+        bool silent;
+    };
+    std::list<LevelInfo> m_levels;
+    std::list<int16_t*> m_audiolist;
+    LowPassFilter m_lpf;
 };
