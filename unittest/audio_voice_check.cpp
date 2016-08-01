@@ -299,6 +299,7 @@ namespace snail{
 						tFrame* pframe = m_cache.list.front();
 						m_cache.list.pop_front(); 
 						volume_ctrl(pframe->data(), pframe->len);
+
                         noise_suppression( pframe->data(), pframe->len, m_cache.list.size() + 1 );
 						return pframe; 
 					}
@@ -618,8 +619,8 @@ namespace snail{
                 }
                 else
                 {
-                    level = it->level;
                     itCur = it;
+                    level =itCur->level;
                 }
 
                 if ( index < i + 3 && index > i  )

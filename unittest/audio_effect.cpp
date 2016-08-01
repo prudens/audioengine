@@ -24,7 +24,7 @@ AudioEffect::AudioEffect()
     m_apm->gain_control()->set_mode( GainControl::kAdaptiveDigital );
     m_apm->gain_control()->set_compression_gain_db( 90 );
     m_apm->voice_detection()->Enable( true );
-    m_apm->noise_suppression()->Enable( false );
+    m_apm->noise_suppression()->Enable( true );
     m_apm->high_pass_filter()->Enable( true );
 
     m_apm->noise_suppression()->set_level( webrtc::NoiseSuppression::kModerate );
@@ -100,8 +100,9 @@ void AudioEffect::ProcessCaptureStream( int16_t* audio_samples, size_t frame_byt
 
        return;
     }
-    
-   
+  
+    float sp = m_apm->noise_suppression()->speech_probability();
+
     if ( 0 != ( err = m_recReverseResample.Push( af.data_, outLen, audio_samples, frame_byte_size / sizeof( int16_t ), outLen ) ) )
     {
         return;

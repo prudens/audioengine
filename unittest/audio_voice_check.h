@@ -78,7 +78,7 @@ namespace snail{
 			void debug_level_analysis(int level); 
 
 			void update_level(int level,bool isSpeech);
-			void noise_suppression(void* data, int len, int index);
+			void noise_suppression(void* data, int len, int index );
 		protected:
 			void volume_ctrl(void* buf, int len);
 			void volume_check(void* buf, int len);

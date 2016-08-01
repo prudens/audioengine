@@ -475,7 +475,7 @@ void test_play_mp3()
 
 void test_audio_processing()
 {
-    WavReader reader( "D:/rec2-5.wav" );
+    WavReader reader( "D:/rec5.wav" );
     WavWriter writer( "d:/1.wav", reader.sample_rate(), reader.num_channels() );
     AudioEffect ae;
     ae.Init( reader.sample_rate(), reader.num_channels(), reader.sample_rate(), reader.num_channels() );
@@ -496,21 +496,85 @@ void test_audio_processing()
 #include "codec/aac/libAACenc/include/aacenc_lib.h"
 void test_aac()
 {
+    WavReader reader( "E:\\CloudMusic\\Mariage.wav" );
+    int channel = reader.num_channels();
+    int samplerate = reader.sample_rate();
     /* encoder handle */
     HANDLE_AACENCODER hAacEncoder = NULL;
     AACENC_ERROR ErrorStatus;
-    if ( ( ErrorStatus = aacEncOpen( &hAacEncoder, 0, 0 ) ) != AACENC_OK )
+    if ( ( ErrorStatus = aacEncOpen( &hAacEncoder, 0, 2 ) ) != AACENC_OK )
     {
         return;
     }
-    ErrorStatus = aacEncoder_SetParam( hAacEncoder, AACENC_AOT, 29 );
-    ErrorStatus = aacEncoder_SetParam( hAacEncoder, AACENC_BITRATE, 4000 );
-    ErrorStatus = aacEncoder_SetParam( hAacEncoder, AACENC_SAMPLERATE, 48000 );
-    ErrorStatus = aacEncoder_SetParam( hAacEncoder, AACENC_CHANNELMODE, MODE_1 );
+    ErrorStatus = aacEncoder_SetParam( hAacEncoder, AACENC_AOT, AOT_SBR );
+    ErrorStatus = aacEncoder_SetParam( hAacEncoder, AACENC_BITRATE, 32000 );
+    ErrorStatus = aacEncoder_SetParam( hAacEncoder, AACENC_SAMPLERATE, samplerate );
+    ErrorStatus = aacEncoder_SetParam( hAacEncoder, AACENC_CHANNELMODE, MODE_2 );
     ErrorStatus = aacEncEncode( hAacEncoder, NULL, NULL, NULL, NULL );
     AACENC_InfoStruct encInfo;
     ErrorStatus = aacEncInfo( hAacEncoder, &encInfo );
+    
+
+    int frames = encInfo.frameLength*channel;
+    int16_t* buf = new int16_t[frames];
+    char*out_stream = new char[encInfo.maxOutBufBytes];
+    
+    AACENC_BufDesc encinBuf;
+    int in_eisize = 2;
+    int in_bufsize = frames*sizeof(int16_t);
+    int in_buf_id = IN_AUDIO_DATA;
+
+
+
+    encinBuf.bufElSizes = &in_eisize;
+    encinBuf.bufferIdentifiers = &in_buf_id;
+    encinBuf.bufs = (void**)&buf;
+    encinBuf.bufSizes = &in_bufsize;
+    encinBuf.numBufs = 1;
+    
+    AACENC_BufDesc encoutBuf;
+    int out_eisize = 2;
+    int out_bufsize = encInfo.maxOutBufBytes;
+    int out_buf_id = OUT_BITSTREAM_DATA;
+    encoutBuf.bufElSizes = &out_eisize;
+    encoutBuf.bufferIdentifiers = &out_buf_id;
+    encoutBuf.bufSizes = &out_bufsize;
+    encoutBuf.numBufs = 1;
+    encoutBuf.bufs = (void **)&out_stream;
+
+    AACENC_InArgs in_args;
+    AACENC_OutArgs out_args;
+    in_args.numAncBytes = 0;
+    FILE*outfile = fopen( "D:/Mariage.aac", "wb" );
+    for ( ;; )
+    {
+        auto len = reader.ReadSamples( frames, buf );
+        if ( 0 == len )
+        {
+            encinBuf.bufs = nullptr;
+        }
+        in_args.numInSamples = (len) * sizeof( int16_t ) / channel;
+        auto ret = aacEncEncode( hAacEncoder, &encinBuf, &encoutBuf, &in_args, &out_args );
+        if (ret != AACENC_OK)
+        {
+            break;
+        }
+        if ( out_args.numOutBytes > 0 )
+        {
+            static int i = 0;
+            printf("[%d]enc out bytes=%d\n",++i,out_args.numOutBytes);
+           fwrite( out_stream, 1, out_args.numOutBytes, outfile);
+        }
+        if (len == 0)
+        {
+            break;
+        }
+    }
+    delete[] buf;
+    delete[] out_stream;
     aacEncClose( &hAacEncoder );
+    fclose( outfile );
+    outfile = nullptr;
     
 }
 
@@ -524,7 +588,8 @@ int main( int argc, char** argv )
     //test_circular_buffer();
     //test_play_mp3();
    // test_vcl( argc, argv );
-  //  test_audio_processing();
+   // test_audio_processing();
+
     test_aac();
     system( "pause" );
     return 0;
