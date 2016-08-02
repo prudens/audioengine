@@ -52,7 +52,7 @@
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS /D"_CRT_SECURE_NO_WARNINGS" %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>../../;../../codec/mp3/decoder/ports/MSVC++;../../codec/mp3/decoder/src/libmpg123/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../;../../codec/mp3/decoder/ports/MSVC++;../../codec/mp3/decoder/src/libmpg123/；../../codec/aac/libAACenc/include;../../codec/aac/;../../codec/aac/libFDK/include;../../codec/aac/libsys/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -67,7 +67,7 @@
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/D"_CRT_SECURE_NO_WARNINGS" %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>../../;../../codec/mp3/decoder/ports/MSVC++;../../codec/mp3/decoder/src/libmpg123/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../;../../codec/mp3/decoder/ports/MSVC++;../../codec/mp3/decoder/src/libmpg123/;../../codec/aac/libAACenc/include;../../codec/aac/;../../codec/aac/libFDK/include;../../codec/aac/libsys/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -76,12 +76,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\io\aacfilewriter.cpp" />
+    <ClCompile Include="..\..\io\audiowriter.cpp" />
     <ClCompile Include="..\..\io\mp3filereader.cpp" />
     <ClCompile Include="..\..\io\mp3filewriter.cpp" />
     <ClCompile Include="..\..\io\wav_file.cc" />
     <ClCompile Include="..\..\io\wav_header.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\io\aacfilewriter.h" />
     <ClInclude Include="..\..\io\include\audioreader.h" />
     <ClInclude Include="..\..\io\include\audiowriter.h" />
     <ClInclude Include="..\..\io\include\io_common_define.h" />

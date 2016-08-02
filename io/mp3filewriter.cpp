@@ -1,15 +1,6 @@
 #include <cstring>
 #include "mp3filewriter.h"
 
-AudioWriter* AudioWriter::Create( const char* filename, int sample_rate, size_t channels, AudioFileType type )
-{
-    if (type == AFT_MP3)
-    {
-        return new Mp3FileWriter( filename, sample_rate, channels );
-    }
-    return nullptr;
-}
-
 Mp3FileWriter::Mp3FileWriter(const char* filename, int samplerate, int channel )
 :m_samplerate(samplerate)
 ,m_channel(channel)
@@ -122,6 +113,7 @@ void Mp3FileWriter::WriteSamples( const int16_t* samples, size_t num_samples )
     {
         return;
     }
+    m_nSamples += num_samples;
     int len = lame_encode_buffer_interleaved( m_lame, (int16_t*)samples, num_samples / m_channel, m_OutBuffer.current(), m_OutBuffer.unused() );
     if ( len <= 0 )
     {
@@ -133,6 +125,6 @@ void Mp3FileWriter::WriteSamples( const int16_t* samples, size_t num_samples )
         fwrite( m_OutBuffer.begin(), 1, m_OutBuffer.used(), m_mp3file );
         m_OutBuffer.advance( -m_OutBuffer.used() );
     }
-    m_nSamples += num_samples;
+
 }
 

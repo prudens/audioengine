@@ -422,17 +422,17 @@ public:
     Mp3ReadProc()
     {
         pMp3Reader = AudioReader::Create("E:/CloudMusic/Mariage.mp3",AFT_MP3);
-        pMp3Reader->SetSpeed( 2 );
-        pMp3Writer = AudioWriter::Create( "D:/myvoice.mp3",44100,2, AFT_MP3 );
+       // pMp3Reader->SetSpeed( 1 );
+        pMp3Writer = AudioWriter::Create( "D:/myvoice.aac",44100,2, AFT_AAC );
         std::cout << timestamp() << std::endl;
         m_ts = timestamp();
     }
     ~Mp3ReadProc()
     {
+        auto ts = timestamp();
+        std::cout << "\n record time: " << ts - m_ts << " sample number£º " << pMp3Writer->NumSamples() / pMp3Writer->SampleRate()/pMp3Writer->NumChannels() << std::endl;
         pMp3Reader->Destroy();
         pMp3Writer->Destroy();
-        auto ts = timestamp();
-        std::cout << ts - m_ts << std::endl;
     }
     virtual void RecordingDataIsAvailable( const void*data, size_t size_in_byte )
     {
@@ -444,6 +444,7 @@ public:
 //        pMp3Reader->ReadSamples( size_in_byte / 2, buf );
 //        FloatToS16(buf,size_in_byte/2,(int16_t*)data);
         int len = pMp3Reader->ReadSamples( size_in_byte / 2, (int16_t*)data );
+        pMp3Writer->WriteSamples( (int16_t*)data, size_in_byte / 2 );
         if (len == 0)
         {
             pMp3Reader->SeekTime( 0 );
@@ -463,8 +464,8 @@ void test_play_mp3()
 
     Mp3ReadProc cb;
     pWinDevice->SetAudioBufferCallback( &cb );
-  //  pWinDevice->StartPlayout();
-    pWinDevice->StartRecording();
+    pWinDevice->StartPlayout();
+  //  pWinDevice->StartRecording();
     system( "pause" );
     pWinDevice->StopPlayout();
     pWinDevice->StopRecording();
@@ -475,8 +476,8 @@ void test_play_mp3()
 
 void test_audio_processing()
 {
-    WavReader reader( "D:/rec5.wav" );
-    WavWriter writer( "d:/1.wav", reader.sample_rate(), reader.num_channels() );
+    WavReader reader( "D:/0802.wav" );
+    WavWriter writer( "d:/0802ns.wav", reader.sample_rate(), reader.num_channels() );
     AudioEffect ae;
     ae.Init( reader.sample_rate(), reader.num_channels(), reader.sample_rate(), reader.num_channels() );
     int frames = reader.sample_rate() / 100 * reader.num_channels();
@@ -486,7 +487,8 @@ void test_audio_processing()
         if ( frames != reader.ReadSamples( frames, buf ))
              break;
         ae.ProcessCaptureStream( buf, frames*2 );
-        while (ae.GetRecordingData(buf,frames*2,false))
+
+        //while (ae.GetRecordingData(buf,frames*2,false))
         {
             writer.WriteSamples( buf, frames );
         }
@@ -546,25 +548,30 @@ void test_aac()
     AACENC_OutArgs out_args;
     in_args.numAncBytes = 0;
     FILE*outfile = fopen( "D:/Mariage.aac", "wb" );
+    auto aacfile = AudioWriter::Create( "D:/myvoice.aac", 44100, 2, AFT_AAC );
     for ( ;; )
     {
-        auto len = reader.ReadSamples( frames, buf );
+        auto len = reader.ReadSamples( 882, buf );
         if ( 0 == len )
         {
             encinBuf.bufs = nullptr;
         }
-        in_args.numInSamples = (len) * sizeof( int16_t ) / channel;
-        auto ret = aacEncEncode( hAacEncoder, &encinBuf, &encoutBuf, &in_args, &out_args );
-        if (ret != AACENC_OK)
+        if (len>0)
         {
-            break;
+            aacfile->WriteSamples( buf, len );
         }
-        if ( out_args.numOutBytes > 0 )
-        {
-            static int i = 0;
-            printf("[%d]enc out bytes=%d\n",++i,out_args.numOutBytes);
-           fwrite( out_stream, 1, out_args.numOutBytes, outfile);
-        }
+//         in_args.numInSamples = (len) * sizeof( int16_t ) / channel;
+//         auto ret = aacEncEncode( hAacEncoder, &encinBuf, &encoutBuf, &in_args, &out_args );
+//         if (ret != AACENC_OK)
+//         {
+//             break;
+//         }
+//         if ( out_args.numOutBytes > 0 )
+//         {
+//             static int i = 0;
+//             printf("[%d]enc out bytes=%d\n",++i,out_args.numOutBytes);
+//            fwrite( out_stream, 1, out_args.numOutBytes, outfile);
+//         }
         if (len == 0)
         {
             break;
@@ -575,8 +582,9 @@ void test_aac()
     aacEncClose( &hAacEncoder );
     fclose( outfile );
     outfile = nullptr;
-    
+    aacfile->Destroy();
 }
+
 
 int main( int argc, char** argv )
 {
@@ -586,7 +594,7 @@ int main( int argc, char** argv )
    // test_real_time_3d();
    // test_mit_hrtf_get();
     //test_circular_buffer();
-    //test_play_mp3();
+   // test_play_mp3();
    // test_vcl( argc, argv );
    // test_audio_processing();
 
