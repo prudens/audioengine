@@ -350,11 +350,3 @@ bool Mp3FileReader::SetSpeed( double times )
 
 
 
-AudioReader* AudioReader::Create( const char*filename, AudioFileType type )
-{
-    if (type == AFT_MP3)
-    {
-        return new Mp3FileReader( filename );
-    }
-    return nullptr;
-}

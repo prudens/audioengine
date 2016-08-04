@@ -76,7 +76,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\io\aacfilereader.cpp" />
     <ClCompile Include="..\..\io\aacfilewriter.cpp" />
+    <ClCompile Include="..\..\io\audioreader.cpp" />
     <ClCompile Include="..\..\io\audiowriter.cpp" />
     <ClCompile Include="..\..\io\mp3filereader.cpp" />
     <ClCompile Include="..\..\io\mp3filewriter.cpp" />
@@ -84,6 +86,7 @@
     <ClCompile Include="..\..\io\wav_header.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\io\aacfilereader.h" />
     <ClInclude Include="..\..\io\aacfilewriter.h" />
     <ClInclude Include="..\..\io\include\audioreader.h" />
     <ClInclude Include="..\..\io\include\audiowriter.h" />

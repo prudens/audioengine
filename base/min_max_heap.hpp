@@ -153,9 +153,19 @@ namespace {
 
 
     template<class T>
-    max_min_heap<T> BuildHeap( T *arr, size_t size )
+    max_min_heap<T> BuildMinHeap( T *arr, size_t size )
     {
         max_min_heap<T> heap;
+        for ( size_t i = 0; i < size; i++ )
+        {
+            heap.push( arr[i] );
+        }
+        return heap;
+    }
+    template<class T>
+    max_min_heap<T, std::greater<T>> BuildMaxHeap( T *arr, size_t size )
+    {
+        max_min_heap<T, std::greater<T>> heap;
         for ( size_t i = 0; i < size; i++ )
         {
             heap.push( arr[i] );

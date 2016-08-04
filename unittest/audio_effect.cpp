@@ -27,7 +27,7 @@ AudioEffect::AudioEffect()
     m_apm->noise_suppression()->Enable( true );
     m_apm->high_pass_filter()->Enable( true );
 
-    m_apm->noise_suppression()->set_level( webrtc::NoiseSuppression::kHigh );
+    m_apm->noise_suppression()->set_level( webrtc::NoiseSuppression::kVeryHigh );
     m_apm->voice_detection()->set_likelihood( VoiceDetection::kLowLikelihood );
     m_apm->level_estimator()->Enable( true );
 	 

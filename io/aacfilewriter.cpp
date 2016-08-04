@@ -53,6 +53,24 @@ AACFileWriter::AACFileWriter( const char* filename, int samplerate, int channel 
 
 AACFileWriter::~AACFileWriter()
 {
+
+    if (m_advance_samples>0)
+    {
+        m_in_args.numInSamples = m_advance_samples * sizeof( int16_t ) / m_channel;
+        m_encinBuf.bufs = (void **)&m_pInputbuf;
+        m_in_bufsize = m_advance_samples * sizeof( int16_t );
+        auto ret = aacEncEncode( m_hAacEncoder, &m_encinBuf, &m_encoutBuf, &m_in_args, &m_out_args );
+        if ( ret != AACENC_OK )
+        {
+            return;
+        }
+        if ( m_out_args.numOutBytes > 0 )
+        {
+            fwrite( m_outofbyte, 1, m_out_args.numOutBytes, m_aacfile );
+        }
+    }
+
+
     m_in_bufsize = 0;
     m_encinBuf.bufs = nullptr;
     m_in_args.numInSamples = -1;
@@ -65,10 +83,11 @@ AACFileWriter::~AACFileWriter()
     {
         fwrite( m_outofbyte, 1, m_out_args.numOutBytes, m_aacfile );
     }
-    fclose( m_aacfile );
+    if(m_aacfile) fclose( m_aacfile );
     m_aacfile = nullptr;
-    delete[] m_outofbyte;
-    delete[] m_pInputbuf;
+    if(m_outofbyte) delete[] m_outofbyte;
+    if(m_pInputbuf) delete[] m_pInputbuf;
+    aacEncClose( &m_hAacEncoder );
 }
 
 void AACFileWriter::Destroy()
