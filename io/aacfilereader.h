@@ -1,10 +1,15 @@
 #pragma once
+#include <stdio.h>
 #include "io/include/audioreader.h"
 #include "codec/aac/libAACdec/include/aacdecoder_lib.h"
-#include <stdio.h>
 class AACFileReader :public AudioReader
 {
 public:
+    enum 
+    {
+        INPUT_BUF_SIZE = 2*768,
+        OUTPUT_BUF_SIZE = 4096,
+    };
     AACFileReader(const char* filename );
     ~AACFileReader();
     virtual void   Destroy();
@@ -19,15 +24,18 @@ public:
     virtual bool   SetSpeed( double times );
 private:
     bool ReadFrame();
-    HANDLE_AACDECODER aacDecoderInfo = nullptr;
-    FILE* m_file = nullptr;
-    bool m_bInit= false;
-    long m_nSamplerate = 0;
-    int m_nChannels = 0;
-    int m_nSample = 0;
-    int m_readSample = 0;
-    char m_inBuf[512];
-    INT_PCM m_outBuf[4096];
-    int m_advace_pos = 4096;
-    UINT bytevalid = 0;
+    bool Analyze( int indexFrame = -1, int* pos = nullptr );
+private:
+    HANDLE_AACDECODER m_hAACDecoder = nullptr;
+    FILE*   m_file = nullptr;
+    bool    m_bInit= false;
+    long    m_nSamplerate = 0;
+    int     m_nChannels = 0;
+    size_t  m_nSample = 0;
+    size_t  m_readSample = 0;
+    UCHAR   m_inBuf[INPUT_BUF_SIZE];
+    INT_PCM m_outBuf[OUTPUT_BUF_SIZE];
+    int     m_advace_pos = OUTPUT_BUF_SIZE;
+    UINT    m_bytevalid = 0;
+    int     m_frameSize = OUTPUT_BUF_SIZE/2;
 };
