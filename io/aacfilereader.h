@@ -22,6 +22,7 @@ public:
     virtual bool   SeekSamples( size_t pos );
     virtual bool   SeekTime( double sec );
     virtual bool   SetSpeed( double times );
+    bool           Initialized() { return m_bInit; }
 private:
     bool ReadFrame();
     bool Analyze( int indexFrame = -1, int* pos = nullptr );

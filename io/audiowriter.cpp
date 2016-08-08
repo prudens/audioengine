@@ -5,11 +5,23 @@ AudioWriter*AudioWriter::Create( const char* filename, int sample_rate, size_t c
 {
     if ( type == AFT_MP3 )
     {
-        return new Mp3FileWriter( filename, sample_rate, channels );
+        auto pWriter = new Mp3FileWriter( filename, sample_rate, channels );
+        if ( !pWriter->Initialized() )
+        {
+            pWriter->Destroy();
+            return nullptr;
+        }
+        return pWriter;
     }
     else if ( type == AFT_AAC )
     {
-        return new AACFileWriter( filename, sample_rate, channels );
+        auto pWriter = new AACFileWriter( filename, sample_rate, channels );
+        if ( !pWriter->Initialized() )
+        {
+            pWriter->Destroy();
+            return nullptr;
+        }
+        return pWriter;
     }
     return nullptr;
 }

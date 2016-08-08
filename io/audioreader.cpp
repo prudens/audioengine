@@ -4,11 +4,23 @@ AudioReader* AudioReader::Create( const char*filename, AudioFileType type )
 {
     if ( type == AFT_MP3 )
     {
-        return new Mp3FileReader( filename );
+        auto pReader = new Mp3FileReader( filename );
+        if (!pReader->Initialized())
+        {
+            pReader->Destroy();
+            return nullptr;
+        }
+        return pReader;
     }
     else if ( type == AFT_AAC)
     {
-        return new AACFileReader( filename );
+        auto pReader = new AACFileReader( filename );
+        if ( !pReader->Initialized() )
+        {
+            pReader->Destroy();
+            return nullptr;
+        }
+        return pReader;
     }
     return nullptr;
 }

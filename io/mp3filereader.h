@@ -23,6 +23,7 @@ public:
     virtual bool   SeekSamples( size_t pos ) override;
     virtual bool   SeekTime( double time ) override;
     virtual bool   SetSpeed( double times ) override;
+    bool           Initialized() { return m_bInit; }
 private:
     bool OpenFile( const char*filename, bool m_bFloatFormat );
     void Close();

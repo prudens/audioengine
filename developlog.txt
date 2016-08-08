@@ -3,3 +3,4 @@
 2016-7-10 需改了audio_processing 的ndk-build 编译脚本，之前编译的时候一直出一大堆重复编译目标的warning，
           今天通过禁用LOCAL_CPP_EXTENSION选项并添加LOCAL_CFLAGS 以支持C程序，可以减少很多warning。
           添加MP3的支持。
+2016-8-5  时间过得太快，一个月又过去了，这个月添加了io，包括aac ,mp3的读写。后面计划添加混音和neteq

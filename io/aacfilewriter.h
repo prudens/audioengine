@@ -14,6 +14,7 @@ public:
     virtual size_t NumSamples() const override;
     virtual void WriteSamples( const float* samples, size_t num_samples ) override;
     virtual void WriteSamples( const int16_t* samples, size_t num_samples ) override;
+    bool           Initialized() { return m_bInit; }
 private:
     HANDLE_AACENCODER m_hAacEncoder = nullptr;
     bool m_bInit = false;

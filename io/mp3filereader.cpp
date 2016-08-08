@@ -19,6 +19,11 @@ Mp3FileReader::Mp3FileReader( const char*filename )
         return;
     }
     m_filename = filename;
+    OpenFile( filename, false );
+
+    m_cirbuf = new CircularAudioBuffer( 8192 );
+
+    m_bInit = true;
 }
 
 Mp3FileReader::~Mp3FileReader()
@@ -47,75 +52,74 @@ size_t Mp3FileReader::NumSamples() const
     return m_NumSamples;
 }
 
-size_t Mp3FileReader::ReadSamples( size_t num_samples, float* samples )
+size_t Mp3FileReader::ReadSamples( size_t /* num_samples */ , float* /* samples*/ )
 {
-    if (!m_bInit)
-    {
-        OpenFile( m_filename.c_str(),true );
-        m_bInit = true;
-    }
-    if ( m_wavformat != WAVE_FORMAT_IEEE_FLOAT )
-    {
-        return 0;
-    }
-    if ( m_SampleRemain == 0 )
-    {
-        return 0;
-    }
-    int ret = MPG123_OK;
-    size_t need_samples = num_samples;
-    size_t readlen = 0;
-    if ( m_fcirbuf )
-    {
-        readlen = ( std::min )( need_samples, m_fcirbuf->readSizeRemaining() );
-        readlen = m_fcirbuf->read( samples, readlen );
-    }
-
-    need_samples -= readlen;
-    m_SampleRemain -= readlen;
-    while ( need_samples > 0 )
-    {
-        off_t curFrame;
-        unsigned char* audio = 0;
-        size_t bytes = 0;
-        ret = mpg123_decode_frame( m_hFile, &curFrame, &audio, &bytes );
-        if ( ret == MPG123_DONE )
-        {
-            break;
-        }
-
-        if ( audio && bytes > 0 )
-        {
-            size_t read = ( std::min )( need_samples, bytes / sizeof(float) );
-            memcpy( samples + readlen, audio, read * sizeof(float) );
-            m_SampleRemain -= read;
-            need_samples -= read;
-            if ( need_samples == 0 )
-            {
-                if ( m_fcirbuf == nullptr && curFrame > 0 )
-                {
-                    m_fcirbuf = new CircularBuffer<float>( bytes * 2 );
-                }
-                m_fcirbuf->write( (float*)( audio + read * sizeof( float ) ), bytes / sizeof( float ) - read );
-                break;
-            }
-        }
-        else
-        {
-            break;
-        }
-    }
-
-    return num_samples - need_samples;
+    return 0;
+//     if (!m_bInit)
+//     {
+//         OpenFile( m_filename.c_str(),true );
+//         m_bInit = true;
+//     }
+//     if ( m_wavformat != WAVE_FORMAT_IEEE_FLOAT )
+//     {
+//         return 0;
+//     }
+//     if ( m_SampleRemain == 0 )
+//     {
+//         return 0;
+//     }
+//     int ret = MPG123_OK;
+//     size_t need_samples = num_samples;
+//     size_t readlen = 0;
+//     if ( m_fcirbuf )
+//     {
+//         readlen = ( std::min )( need_samples, m_fcirbuf->readSizeRemaining() );
+//         readlen = m_fcirbuf->read( samples, readlen );
+//     }
+// 
+//     need_samples -= readlen;
+//     m_SampleRemain -= readlen;
+//     while ( need_samples > 0 )
+//     {
+//         off_t curFrame;
+//         unsigned char* audio = 0;
+//         size_t bytes = 0;
+//         ret = mpg123_decode_frame( m_hFile, &curFrame, &audio, &bytes );
+//         if ( ret == MPG123_DONE )
+//         {
+//             break;
+//         }
+// 
+//         if ( audio && bytes > 0 )
+//         {
+//             size_t read = ( std::min )( need_samples, bytes / sizeof(float) );
+//             memcpy( samples + readlen, audio, read * sizeof(float) );
+//             m_SampleRemain -= read;
+//             need_samples -= read;
+//             if ( need_samples == 0 )
+//             {
+//                 if ( m_fcirbuf == nullptr && curFrame > 0 )
+//                 {
+//                     m_fcirbuf = new CircularBuffer<float>( bytes * 2 );
+//                 }
+//                 m_fcirbuf->write( (float*)( audio + read * sizeof( float ) ), bytes / sizeof( float ) - read );
+//                 break;
+//             }
+//         }
+//         else
+//         {
+//             break;
+//         }
+//     }
+// 
+//     return num_samples - need_samples;
 }
 
 size_t Mp3FileReader::ReadSamples( size_t num_samples, int16_t* samples )
 {
-
     if (!m_bInit)
     {
-         OpenFile( m_filename.c_str(),false );
-         m_bInit = true;
+        return 0;
     }
 
     if (m_wavformat != WAVE_FORMAT_PCM)
@@ -155,12 +159,9 @@ size_t Mp3FileReader::ReadSamples( size_t num_samples, int16_t* samples )
             memcpy( samples + readlen, audio, read*2 );
             m_SampleRemain -= read;
             need_samples -= read;
+            readlen += read;
             if ( need_samples == 0 )
             {
-                if ( m_cirbuf == nullptr && curFrame > 0  )
-                {
-                    m_cirbuf = new CircularAudioBuffer( bytes * 2 );
-                }
                 m_cirbuf->write( (int16_t*)( audio + read * 2 ), bytes/2 - read );
                 break;
             }

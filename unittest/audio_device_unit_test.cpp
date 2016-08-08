@@ -441,9 +441,6 @@ public:
     };
     virtual size_t NeedMorePlayoutData( void*data, size_t size_in_byte )
     {
-//        float buf[441 * 4];
-//        pMp3Reader->ReadSamples( size_in_byte / 2, buf );
-//        FloatToS16(buf,size_in_byte/2,(int16_t*)data);
         int len = pMp3Reader->ReadSamples( size_in_byte / 2, (int16_t*)data );
         pMp3Writer->WriteSamples( (int16_t*)data, size_in_byte / 2 );
         if (len == 0)
@@ -477,12 +474,11 @@ void test_play_mp3()
 
 void test_audio_processing()
 {
-    WavReader reader_rec( "D:/log/ply.wav" );
-    WavReader reader_ply( "D:/log/ply.wav" );
+    WavReader reader_rec( "D:/log/test-ply-pro.wav" );
     int samplerate = reader_rec.sample_rate();
     int channel = reader_rec.num_channels();
 
-    WavWriter writer( "d:/src-pro.wav", samplerate, channel );
+    WavWriter writer( "d:/log/test-pro.wav", samplerate, channel );
     AudioEffect ae;
     ae.Init( samplerate, channel, samplerate, channel );
     int frames = samplerate / 100 * channel;
@@ -493,7 +489,7 @@ void test_audio_processing()
              break;
         ae.ProcessCaptureStream( buf, frames*2 );
 
-        //while (ae.GetRecordingData(buf,frames*2,false))
+        while (ae.GetRecordingData(buf,frames*2,false))
         {
             writer.WriteSamples( buf, frames );
         }
@@ -591,13 +587,33 @@ float hw[] = { 0.000001, 0.000002, 0.000005, 0.000009, 0.000015, 0.000021, 0.000
 //        3000 Hz - 4000 Hz
 //        4000 Hz - 8000 Hz
 //        8000 Hz - 24000 Hz
-int band[] = { 80, 250, 500, 1000, 2000, 3000, 4000, 8000, 24000 };
+int band[] = { 80, 500, 1100, 2000, 3000, 4000, 8000,16000, 24000 };
 
 struct bandinfo
 {
     float v;
     int idx;
 };
+
+float GetStd(float*arr,int size)
+{
+    float mean = 0;
+    for ( int i = 0; i < size; i++ )
+    {
+        mean += arr[i];
+    }
+
+    float std = 0;
+    for ( int i = 0; i < size; i++ )
+    {
+        std += ( arr[i] - mean ) * ( arr[i] - mean );
+    }
+    std /= 8;
+    std = sqrt( std ) / mean * 100;
+    printf( "%f\t", std );
+    return std;
+}
+
 void test_audio_ns()
 {
     WavReader reader_rec( "D:/log/test-ply.wav" );
@@ -605,27 +621,27 @@ void test_audio_ns()
     int channel = reader_rec.num_channels();
     WavWriter writer( "D:/log/test-ply-pro.wav", samplerate, channel );
 
-    const int frame = 4096;
+    const int frame = 512;
     const float bandunit = frame * 2.0 / samplerate;
     complex* pData = new complex[frame];
     int16_t*pPCMData = new int16_t[frame];
+    memset( pPCMData, 0, frame);
     float bands[41];
     for ( int k = 0; k < 100000;k++ )
     {
-        if ( 0 == reader_rec.ReadSamples( frame, pPCMData ) )
+        if ( 0 == reader_rec.ReadSamples( frame/2, pPCMData+frame/2 ) )
         {
             return;
         }
         for ( int i = 0; i < frame; i++ )
         {
-
-            pData[i] = S16ToFloat( pPCMData[i] )*hw[i];
+            pData[i] = S16ToFloat( pPCMData[i] )/**hw[i]*/;
         }
 
         CFFT::Forward( pData, frame );
         int static index = 0;
         index++;
-        for ( int i = 0; i < 8;i++ )
+        for ( int i = 0; i < 8; i++ )
         {
             bands[i] = 0;
             int start = band[i] * bandunit;
@@ -644,25 +660,39 @@ void test_audio_ns()
             bi[i].v = bands[i];
         }
         sort( bi, bi + 8, []( const bandinfo& l, const bandinfo& r ) {return l.v > r.v; } );
-        if ( bi[0].idx > 2 )
+        float sum = 0;
+        for ( int i = 0; i < 8;i++ )
         {
-            memset( pPCMData, 0, frame * 2 );
+            sum += bi[i].v;
         }
-        float mean = 0;
-        for ( int i = 0; i < 4; i++ )
+        float scale = bi[0].v / sum;
+        float flag = 1.f;
+        if (bi[0].idx == 1)
         {
-            mean += bi[i].v;
+            if (bi[1].idx == 0)
+            {
+                flag = 0.9f;
+            }
+            else
+            {
+                flag = 0.8;
+            }
+            flag = 0.5f;
+        }
+        else if ( bi[0].idx >= 2)
+        {
+            flag = 0.75f;
+            flag = 0;
         }
 
-        float std = 0;
-        for ( int i = 0; i < 4;i++ )
+        if ( flag < scale )
         {
-           std += (bi[i].v -mean) * (bi[i].v-mean);
+            printf( "[%d]scale:%f\n", bi[0].idx,scale );
+            memset( pPCMData, 0, frame );
         }
-        std /= 8;
-        std = sqrt( std )/mean*100;
-        printf( "%f\t", std );
-        writer.WriteSamples( pPCMData, frame );
+
+        writer.WriteSamples( pPCMData, frame/2 );
+        memcpy(pPCMData,pPCMData+frame/2,frame);
        
     }
 
@@ -866,6 +896,34 @@ void test_aac_dec_file()
 
     pReader->Destroy();
 }
+#include <filesystem>
+
+void run_mp32wav( const char* filename )
+{
+    using file_path = std::tr2::sys::path;
+
+    AudioReader *mp3reader = AudioReader::Create( filename, AFT_MP3 );
+    if (mp3reader == nullptr)
+    {
+        return;
+    }
+    file_path p1 = filename;
+    p1.replace_extension( ".wav" );
+
+    WavWriter writer( p1.string().c_str(), mp3reader->SampleRate(), mp3reader->NumChannels() );
+    int16_t buf[4096];
+    for ( ;; )
+    {
+        int len = mp3reader->ReadSamples( 4096, buf );
+        if (len == 0)
+        {
+            break;
+        }
+        writer.WriteSamples( buf, len );
+    }
+    mp3reader->Destroy();
+}
+
 int main( int argc, char** argv )
 {
    // test_windows_core_audio();
@@ -876,13 +934,15 @@ int main( int argc, char** argv )
     //test_circular_buffer();
    // test_play_mp3();
    // test_vcl( argc, argv );
-    //test_audio_processing();
-  //  test_audio_ns();
+   // test_audio_ns();
+    test_audio_processing();
+
 
   //  test_aac_enc();
 //    test_aac_dec();
 //    test_aac_pasre_head();
-    test_aac_dec_file();
+ //   test_aac_dec_file();
+//    run_mp32wav( "E:/CloudMusic/凡人歌.mp3" );
     system( "pause" );
     return 0;
 
