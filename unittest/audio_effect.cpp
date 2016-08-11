@@ -24,7 +24,7 @@ AudioEffect::AudioEffect()
     m_apm->gain_control()->set_mode( GainControl::kAdaptiveDigital );
     m_apm->gain_control()->set_compression_gain_db( 90 );
     m_apm->voice_detection()->Enable( true );
-    m_apm->noise_suppression()->Enable( true );
+    m_apm->noise_suppression()->Enable( false );
     m_apm->high_pass_filter()->Enable( true );
 
     m_apm->noise_suppression()->set_level( webrtc::NoiseSuppression::kVeryHigh );
@@ -242,7 +242,7 @@ bool AudioEffect::GetRecordingData( void* data, size_t size_in_byte, bool bNoCac
     }
 
     memcpy( data, pframe->data(), pframe->len );
-    m_lpf.Processing( (const int16_t*)data, (int16_t*)data, size_in_byte / 2 );
+   // m_lpf.Processing( (const int16_t*)data, (int16_t*)data, size_in_byte / 2 );
     return true;
 
 
@@ -317,7 +317,7 @@ bool AudioEffect::GetRecordingData( void* data, size_t size_in_byte, bool bNoCac
     }
     memcpy( data, pInput, size_in_byte );
 
-    m_lpf.Processing( (const int16_t*)data, (int16_t*)data, size_in_byte / 2 );
+  //  m_lpf.Processing( (const int16_t*)data, (int16_t*)data, size_in_byte / 2 );
     delete pInput;
     printf( "count=%d,total_count=%d quality=%f\n",count,total_count,(float)count/total_count );
     return true;

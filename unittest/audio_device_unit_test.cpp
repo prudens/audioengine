@@ -474,7 +474,7 @@ void test_play_mp3()
 
 void test_audio_processing()
 {
-    WavReader reader_rec( "D:/log/test-ply-pro.wav" );
+    WavReader reader_rec( "D:/log/test1.wav" );
     int samplerate = reader_rec.sample_rate();
     int channel = reader_rec.num_channels();
 
@@ -493,6 +493,10 @@ void test_audio_processing()
         {
             writer.WriteSamples( buf, frames );
         }
+    }
+    while ( ae.GetRecordingData( buf, frames * 2, true ) )
+    {
+        writer.WriteSamples( buf, frames );
     }
     delete[] buf;
 }
@@ -587,8 +591,12 @@ float hw[] = { 0.000001, 0.000002, 0.000005, 0.000009, 0.000015, 0.000021, 0.000
 //        3000 Hz - 4000 Hz
 //        4000 Hz - 8000 Hz
 //        8000 Hz - 24000 Hz
-int band[] = { 80, 500, 1100, 2000, 3000, 4000, 8000,16000, 24000 };
 
+const int BAND_NUM = 8;
+int band[BAND_NUM+1] = { 80, 500, 1100, 1750, 2500,3500,4500,6000, 8000};
+const float Threshold[BAND_NUM] = {1,0.7,0.65,0.65,0.65,0.6,0.6,0.6};
+
+//int band[BAND_NUM + 1] = { 80, 500, 1000, 1500,2000,2500,3000,3500,4000,4500,5000,5500,6000,6500,7000,7500,8000 };
 struct bandinfo
 {
     float v;
@@ -602,36 +610,41 @@ float GetStd(float*arr,int size)
     {
         mean += arr[i];
     }
-
+    mean /= size;
     float std = 0;
     for ( int i = 0; i < size; i++ )
     {
         std += ( arr[i] - mean ) * ( arr[i] - mean );
     }
-    std /= 8;
-    std = sqrt( std ) / mean * 100;
-    printf( "%f\t", std );
+
+    std /= size;
+    std = sqrt( std );
+    std /= mean;
     return std;
 }
 
 void test_audio_ns()
 {
-    WavReader reader_rec( "D:/log/test-ply.wav" );
+    {
+
+    WavReader reader_rec( "D:/log/all_16000.wav" );
     int samplerate = reader_rec.sample_rate();
     int channel = reader_rec.num_channels();
-    WavWriter writer( "D:/log/test-ply-pro.wav", samplerate, channel );
+    WavWriter writer( "D:/log/test1.wav", samplerate, channel );
 
-    const int frame = 512;
-    const float bandunit = frame * 2.0 / samplerate;
-    complex* pData = new complex[frame];
+    const int frame = 512;// pow( 2, static_cast<int>( log2( samplerate / 100 ) ) + 1 );
+    const float bandunit = frame / (float)samplerate;
+    complex pData[frame];// = new complex[frame];
     int16_t*pPCMData = new int16_t[frame];
-    memset( pPCMData, 0, frame);
+    memset( pPCMData, 0, frame );
     float bands[41];
-    for ( int k = 0; k < 100000;k++ )
+    float energy[frame] = { 0 };
+    float std[BAND_NUM] = { 0 };
+    for ( int k = 1; k < 100000; k++ )
     {
-        if ( 0 == reader_rec.ReadSamples( frame/2, pPCMData+frame/2 ) )
+        if ( 0 == reader_rec.ReadSamples( frame, pPCMData ) )
         {
-            return;
+            break;
         }
         for ( int i = 0; i < frame; i++ )
         {
@@ -639,63 +652,75 @@ void test_audio_ns()
         }
 
         CFFT::Forward( pData, frame );
-        int static index = 0;
-        index++;
-        for ( int i = 0; i < 8; i++ )
+
+        float sum = 0;
+        for ( int i = 0; i < BAND_NUM; i++ )
         {
             bands[i] = 0;
             int start = band[i] * bandunit;
             int end = band[i + 1] * bandunit;
-            for ( int j = start; j != end; j++ )
+            for ( int j = start; j < end; j++ )
             {
-                bands[i] += ( pData[j].real() * pData[j].real() + pData[j].imag() * pData[j].imag() );
+                energy[j] = ( pData[j].real() * pData[j].real() + pData[j].imag() * pData[j].imag() );
+                bands[i] += energy[j];
             }
+            std[i] = GetStd( energy + start, end - start - 1 );
+            sum += bands[i];
             bands[i] /= ( end - start );
         }
-
-        bandinfo bi[8];
-        for ( int i = 0; i < 8; i++ )
+        sum /= 256;
+        bandinfo bi[BAND_NUM];
+        for ( int i = 0; i < BAND_NUM; i++ )
         {
             bi[i].idx = i;
             bi[i].v = bands[i];
         }
-        sort( bi, bi + 8, []( const bandinfo& l, const bandinfo& r ) {return l.v > r.v; } );
-        float sum = 0;
-        for ( int i = 0; i < 8;i++ )
+
+        sort( bi, bi + BAND_NUM, [] ( const bandinfo& l, const bandinfo& r ) { return l.v > r.v; } );
+        sum = 0;
+        for ( int i = 0; i < BAND_NUM; i++ )
         {
+            printf( "%.3f  ", bands[i] );
             sum += bi[i].v;
         }
+        int maxidx = bi[0].idx;
         float scale = bi[0].v / sum;
-        float flag = 1.f;
-        if (bi[0].idx == 1)
+        float flag = 1;
+        printf( "[%d]%.3f std=%f  ", bi[0].idx, scale, std[maxidx] );
+        flag = Threshold[maxidx];
+        const float CoefVar[BAND_NUM] = { 4, 1, 1, 1, 1, 1, 1, 1 };
+        float add = 0.0;
+        if (scale > 0.85)
         {
-            if (bi[1].idx == 0)
-            {
-                flag = 0.9f;
-            }
-            else
-            {
-                flag = 0.8;
-            }
-            flag = 0.5f;
+            add = 0.3;
         }
-        else if ( bi[0].idx >= 2)
+        if ( flag < scale && std[maxidx] > CoefVar[maxidx] - add )
         {
-            flag = 0.75f;
-            flag = 0;
+            memset( pPCMData, 0, frame * 2 );
+           // printf( "[%d]%.3f std=%f  ", bi[0].idx, scale, std[maxidx] );
         }
+       // printf( "%d-%d\n", ( k - 1 ) * frame * 1000 / samplerate, k * frame * 1000 / samplerate );
+        writer.WriteSamples( pPCMData, frame );
+        int start = band[maxidx] * bandunit;
+        int end = band[maxidx] * bandunit;
+        int len = end - start - 1;
+        len /= 10;
+        for ( int i = 0; i < 10; i++ )
+        {
+            bands[i] = 0;
 
-        if ( flag < scale )
-        {
-            printf( "[%d]scale:%f\n", bi[0].idx,scale );
-            memset( pPCMData, 0, frame );
+            for ( int j = start + len*i; j < len; j++ )
+             {
+                energy[j] = ( pData[j].real() * pData[j].real() + pData[j].imag() * pData[j].imag() );
+                bands[i] += energy[j];
+            }
+            std[i] = GetStd( energy + start, end - start - 1 );
+            sum += bands[i];
+            bands[i] /= ( end - start );
         }
-
-        writer.WriteSamples( pPCMData, frame/2 );
-        memcpy(pPCMData,pPCMData+frame/2,frame);
-       
     }
-
+}
+    test_audio_processing();
 }
 
 #include "codec/aac/libAACenc/include/aacenc_lib.h"
@@ -934,8 +959,8 @@ int main( int argc, char** argv )
     //test_circular_buffer();
    // test_play_mp3();
    // test_vcl( argc, argv );
-   // test_audio_ns();
-    test_audio_processing();
+    test_audio_ns();
+   // test_audio_processing();
 
 
   //  test_aac_enc();

@@ -659,7 +659,7 @@ namespace snail{
                     p[j] = p[j] * scale;
                 }
             }
-            m_lpf.Processing( (const int16_t*)data, (int16_t*)data, len / 2 );
+           // m_lpf.Processing( (const int16_t*)data, (int16_t*)data, len / 2 );
             m_noise.voice_quality = (float)m_noise.noise_count / m_noise.voice_count;
             printf( "count=%d,total_count=%d,quality=%f\n", m_noise.noise_count, m_noise.voice_count,m_noise.voice_quality );
         }
