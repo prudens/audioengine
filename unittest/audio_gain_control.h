@@ -4,11 +4,10 @@
 #include <functional>
 #include <valarray>
 #include <list>
-
 #include "webrtc/common_audio/signal_processing/include/spl_inl.h"
 #include "webrtc/common_audio/signal_processing/include/signal_processing_library.h"
 #include "webrtc/common_audio/real_fourier.h"
-typedef std::function<bool( std::valarray< std::complex<float> >, std::valarray<float>& amplitide, std::valarray<float>& angle ) > SpecAnalyze;
+typedef std::function<bool( std::valarray< std::complex<float> >& frec, std::valarray<float>& amplitide, std::valarray<float>& angle ) > SpecAnalyze;
 
 class AudioGainControl
 {

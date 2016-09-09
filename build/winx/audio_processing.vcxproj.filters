@@ -109,6 +109,9 @@
     <Filter Include="Header Files\system_wrappers">
       <UniqueIdentifier>{29b80bf5-fcb5-42eb-9171-ab099e82eda7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="audio_mixer">
+      <UniqueIdentifier>{33cc4de3-bd39-4a75-81c6-e5bdbdf0768f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\processing\src\webrtc\common_audio\include\audio_util.h">
@@ -762,6 +765,12 @@
     <ClInclude Include="..\..\processing\src\webrtc\common_audio\window_generator.h">
       <Filter>webrtc\common_audio\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\processing\src\audio_mixer\include\audio_mixer.h">
+      <Filter>audio_mixer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\processing\src\audio_mixer\source\audio_mixer_impl.h">
+      <Filter>audio_mixer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\auto_corr_to_refl_coef.c">
@@ -1372,6 +1381,9 @@
     </ClCompile>
     <ClCompile Include="..\..\processing\src\webrtc\base\timeutils.cc">
       <Filter>webrtc\base\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\processing\src\audio_mixer\source\audio_mixer_impl.cpp">
+      <Filter>audio_mixer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

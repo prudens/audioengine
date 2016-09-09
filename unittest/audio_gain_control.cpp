@@ -25,6 +25,11 @@ AudioGainControl::~AudioGainControl()
 
 bool AudioGainControl::Init( int32_t frame_size, SpecAnalyze analyze, int nOverLapPencent )
 {
+    if (m_bInit)
+    {
+        return true;
+    }
+
     if ( frame_size <= 0 || nOverLapPencent < 0 || nOverLapPencent >= 100 )
     {
         return false;
@@ -68,6 +73,7 @@ bool AudioGainControl::Init( int32_t frame_size, SpecAnalyze analyze, int nOverL
     m_angle.resize( m_nFFT );
     m_insign = new float[m_nFFT];
     memset( m_insign, 0, m_nFFT * sizeof(float) );
+    m_bInit = true;
     return true;
 }
 
@@ -75,48 +81,57 @@ void AudioGainControl::ScaleVoice( int16_t* data, int16_t size )
 {
     memcpy( m_data, m_data + m_len - m_len1, m_len1*sizeof( float ) );
     webrtc::S16ToFloat( data, m_len2, m_data + m_len1 );
-    for ( int i = 0; i < m_len; i++ )
+    for ( int k = 0; k < 1;k++ )
     {
-        m_insign[i] = m_win[i] * m_data[i];
+        for ( int i = 0; i < m_len; i++ )
+        {
+            m_insign[i] = m_win[i] * m_data[i];
+        }
+        memset( m_insign+m_len, 0, sizeof( float ) * (m_nFFT - m_len) );
+        memset( &m_spec[0], 0, m_spec.size() * sizeof(m_spec[0]));
+        m_fft->Forward( m_insign, &m_spec[0] );
+
+        //m_fft->Inverse( &m_spec[0], m_insign ); // test
+        for ( int i = 0; i < m_nFFT;i++ )
+       {
+           m_amplitude[i] = std::pow( std::abs( m_spec[i] ), 2 );
+       }
+        for ( int i = 0; i < m_nFFT; i++ )
+        {
+            m_angle[i] = std::arg( m_spec[i] );
+        }
+
+        bool bInverse = false;
+        if ( m_SpecAnalyze )
+        {
+            bInverse = m_SpecAnalyze( m_spec, m_amplitude, m_angle );
+        }
+
+        if (!bInverse)
+        {
+            m_fft->Inverse( &m_spec[0], m_insign );
+        }
+        else
+        {
+            m_amplitude = sqrt( m_amplitude );
+            std::valarray<float> amp_r = m_amplitude* cos( m_angle );
+            std::valarray<float> amp_i = m_amplitude* sin( m_angle );
+            for ( int i = 0; i < m_nFFT; i++ )
+            {
+                m_spec[i] = Complex( amp_r[i], amp_i[i] );
+            }
+
+            m_fft->Inverse( &m_spec[0], m_insign );
+        }
+
+
+
+        for ( int i = 0; i < m_len1; i++ )
+        {
+            m_insign[i]  = m_overLap[i] + m_insign[i]; //
+            m_overLap[i] = m_insign[m_len - m_len1 + i];
+        }
     }
-
-    m_fft->Forward( m_insign, &m_spec[0] );
-
-   // m_fft->Inverse( m_spec, m_insign ); // test
-
-    for ( int i = 0; i < m_nFFT; i++ )
-    {
-        m_amplitude[i] = std::pow( std::abs( m_spec[i] ), 2 );
-        m_angle[i] = std::arg( m_spec[i] );
-    }
-
-    bool bInverse = false;
-    if ( m_SpecAnalyze )
-    {
-        bInverse = m_SpecAnalyze( m_spec, m_amplitude, m_angle );
-    }
-
-    if (!bInverse)
-    {
-        memcpy( m_overLap, m_insign + m_len - m_len1, m_len1 );
-        return;
-    }
-
-    std::valarray<float> amp_r = sqrt( m_amplitude )* cos( m_amplitude );
-    std::valarray<float> amp_i = sqrt( m_amplitude )* sin( m_amplitude );
-
-    for ( int i = 0; i < m_nFFT; i++ )
-    {
-        m_spec[i] = Complex( amp_r[i], amp_i[i] );
-    }
-
-    m_fft->Inverse( &m_spec[0], m_insign );
-    for ( int i = 0; i < m_len1; i++ )
-    {
-        m_insign[i]  = m_overLap[i] + m_insign[i]; //
-        m_overLap[i] = m_insign[m_len - m_len1 + i];
-    }
-
     webrtc::FloatToS16( m_insign, m_len1, data ); 
 }
 

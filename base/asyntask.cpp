@@ -1,8 +1,45 @@
 #include "asyntask.h"
 #include "min_max_heap.hpp"
-namespace 
-{
+#include <list>
+#include <condition_variable>
+#include <thread>
+#include <mutex>
+#include <atomic>
+
+    uint64_t now()
+    {
+        return duration_cast<milliseconds>(
+            system_clock::now() - time_point<system_clock>() ).count();
+    }
+
     uint32_t AsynTask::s_task_id = 1;
+    struct Task
+    {
+
+        uint32_t id;
+        uint32_t elapsed;
+        uint64_t expired;
+        bool repeat;
+        TaskExecute execute;
+        Task() :id( 0 ),
+            elapsed( 0 ),
+            expired( (std::numeric_limits<uint64_t>::max)() ),
+            repeat( false )
+        {
+        }
+
+        bool operator < ( const Task& other )const
+        {
+            return this->elapsed < other.elapsed ||
+                ( this->elapsed == other.elapsed
+                && this->id < other.id );
+        }
+        bool operator >= ( const Task& other )const
+        {
+            return !(*this < other);
+        }
+    };
+
     class TaskQueue
     {
     public:
@@ -31,15 +68,15 @@ namespace
                         std::lock_guard<std::mutex> guard( _lock );
                         if ( !_tasks.empty() )
                         {
-                            task = _tasks.top();
+                            task = _tasks.front();
                         }
                         if ( task.expired < t )
                         {
-                            _tasks.pop();
+                            _tasks.pop_front();
                             if ( task.repeat )
                             {
                                 task.expired = task.elapsed + t;
-                                _tasks.push( task );
+                                Insert( task );
                             }
                         }
                         else
@@ -57,12 +94,12 @@ namespace
                 {
                     return;
                 }
-                int32_t sleep_time = std::numeric_limits<int32_t>::max MAX_MACRO_COMPILE_SUPPORT();
+                int32_t sleep_time = (std::numeric_limits<int32_t>::max)();
 
                 std::unique_lock <std::mutex> lck( _lock );
                 if ( !_tasks.empty() )
                 {
-                    sleep_time = static_cast<int32_t>( _tasks.top().expired - now() );
+                    sleep_time = static_cast<int32_t>( _tasks.front().expired - now() );
                     if ( sleep_time < 0 )
                     {
                         continue;
@@ -84,19 +121,15 @@ namespace
         void Push( Task& task )
         {
             std::unique_lock <std::mutex> lck( _lock );
-            _tasks.push( task );
+            Insert( task );
             _flag.store( true );
             _cond_variable.notify_all();
-
         }
 
         void Clear()
         {
             std::lock_guard<std::mutex> guard( _lock );
-            while ( !_tasks.empty() )
-            {
-                _tasks.pop();
-            }
+            _tasks.clear();
         }
 
         void Remove( uint32_t task_id )
@@ -115,9 +148,29 @@ namespace
             _stop.store( true );
             _cond_variable.notify_all();
         }
+    protected:
+        // Insert函数非线程安全
+        void Insert(Task&task)
+        {
+            auto it = _tasks.begin();
+            for ( ; it != _tasks.end(); ++it )
+            {
+                if ( task < *it )
+                {
+                    _tasks.insert( it, task );
+                    break;
+                }
+            }
+            if ( it == _tasks.end() )
+            {
+                _tasks.push_back( task );
+            }
+        }
     private:
+
         std::atomic_bool _stop;
-        max_min_heap<Task> _tasks;
+        typedef std::list<Task> TaskList;
+        TaskList _tasks;
         std::mutex _lock;
         std::condition_variable _cond_variable;
         std::atomic_bool _flag;
@@ -158,11 +211,3 @@ namespace
     {
         _task_queue->Clear();
     }
-
-    uint64_t now()
-    {
-        return duration_cast<milliseconds>(
-            system_clock::now() - time_point<system_clock>() ).count();
-    }
-
-}

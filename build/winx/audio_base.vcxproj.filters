@@ -47,9 +47,6 @@
     <ClInclude Include="..\..\base\string_cvt.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\base\time_cvt.hpp">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\base\audio_util.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -127,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="..\..\base\vcl\special\vector3d.h">
       <Filter>vcl\special</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\time_cvt.hpp">
+      <Filter>source</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

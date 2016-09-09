@@ -44,10 +44,10 @@
     }
 
     // 计时器
-    class ctime
+    class Timer
     {
     public:
-        ctime() : m_begin( high_resolution_clock::now() ) {}
+        Timer() : m_begin( high_resolution_clock::now() ) {}
         void reset() { m_begin = high_resolution_clock::now(); }
 
         //默认输出毫秒

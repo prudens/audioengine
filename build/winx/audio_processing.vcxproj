@@ -145,6 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\processing\src\audio_mixer\include\audio_mixer.h" />
+    <ClInclude Include="..\..\processing\src\audio_mixer\source\audio_mixer_impl.h" />
     <ClInclude Include="..\..\processing\src\webrtc\base\arraysize.h" />
     <ClInclude Include="..\..\processing\src\webrtc\base\array_view.h" />
     <ClInclude Include="..\..\processing\src\webrtc\base\asyncfile.h" />
@@ -367,6 +369,7 @@
     <ClInclude Include="..\..\processing\src\webrtc\system_wrappers\source\trace_win.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\processing\src\audio_mixer\source\audio_mixer_impl.cpp" />
     <ClCompile Include="..\..\processing\src\webrtc\base\checks.cc" />
     <ClCompile Include="..\..\processing\src\webrtc\base\common.cc" />
     <ClCompile Include="..\..\processing\src\webrtc\base\criticalsection.cc" />

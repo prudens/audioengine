@@ -19,7 +19,7 @@
 //3rd file
 #include "webrtc/modules/audio_processing/include/audio_processing.h"
 #include "webrtc/common_audio/resampler/include/resampler.h"
-
+#include "webrtc/common_audio/real_fourier.h"
 //project file
 #include "audio_voice_check.h"
 #include "audio_low_pass_filter.h"
@@ -81,4 +81,6 @@ private:
     std::list<LevelInfo> m_levels;
     std::list<int16_t*> m_audiolist;
     LowPassFilter m_lpf;
+    rtc::scoped_ptr<webrtc::RealFourier> m_fft;
+
 };

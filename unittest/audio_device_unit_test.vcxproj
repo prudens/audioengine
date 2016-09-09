@@ -54,13 +54,14 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../;../processing/src;../codec/aac/libAACenc/include;../codec/aac/;../codec/aac/libFDK/include;../codec/aac/libsys/include</AdditionalIncludeDirectories>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);DEBUG;WEBRTC_WIN;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -71,13 +72,18 @@
   <ItemGroup>
     <ClCompile Include="audio_device_unit_test.cpp" />
     <ClCompile Include="audio_effect.cpp" />
+    <ClCompile Include="audio_gain_control.cpp" />
     <ClCompile Include="audio_low_pass_filter.cpp" />
+    <ClCompile Include="audio_noise_suppression.cpp" />
     <ClCompile Include="audio_voice_check.cpp" />
     <ClCompile Include="dispatch_example.cpp" />
+    <ClCompile Include="numeric_example.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio_effect.h" />
+    <ClInclude Include="audio_gain_control.h" />
     <ClInclude Include="audio_low_pass_filter.h" />
+    <ClInclude Include="audio_noise_suppression.h" />
     <ClInclude Include="audio_voice_check.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

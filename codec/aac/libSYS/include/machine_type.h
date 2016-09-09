@@ -103,7 +103,7 @@ amm-info@iis.fraunhofer.de
 /**
  *  collate all corresponding compiler specific macros to detect a debug build, and set the DEBUG macro if that is the case.
  */
-#if defined(_DEBUG)
+#if defined(_DEBUG) && !defined(DEBUG)
 #define DEBUG
 #endif
 
