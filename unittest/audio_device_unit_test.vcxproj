@@ -70,13 +70,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="audio_device_example.cpp" />
     <ClCompile Include="audio_device_unit_test.cpp" />
     <ClCompile Include="audio_effect.cpp" />
     <ClCompile Include="audio_gain_control.cpp" />
     <ClCompile Include="audio_low_pass_filter.cpp" />
     <ClCompile Include="audio_noise_suppression.cpp" />
+    <ClCompile Include="audio_processing_example.cpp" />
     <ClCompile Include="audio_voice_check.cpp" />
+    <ClCompile Include="codec_example.cpp" />
     <ClCompile Include="dispatch_example.cpp" />
+    <ClCompile Include="import_lib.cpp" />
     <ClCompile Include="numeric_example.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +89,7 @@
     <ClInclude Include="audio_low_pass_filter.h" />
     <ClInclude Include="audio_noise_suppression.h" />
     <ClInclude Include="audio_voice_check.h" />
+    <ClInclude Include="header.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

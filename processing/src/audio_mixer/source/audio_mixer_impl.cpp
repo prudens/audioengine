@@ -45,6 +45,7 @@ bool AudioMixerImpl::GetMixerAudio( webrtc::AudioFrame* audioFrame )
         return false;
     }
     // 分类
+    bool bMix = false;
     for ( auto& v : m_participants )
     {
         auto participant = v.participant;
@@ -56,12 +57,18 @@ bool AudioMixerImpl::GetMixerAudio( webrtc::AudioFrame* audioFrame )
             v.weightFactor = 0.0f;
             v.audioFrame = nullptr;
             v.energy = 0;
+            v.isMixed = false;
             PushAudioFrame( audioFrame );
             continue;
         }
+        bMix = true;
         v.energy = CalculateEnergy( audioFrame );
         v.isSilent = audioFrame->vad_activity_ != webrtc::AudioFrame::kVadActive;
         v.audioFrame = audioFrame;
+    }
+    if (!bMix)
+    {
+        return false;
     }
     if (m_participants.size() > (uint32_t)m_limitCount)
     {
@@ -82,6 +89,7 @@ bool AudioMixerImpl::GetMixerAudio( webrtc::AudioFrame* audioFrame )
                 nMixframeCounter++;
                 it->needMixCount = 5;
                 it->isMixed = true;
+                // 这里系数的调整至关重要，目前先简单的处理下
                 if (it->isSilent)
                 {
                     it->weightFactor = 0.7f;
@@ -104,12 +112,13 @@ bool AudioMixerImpl::GetMixerAudio( webrtc::AudioFrame* audioFrame )
             }
         }
     }
-    if (!mixerlist.empty())
-    {
-        return false;
-    }
 
     MixFrameList( mixerlist, audioFrame );
+    for ( auto&v : m_participants )
+    {
+        if ( v.audioFrame )
+            PushAudioFrame( v.audioFrame );
+    }
     return true;
 }
 
@@ -137,7 +146,7 @@ void AudioMixerImpl::PushAudioFrame( webrtc::AudioFrame* pAudioFrame )
 uint32_t  AudioMixerImpl::CalculateEnergy( const webrtc::AudioFrame* audioFrame )
 {
     uint32_t energy = 0;
-    for ( size_t position = 0; position < audioFrame->samples_per_channel_;
+    for ( size_t position = 0; position < audioFrame->samples_per_channel_*audioFrame->num_channels_;
           position++ )
     {
         energy += audioFrame->data_[position] * audioFrame->data_[position];
@@ -147,8 +156,14 @@ uint32_t  AudioMixerImpl::CalculateEnergy( const webrtc::AudioFrame* audioFrame 
 
 void AudioMixerImpl::MixFrameList( MixerParticipantList & mixlist, webrtc::AudioFrame* audioFrame )
 {
+    if ( mixlist.empty() )
+    {
+        memset( audioFrame->data_, 0, audioFrame->samples_per_channel_*audioFrame->num_channels_ * 2 );//静音包
+        return;
+    }
     size_t size = audioFrame->samples_per_channel_*audioFrame->num_channels_;
     float* data = new float[size];
+    memset( data, 0, sizeof( float )*size );
     for ( auto& v : mixlist )
     {
         for ( size_t i = 0; i < size; i++ )

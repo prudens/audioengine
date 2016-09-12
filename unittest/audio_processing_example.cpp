@@ -1,5 +1,5 @@
 #include "header.h"
-void test_audio_processing()
+void test_audio_effect()
 {
     WavReader reader_rec( "D:/rec-97.wav" );
     int samplerate = reader_rec.sample_rate();
@@ -373,4 +373,66 @@ void test_audio_ns()
             }
         }
     }
+}
+
+#include "processing/src/audio_mixer/include/audio_mixer.h"
+class AudioStream :public MixerParticipant
+{
+public:
+    AudioStream( const char* file )
+    {
+        reader = new WavReader( file );
+        channel = reader->num_channels();
+        samplerate = reader->sample_rate();
+    }
+    virtual bool GetAudioFrame( webrtc::AudioFrame* audioFrame )
+    {
+        int nSamples = samplerate / 100 * channel;
+        if ( nSamples != reader->ReadSamples( nSamples, audioFrame->data_ ) )
+             return false;
+        audioFrame->num_channels_ = channel;
+        audioFrame->sample_rate_hz_ = samplerate;
+        audioFrame->vad_activity_ = AudioFrame::kVadActive;
+        audioFrame->samples_per_channel_ = 480;
+        return true;
+    }
+    ~AudioStream()
+    {
+        delete reader;
+    }
+private:
+    WavReader*reader;
+    int samplerate;
+    int channel;
+};
+void test_audio_mixer()
+{
+    WavWriter output( "D:/es-output.wav",48000,2 );
+    AudioStream es01("C:/Users/zhangnaigan/Desktop/3D_test_Audio/es01.wav");
+    AudioStream es02( "C:/Users/zhangnaigan/Desktop/3D_test_Audio/es02.wav" );
+    AudioStream es03( "C:/Users/zhangnaigan/Desktop/3D_test_Audio/es03.wav" );
+    AudioStream es04( "C:/Users/zhangnaigan/Desktop/3D_test_Audio/sc01.wav" );
+    AudioStream es05( "C:/Users/zhangnaigan/Desktop/3D_test_Audio/sc02.wav" );
+    AudioStream es06( "C:/Users/zhangnaigan/Desktop/3D_test_Audio/sc03.wav" );
+    AudioMixer* mixer = AudioMixer::Create( 48000, 2 );
+    mixer->LimitParticipantCount( 5 );
+    mixer->AddParticipant( &es01 );
+    mixer->AddParticipant( &es02 );
+    mixer->AddParticipant( &es03 );
+    mixer->AddParticipant( &es04 );
+    mixer->AddParticipant( &es05 );
+    mixer->AddParticipant( &es06 );
+    AudioFrame af;
+    af.samples_per_channel_ = 480;
+    af.sample_rate_hz_ = 48000;
+    af.num_channels_ = 2;
+    while ( mixer->GetMixerAudio( &af ) )
+    {
+        output.WriteSamples( af.data_, af.num_channels_*af.samples_per_channel_ );
+    }
+}
+
+void test_audio_processing()
+{
+    test_audio_mixer();
 }
