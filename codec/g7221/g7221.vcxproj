@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{9A4C710D-42B8-49EB-B4E6-B70E8BBEBC42}</ProjectGuid>
-    <RootNamespace>audio_io</RootNamespace>
+    <ProjectGuid>{0A399DDB-BF0C-4601-AD0D-2B38F23B7D48}</ProjectGuid>
+    <RootNamespace>g7221</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -40,19 +40,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(ProjectName)$(Configuration)\</IntDir>
-    <IncludePath>F:\repo\audioengine\codec\mp3\decoder\ports\MSVC++;F:\repo\audioengine\codec\mp3\decoder\src\libmpg123;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectName)$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS /D"_CRT_SECURE_NO_WARNINGS" %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>../../;../../codec/mp3/decoder/ports/MSVC++;../../codec/mp3/decoder/src/libmpg123/;../../codec/aac/libAACenc/include;../../codec/aac/;../../codec/aac/libFDK/include;../../codec/aac/libsys/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -60,14 +57,12 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalOptions>/D"_CRT_SECURE_NO_WARNINGS" %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>../../;../../codec/mp3/decoder/ports/MSVC++;../../codec/mp3/decoder/src/libmpg123/;../../codec/aac/libAACenc/include;../../codec/aac/;../../codec/aac/libFDK/include;../../codec/aac/libsys/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -76,32 +71,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\io\aacfilereader.cpp" />
-    <ClCompile Include="..\..\io\aacfilewriter.cpp" />
-    <ClCompile Include="..\..\io\audioencoder.cpp" />
-    <ClCompile Include="..\..\io\audioreader.cpp" />
-    <ClCompile Include="..\..\io\audiowriter.cpp" />
-    <ClCompile Include="..\..\io\g7721encoder.cpp">
-      <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Cdecl</CallingConvention>
-      <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
-    </ClCompile>
-    <ClCompile Include="..\..\io\mp3filereader.cpp" />
-    <ClCompile Include="..\..\io\mp3filewriter.cpp" />
-    <ClCompile Include="..\..\io\wav_file.cc" />
-    <ClCompile Include="..\..\io\wav_header.cc" />
+    <ClCompile Include="src\common.c" />
+    <ClCompile Include="src\dct4.c" />
+    <ClCompile Include="src\decoder.c" />
+    <ClCompile Include="src\encoder.c" />
+    <ClCompile Include="src\rmlt_coefs_to_samples.c" />
+    <ClCompile Include="src\samples_to_rmlt_coefs.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\io\aacfilereader.h" />
-    <ClInclude Include="..\..\io\aacfilewriter.h" />
-    <ClInclude Include="..\..\io\g7721encoder.h" />
-    <ClInclude Include="..\..\io\include\audioencoder.h" />
-    <ClInclude Include="..\..\io\include\audioreader.h" />
-    <ClInclude Include="..\..\io\include\audiowriter.h" />
-    <ClInclude Include="..\..\io\include\io_common_define.h" />
-    <ClInclude Include="..\..\io\mp3filereader.h" />
-    <ClInclude Include="..\..\io\mp3filewriter.h" />
-    <ClInclude Include="..\..\io\wav_file.h" />
-    <ClInclude Include="..\..\io\wav_header.h" />
+    <ClInclude Include="include\defs.h" />
+    <ClInclude Include="include\g7221.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

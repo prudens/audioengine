@@ -1,6 +1,6 @@
 ﻿#include "header.h"
 #include "codec/aac/libAACenc/include/aacenc_lib.h"
-
+#include "io/include/audioencoder.h"
 void test_aac_enc()
 {
     WavReader reader( "E:\\CloudMusic\\Mariage.wav" );
@@ -283,4 +283,79 @@ void test_play_mp3()
     pWinDevice->StopRecording();
     pWinDevice->Terminate();
     pWinDevice->Release();
+}
+
+class G7221EncoderProc: public  AudioBufferProc
+{
+    AudioEncoder* encoder;
+    FILE *hFile;
+    char buf[2048];
+    int maxLen = 2048;
+    Resampler m_recResample;
+    int m_channel;
+    int16_t input[160];
+public:
+    G7221EncoderProc(const char* file,int samplerate,int channel)
+    {
+        m_channel = channel;
+        hFile = fopen( file, "wb+" );
+        encoder = AudioEncoder::Create( AFT_G7221 );
+        m_recResample.Reset( samplerate ,16000,1);
+    }
+    ~G7221EncoderProc()
+    {
+        encoder->Release();
+        fclose( hFile );
+    }
+    virtual void RecordingDataIsAvailable( const void*data, size_t size_in_byte )
+    {
+        int16_t*pData = (int16_t*)data;
+        if (m_channel == 2)
+        {
+
+            for ( size_t i = 0; i < size_in_byte/4; i++)
+            {
+                pData[i] = pData[i * 2];
+            }
+        }
+        size_t outLen = 0;
+       // m_recResample.Push( pData, size_in_byte / 2, input, 160, outLen );
+        maxLen = 2048;
+        encoder->Encode( (int16_t*)pData, 160*2, buf, maxLen );
+        if (maxLen>0)
+        {
+            fwrite( buf, 1, maxLen, hFile );
+        }
+
+    };
+    virtual size_t NeedMorePlayoutData( void*data, size_t size_in_byte )
+    {
+        return 0;
+    }
+};
+void test_encoder_g7221()
+{
+    AudioDevice* pWinDevice = AudioDevice::Create();
+    pWinDevice->Initialize();
+    pWinDevice->SetRecordingFormat( 16000, 2 );
+    pWinDevice->InitPlayout();
+    pWinDevice->InitRecording();
+    uint32_t samplerate;
+    uint16_t channel;
+    pWinDevice->GetRecordingFormat( samplerate, channel );
+    G7221EncoderProc cb( "D:/rec.pak", samplerate, channel );
+     pWinDevice->SetAudioBufferCallback( &cb );
+    //pWinDevice->StartPlayout();
+    pWinDevice->StartRecording();
+    system( "pause" );
+    pWinDevice->StopPlayout();
+    pWinDevice->StopRecording();
+    pWinDevice->Terminate();
+    pWinDevice->Release();
+
+}
+
+void test_codec()
+{
+    test_encoder_g7221();
 }

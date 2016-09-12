@@ -6,5 +6,6 @@ enum AudioFileType
     AFT_WAV,
     AFT_MP3,
     AFT_AAC,
+    AFT_G7221,
     //...OTHER TYPE
 };
