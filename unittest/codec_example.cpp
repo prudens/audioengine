@@ -1,6 +1,7 @@
 ﻿#include "header.h"
 #include "codec/aac/libAACenc/include/aacenc_lib.h"
 #include "io/include/audioencoder.h"
+#include "io/include/audiodecoder.h"
 void test_aac_enc()
 {
     WavReader reader( "E:\\CloudMusic\\Mariage.wav" );
@@ -285,77 +286,189 @@ void test_play_mp3()
     pWinDevice->Release();
 }
 
-class G7221EncoderProc: public  AudioBufferProc
+void run_wav2mp3( const char* infile, const char*outfile )
 {
-    AudioEncoder* encoder;
-    FILE *hFile;
-    char buf[2048];
-    int maxLen = 2048;
-    Resampler m_recResample;
-    int m_channel;
-    int16_t input[160];
-public:
-    G7221EncoderProc(const char* file,int samplerate,int channel)
+    WavReader reader( infile );
+    AudioWriter* pMp3 = AudioWriter::Create( outfile, reader.sample_rate(), reader.num_channels(), AFT_MP3 );
+    const int NUM_SAMPLES = 100;
+    int16_t pcm[NUM_SAMPLES];
+    float fpcm[NUM_SAMPLES];
+    for ( ;; )
     {
-        m_channel = channel;
-        hFile = fopen( file, "wb+" );
-        encoder = AudioEncoder::Create( AFT_G7221 );
-        m_recResample.Reset( samplerate ,16000,1);
+        if ( NUM_SAMPLES != reader.ReadSamples( NUM_SAMPLES, pcm ) )
+            break;
+        S16ToFloat( pcm, NUM_SAMPLES, fpcm );
+        pMp3->WriteSamples( fpcm, NUM_SAMPLES );
     }
-    ~G7221EncoderProc()
-    {
-        encoder->Release();
-        fclose( hFile );
-    }
-    virtual void RecordingDataIsAvailable( const void*data, size_t size_in_byte )
-    {
-        int16_t*pData = (int16_t*)data;
-        if (m_channel == 2)
-        {
+    pMp3->Destroy();
+}
 
-            for ( size_t i = 0; i < size_in_byte/4; i++)
-            {
-                pData[i] = pData[i * 2];
-            }
-        }
-        size_t outLen = 0;
-       // m_recResample.Push( pData, size_in_byte / 2, input, 160, outLen );
-        maxLen = 2048;
-        encoder->Encode( (int16_t*)pData, 160*2, buf, maxLen );
-        if (maxLen>0)
-        {
-            fwrite( buf, 1, maxLen, hFile );
-        }
 
-    };
-    virtual size_t NeedMorePlayoutData( void*data, size_t size_in_byte )
+#include "G7221Interface.h"
+Timer timer;
+std::list < char*> pList;
+std::mutex _lock;
+
+void __stdcall EncodeCallback( const void* data, int lenofbytes, void* pcmData,int len )
+{
+    std::lock_guard<std::mutex> ls( _lock );
+    char* p = new char[lenofbytes];
+    memcpy( p, data, lenofbytes );
+    pList.push_back(p);
+   // printf( "[%d]recv encode len = %d\n", (int)timer.elapsed(),lenofbytes );
+}
+
+void __stdcall DecodeCallback( const void* data, int lenofbytes, void* pcmData, int len )
+{
+    std::lock_guard<std::mutex> ls( _lock );
+    if (pList.size()<50)
     {
-        return 0;
+        //memset( (void*)data, 0, lenofbytes );
+        return;
     }
-};
+    char* p = pList.front();
+    memcpy( (void*)data, p, lenofbytes );
+    pList.pop_front();
+    //printf( "[%d]recv encode len = %d\n", (int)timer.elapsed(), lenofbytes );
+}
+
+void* encoder = nullptr;
+void* decoder = nullptr;
 void test_encoder_g7221()
 {
-    AudioDevice* pWinDevice = AudioDevice::Create();
-    pWinDevice->Initialize();
-    pWinDevice->SetRecordingFormat( 16000, 2 );
-    pWinDevice->InitPlayout();
-    pWinDevice->InitRecording();
-    uint32_t samplerate;
-    uint16_t channel;
-    pWinDevice->GetRecordingFormat( samplerate, channel );
-    G7221EncoderProc cb( "D:/rec.pak", samplerate, channel );
-     pWinDevice->SetAudioBufferCallback( &cb );
-    //pWinDevice->StartPlayout();
-    pWinDevice->StartRecording();
+    encoder = CreateEncoder( EncodeCallback );
+    StartEncode( encoder );
+    decoder = CreateDecoder( DecodeCallback );
+    StartDecode( decoder );
     system( "pause" );
-    pWinDevice->StopPlayout();
-    pWinDevice->StopRecording();
-    pWinDevice->Terminate();
-    pWinDevice->Release();
+    StopEncode( encoder );
+    DeleteEncoder( encoder );
+    StopDecode( decoder );
+    DeleteEncoder( decoder );
+}
+
+#include "C:/Users/zhangnaigan/Desktop/CH-HCNetSDK(Windows32)V5.2.1.3_build20160513/头文件/HCNetSDK.h"
+
+#pragma comment(lib,"HCNetSDK.lib")
+#define FRAME_SIZE 20
+void test_g7221_encode()
+{
+    bool bInit = NET_DVR_Init();
+    if (!bInit)
+    {
+        return;
+    }
+    void*encoder = NET_DVR_InitG722Encoder();
+
+    FILE* file = fopen( "D:/rec.pak","wb+" );
+    FILE* file1 = fopen( "D:/rec1.pak", "wb+" );
+    auto pG7221 = AudioEncoder::Create( AFT_G7221 );
+    WavReader reader( "D:/直接采集PCM音频.wav" );
+    int16_t pcm[16000 * FRAME_SIZE / 1000] = { 0 };
+    int16_t encBuf[80 * 2] = {0};
+    int bufLen = 80*2*2;
+    for ( ;; )
+    {
+        if ( FRAME_SIZE * 16 != reader.ReadSamples( FRAME_SIZE*16, pcm ) )
+        {
+            break;
+        }
+        bool bencode = NET_DVR_EncodeG722Frame( encoder, (BYTE*)pcm, (BYTE*)encBuf);
+        fwrite( encBuf, 1, 80, file );
+        pG7221->Encode( pcm, FRAME_SIZE * 16 * 2, encBuf, bufLen );
+        fwrite( encBuf, 1, 80, file1 );
+    }
+    fclose(file);
+    fclose( file1 );
+    pG7221->Release();
+    NET_DVR_ReleaseG722Encoder( encoder );
+    NET_DVR_Cleanup();
+}
+
+
+void test_g7221_decode()
+{
+    FILE* file = fopen( "D:/rec1.pak", "rb+" );
+    auto pG7221 = AudioDecoder::Create( AFT_G7221 );
+    WavWriter writer( "D:/rec.wav", 16000, 1 );
+    int16_t pcm[16000 * FRAME_SIZE / 1000];
+    uint8_t encBuf[80] = { 0 };
+    int bufLen = FRAME_SIZE*2;
+    int decLen = FRAME_SIZE*16*2;
+    for ( ;; )
+    {
+        int len = fread( encBuf, 1, bufLen, file );
+        if( bufLen != len)
+            break;
+        pG7221->Decode( encBuf, bufLen, pcm, decLen );
+        writer.WriteSamples( pcm, decLen / 2 );
+    }
+    fclose( file );
+    pG7221->Release();
+}
+
+#include "webrtc/modules/audio_coding/codecs/g722/g722_interface.h"
+void test_g722_decode()
+{
+    FILE* file = fopen("D:/rec.","rb+");
+    WavWriter writer( "D:/g722.wav",16000,1 );
+     G722DecInst *G722dec_inst;
+     WebRtcG722_CreateDecoder( &G722dec_inst );
+     if (!G722dec_inst)
+     {
+         return;
+     }
+     WebRtcG722_DecoderInit( G722dec_inst );
+     char encBuf[80] = { 0 };
+     int16_t decBuf[512] = { 0 };
+     int16_t speechType = 0;
+     for ( ;; )
+     {
+         int ret = fread( encBuf, 1, 20, file );
+         if (ret != 20)
+         {
+             break;
+         }
+
+         size_t len = WebRtcG722_Decode( G722dec_inst, (uint8_t*)encBuf, 20, decBuf, &speechType );
+         writer.WriteSamples( decBuf, len );
+     }
+     WebRtcG722_FreeDecoder( G722dec_inst );
+     fclose( file );
 
 }
 
+void test_g722_encode()
+{
+    WavReader reader( "D:/直接采集PCM音频.wav" );
+    FILE* file = fopen( "D:/G722.pak","wb+" );
+    G722EncInst * G722enc_inst;
+    WebRtcG722_CreateEncoder( &G722enc_inst );
+    WebRtcG722_EncoderInit(G722enc_inst);
+    int16_t pcm[160];
+    uint8_t encBuf[160];
+    for ( ;; )
+    {
+        auto len =  reader.ReadSamples(160,pcm);
+        if (len != 160)
+        {
+            break;
+        }
+        len = WebRtcG722_Encode( G722enc_inst, pcm, 160, encBuf );
+        fwrite(encBuf,1,len,file);
+
+    }
+    WebRtcG722_FreeEncoder( G722enc_inst );
+    fclose(file);
+}
 void test_codec()
 {
-    test_encoder_g7221();
+    //run_wav2mp3( "C:/Users/zhangnaigan/Desktop/歌曲.wav", "C:/Users/zhangnaigan/Desktop/歌曲1.mp3" );
+   // run_mp32wav( "E:/CloudMusic/Mariage.mp3" );
+   // test_encoder_g7221();
+   // test_g7221_encode();
+    test_g7221_decode();
+   // test_g722_encode();
+   // test_g722_decode();
+
 }

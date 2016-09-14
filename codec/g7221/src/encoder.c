@@ -26,9 +26,9 @@
 
 #include <stdio.h>
 #include <math.h>
-#include "../include/defs.h"
+#include "defs.h"
 #include "huff_defs.h"
-#include "../include/g7221.h"
+#include "g7221.h"
 /* local function declarations */
 int compute_region_powers(int, float [], int [], int [], int[]);
 void vector_quantize_mlts(int, int, float [], int[], int [], int [], int *,

@@ -78,9 +78,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\io\aacfilereader.cpp" />
     <ClCompile Include="..\..\io\aacfilewriter.cpp" />
+    <ClCompile Include="..\..\io\audiodecoder.cpp" />
     <ClCompile Include="..\..\io\audioencoder.cpp" />
     <ClCompile Include="..\..\io\audioreader.cpp" />
     <ClCompile Include="..\..\io\audiowriter.cpp" />
+    <ClCompile Include="..\..\io\g7221decoder.cpp" />
     <ClCompile Include="..\..\io\g7721encoder.cpp">
       <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Cdecl</CallingConvention>
       <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
@@ -93,7 +95,9 @@
   <ItemGroup>
     <ClInclude Include="..\..\io\aacfilereader.h" />
     <ClInclude Include="..\..\io\aacfilewriter.h" />
+    <ClInclude Include="..\..\io\g7221decoder.h" />
     <ClInclude Include="..\..\io\g7721encoder.h" />
+    <ClInclude Include="..\..\io\include\audiodecoder.h" />
     <ClInclude Include="..\..\io\include\audioencoder.h" />
     <ClInclude Include="..\..\io\include\audioreader.h" />
     <ClInclude Include="..\..\io\include\audiowriter.h" />

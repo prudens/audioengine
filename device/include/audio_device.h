@@ -75,6 +75,7 @@ public:
     virtual bool StopRecording() = 0;
     virtual bool Recording() const = 0;
     virtual void SetAudioBufferCallback( AudioBufferProc* pCallback ) = 0;
+    virtual AudioBufferProc* GetAudioBufferCallback()const = 0;
     virtual bool SetPropertie( AudioPropertyID id, void* ) = 0;
     virtual bool GetProperty( AudioPropertyID id, void* ) = 0;
 protected:

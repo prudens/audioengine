@@ -88,7 +88,6 @@ void test_array();
 void test_audio_processing();
 void test_codec();
 
-
 int main( int argc, char** argv )
 {
     test_codec();

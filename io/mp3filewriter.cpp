@@ -31,7 +31,7 @@ Mp3FileWriter::Mp3FileWriter(const char* filename, int samplerate, int channel )
     {
         return;
     }
-    ret = lame_set_VBR_mean_bitrate_kbps( m_lame,32 );
+    ret = lame_set_VBR_mean_bitrate_kbps( m_lame,128 );
     ret = lame_init_params( m_lame );
     if ( ret != 0 )
     {

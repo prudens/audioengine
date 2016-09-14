@@ -38,14 +38,16 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <TargetName>G7221Codec</TargetName>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../;../processing/src;../codec/aac/libAACenc/include;../codec/aac/;../codec/aac/libFDK/include;../codec/aac/libsys/include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);DEBUG;WEBRTC_WIN;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;G7221_EXPORTS;%(PreprocessorDefinitions);DEBUG;WEBRTC_WIN;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -60,7 +62,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../;../processing/src;../codec/aac/libAACenc/include;../codec/aac/;../codec/aac/libFDK/include;../codec/aac/libsys/include</AdditionalIncludeDirectories>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);DEBUG;WEBRTC_WIN;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;G7221_EXPORTS;%(PreprocessorDefinitions);DEBUG;WEBRTC_WIN;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
@@ -77,9 +79,11 @@
     <ClCompile Include="audio_low_pass_filter.cpp" />
     <ClCompile Include="audio_noise_suppression.cpp" />
     <ClCompile Include="audio_processing_example.cpp" />
+    <ClCompile Include="audio_resample.cpp" />
     <ClCompile Include="audio_voice_check.cpp" />
     <ClCompile Include="codec_example.cpp" />
     <ClCompile Include="dispatch_example.cpp" />
+    <ClCompile Include="G7221Interface.cpp" />
     <ClCompile Include="import_lib.cpp" />
     <ClCompile Include="numeric_example.cpp" />
   </ItemGroup>
@@ -88,7 +92,9 @@
     <ClInclude Include="audio_gain_control.h" />
     <ClInclude Include="audio_low_pass_filter.h" />
     <ClInclude Include="audio_noise_suppression.h" />
+    <ClInclude Include="audio_resample.h" />
     <ClInclude Include="audio_voice_check.h" />
+    <ClInclude Include="G7221Interface.h" />
     <ClInclude Include="header.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

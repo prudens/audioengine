@@ -51,7 +51,9 @@ public:
     virtual bool StopRecording()override;
     virtual bool Recording() const override;
 
-    virtual void SetAudioBufferCallback( AudioBufferProc* pCallback )override;
+    virtual void SetAudioBufferCallback( AudioBufferProc* pCallback ) override;
+    virtual AudioBufferProc* GetAudioBufferCallback()const override;
+
     virtual bool SetPropertie( AudioPropertyID id, void* );
     virtual bool GetProperty( AudioPropertyID id, void* );
 private:

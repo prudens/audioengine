@@ -662,6 +662,11 @@ void WindowsCoreAudio::SetAudioBufferCallback( AudioBufferProc* pCallback )
     m_pBufferProc = pCallback;
 }
 
+AudioBufferProc* WindowsCoreAudio::GetAudioBufferCallback()const
+{
+    return m_pBufferProc;
+}
+
 bool WindowsCoreAudio::SetPropertie( AudioPropertyID id, void*value )
 {
     switch ( id )
@@ -1494,5 +1499,7 @@ DWORD WINAPI WindowsCoreAudio::WSAPICaptureThread( LPVOID context )
     return reinterpret_cast<WindowsCoreAudio*>( context )->
         DoCaptureThread();
 }
+
+
 
 
