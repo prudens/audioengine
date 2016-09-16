@@ -208,12 +208,12 @@ void test_hrtf( int nAzimuth, int nElevation, const char* inputfile, const char*
 {
 
     WavReader reader( inputfile );
-    int len = reader.num_samples();
+    int len = reader.NumChannels();
 
     const int nFFT = 4096;
     float pLeft[nFFT] = { 0 };
     float pRight[nFFT] = { 0 };
-    int nFil = mit_hrtf_get( &nAzimuth, &nElevation, reader.sample_rate(), 0, pLeft, pRight );
+    int nFil = mit_hrtf_get( &nAzimuth, &nElevation, reader.SampleRate(), 0, pLeft, pRight );
     if ( nFil == 0 ) return;
     Complex flt[nFFT] = { 0 };
     for ( int i = 0; i < nFil; i++ )
@@ -223,14 +223,14 @@ void test_hrtf( int nAzimuth, int nElevation, const char* inputfile, const char*
     }
     CFFT::Forward( flt, nFFT );
 
-    WavWriter writer( outputfile, reader.sample_rate(), 1 );
-
+    WavWriter writer( outputfile, reader.SampleRate(), 1 );
+    int channels =  reader.NumChannels();
     int16_t pSrc[nFFT * 2];
-    reader.ReadSamples( nFFT*reader.num_channels(), pSrc );
-    reader.ReadSamples( nFFT*reader.num_channels(), pSrc );
-    reader.ReadSamples( nFFT*reader.num_channels(), pSrc );
+    reader.ReadSamples( nFFT*channels, pSrc );
+    reader.ReadSamples( nFFT*channels, pSrc );
+    reader.ReadSamples( nFFT*channels, pSrc );
     int16_t pMono[nFFT];
-    DownmixInterleavedToMono( pSrc, nFFT, reader.num_channels(), pMono );
+    DownmixInterleavedToMono( pSrc, nFFT, channels, pMono );
     writer.WriteSamples( pMono, nFFT );
     float pData[nFFT];
     S16ToFloat( pMono, nFFT, pData );

@@ -58,8 +58,8 @@ void test_fft()
 void test_voice_scale()
 {
     WavReader reader_rec( "D:/log/test-16000.wav" );
-    int samplerate = reader_rec.sample_rate();
-    int channel = reader_rec.num_channels();
+    int samplerate = reader_rec.SampleRate();
+    int channel = reader_rec.NumChannels();
     WavWriter writer( "D:/log/test1.wav", samplerate, channel );
 
     AudioGainControl agc;

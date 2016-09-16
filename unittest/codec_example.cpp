@@ -5,8 +5,8 @@
 void test_aac_enc()
 {
     WavReader reader( "E:\\CloudMusic\\Mariage.wav" );
-    int channel = reader.num_channels();
-    int samplerate = reader.sample_rate();
+    int channel = reader.NumChannels();
+    int samplerate = reader.SampleRate();
 
     auto aacfile = AudioWriter::Create( "D:/Mariage.aac", samplerate, channel, AFT_AAC );
     int frame = 882;
@@ -289,7 +289,7 @@ void test_play_mp3()
 void run_wav2mp3( const char* infile, const char*outfile )
 {
     WavReader reader( infile );
-    AudioWriter* pMp3 = AudioWriter::Create( outfile, reader.sample_rate(), reader.num_channels(), AFT_MP3 );
+    AudioWriter* pMp3 = AudioWriter::Create( outfile, reader.SampleRate(), reader.NumChannels(), AFT_MP3 );
     const int NUM_SAMPLES = 100;
     int16_t pcm[NUM_SAMPLES];
     float fpcm[NUM_SAMPLES];

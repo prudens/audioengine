@@ -1,9 +1,23 @@
 #include "io/include/audiowriter.h"
 #include "aacfilewriter.h"
 #include "mp3filewriter.h"
+#include "wav_file.h"
+#include "pcm_file.h"
 AudioWriter*AudioWriter::Create( const char* filename, int sample_rate, size_t channels, AudioFileType type )
 {
-    if ( type == AFT_MP3 )
+    switch ( type )
+    {
+    case AFT_AAC:
+    {
+        auto pWriter = new AACFileWriter( filename, sample_rate, channels );
+        if ( !pWriter->Initialized() )
+        {
+            pWriter->Destroy();
+            return nullptr;
+        }
+        return pWriter;
+    }
+    case AFT_MP3:
     {
         auto pWriter = new Mp3FileWriter( filename, sample_rate, channels );
         if ( !pWriter->Initialized() )
@@ -13,15 +27,26 @@ AudioWriter*AudioWriter::Create( const char* filename, int sample_rate, size_t c
         }
         return pWriter;
     }
-    else if ( type == AFT_AAC )
+    case AFT_WAV:
     {
-        auto pWriter = new AACFileWriter( filename, sample_rate, channels );
+        auto pWriter = new WavWriter( filename, sample_rate, channels );
+        if (!pWriter->Initialized())
+        {
+            pWriter->Destroy();
+            pWriter = nullptr;
+        }
+        return pWriter;
+    }
+    case AFT_PCM:
+    {
+        auto pWriter = new PCMFileWriter( filename, sample_rate, channels );
         if ( !pWriter->Initialized() )
         {
             pWriter->Destroy();
-            return nullptr;
+            pWriter = nullptr;
         }
         return pWriter;
+    }
     }
     return nullptr;
 }

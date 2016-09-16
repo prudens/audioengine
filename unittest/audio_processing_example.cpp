@@ -2,8 +2,8 @@
 void test_audio_effect()
 {
     WavReader reader_rec( "D:/rec-97.wav" );
-    int samplerate = reader_rec.sample_rate();
-    int channel = reader_rec.num_channels();
+    int samplerate = reader_rec.SampleRate();
+    int channel = reader_rec.NumChannels();
 
     WavWriter writer( "d:/log/test-pro.wav", samplerate, channel );
     AudioEffect ae;
@@ -250,8 +250,8 @@ void test_audio_ns()
     int16_t pPCMData[frame] = { 0 };
     {
         WavReader reader_rec( "D:/log/123.wav" );
-        samplerate = reader_rec.sample_rate();
-        channel = reader_rec.num_channels();
+        samplerate = reader_rec.SampleRate();
+        channel = reader_rec.NumChannels();
         WavWriter writer( "D:/log/test1.wav", samplerate, channel );
         ans.Init( samplerate, channel );
         for ( ;; )
@@ -280,8 +280,8 @@ void test_audio_ns()
     {
 
         WavReader reader_rec( "D:/log/test-16000.wav" );
-        samplerate = reader_rec.sample_rate();
-        channel = reader_rec.num_channels();
+        samplerate = reader_rec.SampleRate();
+        channel = reader_rec.NumChannels();
         WavWriter writer( "D:/log/test1.wav", samplerate, channel );
         for ( const auto & v : level_list )
         {
@@ -382,8 +382,8 @@ public:
     AudioStream( const char* file )
     {
         reader = new WavReader( file );
-        channel = reader->num_channels();
-        samplerate = reader->sample_rate();
+        channel = reader->NumChannels();
+        samplerate = reader->SampleRate();
     }
     virtual bool GetAudioFrame( webrtc::AudioFrame* audioFrame )
     {
