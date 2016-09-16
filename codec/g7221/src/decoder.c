@@ -1,653 +1,715 @@
-/*****************************************************************
-******************************************************************
-**
-**   G.722.1 Annex B - G.722.1 Floating point implementation
-**   > Software Release 2.1 (2008-06)
-**
-**	Filename : decoder.c
-**
-**   ?2000 PictureTel Coporation
-**          Andover, MA, USA  
-**
-**	    All rights reserved.
-**
-******************************************************************
-*****************************************************************/
-/*****************************************************************
-  Filename:   decoder.c    
-  Original Author:
-  Creation Date:  
-  
-  Purpose:         Contains files used to implement
-                   the G.722.1 decoder
-******************************************************************/
+/*
+ * g722_1 - a library for the G.722.1 and Annex C codecs
+ *
+ * decoder.c
+ *
+ * Adapted by Steve Underwood <steveu@coppice.org> from the reference
+ * code supplied with ITU G.722.1, which is:
+ *
+ *   (C)2004 Polycom, Inc.
+ *   All rights reserved.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
 
-/******************************************************************
- Include files                                                           
-*******************************************************************/
+/*! \file */
 
-#include <stdio.h>
-#include <math.h>
+#if defined(HAVE_CONFIG_H)
+#include <config.h>
+#endif
+
+#include <inttypes.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "g722_1.h"
+
 #include "defs.h"
-#include "huff_defs.h"
+#include "tables.h"
+#include "huff_tab.h"
+#include "bitstream.h"
 
-/* decalaration of external functions and variables */
-extern float mlt_quant_centroid[NUM_CATEGORIES-1][MAX_NUM_BINS];
-extern float region_standard_deviation_table[REGION_POWER_TABLE_SIZE];
-extern int index_to_array(int, int[], int);
-
-extern int region_size;
-extern int differential_region_power_decoder_tree[MAX_NUM_REGIONS][DIFF_REGION_POWER_LEVELS-1][2];
-extern int vector_dimension[NUM_CATEGORIES];
-extern int number_of_vectors[NUM_CATEGORIES];
-extern int table_of_decoder_tables[NUM_CATEGORIES-1];
-
-/* decalaration of local functions and variables */
-void rate_adjust_categories(int, int [], int []);
-void decode_envelope(int, float[], int[]);
-void decode_vector_quantized_mlt_indices(int, float [], int [], float []);
-
-static int number_of_bits_left;
-static int next_bit;
-static int code_word;
-static int code_bit_count;
-static short int *code_word_ptr;
-
-#define NOISE_SCALE_FACTOR 22.0F
-
-#define GET_NEXT_BIT \
-if (code_bit_count == 0) { \
-  code_word = *code_word_ptr++; \
-  code_bit_count = 16; \
-} \
-code_bit_count--; \
-next_bit = (code_word >> code_bit_count) & 1;
-
-/***************************************************************************
- Procedure/Function:  decoder
-
- Syntax:     void decoder(  number_of_regions,
-							number_of_bits_per_frame,
-							bitstream,
-							decoder_mlt_coefs,
-							frame_error_flag)
-
-							int number_of_regions;
-							int number_of_bits_per_frame;
-							short int bitstream[];
-							float decoder_mlt_coefs[MAX_DCT_SIZE];
-							int frame_error_flag;
-      
-              inputs:    int number_of_regions
-                         int number_of_bits_per_frame
-						 int frame_error_flag
-              
-              outputs:   float *decoder_mlt_coefs[],    
-                         short int bitstream[]          
-                  
- Description:  
-				
-***************************************************************************/
-
-void decoder(number_of_regions,
-	     number_of_bits_per_frame,
-	     bitstream,
-	     decoder_mlt_coefs,
-	     frame_error_flag)
-     int number_of_regions;
-     int number_of_bits_per_frame;
-     short int bitstream[];
-     float decoder_mlt_coefs[MAX_DCT_SIZE];
-     int frame_error_flag;
-
+int16_t get_rand(g722_1_rand_t *randobj)
 {
+    int16_t random_word;
+    int32_t acca;
 
-  extern void categorize(int, int, int[], int[], int[]);
-  static float old_decoder_mlt_coefs[MAX_DCT_SIZE];
-  int absolute_region_power_index[MAX_NUM_REGIONS];
-  int decoder_power_categories[MAX_NUM_REGIONS];
-  int decoder_category_balances[MAX_NUM_RATE_CONTROL_POSSIBILITIES-1];
-  int rate_control;
-  int num_rate_control_bits;
-  int num_rate_control_possibilities;
-  float decoder_region_standard_deviation[MAX_NUM_REGIONS];
-  int number_of_coefs;
-  int number_of_valid_coefs;
+    acca = randobj->seed0 + randobj->seed3;
+    random_word = (int16_t) acca;
 
+    if ((random_word & 32768L) != 0)
+        random_word++;
+    randobj->seed3 = randobj->seed2;
+    randobj->seed2 = randobj->seed1;
+    randobj->seed1 = randobj->seed0;
+    randobj->seed0 = random_word;
+    return random_word;
+}
+/*- End of function --------------------------------------------------------*/
 
-  number_of_valid_coefs = number_of_regions * region_size;
+#if defined(G722_1_USE_FIXED_POINT)
 
-  if (number_of_regions <= 14)
-    number_of_coefs = 320;
+static void test_for_frame_errors(g722_1_decode_state_t *s,
+                                  int16_t number_of_regions,
+                                  int16_t num_categorization_control_possibilities,
+                                  int *frame_error_flag,
+                                  int16_t categorization_control,
+                                  int16_t *absolute_region_power_index);
 
-  if (frame_error_flag == 0) {
+static void error_handling(int16_t number_of_coefs,
+                           int16_t number_of_valid_coefs,
+                           int *frame_error_flag,
+                           int16_t *decoder_mlt_coefs,
+                           int16_t *old_decoder_mlt_coefs,
+                           int16_t *p_mag_shift,
+                           int16_t *p_old_mag_shift);
 
-    code_word_ptr = bitstream;
-    code_bit_count = 0;
+static void decode_vector_quantized_mlt_indices(g722_1_decode_state_t *s,
+                                                int16_t number_of_regions,
+                                                int16_t *decoder_region_standard_deviation,
+                                                int16_t *dedecoder_power_categories,
+                                                int16_t *dedecoder_mlt_coefs);
 
+static void decode_envelope(g722_1_decode_state_t *s,
+                            int16_t number_of_regions,
+                            int16_t *decoder_region_standard_deviation,
+                            int16_t *absolute_region_power_index,
+                            int16_t *p_mag_shift);
 
-    if (number_of_regions <= 14) {
-      num_rate_control_bits = 4;
-      num_rate_control_possibilities = 16;
+static void rate_adjust_categories(int16_t categorization_control,
+                                   int16_t *decoder_power_categories,
+                                   int16_t *decoder_category_balances);
 
+static int16_t index_to_array(int16_t index, int16_t *array, int16_t category);
 
-    }
+static void decoder(g722_1_decode_state_t *s,
+                    int16_t number_of_regions,
+                    int16_t decoder_mlt_coefs[],
+                    int16_t *p_mag_shift,
+                    int16_t *p_old_mag_shift,
+                    int16_t old_decoder_mlt_coefs[],
+                    int frame_error_flag);
 
-    number_of_bits_left = number_of_bits_per_frame;
+/* Decodes the out_words into MLT coefs using G.722.1 Annex C */
+void decoder(g722_1_decode_state_t *s,
+             int16_t number_of_regions,
+             int16_t decoder_mlt_coefs[],
+             int16_t *p_mag_shift,
+             int16_t *p_old_mag_shift,
+             int16_t old_decoder_mlt_coefs[],
+             int frame_error_flag)
+{
+    int16_t decoder_region_standard_deviation[MAX_NUMBER_OF_REGIONS];
+    int16_t absolute_region_power_index[MAX_NUMBER_OF_REGIONS];
+    int16_t decoder_power_categories[MAX_NUMBER_OF_REGIONS];
+    int16_t decoder_category_balances[MAX_NUM_CATEGORIZATION_CONTROL_POSSIBILITIES - 1];
+    int16_t num_categorization_control_bits;
+    int16_t num_categorization_control_possibilities;
+    int16_t number_of_coefs;
+    int16_t number_of_valid_coefs;
+    uint16_t categorization_control;
+ 
+    number_of_valid_coefs = number_of_regions*REGION_SIZE;
 
-    decode_envelope(number_of_regions,
-		    decoder_region_standard_deviation,
-		    absolute_region_power_index);
-
+    /* Get some parameters based solely on the bitstream style */
+    if (number_of_regions == NUMBER_OF_REGIONS)
     {
-      int i;
-      rate_control = 0;
-      for (i=0; i<num_rate_control_bits; i++) {
-	GET_NEXT_BIT;
-	rate_control <<= 1;
-	rate_control += next_bit;
-      }
+        number_of_coefs = DCT_LENGTH;
+        num_categorization_control_bits = NUM_CATEGORIZATION_CONTROL_BITS;
+        num_categorization_control_possibilities = NUM_CATEGORIZATION_CONTROL_POSSIBILITIES;
     }
-    number_of_bits_left -= num_rate_control_bits;
-
-    categorize(number_of_regions,
-	       number_of_bits_left,
-	       absolute_region_power_index,
-	       decoder_power_categories,
-	       decoder_category_balances);
-
-    rate_adjust_categories(rate_control,
-			   decoder_power_categories,
-			   decoder_category_balances);
-
-    decode_vector_quantized_mlt_indices(number_of_regions,
-					decoder_region_standard_deviation,
-					decoder_power_categories,
-					decoder_mlt_coefs);
-
-/* Test for bit stream errors. */
-
-    if (number_of_bits_left > 0) {
-      {
-	int i;
-	for (i=0; i<number_of_bits_left; i++) {
-	  GET_NEXT_BIT;
-	  if (next_bit == 0) frame_error_flag = 1;
-	}	
-      }
-    }
-    else {
-      if (rate_control < num_rate_control_possibilities-1) {
-	if (number_of_bits_left < 0)
-	  frame_error_flag |= 2;
-      }
-    }
+    else
     {
-      int region;
-      for (region=0; region<number_of_regions; region++) {
-
-	if ((absolute_region_power_index[region]+ESF_ADJUSTMENT_TO_RMS_INDEX > 31) ||
-	    (absolute_region_power_index[region]+ESF_ADJUSTMENT_TO_RMS_INDEX < -8))
-	  frame_error_flag |= 4;
-      }
+        number_of_coefs = MAX_DCT_LENGTH;
+        num_categorization_control_bits = MAX_NUM_CATEGORIZATION_CONTROL_BITS;
+        num_categorization_control_possibilities = MAX_NUM_CATEGORIZATION_CONTROL_POSSIBILITIES;
     }
 
-  }
+    if (frame_error_flag == 0)
+    {
+        /* Convert the bits to absolute region power index and decoder_region_standard_deviation */
+        decode_envelope(s,
+                        number_of_regions,
+                        decoder_region_standard_deviation,
+                        absolute_region_power_index,
+                        p_mag_shift);
 
+        /* Fill the categorization_control with NUM_CATEGORIZATION_CONTROL_BITS */
+        categorization_control = g722_1_bitstream_get(&s->bitstream, &(s->code_ptr), num_categorization_control_bits);
+        s->number_of_bits_left -= num_categorization_control_bits;
 
-/* If both the current and previous frames are errored,
-   set the mlt coefficients to 0. If only the current frame
-   is errored, then repeat the previous frame's mlt coefficients. */
-  {
+        /* Obtain decoder power categories and category balances */
+        /* Based on the absolute region power index */
+        categorize(s->number_of_bits_left,
+                   number_of_regions,
+                   num_categorization_control_possibilities,
+                   absolute_region_power_index,
+                   decoder_power_categories,
+                   decoder_category_balances);
+
+        /* Perform adjustmaents to the power categories and category balances based on the cat control */
+        rate_adjust_categories(categorization_control,
+                               decoder_power_categories,
+                               decoder_category_balances);
+
+        /* Decode the quantized bits into mlt coefs */
+        decode_vector_quantized_mlt_indices(s,
+                                            number_of_regions,
+                                            decoder_region_standard_deviation,
+                                            decoder_power_categories,
+                                            decoder_mlt_coefs);
+
+        test_for_frame_errors(s,
+                              number_of_regions,
+                              num_categorization_control_possibilities,
+                              &frame_error_flag,
+                              categorization_control,
+                              absolute_region_power_index);
+    }
+
+    /* Perform error handling operations */
+    error_handling(number_of_coefs,
+                   number_of_valid_coefs,
+                   &frame_error_flag,
+                   decoder_mlt_coefs,
+                   old_decoder_mlt_coefs,
+                   p_mag_shift,
+                   p_old_mag_shift);
+}
+/*- End of function --------------------------------------------------------*/
+
+/* Recover differential_region_power_index from code bits */
+static void decode_envelope(g722_1_decode_state_t *s,
+                            int16_t number_of_regions,
+                            int16_t *decoder_region_standard_deviation,
+                            int16_t *absolute_region_power_index,
+                            int16_t *p_mag_shift)
+{
+    int16_t region;
+    int16_t i;
+    int16_t index;
+    int16_t differential_region_power_index[MAX_NUMBER_OF_REGIONS];
+    int16_t max_index;
+    int16_t temp;
+    int16_t temp1;
+    int16_t temp2;
+    int32_t acca;
+
+    /* Get 5 bits from the current code word */
+    index = g722_1_bitstream_get(&s->bitstream, &(s->code_ptr), 5);
+    s->number_of_bits_left -= 5;
+
+    /* ESF_ADJUSTMENT_TO_RMS_INDEX compensates for the current (9/30/96)
+       IMLT being scaled to high by the ninth power of sqrt(2). */
+    differential_region_power_index[0] = sub(index, ESF_ADJUSTMENT_TO_RMS_INDEX);
+
+    /* Obtain differential_region_power_index */
+    for (region = 1;  region < number_of_regions;  region++)
+    {
+        index = 0;
+        do
+        {
+            if (g722_1_bitstream_get(&s->bitstream, &(s->code_ptr), 1) == 0)
+                index = differential_region_power_decoder_tree[region][index][0];
+            else
+                index = differential_region_power_decoder_tree[region][index][1];
+            s->number_of_bits_left--;
+        }
+        while (index > 0);
+
+        differential_region_power_index[region] = negate(index);
+    }
+
+    /* Reconstruct absolute_region_power_index[] from differential_region_power_index[]. */
+    absolute_region_power_index[0] = differential_region_power_index[0];
+    for (region = 1;  region < number_of_regions;  region++)
+    {
+        acca = L_add(absolute_region_power_index[region - 1], differential_region_power_index[region]);
+        acca = L_add(acca, DRP_DIFF_MIN);
+        absolute_region_power_index[region] = (int16_t) acca;
+    }
+
+    /* Reconstruct decoder_region_standard_deviation[] from absolute_region_power_index[]. */
+    /* DEBUG!!!! - This integer method jointly computes the mag_shift
+       and the standard deviations already mag_shift compensated. It
+       relies on REGION_POWER_STEPSIZE_DB being exactly 3.010299957 db
+       or a square root of 2 change in standard deviation. If
+       REGION_POWER_STEPSIZE_DB changes, this software must be reworked. */
+
+    temp = 0;
+    max_index = 0;
+    for (region = 0;  region < number_of_regions;  region++)
+    {
+        acca = L_add(absolute_region_power_index[region], REGION_POWER_TABLE_NUM_NEGATIVES);
+        i = (int16_t) acca;
+
+        temp1 = sub(i, max_index);
+        if (temp1 > 0)
+            max_index = i;
+        temp = add(temp, int_region_standard_deviation_table[i]);
+    }
+    i = 9;
+    temp1 = sub(temp, 8);
+    temp2 = sub(max_index, 28);
+    while ((i >= 0)  &&  ((temp1 >= 0)  ||  (temp2 > 0)))
+    {
+        i = sub(i, 1);
+        temp >>= 1;
+        max_index = sub(max_index, 2);
+        temp1 = sub(temp, 8);
+        temp2 = sub(max_index, 28);
+    }
+
+    *p_mag_shift = i;
+
+    temp = (int16_t ) (REGION_POWER_TABLE_NUM_NEGATIVES + (*p_mag_shift * 2));
+    for (region = 0;  region < number_of_regions;  region++)
+    {
+        acca = L_add(absolute_region_power_index[region], temp);
+        i = (int16_t) acca;
+        decoder_region_standard_deviation[region] = int_region_standard_deviation_table[i];
+    }
+
+}
+/*- End of function --------------------------------------------------------*/
+
+/* Adjust the power categories based on the categorization control */
+static void rate_adjust_categories(int16_t categorization_control,
+                                   int16_t *decoder_power_categories,
+                                   int16_t *decoder_category_balances)
+{
+    int16_t i;
+    int16_t region;
+
+    i = 0;
+    while (categorization_control > 0)
+    {
+        region = decoder_category_balances[i++];
+        decoder_power_categories[region]++;
+        categorization_control = sub(categorization_control, 1);
+    }
+}
+/*- End of function --------------------------------------------------------*/
+
+/* Decode MLT coefficients */
+static void decode_vector_quantized_mlt_indices(g722_1_decode_state_t *s,
+                                                int16_t number_of_regions,
+                                                int16_t *decoder_region_standard_deviation,
+                                                int16_t *decoder_power_categories,
+                                                int16_t *decoder_mlt_coefs)
+{
+    const int16_t noise_fill_factor[3] =
+    {
+        5793, 8192, 23170
+    };
+    int j;
+    int16_t standard_deviation;
+    int16_t *decoder_mlt_ptr;
+    int16_t decoder_mlt_value;
+    int16_t noifillpos;
+    int16_t noifillneg;
+    int16_t region;
+    int16_t category;
+    int16_t n;
+    int16_t k[MAX_VECTOR_DIMENSION];
+    int16_t vec_dim;
+    int16_t num_vecs;
+    int16_t index;
+    int16_t signs_index;
+    int16_t bit;
+    int16_t num_sign_bits;
+    int16_t ran_out_of_bits_flag;
+    int16_t random_word;
+    int16_t temp;
+    int32_t acca;
+    const int16_t *decoder_table_ptr;
+
+    ran_out_of_bits_flag = 0;
+    for (region = 0;  region < number_of_regions;  region++)
+    {
+        category = (int16_t) decoder_power_categories[region];
+        acca = L_mult0(region, REGION_SIZE);
+        index = (int16_t) acca;
+        decoder_mlt_ptr = &decoder_mlt_coefs[index];
+        standard_deviation = decoder_region_standard_deviation[region];
+
+        temp = sub(category, 7);
+        if (temp < 0)
+        {
+            /* Get the proper table of decoder tables, vec_dim, and num_vecs for the cat */
+            decoder_table_ptr = table_of_decoder_tables[category];
+            vec_dim = vector_dimension[category];
+            num_vecs = number_of_vectors[category];
+
+            for (n = 0;  n < num_vecs;  n++)
+            {
+                index = 0;
+
+                /* Get index */
+                do
+                {
+                    if (s->number_of_bits_left <= 0)
+                    {
+                        ran_out_of_bits_flag = 1;
+                        break;
+                    }
+
+                    if (g722_1_bitstream_get(&s->bitstream, &(s->code_ptr), 1) == 0)
+                    {
+                        temp = shl(index, 1);
+                        index = decoder_table_ptr[temp];
+                    }
+                    else
+                    {
+                        temp = shl(index, 1);
+                        index = decoder_table_ptr[temp + 1];
+                    }
+                    s->number_of_bits_left--;
+                }
+                while (index > 0);
+
+                if (ran_out_of_bits_flag != 0)
+                    break;
+
+                index = negate(index);
+
+                /* convert index into array used to access the centroid table */
+                /* get the number of sign bits in the index */
+                num_sign_bits = index_to_array(index, k, category);
+
+                if (s->number_of_bits_left >= num_sign_bits)
+                {
+                    signs_index = 0;
+                    bit = 0;
+                    if (num_sign_bits != 0)
+                    {
+                        signs_index = g722_1_bitstream_get(&s->bitstream, &(s->code_ptr), num_sign_bits);
+                        s->number_of_bits_left -= num_sign_bits;
+                        bit = 1 << (num_sign_bits - 1);
+                    }
+
+                    for (j = 0;  j < vec_dim;  j++)
+                    {
+                        acca = L_mult0(standard_deviation, mlt_quant_centroid[category][k[j]]);
+                        acca = L_shr(acca, 12);
+                        decoder_mlt_value = (int16_t) acca;
+
+                        if (decoder_mlt_value != 0)
+                        {
+                            if ((signs_index & bit) == 0)
+                                decoder_mlt_value = negate(decoder_mlt_value);
+                            bit >>= 1;
+                        }
+                        *decoder_mlt_ptr++ = decoder_mlt_value;
+                    }
+                }
+                else
+                {
+                    ran_out_of_bits_flag = 1;
+                    break;
+                }
+            }
+            /* If ran out of bits during decoding do noise fill for remaining regions. */
+            /* DEBUG!! - For now also redo all of last region with all noise fill. */
+            if (ran_out_of_bits_flag != 0)
+            {
+                for (j = region + 1;  j < number_of_regions;  j++)
+                    decoder_power_categories[j] = 7;
+                category = 7;
+                decoder_mlt_ptr = &decoder_mlt_coefs[region*REGION_SIZE];
+            }
+        }
+
+        if (category == (NUM_CATEGORIES - 3)  ||  category == (NUM_CATEGORIES - 2))
+        {
+            decoder_mlt_ptr = &decoder_mlt_coefs[region*REGION_SIZE];
+            noifillpos = mult(standard_deviation, noise_fill_factor[category - 5]);
+            noifillneg = negate(noifillpos);
+            random_word = get_rand(&s->randobj);
+
+            for (j = 0;  j < 10;  j++)
+            {
+                if (*decoder_mlt_ptr == 0)
+                {
+                    *decoder_mlt_ptr = ((random_word & 1) == 0)  ?  noifillneg  :  noifillpos;
+                    random_word >>= 1;
+                }
+                /* pointer arithmetic */
+                decoder_mlt_ptr++;
+            }
+            random_word = get_rand(&s->randobj);
+            for (j = 0;  j < 10;  j++)
+            {
+                if (*decoder_mlt_ptr == 0)
+                {
+                    *decoder_mlt_ptr = ((random_word & 1) == 0)  ?  noifillneg  :  noifillpos;
+                    random_word >>= 1;
+                }
+                /* pointer arithmetic */
+                decoder_mlt_ptr++;
+            }
+        }
+
+        if (category == NUM_CATEGORIES - 1)
+        {
+            index = sub(category, 5);
+            noifillpos = mult(standard_deviation, noise_fill_factor[index]);
+            noifillneg = negate(noifillpos);
+            random_word = get_rand(&s->randobj);
+            for (j = 0;  j < 10;  j++)
+            {
+                *decoder_mlt_ptr++ = ((random_word & 1) == 0)  ?  noifillneg  :  noifillpos;
+                random_word >>= 1;
+            }
+            random_word = get_rand(&s->randobj);
+            for (j = 0;  j < 10;  j++)
+            {
+                decoder_mlt_ptr[j] = ((random_word & 1) == 0)  ?  noifillneg  :  noifillpos;
+                random_word >>= 1;
+            }
+        }
+    }
+
+    if (ran_out_of_bits_flag)
+        s->number_of_bits_left = -1;
+}
+/*- End of function --------------------------------------------------------*/
+
+/* Compute an array of sign bits with the length of the category vector
+   Returns the number of sign bits and the array */
+static int16_t index_to_array(int16_t index, int16_t *array, int16_t category)
+{
+    int16_t j;
+    int16_t q;
+    int16_t p;
+    int16_t number_of_non_zero;
+    int16_t max_bin_plus_one;
+    int16_t inverse_of_max_bin_plus_one;
+
+    number_of_non_zero = 0;
+    p = index;
+    max_bin_plus_one = max_bin[category] + 1;
+    inverse_of_max_bin_plus_one = max_bin_plus_one_inverse[category];
+
+    for (j = vector_dimension[category] - 1;  j >= 0;  j--)
+    {
+        q = (p*inverse_of_max_bin_plus_one) >> 15;
+        array[j] = p - q*max_bin_plus_one;
+        p = q;
+        if (array[j] != 0)
+            number_of_non_zero++;
+    }
+    return number_of_non_zero;
+}
+/*- End of function --------------------------------------------------------*/
+
+/* Tests for error conditions and sets the frame_error_flag accordingly */
+static void test_for_frame_errors(g722_1_decode_state_t *s,
+                                  int16_t number_of_regions,
+                                  int16_t num_categorization_control_possibilities,
+                                  int *frame_error_flag,
+                                  int16_t categorization_control,
+                                  int16_t *absolute_region_power_index)
+{
     int i;
 
-    if (frame_error_flag != 0) {
-
-      for (i = 0; i < number_of_valid_coefs; i++)
-	decoder_mlt_coefs[i] = old_decoder_mlt_coefs[i];
-
-      for (i = 0; i < number_of_valid_coefs; i++)
-	old_decoder_mlt_coefs[i] = 0;
-
+    /* Test for bit stream errors. */
+    if (s->number_of_bits_left > 0)
+    {
+        while (s->number_of_bits_left > 0)
+        {
+            if (g722_1_bitstream_get(&s->bitstream, &(s->code_ptr), 1) == 0)
+                *frame_error_flag = 1;
+            s->number_of_bits_left--;
+        }
+    }
+    else
+    {
+        if (categorization_control < num_categorization_control_possibilities - 1)
+        {
+            if (s->number_of_bits_left < 0)
+                *frame_error_flag |= 2;
+        }
     }
 
-    else {
-
-		/* Store in case next frame is errored. */
-      
-		for (i = 0; i < number_of_valid_coefs; i++)
-	old_decoder_mlt_coefs[i] = decoder_mlt_coefs[i];
-
+    /* Checks to ensure that absolute_region_power_index is within range */
+    /* The error flag is set if it is out of range */
+    for (i = 0;  i < number_of_regions;  i++)
+    {
+        if ((absolute_region_power_index[i] + ESF_ADJUSTMENT_TO_RMS_INDEX > 31)
+            ||
+            (absolute_region_power_index[i] + ESF_ADJUSTMENT_TO_RMS_INDEX < -8))
+        {
+            *frame_error_flag |= 4;
+            break;
+        }
     }
-  }
+}
+/*- End of function --------------------------------------------------------*/
 
-
-/* Zero out the upper 1/8 of the spectrum. */
-  
-  {
+static void error_handling(int16_t number_of_coefs,
+                           int16_t number_of_valid_coefs,
+                           int *frame_error_flag,
+                           int16_t *decoder_mlt_coefs,
+                           int16_t *old_decoder_mlt_coefs,
+                           int16_t *p_mag_shift,
+                           int16_t *p_old_mag_shift)
+{
     int i;
-    for (i = number_of_valid_coefs; i < number_of_coefs; i++)
-      decoder_mlt_coefs[i] = 0;
-  }
 
+    /* If both the current and previous frames are errored,
+       set the mlt coefficients to 0. If only the current frame
+       is errored, repeat the previous frame's MLT coefficients. */
+    if (*frame_error_flag)
+    {
+        for (i = 0;  i < number_of_valid_coefs;  i++)
+            decoder_mlt_coefs[i] = old_decoder_mlt_coefs[i];
+        for (i = 0;  i < number_of_valid_coefs;  i++)
+            old_decoder_mlt_coefs[i] = 0;
+        *p_mag_shift = *p_old_mag_shift;
+        *p_old_mag_shift = 0;
+    }
+    else
+    {
+        /* Store in case the next frame has errors. */
+        for (i = 0;  i < number_of_valid_coefs;  i++)
+            old_decoder_mlt_coefs[i] = decoder_mlt_coefs[i];
+        *p_old_mag_shift = *p_mag_shift;
+    }
 
+    /* Zero out the upper 1/8 of the spectrum. */
+    for (i = number_of_valid_coefs;  i < number_of_coefs;  i++)
+        decoder_mlt_coefs[i] = 0;
 }
+/*- End of function --------------------------------------------------------*/
 
-/***************************************************************************
- Procedure/Function:  decode_envelope
-
- Syntax:   void decode_envelope(number_of_regions,
-								decoder_region_standard_deviation,
-								absolute_region_power_index)
-								int number_of_regions;
-								float decoder_region_standard_deviation[MAX_NUM_REGIONS];
-								int absolute_region_power_index[MAX_NUM_REGIONS];
-																					   
-              
-              inputs:   int int number_of_regions
-                                                
-              outputs:  float decoder_region_standard_deviation[MAX_NUM_REGIONS];
-						int absolute_region_power_index[MAX_NUM_REGIONS];
-						
- Description:  Recover differential_region_power_index from code bits
-
- Design Notes:
- 				
-***************************************************************************/
-
-void decode_envelope(number_of_regions,
-		     decoder_region_standard_deviation,
-		     absolute_region_power_index)
-     int number_of_regions;
-     float decoder_region_standard_deviation[MAX_NUM_REGIONS];
-     int absolute_region_power_index[MAX_NUM_REGIONS];
-
-
+int G7221_CALL g722_1_decode ( g722_1_decode_state_t *s, int16_t amp[], const uint8_t g722_1_data[], int len )
 {
-  int region;
-  int i;
-  int index;
-  int differential_region_power_index[MAX_NUM_REGIONS];
+    int16_t decoder_mlt_coefs[MAX_DCT_LENGTH];
+    int16_t mag_shift;
+    int i;
+    int j;
 
-/* Recover differential_region_power_index[] from code_bits[]. */
-  
-  index = 0;
-  for (i=0; i<5; i++) {
-    GET_NEXT_BIT;
-    index <<= 1;
-    index += next_bit;
-  }
+    for (i = 0, j = 0;  j < len;  i += s->frame_size, j += s->number_of_bits_per_frame/8)
+    {
+        g722_1_bitstream_init(&s->bitstream);
+        s->code_ptr = &g722_1_data[j];
+        s->number_of_bits_left = s->number_of_bits_per_frame;
 
-/* ESF_ADJUSTMENT_TO_RMS_INDEX compensates for the current (9/30/96)
-   IMLT being scaled to high by the ninth power of sqrt(2). */
-  
-  differential_region_power_index[0] = index-ESF_ADJUSTMENT_TO_RMS_INDEX;
-  number_of_bits_left -= 5;
+        /* Process the out_words into decoder_mlt_coefs */
+        decoder(s,
+                s->number_of_regions,
+                decoder_mlt_coefs,
+                &mag_shift,
+                &s->old_mag_shift,
+                s->old_decoder_mlt_coefs,
+                0);
 
-  for (region=1; region<number_of_regions; region++) {
-    index = 0;
-    do {
-      GET_NEXT_BIT;
-      if (next_bit == 0)
-	index = differential_region_power_decoder_tree[region][index][0];
-      else
-	index = differential_region_power_decoder_tree[region][index][1];
-      number_of_bits_left--;
-    } while (index > 0);
-    differential_region_power_index[region] = -index;
-  }
-
-/* Reconstruct absolute_region_power_index[] from differential_region_power_index[]. */
-  
-  absolute_region_power_index[0] = differential_region_power_index[0];
-  
-  for (region=1; region<number_of_regions; region++) {
-    absolute_region_power_index[region] = absolute_region_power_index[region-1] +
-      differential_region_power_index[region] + DRP_DIFF_MIN;
-  }
-
-/* Reconstruct decoder_region_standard_deviation[] from absolute_region_power_index[]. */
-
-  for (region=0; region<number_of_regions; region++) {
-    i = absolute_region_power_index[region]+REGION_POWER_TABLE_NUM_NEGATIVES;
-    decoder_region_standard_deviation[region] = region_standard_deviation_table[i];
-  }
-
+        /* Convert the decoder_mlt_coefs to samples */
+        rmlt_coefs_to_samples(decoder_mlt_coefs, s->old_samples, amp + i, s->frame_size, mag_shift);
+    }
+    return i;
 }
+/*- End of function --------------------------------------------------------*/
 
-/***************************************************************************
- Procedure/Function:  rate_adjust_categories
-
- Syntax:			void rate_adjust_categories(rate_control,
-												decoder_power_categories,
-												decoder_category_balances)
-												int rate_control;
-												int decoder_power_categories[MAX_NUM_REGIONS];
-												int decoder_category_balances[MAX_NUM_RATE_CONTROL_POSSIBILITIES-1];     
- 
-   
-               inputs:    int rate_control,   
-                          int *decoder_power_categories,
-                          int *decoder_category_balances
-                          
-               outputs:   int rate_control,   
-                          int *decoder_power_categories,
- 
- Description:     Adjust the power categories based on the categorization control
-				
-***************************************************************************/
-
-void rate_adjust_categories(rate_control,
-			    decoder_power_categories,
-			    decoder_category_balances)
-     int rate_control;
-     int decoder_power_categories[MAX_NUM_REGIONS];
-     int decoder_category_balances[MAX_NUM_RATE_CONTROL_POSSIBILITIES-1];
+int g722_1_fillin(g722_1_decode_state_t *s, int16_t amp[], const uint8_t g722_1_data[], int len)
 {
-  int i;
-  int region;
+    int16_t decoder_mlt_coefs[MAX_DCT_LENGTH];
+    int16_t mag_shift;
+    int i;
+    int j;
 
-  i = 0;
-  while (rate_control > 0) {
-    region = decoder_category_balances[i++];
-    decoder_power_categories[region]++;
-    rate_control--;
-  }
+    for (i = 0, j = 0;  j < len;  i += s->frame_size, j += s->number_of_bits_per_frame/8)
+    {
+        g722_1_bitstream_init(&s->bitstream);
+        s->code_ptr = &g722_1_data[j];
+        s->number_of_bits_left = s->number_of_bits_per_frame;
 
+        /* Process the out_words into decoder MLT coefs */
+        decoder(s,
+                s->number_of_regions,
+                decoder_mlt_coefs,
+                &mag_shift,
+                &s->old_mag_shift,
+                s->old_decoder_mlt_coefs,
+                1);
+
+        /* Convert the decoder MLT coefs to samples */
+        rmlt_coefs_to_samples(decoder_mlt_coefs, s->old_samples, amp + i, s->frame_size, mag_shift);
+        i += s->frame_size;
+        break;
+    }
+    return i;
 }
+/*- End of function --------------------------------------------------------*/
+#endif
 
-/* ************************************************************************************ */
-/* ************************************************************************************ */
-
-#define get_rand() \
-random_word = b0+b3; \
-if ((random_word & 32768) != 0) random_word++; \
-b3 = b2; \
-b2 = b1; \
-b1 = b0; \
-b0 = random_word;
-
-
-/***************************************************************************
- Procedure/Function:   decode_vector_quantized_mlt_indices
-
- Syntax:  void decode_vector_quantized_mlt_indices(number_of_regions,
-							decoder_region_standard_deviation,
-							decoder_power_categories,
-							decoder_mlt_coefs)
-
-							int number_of_regions;
-							float decoder_region_standard_deviation[MAX_NUM_REGIONS];
-							int decoder_power_categories[MAX_NUM_REGIONS];
-							float decoder_mlt_coefs[MAX_DCT_SIZE];
-
-			 inputs:   int    number_of_regions
-                       float  *decoder_region_standard_deviation
-                       int    *decoder_power_categories
-            
-             outputs:  float  decoder_mlt_coefs[MAX_DCT_SIZE]
-             
-
- Description:  
-				
-***************************************************************************/
-
-void decode_vector_quantized_mlt_indices(number_of_regions,
-					 decoder_region_standard_deviation,
-					 decoder_power_categories,
-					 decoder_mlt_coefs)
-
-     int number_of_regions;
-     float decoder_region_standard_deviation[MAX_NUM_REGIONS];
-     int decoder_power_categories[MAX_NUM_REGIONS];
-     float decoder_mlt_coefs[MAX_DCT_SIZE];
-
+int g722_1_decode_set_rate(g722_1_decode_state_t *s, int bit_rate)
 {
-
-  float standard_deviation;
-  float *decoder_mlt_ptr;
-  float decoder_mlt_value;
-  float temp1;
-  float noifillpos;
-  float noifillneg;
-
-  static float noise_fill_factor_cat5[20] = {0.70711, 0.6179, 0.5005, 0.3220,
-					       0.17678, 0.17678, 0.17678, 0.17678,
-					       0.17678, 0.17678, 0.17678, 0.17678,
-					       0.17678, 0.17678, 0.17678, 0.17678,
-					       0.17678, 0.17678, 0.17678, 0.17678};
-
-  static float noise_fill_factor_cat6[20] = {0.70711, 0.5686, 0.3563, 0.25,
-					       0.25, 0.25, 0.25, 0.25,
-					       0.25, 0.25, 0.25, 0.25,
-					       0.25, 0.25, 0.25, 0.25,
-					       0.25, 0.25, 0.25, 0.25};
-
-
-  int region;
-  int category;
-  int j,n;
-  int k[MAX_VECTOR_DIMENSION];
-  int vec_dim;
-  int num_vecs;
-  int index,signs_index;
-  int bit;
-  int num_sign_bits;
-  int num_bits;
-  int ran_out_of_bits_flag;
-  int *decoder_table_ptr;
-
-  static int here_before = 0;
-  static int b0,b1,b2,b3;
-  int random_word;
-
-  if (here_before == 0) {
-    here_before = 1;
-    b0 = 1;
-    b1 = 1;
-    b2 = 1;
-    b3 = 1;
-  }         
-
-  ran_out_of_bits_flag = 0;
-  for (region=0; region<number_of_regions; region++) {
-    category = decoder_power_categories[region];
-    decoder_mlt_ptr = &decoder_mlt_coefs[region*region_size];
-    standard_deviation = decoder_region_standard_deviation[region];
-    if (category < NUM_CATEGORIES-1)
-      {
-	decoder_table_ptr = (int *) table_of_decoder_tables[category];
- 	vec_dim = vector_dimension[category];
-	num_vecs = number_of_vectors[category];
-
-	for (n=0; n<num_vecs; n++) {
-	  num_bits = 0;
-
-	  index = 0;
-	  do {
-	    if (number_of_bits_left <= 0) {
-	      ran_out_of_bits_flag = 1;
-
-	      break;
-	    }
-
-	    GET_NEXT_BIT;
-	    if (next_bit == 0)
-	      index = *(decoder_table_ptr + 2*index);
-	    else
-	      index = *(decoder_table_ptr + 2*index + 1);
-
-
-	    number_of_bits_left--;
-	  } while (index > 0);
-	  if (ran_out_of_bits_flag == 1)
-	    break;
-	  index = -index;
-	  num_sign_bits = index_to_array(index,k,category);
-
-	  if (number_of_bits_left >= num_sign_bits) {
-	    if (num_sign_bits != 0) {
-	      signs_index = 0;
-	      for (j=0; j<num_sign_bits; j++) {
-		GET_NEXT_BIT;
-       		signs_index <<= 1;
-		signs_index += next_bit;
-		number_of_bits_left--;
-	      }
-	      bit = 1 << (num_sign_bits-1);
-	    }
-	    for (j=0; j<vec_dim; j++) {
-
-		  /*
-		  ** This was changed to for fixed point interop
-		  ** A scale factor of 22.0 is used to adjust the decoded mlt value. 
-		  */
-	      decoder_mlt_value = standard_deviation * mlt_quant_centroid[category][k[j]]*22.0f;
-
-	      if (decoder_mlt_value != 0) {
-		if ( (signs_index & bit) == 0)
-		  decoder_mlt_value *= -1;
-		bit >>= 1;
-	      }
-
-	      *decoder_mlt_ptr++ = decoder_mlt_value;
-	    }
-	  }
-	  else {
-	    ran_out_of_bits_flag = 1;
-
-	    break;
-	  }
-	}
-
-	/* If ran out of bits during decoding do noise fill for remaining regions. */
-
-	if (ran_out_of_bits_flag == 1) {
-	  for (j=region+1; j<number_of_regions; j++)
-	    decoder_power_categories[j] = NUM_CATEGORIES-1;
-	  category = NUM_CATEGORIES-1;
-	  decoder_mlt_ptr = &decoder_mlt_coefs[region*region_size];
-	}
-      }
-
-
-    if (category == NUM_CATEGORIES-3)
-      {
-
-	decoder_mlt_ptr = &decoder_mlt_coefs[region*region_size];
-	n = 0;
-	for (j=0; j<region_size; j++) {
-	  if (*decoder_mlt_ptr != 0) {
-	    n++;
-	    if (fabs(*decoder_mlt_ptr) > 44.0F*standard_deviation) {
-	      n += 3;
-	    }
-	  }
-	  decoder_mlt_ptr++;
-	}
-	if(n>19)n=19;
-	temp1 = noise_fill_factor_cat5[n];
-
-	decoder_mlt_ptr = &decoder_mlt_coefs[region*region_size];
-
-/*	noifillpos = standard_deviation * 0.17678; */
-	noifillpos = standard_deviation * temp1;
-
-	noifillneg = -noifillpos;
-
-/* This assumes region_size = 20 */
-	get_rand();
-	for (j=0; j<10; j++) {
-	  if (*decoder_mlt_ptr == 0) {
-	    temp1 = noifillpos;
-	    if ((random_word & 1) == 0) temp1 = noifillneg;
-	    *decoder_mlt_ptr = temp1*NOISE_SCALE_FACTOR;
-	    random_word >>= 1;
-	  }
-	  decoder_mlt_ptr++;
-	}
-	get_rand();
-	for (j=0; j<10; j++) {
-	  if (*decoder_mlt_ptr == 0) {
-	    temp1 = noifillpos;
-	    if ((random_word & 1) == 0) temp1 = noifillneg;
-	    *decoder_mlt_ptr = temp1*NOISE_SCALE_FACTOR;
-	    random_word >>= 1;
-	  }
-	  decoder_mlt_ptr++;
-	}
-
-      }
-
-    if (category == NUM_CATEGORIES-2)
-      {
-	
-	decoder_mlt_ptr = &decoder_mlt_coefs[region*region_size];
-	n = 0;
-	for (j=0; j<region_size; j++) {
-	  if (*decoder_mlt_ptr++ != 0)
-	    n++;
-	}
-	temp1 = noise_fill_factor_cat6[n];
-
-	decoder_mlt_ptr = &decoder_mlt_coefs[region*region_size];
-
-	noifillpos = standard_deviation * temp1;
-
-	noifillneg = -noifillpos;
-
-/* This assumes region_size = 20 */
-	
-	get_rand();
-	for (j=0; j<10; j++) {
-	  if (*decoder_mlt_ptr == 0) {
-	    temp1 = noifillpos;
-	    if ((random_word & 1) == 0) temp1 = noifillneg;
-	    *decoder_mlt_ptr = temp1*NOISE_SCALE_FACTOR;
-	    random_word >>= 1;
-	  }
-	  decoder_mlt_ptr++;
-	}
-	get_rand();
-	for (j=0; j<10; j++) {
-	  if (*decoder_mlt_ptr == 0) {
-	    temp1 = noifillpos;
-	    if ((random_word & 1) == 0) temp1 = noifillneg;
-	    *decoder_mlt_ptr = temp1*NOISE_SCALE_FACTOR ;
-	    random_word >>= 1;
-	  }
-	  decoder_mlt_ptr++;
-	}
-      }
-
-    if (category == NUM_CATEGORIES-1)
-      {
-
-	noifillpos =  (float)( standard_deviation * 0.70711) ;
-
-	noifillneg = -noifillpos;
-
-/* This assumes region_size = 20 */
-	
-	get_rand();
-	for (j=0; j<10; j++) {
-	  temp1 = noifillpos;
-	  if ((random_word & 1) == 0) temp1 = noifillneg;
-	  *decoder_mlt_ptr++ = temp1*NOISE_SCALE_FACTOR;
-	  random_word >>= 1;
-	}
-	get_rand();
-	for (j=0; j<10; j++) {
-	  temp1 = noifillpos;
-	  if ((random_word & 1) == 0) temp1 = noifillneg;
-	  *decoder_mlt_ptr++ = temp1*NOISE_SCALE_FACTOR;
-	  random_word >>= 1;
-	}
-      }
-
-  }
-
-  if (ran_out_of_bits_flag)
-    number_of_bits_left = -1;
-
+    if ((bit_rate < 16000)  ||  (bit_rate > 48000)  ||  ((bit_rate%800) != 0))
+        return -1;
+    s->bit_rate = bit_rate;
+    s->number_of_bits_per_frame = (int16_t) ((s->bit_rate)/50);
+    s->bytes_per_frame = s->number_of_bits_per_frame/8;
+    return 0;
 }
+/*- End of function --------------------------------------------------------*/
+
+g722_1_decode_state_t *G7221_CALL g722_1_decode_init( g722_1_decode_state_t *s, int bit_rate, int sample_rate )
+{
+#if !defined(G722_1_USE_FIXED_POINT)
+    int i;
+#endif
+
+    if ((bit_rate < 16000)  ||  (bit_rate > 48000)  ||  ((bit_rate%800) != 0))
+        return NULL;
+    if (sample_rate != G722_1_SAMPLE_RATE_16000  &&  sample_rate != G722_1_SAMPLE_RATE_32000)
+        return NULL;
+
+    if (s == NULL)
+    {
+        if ((s = (g722_1_decode_state_t *) malloc(sizeof(*s))) == NULL)
+            return NULL;
+    }
+    memset(s, 0, sizeof(*s));
+#if !defined(G722_1_USE_FIXED_POINT)
+    /* Initialize the coefs history */
+    for (i = 0;  i < s->frame_size;  i++)
+        s->old_decoder_mlt_coefs[i] = 0.0f;
+    for (i = 0;  i < (s->frame_size >> 1);  i++)
+        s->old_samples[i] = 0.0f;
+#endif
+    s->sample_rate = sample_rate;
+    if (sample_rate == G722_1_SAMPLE_RATE_16000)
+    {
+        s->number_of_regions = NUMBER_OF_REGIONS;
+        s->frame_size = MAX_FRAME_SIZE >> 1;
+    }
+    else
+    {
+        s->number_of_regions = MAX_NUMBER_OF_REGIONS;
+        s->frame_size = MAX_FRAME_SIZE;
+    }
+    s->bit_rate = bit_rate;
+    s->number_of_bits_per_frame = s->bit_rate/50;
+    s->bytes_per_frame = s->number_of_bits_per_frame/8;
+
+    /* Initialize the random number generator */
+    s->randobj.seed0 = 1;
+    s->randobj.seed1 = 1;
+    s->randobj.seed2 = 1;
+    s->randobj.seed3 = 1;
+
+    return s;
+}
+/*- End of function --------------------------------------------------------*/
+
+int G7221_CALL g722_1_decode_release( g722_1_decode_state_t *s )
+{
+    free(s);
+    return 0;
+}
+/*- End of function --------------------------------------------------------*/
+/*- End of file ------------------------------------------------------------*/

@@ -1,322 +1,284 @@
-/*****************************************************************
-******************************************************************
-**
-**   G.722.1 Annex B - G.722.1 Floating point implementation
-**   > Software Release 2.1 (2008-06)
-**
-**	Filename : common.c
-**
-**    ?2000 PictureTel Coporation
-**          Andover, MA, USA  
-**
-**	    All rights reserved.
-**
-******************************************************************
-*****************************************************************/
+/*
+ * g722_1 - a library for the G.722.1 and Annex C codecs
+ *
+ * common.c
+ *
+ * Adapted by Steve Underwood <steveu@coppice.org> from the reference
+ * code supplied with ITU G.722.1, which is:
+ *
+ *   (C) 2004 Polycom, Inc.
+ *   All rights reserved.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
 
-#include <stdio.h>
-#include <math.h>
+/*! \file */
+
+#if defined(HAVE_CONFIG_H)
+#include <config.h>
+#endif
+
+#include <inttypes.h>
+#include <stdlib.h>
+
+#include "g722_1.h"
+
 #include "defs.h"
+#include "huff_tab.h"
+#include "tables.h"
 
-#include "huff_defs.h"
-#include "huff_tables.h"
+#if defined(G722_1_USE_FIXED_POINT)
 
-int region_size;
-float region_size_inverse;
+static void compute_raw_pow_categories(int16_t *power_categories,
+                                       int16_t *rms_index,
+                                       int16_t number_of_regions,
+                                       int16_t offset);
 
-float region_standard_deviation_table[REGION_POWER_TABLE_SIZE];
-float standard_deviation_inverse_table[REGION_POWER_TABLE_SIZE];
-float step_size_inverse_table[NUM_CATEGORIES];
-
-
-float region_power_table[REGION_POWER_TABLE_SIZE];
-float region_power_table_boundary[REGION_POWER_TABLE_SIZE-1];
-
-int vector_dimension[NUM_CATEGORIES] =  { 2, 2, 2, 4, 4, 5, 5, 1};
-int number_of_vectors[NUM_CATEGORIES] = {10,10,10, 5, 5, 4, 4,20};
-
-/* The last category isn't really coded with scalar quantization. */
-
-float step_size[NUM_CATEGORIES] = {0.3536, 0.5, 0.7071, 1.0, 1.4142, 2.0, 2.8284, 2.8284};
-int max_bin[NUM_CATEGORIES] = {13, 9, 6, 4, 3, 2, 1, 1};
-int int_dead_zone[NUM_CATEGORIES];
-float dead_zone[NUM_CATEGORIES] = {0.3, 0.33, 0.36, 0.39, 0.42, 0.45, 0.5, 0.5};
-static int max_bin_plus_one_inverse[NUM_CATEGORIES];
-
-/****************************************************************************************
- Procedure/Function:  index_to_array 
-
- Syntax:   number_of_non_zero = index_to_array(int index, 
-                                               int array[MAX_VECTOR_DIMENSION],
-                                               int category)
-
-                inputs:  int index
-                         int category                     
-                       
-                outputs: int array[MAX_VECTOR_DIMENSION] - used in decoder to access
-                                                             mlt_quant_centroid table
-                        
-                         int number_of_non_zero          - number of non zero elements
-                                                             in the array
- 
- Description:   Computes an array of sign bits with the length of the category vector
-                Returns the number of sign bits and the array
-
-****************************************************************************************/
-
-int index_to_array(index,array,category)
-int index;
-int array[MAX_VECTOR_DIMENSION];
-int category;
+/* Compute a series of categorizations */
+void categorize(int16_t number_of_available_bits,
+                int16_t number_of_regions,
+                int16_t num_categorization_control_possibilities,
+                int16_t *rms_index,
+                int16_t *power_categories,
+                int16_t *category_balances)
 {
-  int j,q,p;
-  int number_of_non_zero;
-  int max_bin_plus_one;
-  int inverse_of_max_bin_plus_one;
 
-  number_of_non_zero = 0;
-  p = index;
-  max_bin_plus_one = max_bin[category] + 1;
-  inverse_of_max_bin_plus_one = max_bin_plus_one_inverse[category];
+    int16_t offset;
+    int16_t temp;
+    int16_t frame_size;
 
-  for (j=vector_dimension[category]-1; j>=0; j--) {
+    /* At higher bit rates, there is an increase for most categories in average bit
+       consumption per region. We compensate for this by pretending we have fewer
+       available bits. */
+    frame_size = (number_of_regions == NUMBER_OF_REGIONS)  ?  DCT_LENGTH  :  MAX_DCT_LENGTH;
 
-	  /*    q = p/max_bin_plus_one; */
-    
-	  q = (p*inverse_of_max_bin_plus_one) >> 15;
-    array[j] = p - q*max_bin_plus_one;
-    p = q;
-    if (array[j] != 0) number_of_non_zero++;
-  }
-  return(number_of_non_zero);
-}
-
-/****************************************************************************************
- Procedure/Function:  mlt_based_coder_init
-
- Syntax:        void mlt_based_coder_init()
-                inputs:  none
-                         
-                outputs: none
- 
- Description:   Initializes region and category related stuff
-
-****************************************************************************************/
- void mlt_based_coder_init()
-	 {
-  int i,j;
-  int category;
-  int number_of_indices;
- 
-/*  region_size = (BLOCK_SIZE * 0.875)/NUM_REGIONS; */
-  
-  region_size = 20;
-  region_size_inverse = (float)(1.0/((float) region_size));
-
-  for (i=0; i<REGION_POWER_TABLE_SIZE; i++) {
-    region_power_table[i] =
-      (float) pow(10.0, 0.10*REGION_POWER_STEPSIZE_DB*
-	  ((float) (i-REGION_POWER_TABLE_NUM_NEGATIVES)));
-
-    region_standard_deviation_table[i] = (float)sqrt(region_power_table[i]);
-    standard_deviation_inverse_table[i] = (float) 1.0/region_standard_deviation_table[i];
-
-  }
-
-  for (i=0; i<REGION_POWER_TABLE_SIZE-1; i++)
-    region_power_table_boundary[i] = (float)
-      pow(10.0, 0.10*REGION_POWER_STEPSIZE_DB*
-	  (0.5+((float) (i-REGION_POWER_TABLE_NUM_NEGATIVES))));
-
-  /* Initialize category related stuff. */
-
-  for (category=0; category<NUM_CATEGORIES; category++) {
-
-  /* Rounding up by 1.0 instead of 0.5 allows us to avoid rounding every
-   time this is used. */
-
-	  max_bin_plus_one_inverse[category] = (int) ((32768./(max_bin[category]+1.0)) + 1.0);
-
-/* Test division for all indices. */
-
-    number_of_indices = 1;
-    for (j=0; j<vector_dimension[category]; j++)
-      number_of_indices *= (max_bin[category]+1);
-    for (j=0; j<number_of_indices; j++) {
-      if (j/(max_bin[category]+1) != ((j*max_bin_plus_one_inverse[category]) >> 15))
-	printf("max_bin_plus_one_inverse ERROR!! %1d: %5d %3d\n",category,max_bin_plus_one_inverse[category],j);
+    temp = sub(number_of_available_bits, frame_size);
+    if (temp > 0)
+    {
+        number_of_available_bits = sub(number_of_available_bits, frame_size);
+        number_of_available_bits = (int16_t) L_mult0(number_of_available_bits, 5);
+        number_of_available_bits = shr(number_of_available_bits, 3);
+        number_of_available_bits = add(number_of_available_bits, frame_size);
     }
-  }
 
-  for (category=0; category<NUM_CATEGORIES; category++)
-    step_size_inverse_table[category] = (float) 1.0/step_size[category];
+    /* calculate the offset using the original category assignments */
+    offset = calc_offset(rms_index, number_of_regions, number_of_available_bits);
 
+    /* compute the power categories based on the uniform offset */
+    compute_raw_pow_categories(power_categories, rms_index, number_of_regions,offset);
+
+    /* adjust the category assignments */
+    /* compute the new power categories and category balances */
+    comp_powercat_and_catbalance(power_categories ,category_balances, rms_index, number_of_available_bits, number_of_regions, num_categorization_control_possibilities, offset);
 }
+/*- End of function --------------------------------------------------------*/
 
-/****************************************************************************************
- Procedure/Function:  categorize
+/* Compute the power_categories and the category balances */
+void comp_powercat_and_catbalance(int16_t *power_categories,
+                                  int16_t *category_balances,
+                                  int16_t *rms_index,
+                                  int16_t number_of_available_bits,
+                                  int16_t number_of_regions,
+                                  int16_t num_categorization_control_possibilities,
+                                  int16_t offset)
+{
+    int16_t expected_number_of_code_bits;
+    int16_t region;
+    int16_t max_region;
+    int16_t j;
+    int16_t max_rate_categories[MAX_NUMBER_OF_REGIONS];
+    int16_t min_rate_categories[MAX_NUMBER_OF_REGIONS];
+    int16_t temp_category_balances[2*MAX_NUM_CATEGORIZATION_CONTROL_POSSIBILITIES];
+    int16_t raw_max;
+    int16_t raw_min;
+    int16_t raw_max_index;
+    int16_t raw_min_index;
+    int16_t max_rate_pointer;
+    int16_t min_rate_pointer;
+    int16_t max;
+    int16_t min;
+    int16_t itemp0;
+    int16_t itemp1;
+    int16_t min_plus_max;
+    int16_t two_x_number_of_available_bits;
+    int16_t temp;
 
- Syntax:    void categorize(number_of_regions,
-                            number_of_available_bits,   
-                            rms_index,                  
-                            power_categories,           
-                            category_balances)          
-
-                  inputs:   number_of_regions
-				            number_of_available_bits
-                            rms_index[MAX_NUM_REGIONS]                              
-                  
-                  outputs:  power_categories[MAX_NUM_REGIONS]                       
-                            category_balances[MAX_NUM_RATE_CONTROL_POSSIBILITIES-1]
-
- Description: Computes a series of categorizations    			
-****************************************************************************************/
-
-	void categorize(number_of_regions,
-		number_of_available_bits,
-		rms_index,
-		power_categories,
-		category_balances)
-     int number_of_regions;
-     int number_of_available_bits;
-     int rms_index[MAX_NUM_REGIONS];
-     int power_categories[MAX_NUM_REGIONS];
-     int category_balances[MAX_NUM_RATE_CONTROL_POSSIBILITIES-1];
-
-	 {
-  int region;
-  int j;
-  int expected_number_of_code_bits;
-
-  int delta;
-  int offset;
-  int test_offset;
-
-  int num_rate_control_possibilities;
-
-  if (number_of_regions <= 14)
-    num_rate_control_possibilities = 16;
-
-
-/* At higher bit rates, there is an increase for most categories in average bit
-   consumption per region. We compensate for this by pretending we have fewer
-   available bits. 
-*/
-
-  if (number_of_regions <= 14) 
-  {
-    if (number_of_available_bits > 320)
-      number_of_available_bits =
-	320 + (((number_of_available_bits - 320)*5) >> 3);
-  }
-
-  offset = -32;
-  delta = 32;
-  do {
-    test_offset = offset + delta;
-    for (region=0; region<number_of_regions; region++) {
-      j = (test_offset-rms_index[region]) >> 1;
-      if (j < 0) j = 0;
-      if (j > NUM_CATEGORIES-1) j = NUM_CATEGORIES-1;
-      power_categories[region] = j;
-    }
     expected_number_of_code_bits = 0;
-    for (region=0; region<number_of_regions; region++)
-      expected_number_of_code_bits += expected_bits_table[power_categories[region]];
+    raw_max_index = 0;
+    raw_min_index = 0;
 
-    if (expected_number_of_code_bits >= number_of_available_bits - 32)
-      offset = test_offset;
+    for (region = 0;  region < number_of_regions;  region++)
+        expected_number_of_code_bits = add(expected_number_of_code_bits, expected_bits_table[power_categories[region]]);
 
-    delta >>= 1;
-  } while (delta > 0);
-
-
-  for (region=0; region<number_of_regions; region++) {
-    j = (offset-rms_index[region]) >> 1;
-    if (j < 0) j = 0;
-    if (j > NUM_CATEGORIES-1) j = NUM_CATEGORIES-1;
-    power_categories[region] = j;
-  }
-  expected_number_of_code_bits = 0;
-  for (region=0; region<number_of_regions; region++)
-    expected_number_of_code_bits += expected_bits_table[power_categories[region]];
-
-
-  {
-    int max_rate_categories[MAX_NUM_REGIONS];
-    int min_rate_categories[MAX_NUM_REGIONS];
-    int temp_category_balances[2*MAX_NUM_RATE_CONTROL_POSSIBILITIES];
-
-    int raw_max, raw_min;
-    int raw_max_index, raw_min_index;
-    int max_rate_pointer, min_rate_pointer;
-    int max, min;
-    int itemp0;
-
-    for (region=0; region<number_of_regions; region++) {
-      max_rate_categories[region] = power_categories[region];
-      min_rate_categories[region] = power_categories[region];
+    for (region = 0;  region < number_of_regions;  region++)
+    {
+        max_rate_categories[region] = power_categories[region];
+        min_rate_categories[region] = power_categories[region];
     }
 
     max = expected_number_of_code_bits;
     min = expected_number_of_code_bits;
-    max_rate_pointer = num_rate_control_possibilities;
-    min_rate_pointer = num_rate_control_possibilities;
+    max_rate_pointer = num_categorization_control_possibilities;
+    min_rate_pointer = num_categorization_control_possibilities;
 
-    for (j=0; j<num_rate_control_possibilities-1; j++) {
-      if (max+min <= 2*number_of_available_bits) {
-	raw_min = 99;
+    for (j = 0;  j < num_categorization_control_possibilities - 1;  j++)
+    {
+        min_plus_max = add(max, min);
+        two_x_number_of_available_bits = shl(number_of_available_bits, 1);
 
-	/* Search from lowest freq regions to highest for best region to reassign to
-   a higher bit rate category. */
+        temp = sub(min_plus_max, two_x_number_of_available_bits);
+        if (temp <= 0)
+        {
+            raw_min = 99;
+            /* Search from lowest freq regions to highest for best */
+            /* region to reassign to a higher bit rate category.   */
+            for (region = 0;  region < number_of_regions;  region++)
+            {
+                if (max_rate_categories[region] > 0)
+                {
+                    itemp0 = shl(max_rate_categories[region], 1);
+                    itemp1 = sub(offset, rms_index[region]);
+                    itemp0 = sub(itemp1, itemp0);
 
-	for (region=0; region<number_of_regions; region++) {
-	  if (max_rate_categories[region] > 0) {
-	    itemp0 = offset - rms_index[region] - 2*max_rate_categories[region];
-	    if (itemp0 < raw_min) {
-	      raw_min = itemp0;
-	      raw_min_index = region;
-	    }
-	  }
-	}
-	max_rate_pointer--;
-	temp_category_balances[max_rate_pointer] = raw_min_index;
+                    temp = sub(itemp0, raw_min);
+                    if (temp < 0)
+                    {
+                        raw_min = itemp0;
+                        raw_min_index = region;
+                    }
+                }
+            }
+            max_rate_pointer = sub(max_rate_pointer, 1);
+            temp_category_balances[max_rate_pointer] = raw_min_index;
 
-	max -= expected_bits_table[max_rate_categories[raw_min_index]];
-	max_rate_categories[raw_min_index] -= 1;
-	max += expected_bits_table[max_rate_categories[raw_min_index]];
-      }
+            max = sub(max,expected_bits_table[max_rate_categories[raw_min_index]]);
+            max_rate_categories[raw_min_index] = sub(max_rate_categories[raw_min_index], 1);
 
-      else {
-	raw_max = -99;
+            max = add(max,expected_bits_table[max_rate_categories[raw_min_index]]);
+        }
+        else
+        {
+            raw_max = -99;
+            /* Search from highest freq regions to lowest for best region to reassign to
+            a lower bit rate category. */
+            max_region = sub(number_of_regions, 1);
+            for (region = max_region;  region >= 0;  region--)
+            {
+                temp = sub(min_rate_categories[region], (NUM_CATEGORIES - 1));
+                if (temp < 0)
+                {
+                    itemp0 = shl(min_rate_categories[region], 1);
+                    itemp1 = sub(offset, rms_index[region]);
+                    itemp0 = sub(itemp1, itemp0);
 
-	/* Search from highest freq regions to lowest for best region to reassign to
-   a lower bit rate category. */
+                    temp = sub(itemp0, raw_max);
+                    if (temp > 0)
+                    {
+                        raw_max = itemp0;
+                        raw_max_index = region;
+                    }
+                }
+            }
+            temp_category_balances[min_rate_pointer] = raw_max_index;
+            min_rate_pointer = add(min_rate_pointer, 1);
+            min = sub(min, expected_bits_table[min_rate_categories[raw_max_index]]);
 
-	for (region=number_of_regions-1; region >= 0; region--) {
-	  if (min_rate_categories[region] < NUM_CATEGORIES-1){
-	    itemp0 = offset - rms_index[region] - 2*min_rate_categories[region];
-	    if (itemp0 > raw_max) {
-	      raw_max = itemp0;
-	      raw_max_index = region;
-	    }
-	  }
-	}
-	temp_category_balances[min_rate_pointer] = raw_max_index;
-	min_rate_pointer++;
-
-	min -= expected_bits_table[min_rate_categories[raw_max_index]];
-	min_rate_categories[raw_max_index] += 1;
-	min += expected_bits_table[min_rate_categories[raw_max_index]];
-      }
+            min_rate_categories[raw_max_index] = add(min_rate_categories[raw_max_index], 1);
+            min = add(min, expected_bits_table[min_rate_categories[raw_max_index]]);
+        }
     }
 
-    for (region=0; region<number_of_regions; region++)
-      power_categories[region] = max_rate_categories[region];
+    for (region = 0;  region < number_of_regions;  region++)
+        power_categories[region] = max_rate_categories[region];
 
-    for (j=0; j<num_rate_control_possibilities-1; j++)
-      category_balances[j] = temp_category_balances[max_rate_pointer++];
-
-  }
-
+    for (j = 0;  j < num_categorization_control_possibilities - 1;  j++)
+        category_balances[j] = temp_category_balances[max_rate_pointer++];
 }
+/*- End of function --------------------------------------------------------*/
+
+/* Calculate the the category offset. This is the shift required
+   To get the most out of the number of available bits.  A binary
+   type search is used to find the offset. */
+int16_t calc_offset(int16_t *rms_index, int16_t number_of_regions, int16_t available_bits)
+{
+    int16_t answer;
+    int16_t delta;
+    int16_t test_offset;
+    int16_t region;
+    int16_t j;
+    int16_t power_cats[MAX_NUMBER_OF_REGIONS];
+    int16_t bits;
+    int16_t offset;
+    int16_t temp;
+
+    /* initialize vars */
+    answer = -32;
+    delta = 32;
+
+    do
+    {
+        test_offset = add(answer, delta);
+
+        /* obtain a category for each region */
+        /* using the test offset             */
+        for (region = 0;  region < number_of_regions;  region++)
+        {
+            j = sub(test_offset, rms_index[region]);
+            j = shr(j, 1);
+
+            /* Ensure j is between 0 and NUM_CAT-1 */
+            if (j < 0)
+                j = 0;
+            temp = sub(j, NUM_CATEGORIES - 1);
+            if (temp > 0)
+                j = sub(NUM_CATEGORIES, 1);
+            power_cats[region] = j;
+        }
+        bits = 0;
+
+        /* compute the number of bits that will be used given the cat assignments */
+        for (region = 0;  region < number_of_regions;  region++)
+            bits = add(bits, expected_bits_table[power_cats[region]]);
+
+        /* If (bits > available_bits - 32) then divide the offset region for the bin search */
+        offset = sub(available_bits, 32);
+        temp = sub(bits, offset);
+        if (temp >= 0)
+            answer = test_offset;
+        delta = shr(delta, 1);
+    }
+    while (delta > 0);
+
+    return answer;
+}
+/*- End of function --------------------------------------------------------*/
+
+/* Compute the power categories given the offset
+   This is kind of redundant since they were already computed
+   in calc_offset to determine the offset. */
+static void compute_raw_pow_categories(int16_t *power_categories, int16_t *rms_index, int16_t number_of_regions, int16_t offset)
+{
+    int16_t region;
+    int16_t j;
+    int16_t temp;
+
+    for (region = 0;  region < number_of_regions;  region++)
+    {
+        j = sub(offset, rms_index[region]);
+        j = shr(j, 1);
+
+        /* make sure j is between 0 and NUM_CAT-1 */
+        if (j < 0)
+            j = 0;
+        temp = sub(j, (NUM_CATEGORIES - 1));
+        if (temp > 0)
+            j = sub(NUM_CATEGORIES, 1);
+
+        power_categories[region] = j;
+    }
+}
+/*- End of function --------------------------------------------------------*/
+#endif
+/*- End of file ------------------------------------------------------------*/

@@ -15,30 +15,96 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\basop32.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bitstream.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\coef2sam.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="src\common.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\commonf.c">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\dct4.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\dct4_a.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dct4_s.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="src\decoder.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\decoderf.c">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\encoder.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\rmlt_coefs_to_samples.c">
+    <ClCompile Include="src\encoderf.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\samples_to_rmlt_coefs.c">
+    <ClCompile Include="src\huff_tab.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sam2coef.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tables.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utilities.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\defs.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="src\basop32.h">
+      <Filter>源文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\g7221.h">
+    <ClInclude Include="src\bitstream.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\coef2sam.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dct4.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dct4_a.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dct4_s.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\defs.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\g722_1.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\huff_tab.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sam2coef.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tables.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utilities.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\version.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\g722_1.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

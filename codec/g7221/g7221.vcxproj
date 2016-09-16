@@ -10,6 +10,40 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\basop32.c" />
+    <ClCompile Include="src\bitstream.c" />
+    <ClCompile Include="src\coef2sam.c" />
+    <ClCompile Include="src\common.c" />
+    <ClCompile Include="src\commonf.c" />
+    <ClCompile Include="src\dct4.c" />
+    <ClCompile Include="src\dct4_a.c" />
+    <ClCompile Include="src\dct4_s.c" />
+    <ClCompile Include="src\decoder.c" />
+    <ClCompile Include="src\decoderf.c" />
+    <ClCompile Include="src\encoder.c" />
+    <ClCompile Include="src\encoderf.c" />
+    <ClCompile Include="src\huff_tab.c" />
+    <ClCompile Include="src\sam2coef.c" />
+    <ClCompile Include="src\tables.c" />
+    <ClCompile Include="src\utilities.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\g722_1.h" />
+    <ClInclude Include="src\basop32.h" />
+    <ClInclude Include="src\bitstream.h" />
+    <ClInclude Include="src\coef2sam.h" />
+    <ClInclude Include="src\dct4.h" />
+    <ClInclude Include="src\dct4_a.h" />
+    <ClInclude Include="src\dct4_s.h" />
+    <ClInclude Include="src\defs.h" />
+    <ClInclude Include="src\g722_1.h" />
+    <ClInclude Include="src\huff_tab.h" />
+    <ClInclude Include="src\sam2coef.h" />
+    <ClInclude Include="src\tables.h" />
+    <ClInclude Include="src\utilities.h" />
+    <ClInclude Include="src\version.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0A399DDB-BF0C-4601-AD0D-2B38F23B7D48}</ProjectGuid>
     <RootNamespace>g7221</RootNamespace>
@@ -49,7 +83,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>./include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_MBCS;G7221_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -63,6 +98,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>./include;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_MBCS;G7221_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -70,18 +106,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="src\common.c" />
-    <ClCompile Include="src\dct4.c" />
-    <ClCompile Include="src\decoder.c" />
-    <ClCompile Include="src\encoder.c" />
-    <ClCompile Include="src\rmlt_coefs_to_samples.c" />
-    <ClCompile Include="src\samples_to_rmlt_coefs.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\defs.h" />
-    <ClInclude Include="include\g7221.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

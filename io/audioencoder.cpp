@@ -17,7 +17,7 @@ AudioEncoder*AudioEncoder::Create( AudioFileType type )
     case AFT_AAC:
         break;
     case AFT_G7221:
-        pEncoder = new G7221Encoder;
+        pEncoder = new G7221Encoder(16000,1);
         break;
     default:
         break;

@@ -2,66 +2,42 @@
 #include <string>
 #include <cstdint>
 #include "g7221decoder.h"
-#include "codec/g7221/include/g7221.h"
+#include "codec/g7221/include/g722_1.h"
 
 
-G7221Decoder::G7221Decoder()
+G7221Decoder::G7221Decoder(int32_t samplerate,int16_t )
 {
-    mlt_based_coder_init();
+    m_decoder = g722_1_decode_init( nullptr, 16000, samplerate);
+    if (!m_decoder)
+    {
+        return;
+    }
+    m_init = true;
 }
 
 void G7221Decoder::Release()
 {
+    if (m_init)
+    {
+        g722_1_decode_release( m_decoder );
+    }
+
     delete this;
 }
 
-bool G7221Decoder::Decode( void* encodeData, int outLen, int16_t* pcmData, int &inLen )
+bool G7221Decoder::Decode( void* encodeData, int inLen, int16_t* pcmData, int &outLen )
 {
-    if (encodeData && outLen>0)
+    outLen = g722_1_decode( m_decoder, pcmData, (uint8_t*)encodeData, inLen );
+    if (outLen == 0)
     {
-        DoDecode( encodeData, outLen, pcmData, inLen );
-    }
-    return true;
-}
-
-bool G7221Decoder::DoDecode( void* encodeData, int& outLen, int16_t* pcmData, int& inLen )
-{
-    assert( inLen/2 >= framesize );
-    if ( outLen < 2 * number_of_16bit_words_per_frame )
-    {
-        outLen = 2 * number_of_16bit_words_per_frame;
         return false;
     }
-    decoder( number_of_regions,
-             number_of_bits_per_frame,
-             (int16_t*)encodeData,
-             mlt_coefs,
-             frame_error_flag );
-
-    rmlt_coefs_to_samples( mlt_coefs, float_new_samples, framesize );
-    {
-        float ftemp0;
-        for ( int i = 0; i < framesize; i++ )
-        {
-            ftemp0 = float_new_samples[i];
-
-            if ( ftemp0 >= 0.0 )
-            {
-                if ( ftemp0 < 32767.0 )
-                    pcmData[i] = (int16_t)( ftemp0 + 0.5 );
-                else
-                    pcmData[i] = 32767;
-            }
-
-            else
-            {
-                if ( ftemp0 > -32768.0 )
-                    pcmData[i] = (int16_t)( ftemp0 - 0.5 );
-                else
-                    pcmData[i] = -32768;
-            }
-        }
-    }
-    inLen = framesize*2;
+    outLen *= 2;
     return true;
 }
+
+bool G7221Decoder::SetBitRate(int bitRate)
+{
+   return 0 == g722_1_decode_set_rate( m_decoder, bitRate );
+}
+

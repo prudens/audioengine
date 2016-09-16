@@ -347,21 +347,12 @@ void test_encoder_g7221()
     DeleteEncoder( decoder );
 }
 
-#include "C:/Users/zhangnaigan/Desktop/CH-HCNetSDK(Windows32)V5.2.1.3_build20160513/头文件/HCNetSDK.h"
 
-#pragma comment(lib,"HCNetSDK.lib")
-#define FRAME_SIZE 20
+
+#define FRAME_SIZE 40
 void test_g7221_encode()
 {
-    bool bInit = NET_DVR_Init();
-    if (!bInit)
-    {
-        return;
-    }
-    void*encoder = NET_DVR_InitG722Encoder();
-
     FILE* file = fopen( "D:/rec.pak","wb+" );
-    FILE* file1 = fopen( "D:/rec1.pak", "wb+" );
     auto pG7221 = AudioEncoder::Create( AFT_G7221 );
     WavReader reader( "D:/直接采集PCM音频.wav" );
     int16_t pcm[16000 * FRAME_SIZE / 1000] = { 0 };
@@ -373,22 +364,18 @@ void test_g7221_encode()
         {
             break;
         }
-        bool bencode = NET_DVR_EncodeG722Frame( encoder, (BYTE*)pcm, (BYTE*)encBuf);
-        fwrite( encBuf, 1, 80, file );
         pG7221->Encode( pcm, FRAME_SIZE * 16 * 2, encBuf, bufLen );
-        fwrite( encBuf, 1, 80, file1 );
+        fwrite( encBuf, 1, 80, file );
     }
     fclose(file);
-    fclose( file1 );
     pG7221->Release();
-    NET_DVR_ReleaseG722Encoder( encoder );
-    NET_DVR_Cleanup();
+
 }
 
 
 void test_g7221_decode()
 {
-    FILE* file = fopen( "D:/rec1.pak", "rb+" );
+    FILE* file = fopen( "D:/rec.pak", "rb+" );
     auto pG7221 = AudioDecoder::Create( AFT_G7221 );
     WavWriter writer( "D:/rec.wav", 16000, 1 );
     int16_t pcm[16000 * FRAME_SIZE / 1000];
@@ -407,7 +394,13 @@ void test_g7221_decode()
     pG7221->Release();
 }
 
+#ifdef WEBRTC_G722
 #include "webrtc/modules/audio_coding/codecs/g722/g722_interface.h"
+void test_g722_encode()
+{
+
+}
+
 void test_g722_decode()
 {
     FILE* file = fopen("D:/rec.","rb+");
@@ -438,29 +431,74 @@ void test_g722_decode()
 
 }
 
-void test_g722_encode()
+#endif
+
+#ifdef HK_G722_COEDC
+#include "C:/Users/zhangnaigan/Desktop/CH-HCNetSDK(Windows32)V5.2.1.3_build20160513/头文件/HCNetSDK.h"
+//#pragma comment(lib,"HCNetSDK.lib")
+void test_hk_g722_encode()
 {
+    bool bInit = NET_DVR_Init();
+    if (!bInit)
+    {
+        return;
+    }
+    void*encoder = NET_DVR_InitG722Encoder();
+    FILE* file = fopen( "D:/rec.pak", "wb+" );
     WavReader reader( "D:/直接采集PCM音频.wav" );
-    FILE* file = fopen( "D:/G722.pak","wb+" );
-    G722EncInst * G722enc_inst;
-    WebRtcG722_CreateEncoder( &G722enc_inst );
-    WebRtcG722_EncoderInit(G722enc_inst);
-    int16_t pcm[160];
-    uint8_t encBuf[160];
+    int16_t pcm[16000 * FRAME_SIZE / 1000] = { 0 };
+    int16_t encBuf[80 * 2] = { 0 };
+    int bufLen = 80 * 2 * 2;
     for ( ;; )
     {
-        auto len =  reader.ReadSamples(160,pcm);
-        if (len != 160)
+        if ( FRAME_SIZE * 16 != reader.ReadSamples( FRAME_SIZE * 16, pcm ) )
         {
             break;
         }
-        len = WebRtcG722_Encode( G722enc_inst, pcm, 160, encBuf );
-        fwrite(encBuf,1,len,file);
-
+        bool bencode = NET_DVR_EncodeG722Frame( encoder, (BYTE*)pcm, (BYTE*)encBuf );
+        fwrite( encBuf, 1, 80, file );
     }
-    WebRtcG722_FreeEncoder( G722enc_inst );
-    fclose(file);
+    fclose( file );
+    NET_DVR_ReleaseG722Encoder( encoder );
+    NET_DVR_Cleanup();
 }
+
+
+void test_hk_g722_decode()
+{
+    FILE* file = fopen( "D:/rec.pak", "rb+" );
+    WavWriter writer( "D:/g722.wav", 16000, 1 );
+    bool bInit = NET_DVR_Init();
+    if ( !bInit )
+    {
+        return;
+    }
+    G722DecInst *G722dec_inst;
+    WebRtcG722_CreateDecoder( &G722dec_inst );
+    if ( !G722dec_inst )
+    {
+        return;
+    }
+    WebRtcG722_DecoderInit( G722dec_inst );
+    char encBuf[80] = { 0 };
+    int16_t decBuf[512] = { 0 };
+    int16_t speechType = 0;
+    for ( ;; )
+    {
+        int ret = fread( encBuf, 1, 80, file );
+        if ( ret != 20 )
+        {
+            break;
+        }
+
+        size_t len = WebRtcG722_Decode( G722dec_inst, (uint8_t*)encBuf, 20, decBuf, &speechType );
+        writer.WriteSamples( decBuf, len );
+    }
+    WebRtcG722_FreeDecoder( G722dec_inst );
+    fclose( file );
+}
+#endif
+
 void test_codec()
 {
     //run_wav2mp3( "C:/Users/zhangnaigan/Desktop/歌曲.wav", "C:/Users/zhangnaigan/Desktop/歌曲1.mp3" );
