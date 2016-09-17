@@ -10,7 +10,7 @@ public:
 class AudioMixer
 {
 public:
-    static AudioMixer* Create(int samplerate,int channel); // 创建一个混音实例
+    static AudioMixer* Create(int samplerate,int channel,int frame_size); // 创建一个混音实例
     virtual void Release() = 0; // 释放一个混音实例
     virtual void AddParticipant( MixerParticipant *participant ) = 0; // 添加一个参与混音的流
     virtual void RemoveParticipant( MixerParticipant *participant ) = 0;// 移除参与混音的流

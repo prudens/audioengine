@@ -1,15 +1,20 @@
 #include "audio_mixer_impl.h"
+#include <functional>
 
 
-
-AudioMixerImpl::AudioMixerImpl( int samplerate, int channel )
+AudioMixerImpl::AudioMixerImpl( int samplerate, int channel,int frame_size )
 {
-
+    m_sample_rate = samplerate;
+    m_channel = channel;
+    m_frame_size = frame_size;
+    m_data = new float[frame_size];
+    m_data_minor = new float[frame_size];
 }
 
 AudioMixerImpl::~AudioMixerImpl()
 {
-
+    delete m_data;
+    delete m_data_minor;
 }
 
 void AudioMixerImpl::Release()
@@ -161,37 +166,44 @@ void AudioMixerImpl::MixFrameList( MixerParticipantList & mixlist, webrtc::Audio
         memset( audioFrame->data_, 0, audioFrame->samples_per_channel_*audioFrame->num_channels_ * 2 );//静音包
         return;
     }
-    size_t size = audioFrame->samples_per_channel_*audioFrame->num_channels_;
-    float* data = new float[size];
-    memset( data, 0, sizeof( float )*size );
-    for ( auto& v : mixlist )
+    size_t size = m_frame_size;
+    memset( m_data, 0, sizeof( float )*size );
+    for (const auto& v : mixlist )
     {
         for ( size_t i = 0; i < size; i++ )
         {
-            data[i] += v.weightFactor * v.audioFrame->data_[i];
+            m_data[i] += v.weightFactor * v.audioFrame->data_[i];
         }
     }
-    size_t overflow = std::count_if( data, data + size, [] (int32_t v)
+
+    size_t overflow = std::count_if( m_data, m_data + size, [] (int32_t v)
     {
-        return ( v > 32767 || v < -32768 );
+        return ( v > 32767);
     } );
     float scale = 1.0f;
-    if (overflow > size/20)
+    //做个阈值，允许适当的溢出，防止过度的缩小音量，根据实际测试情况调整
+    int therefold = m_sample_rate / 2000 / m_channel;
+    assert( therefold < size );
+    if ( overflow > therefold )
     {
-        scale = 0.8f;
+        memcpy( m_data_minor, m_data, sizeof( float )*size );
+        std::nth_element( m_data_minor, m_data_minor + therefold,
+                          m_data_minor + size, std::greater<float>() );
+        float start = m_data_minor[therefold];
+        if (start>32767)
+        {
+            scale = 32767 / start;// 允许适当的溢出
+        }
     }
-    else if ( overflow > size / 40)
-    {
-        scale = 0.9f;
-    }
+
     for ( size_t i = 0; i < size; i++ )
     {
-        int32_t v = static_cast<int32_t>(scale * data[i]);
+        int32_t v = static_cast<int32_t>(scale * m_data[i]);
         if ( v > 32767 )
         {
             audioFrame->data_[i] = 32767;
         }
-        else if ( data[i] < -32768)
+        else if ( m_data[i] < -32768)
         {
             audioFrame->data_[i] = -32768;
         }
@@ -200,9 +212,10 @@ void AudioMixerImpl::MixFrameList( MixerParticipantList & mixlist, webrtc::Audio
             audioFrame->data_[i] = v;
         }
     }
+
 }
 
-AudioMixer* AudioMixer::Create(int samplerate,int channel)
+AudioMixer* AudioMixer::Create(int samplerate,int channel,int frame_size)
 {
-    return new AudioMixerImpl( samplerate, channel );
+    return new AudioMixerImpl( samplerate, channel,frame_size);
 }

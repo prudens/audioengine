@@ -80,6 +80,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\base\asyntask.cpp" />
     <ClCompile Include="..\..\base\audio_util.cc" />
+    <ClCompile Include="..\..\base\bitarray.cpp" />
     <ClCompile Include="..\..\base\fft.cpp" />
     <ClCompile Include="..\..\base\rgba.cpp" />
     <ClCompile Include="..\..\base\vcl\instrset_detect.cpp" />
@@ -88,6 +89,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\base\asyntask.h" />
     <ClInclude Include="..\..\base\audio_util.h" />
+    <ClInclude Include="..\..\base\bitarray.h" />
     <ClInclude Include="..\..\base\circular_buffer.hpp" />
     <ClInclude Include="..\..\base\common_defines.h" />
     <ClInclude Include="..\..\base\fft.h" />

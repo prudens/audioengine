@@ -33,6 +33,9 @@
     <ClCompile Include="..\..\base\vcl\special\ranvec1.cpp">
       <Filter>vcl\special</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\base\bitarray.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\base\asyntask.h">
@@ -127,6 +130,9 @@
     </ClInclude>
     <ClInclude Include="..\..\base\time_cvt.hpp">
       <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\bitarray.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -17,7 +17,7 @@ class AudioMixerImpl :public AudioMixer
     };
     using MixerParticipantList = std::list < MixerParticipantInfo>;
 public:
-    AudioMixerImpl( int samplerate, int channel );
+    AudioMixerImpl( int samplerate, int channel,int framesize );
     ~AudioMixerImpl();
     virtual void Release() override; // 释放一个混音实例
     virtual void AddParticipant( MixerParticipant *participant )override; // 添加一个参与混音的流
@@ -33,5 +33,10 @@ private:
     MixerParticipantList m_participants;
     int32_t m_limitCount = 3;
     std::list<webrtc::AudioFrame*> m_audioFramePool;
+    float*m_data = nullptr;
+    int m_frame_size=0;
+    float*m_data_minor=nullptr;
+    int m_sample_rate;
+    int m_channel;
     
 };
