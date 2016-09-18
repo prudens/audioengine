@@ -1,11 +1,11 @@
 #include "header.h"
 void test_audio_effect()
 {
-    WavReader reader_rec( "D:/rec-97.wav" );
+    WavReader reader_rec( "C:\\Users\\zhangnaigan\\Desktop\\¿ÕÆøÔëÉù-ÈËÉù.wav" );
     int samplerate = reader_rec.SampleRate();
     int channel = reader_rec.NumChannels();
 
-    WavWriter writer( "d:/log/test-pro.wav", samplerate, channel );
+    WavWriter writer( "C:\\Users\\zhangnaigan\\Desktop\\ÈËÉù.wav", samplerate, channel );
     AudioEffect ae;
     ae.Init( samplerate, channel, samplerate, channel );
     int frames = samplerate / 100 * channel;
@@ -21,10 +21,10 @@ void test_audio_effect()
             writer.WriteSamples( buf, frames );
         }
     }
-    while ( ae.GetRecordingData( buf, frames * 2, true ) )
-    {
-        writer.WriteSamples( buf, frames );
-    }
+//     while ( ae.GetRecordingData( buf, frames * 2, true ) )
+//     {
+//         writer.WriteSamples( buf, frames );
+//     }
     delete[] buf;
 }
 
@@ -434,5 +434,6 @@ void test_audio_mixer()
 
 void test_audio_processing()
 {
-    test_audio_mixer();
+    test_audio_effect();
+   // test_audio_mixer();
 }

@@ -69,7 +69,8 @@ public:
     bitarray &flip();
     bitarray&flip(size_t pos);
     std::string to_string();
-    std::vector<uint32_t> touint32();
+    std::vector<uint32_t> touint32s();
+    uint32_t              touint32();
 
 private:
     uint8_t* m_array;

@@ -90,7 +90,8 @@ void test_codec();
 
 int main( int argc, char** argv )
 {
-    test_codec();
+    test_array();
+   // test_codec();
    // test_audio_processing();
    // test_async_task();
    // test_windows_core_audio();
