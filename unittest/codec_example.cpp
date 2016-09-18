@@ -290,7 +290,7 @@ void run_wav2mp3( const char* infile, const char*outfile )
 {
     WavReader reader( infile );
     AudioWriter* pMp3 = AudioWriter::Create( outfile, reader.SampleRate(), reader.NumChannels(), AFT_MP3 );
-    const int NUM_SAMPLES = 100;
+    const int NUM_SAMPLES = 256;
     int16_t pcm[NUM_SAMPLES];
     float fpcm[NUM_SAMPLES];
     for ( ;; )
@@ -298,7 +298,7 @@ void run_wav2mp3( const char* infile, const char*outfile )
         if ( NUM_SAMPLES != reader.ReadSamples( NUM_SAMPLES, pcm ) )
             break;
         S16ToFloat( pcm, NUM_SAMPLES, fpcm );
-        pMp3->WriteSamples( fpcm, NUM_SAMPLES );
+        pMp3->WriteSamples( pcm, NUM_SAMPLES );
     }
     pMp3->Destroy();
 }
@@ -501,7 +501,8 @@ void test_hk_g722_decode()
 
 void test_codec()
 {
-    //run_wav2mp3( "C:/Users/zhangnaigan/Desktop/歌曲.wav", "C:/Users/zhangnaigan/Desktop/歌曲1.mp3" );
+    run_wav2mp3( "C:/Users/zhangnaigan/Desktop/歌曲.wav", "C:/Users/zhangnaigan/Desktop/歌曲1.mp3" );
+   // run_wav2mp3( "E:/CloudMusic/Mariage.wav", "C:/Users/zhangnaigan/Desktop/Mariage.mp3" );
    // run_mp32wav( "E:/CloudMusic/Mariage.mp3" );
    // test_encoder_g7221();
    // test_g7221_encode();

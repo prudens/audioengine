@@ -414,7 +414,7 @@ void test_audio_mixer()
     AudioStream es04( "C:/Users/zhangnaigan/Desktop/3D_test_Audio/sc01.wav" );
     AudioStream es05( "C:/Users/zhangnaigan/Desktop/3D_test_Audio/sc02.wav" );
     AudioStream es06( "C:/Users/zhangnaigan/Desktop/3D_test_Audio/sc03.wav" );
-    AudioMixer* mixer = AudioMixer::Create( 48000, 2 );
+    AudioMixer* mixer = AudioMixer::Create( 48000, 2,960 );
     mixer->LimitParticipantCount( 5 );
     mixer->AddParticipant( &es01 );
     mixer->AddParticipant( &es02 );

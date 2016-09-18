@@ -46,7 +46,7 @@ class Mp3FileWriter : public AudioWriter
 {
 public:
     Mp3FileWriter(const char* filename, int samplerate, int channel );
-    virtual ~Mp3FileWriter();
+    ~Mp3FileWriter();
     virtual void Destroy()override;
     virtual int SampleRate() const override;
     virtual size_t NumChannels() const override;
