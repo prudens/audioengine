@@ -87,12 +87,13 @@ void test_voice_scale()
 void test_array();
 void test_audio_processing();
 void test_codec();
-
+void test_asio( int argc, char** argv );
 int main( int argc, char** argv )
 {
-    test_array();
+    test_asio(argc,argv);
+    //test_array();
    // test_codec();
-   // test_audio_processing();
+    //test_audio_processing();
    // test_async_task();
    // test_windows_core_audio();
    // test_conv();

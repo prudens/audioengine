@@ -15,7 +15,7 @@ void test_audio_effect()
         if ( frames != reader_rec.ReadSamples( frames, buf ) )
             break;
         ae.ProcessCaptureStream( buf, frames * 2 );
-
+        std::cout << ae.GetLevel() << "  ";
         //while (ae.GetRecordingData(buf,frames*2,false))
         {
             writer.WriteSamples( buf, frames );

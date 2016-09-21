@@ -39,15 +39,15 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetName>G7221Codec</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../;../processing/src;../codec/aac/libAACenc/include;../codec/aac/;../codec/aac/libFDK/include;../codec/aac/libsys/include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_MBCS;G7221_EXPORTS;%(PreprocessorDefinitions);DEBUG;WEBRTC_WIN;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../;../processing/src;../codec/aac/libAACenc/include;../codec/aac/;../codec/aac/libFDK/include;../codec/aac/libsys/include;../network/asio/asio/include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ASIO_STANDALONE;_MBCS;G7221_EXPORTS;%(PreprocessorDefinitions);DEBUG;WEBRTC_WIN;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -60,9 +60,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../;../processing/src;../codec/aac/libAACenc/include;../codec/aac/;../codec/aac/libFDK/include;../codec/aac/libsys/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../;../processing/src;../codec/aac/libAACenc/include;../codec/aac/;../codec/aac/libFDK/include;../codec/aac/libsys/include;../network/asio/asio/include</AdditionalIncludeDirectories>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>_MBCS;G7221_EXPORTS;%(PreprocessorDefinitions);DEBUG;WEBRTC_WIN;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;ASIO_STANDALONE;G7221_EXPORTS;%(PreprocessorDefinitions);DEBUG;WEBRTC_WIN;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
@@ -72,6 +72,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="asio_example.cpp" />
     <ClCompile Include="audio_device_example.cpp" />
     <ClCompile Include="audio_device_unit_test.cpp" />
     <ClCompile Include="audio_effect.cpp" />
