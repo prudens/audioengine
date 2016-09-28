@@ -1,0 +1,8 @@
+﻿  audio_decoder.cc
+  audio_encoder.cc
+  audio_decoder_g722.cc
+  audio_encoder_g722.cc
+  g722_decode.c
+  g722_encode.c
+  g722_interface.c
+  g722.vcxproj -> F:\repo\audioengine\build\winx\Release\g722.lib

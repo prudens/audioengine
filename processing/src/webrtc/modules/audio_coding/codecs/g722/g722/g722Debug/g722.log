@@ -1,0 +1,10 @@
+﻿  audio_encoder_g722.cc
+  audio_decoder_g722.cc
+  audio_encoder.cc
+  audio_decoder.cc
+  Generating Code...
+  g722_interface.c
+  g722_encode.c
+  g722_decode.c
+  Generating Code...
+  g722.vcxproj -> F:\repo\audioengine\build\winx\Debug\g722.lib
