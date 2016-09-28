@@ -22,7 +22,7 @@ AudioReader* AudioReader::Create( const char*filename, AudioFileType type )
     case AFT_WAV:
     {
         auto pReader = new WavReader( filename );
-        if ( pReader->Initialized())
+        if ( !pReader->Initialized())
         {
             pReader->Destroy();
             pReader = nullptr;

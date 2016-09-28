@@ -90,9 +90,9 @@ void test_codec();
 void test_asio( int argc, char** argv );
 int main( int argc, char** argv )
 {
-    test_asio(argc,argv);
-    //test_array();
-   // test_codec();
+    //test_asio(argc,argv);
+    test_array();
+    //test_codec();
     //test_audio_processing();
    // test_async_task();
    // test_windows_core_audio();
@@ -107,7 +107,7 @@ int main( int argc, char** argv )
    // test_audio_processing();
 
 
-  //  test_aac_enc();
+ //   test_aac_enc();
 //    test_aac_dec();
 //    test_aac_pasre_head();
  //   test_aac_dec_file();

@@ -59,7 +59,7 @@ public:
  // Reads |length| bytes from file to |buf|. Returns the number of bytes read
  // or -1 on error.
     virtual int Read(void *buf, size_t len) = 0;
-    virtual int Rewind() { return 0; }
+    virtual int Rewind();
     virtual ~InStream() {}
 protected:
     InStream() {}
@@ -71,7 +71,7 @@ public:
  // Writes |length| bytes from |buf| to file. The actual writing may happen
  // some time later. Call Flush() to force a write.
     virtual bool Write(const void *buf, size_t len) = 0;
-    virtual int Rewind() { return 0; }
+    virtual int Rewind();
     virtual ~OutStream() {}
 protected:
     OutStream() {}
@@ -156,25 +156,12 @@ enum ProcessingTypes
     kRecordingPreprocessing
 };
 
-enum FrameType
-{
-    kFrameEmpty            = 0,
-    kAudioFrameSpeech      = 1,
-    kAudioFrameCN          = 2,
-    kVideoFrameKey         = 3,    // independent frame
-    kVideoFrameDelta       = 4,    // depends on the previus frame
-};
-
-// External transport callback interface
-class Transport
-{
-public:
-    virtual int SendPacket(int channel, const void *data, size_t len) = 0;
-    virtual int SendRTCPPacket(int channel, const void *data, size_t len) = 0;
-
-protected:
-    virtual ~Transport() {}
-    Transport() {}
+enum FrameType {
+  kEmptyFrame = 0,
+  kAudioFrameSpeech = 1,
+  kAudioFrameCN = 2,
+  kVideoFrameKey = 3,
+  kVideoFrameDelta = 4,
 };
 
 // Statistics for an RTCP channel
@@ -304,7 +291,7 @@ struct CodecInst {
   char plname[RTP_PAYLOAD_NAME_SIZE];
   int plfreq;
   int pacsize;
-  int channels;
+  size_t channels;
   int rate;  // bits/sec unlike {start,min,max}Bitrate elsewhere in this file!
 
   bool operator==(const CodecInst& other) const {
@@ -323,12 +310,6 @@ struct CodecInst {
 
 // RTP
 enum {kRtpCsrcSize = 15}; // RFC 3550 page 13
-
-enum RTPDirections
-{
-    kRtpIncoming = 0,
-    kRtpOutgoing
-};
 
 enum PayloadFrequencies
 {
@@ -381,7 +362,7 @@ struct NetworkStatistics           // NETEQ statistics
     // max packet waiting time in the jitter buffer (ms)
     int maxWaitingTimeMs;
     // added samples in off mode due to packet loss
-    int addedSamples;
+    size_t addedSamples;
 };
 
 // Statistics for calls to AudioCodingModule::PlayoutData10Ms().
@@ -560,6 +541,7 @@ enum RawVideoType
 enum { kConfigParameterSize = 128};
 enum { kPayloadNameSize = 32};
 enum { kMaxSimulcastStreams = 4};
+enum { kMaxSpatialLayers = 5 };
 enum { kMaxTemporalStreams = 4};
 
 enum VideoCodecComplexity
@@ -587,6 +569,7 @@ enum VP8ResilienceMode {
                      // within a frame.
 };
 
+class TemporalLayersFactory;
 // VP8 specific
 struct VideoCodecVP8 {
   bool                 pictureLossIndicationOn;
@@ -599,26 +582,10 @@ struct VideoCodecVP8 {
   bool                 automaticResizeOn;
   bool                 frameDroppingOn;
   int                  keyFrameInterval;
-
-  bool operator==(const VideoCodecVP8& other) const {
-    return pictureLossIndicationOn == other.pictureLossIndicationOn &&
-           feedbackModeOn == other.feedbackModeOn &&
-           complexity == other.complexity &&
-           resilience == other.resilience &&
-           numberOfTemporalLayers == other.numberOfTemporalLayers &&
-           denoisingOn == other.denoisingOn &&
-           errorConcealmentOn == other.errorConcealmentOn &&
-           automaticResizeOn == other.automaticResizeOn &&
-           frameDroppingOn == other.frameDroppingOn &&
-           keyFrameInterval == other.keyFrameInterval;
-  }
-
-  bool operator!=(const VideoCodecVP8& other) const {
-    return !(*this == other);
-  }
+  const TemporalLayersFactory* tl_factory;
 };
 
-// VP9 specific
+// VP9 specific.
 struct VideoCodecVP9 {
   VideoCodecComplexity complexity;
   int                  resilience;
@@ -627,6 +594,9 @@ struct VideoCodecVP9 {
   bool                 frameDroppingOn;
   int                  keyFrameInterval;
   bool                 adaptiveQpMode;
+  bool                 automaticResizeOn;
+  unsigned char        numberOfSpatialLayers;
+  bool                 flexibleMode;
 };
 
 // H264 specific.
@@ -670,20 +640,13 @@ struct SimulcastStream {
   unsigned int        targetBitrate;  // kilobits/sec.
   unsigned int        minBitrate;  // kilobits/sec.
   unsigned int        qpMax; // minimum quality
+};
 
-  bool operator==(const SimulcastStream& other) const {
-    return width == other.width &&
-           height == other.height &&
-           numberOfTemporalLayers == other.numberOfTemporalLayers &&
-           maxBitrate == other.maxBitrate &&
-           targetBitrate == other.targetBitrate &&
-           minBitrate == other.minBitrate &&
-           qpMax == other.qpMax;
-  }
-
-  bool operator!=(const SimulcastStream& other) const {
-    return !(*this == other);
-  }
+struct SpatialLayer {
+  int scaling_factor_num;
+  int scaling_factor_den;
+  int target_bitrate_bps;
+  // TODO(ivica): Add max_quantizer and min_quantizer?
 };
 
 enum VideoCodecMode {
@@ -712,40 +675,12 @@ struct VideoCodec {
   unsigned int        qpMax;
   unsigned char       numberOfSimulcastStreams;
   SimulcastStream     simulcastStream[kMaxSimulcastStreams];
+  SpatialLayer spatialLayers[kMaxSpatialLayers];
 
   VideoCodecMode      mode;
 
-  // When using an external encoder/decoder this allows to pass
-  // extra options without requiring webrtc to be aware of them.
-  Config*  extra_options;
-
-  bool operator==(const VideoCodec& other) const {
-    bool ret = codecType == other.codecType &&
-               (STR_CASE_CMP(plName, other.plName) == 0) &&
-               plType == other.plType &&
-               width == other.width &&
-               height == other.height &&
-               startBitrate == other.startBitrate &&
-               maxBitrate == other.maxBitrate &&
-               minBitrate == other.minBitrate &&
-               targetBitrate == other.targetBitrate &&
-               maxFramerate == other.maxFramerate &&
-               qpMax == other.qpMax &&
-               numberOfSimulcastStreams == other.numberOfSimulcastStreams &&
-               mode == other.mode;
-    if (ret && codecType == kVideoCodecVP8) {
-      ret &= (codecSpecific.VP8 == other.codecSpecific.VP8);
-    }
-
-    for (unsigned char i = 0; i < other.numberOfSimulcastStreams && ret; ++i) {
-      ret &= (simulcastStream[i] == other.simulcastStream[i]);
-    }
-    return ret;
-  }
-
-  bool operator!=(const VideoCodec& other) const {
-    return !(*this == other);
-  }
+  bool operator==(const VideoCodec& other) const = delete;
+  bool operator!=(const VideoCodec& other) const = delete;
 };
 
 // Bandwidth over-use detector options.  These are used to drive
@@ -758,12 +693,11 @@ struct OverUseDetectorOptions {
         initial_e(),
         initial_process_noise(),
         initial_avg_noise(0.0),
-        initial_var_noise(50),
-        initial_threshold(25.0) {
+        initial_var_noise(50) {
     initial_e[0][0] = 100;
     initial_e[1][1] = 1e-1;
     initial_e[0][1] = initial_e[1][0] = 0;
-    initial_process_noise[0] = 1e-10;
+    initial_process_noise[0] = 1e-13;
     initial_process_noise[1] = 1e-2;
   }
   double initial_slope;
@@ -772,7 +706,6 @@ struct OverUseDetectorOptions {
   double initial_process_noise[2];
   double initial_avg_noise;
   double initial_var_noise;
-  double initial_threshold;
 };
 
 // This structure will have the information about when packet is actually
@@ -804,6 +737,7 @@ struct RTPHeaderExtension {
   // Audio Level includes both level in dBov and voiced/unvoiced bit. See:
   // https://datatracker.ietf.org/doc/draft-lennox-avt-rtp-audio-level-exthdr/
   bool hasAudioLevel;
+  bool voiceActivity;
   uint8_t audioLevel;
 
   // For Coordination of Video Orientation. See
@@ -903,6 +837,11 @@ class StreamDataCountersCallback {
   virtual void DataCountersUpdated(const StreamDataCounters& counters,
                                    uint32_t ssrc) = 0;
 };
+
+// RTCP mode to use. Compound mode is described by RFC 4585 and reduced-size
+// RTCP mode is described by RFC 5506.
+enum class RtcpMode { kOff, kCompound, kReducedSize };
+
 }  // namespace webrtc
 
 #endif  // WEBRTC_COMMON_TYPES_H_

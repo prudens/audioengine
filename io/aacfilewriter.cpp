@@ -17,7 +17,7 @@ AACFileWriter::AACFileWriter( const char* filename, int samplerate, int channel 
         return;
     }
     ErrorStatus = aacEncoder_SetParam( m_hAacEncoder, AACENC_AOT, AOT_SBR );
-    ErrorStatus = aacEncoder_SetParam( m_hAacEncoder, AACENC_BITRATE, 16000 );
+    ErrorStatus = aacEncoder_SetParam( m_hAacEncoder, AACENC_BITRATE, 8*5000 );
     ErrorStatus = aacEncoder_SetParam( m_hAacEncoder, AACENC_SAMPLERATE, samplerate );
     ErrorStatus = aacEncoder_SetParam( m_hAacEncoder, AACENC_CHANNELMODE, channle_mode );
     ErrorStatus = aacEncEncode( m_hAacEncoder, NULL, NULL, NULL, NULL );

@@ -63,14 +63,16 @@ public:
     size_t bits()const;
     void set( size_t pos, uint32_t value, int nbit);
     void set( size_t pos, bool value = true );
+    bool set(int start, std::vector<std::pair< int, int>> v );//start 是位数的基数。第一个是int 是value,第二个是去最低的有效位数。从0开始累加
     bool test( size_t pos )const;
     reference operator []( size_t pos );
     bool operator[]( size_t _Pos )const;
     bitarray &flip();
     bitarray&flip(size_t pos);
     std::string to_string();
-    std::vector<uint32_t> touint32s();
-    uint32_t              touint32();
+    std::vector<uint32_t> to_uint32s();
+    uint32_t              to_uint32();
+    uint8_t*data();
 
 private:
     uint8_t* m_array;

@@ -5,11 +5,9 @@
 class AACFileReader :public AudioReader
 {
 public:
-    enum 
-    {
-        INPUT_BUF_SIZE = 2*768,
-        OUTPUT_BUF_SIZE = 4096,
-    };
+
+    static const int INPUT_BUF_SIZE = 2 * 768;
+    static const int OUTPUT_BUF_SIZE = 4096;
     AACFileReader(const char* filename );
     ~AACFileReader();
     virtual void   Destroy();

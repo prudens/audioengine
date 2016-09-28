@@ -27,21 +27,29 @@ void test_valarray()
 
 void test_bitarray()
 {
-    bitarray arr( 32 );
-    uint32_t v=3;
-    arr.set(0, v, 2 );
-    arr.set( 2 );
-    arr[3] = true;
-    arr[1] = false;
-    assert( arr.test( 0 ) == true );
-    assert( arr.test( 1 ) == false );
-    assert( arr[2] == true );
-    std::string str = arr.to_string();
-    v = 137;
-    arr.set( 0, v,8 );
-    v = arr.touint32();
-    std::cout << v<<"\n";
-    std::cout << arr.to_string();
+    bitarray arr( 128 );
+//     uint32_t v=3;
+//     arr.set(0, v, 2 );
+//     arr.set( 2 );
+//     arr[3] = true;
+//     arr[1] = false;
+//     assert( arr.test( 0 ) == true );
+//     assert( arr.test( 1 ) == false );
+//     assert( arr[2] == true );
+//     std::string str = arr.to_string();
+//     v = 137;
+//     arr.set( 0, v,8 );
+//     v = arr.touint32();
+//     std::cout << v<<"\n";
+//     std::cout << arr.to_string();
+    int *test = new int(0x12345678);
+    std::pair<int, int> p = { 1, 2 };
+    std::vector<std::pair<int, int>>v1 = {
+        /*{ 0, 2 }, { 3, 3 }, { 4, 3 }, */{*test,32}
+    };
+    arr.set(0, v1 );
+    *test = arr.to_uint32();
+    std::cout << arr.to_string() << "to uint32=0x" <<std::hex<< *test << std::endl;
 }
 
 void test_array()

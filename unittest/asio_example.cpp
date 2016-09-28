@@ -421,11 +421,113 @@ int test_tcp_iostream( int argc, char* argv[] )
     return 0;
 
 }
+
+/// Structure of the standard NTP header (as described in RFC 2030)
+///                       1                   2                   3
+///   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+///  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+///  |LI | VN  |Mode |    Stratum    |     Poll      |   Precision   |
+///  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+///  |                          Root Delay                           |
+///  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+///  |                       Root Dispersion                         |
+///  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+///  |                     Reference Identifier                      |
+///  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+///  |                                                               |
+///  |                   Reference Timestamp (64)                    |
+///  |                                                               |
+///  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+///  |                                                               |
+///  |                   Originate Timestamp (64)                    |
+///  |                                                               |
+///  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+///  |                                                               |
+///  |                    Receive Timestamp (64)                     |
+///  |                                                               |
+///  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+///  |                                                               |
+///  |                    Transmit Timestamp (64)                    |
+///  |                                                               |
+///  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+///  |                 Key Identifier (optional) (32)                |
+///  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+///  |                                                               |
+///  |                                                               |
+///  |                 Message Digest (optional) (128)               |
+///  |                                                               |
+///  |                                                               |
+///  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+/// 
+/// -----------------------------------------------------------------------------
+/// 
+/// SNTP Timestamp Format (as described in RFC 2030)
+///                         1                   2                   3
+///     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+/// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+/// |                           Seconds                             |
+/// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+/// |                  Seconds Fraction (0-padded)                  |
+/// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+/// 
+/// </summary>
+
+struct NTPData 
+{
+    int LI = 0;//2
+    int ver;//3
+    int mode;//3
+    int Stratum;//8
+    int Poll;//8
+    int Precision;//8
+    int rootDelay;//32
+    int rootDisp;//32
+    int refid;//32
+    int64_t refts;//64
+    int64_t orits;//64
+    int64_t rects;//64
+    int64_t transts;//64
+    int keyid;//32
+    char msgDisg[128];//128
+
+};
+#include "base/bitarray.h"
+void test_ntp()
+{
+    asio::error_code ec;
+    using namespace asio::ip;
+    asio::io_context io_context;
+    udp::endpoint ep;
+    udp::socket s( io_context, udp::endpoint( udp::v4(), 0 ) );
+    udp::resolver resolver( io_context );
+    udp::resolver::results_type endpoints =
+        resolver.resolve( udp::v4(), "time1.aliyun.com" /*"time.windows.com"*/, "123" );
+    ep = *endpoints.begin();
+    NTPData data;
+    int8_t arr[48] = { 0 };
+     arr[0] = 0x1b;
+    int ts = (int)timestamp();
+
+    for ( int i = 3; i >= 0; i-- )
+    {
+        arr[40 + i] = (char)( ts % 256 );
+        ts = ts / 256;
+    }
+
+    size_t len = s.send_to( asio::buffer( &arr, 48 ), ep );
+    char reply[48];
+    len = s.receive(asio::buffer(reply,48));
+    io_context.run();
+}
+
 void test_asio( int argc, char** argv )
 {
     //test_base_ip();
     //test_tcp_iostream( argc, argv );
    // return;
+
+    test_ntp();
+    return;
     if ( argc == 2 )
     {
         for ( int i = 0; i < 10;i++ )

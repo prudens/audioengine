@@ -82,6 +82,7 @@
     <ClCompile Include="audio_processing_example.cpp" />
     <ClCompile Include="audio_resample.cpp" />
     <ClCompile Include="audio_voice_check.cpp" />
+    <ClCompile Include="backward_redundant_frame.cpp" />
     <ClCompile Include="codec_example.cpp" />
     <ClCompile Include="dispatch_example.cpp" />
     <ClCompile Include="G7221Interface.cpp" />
@@ -95,6 +96,7 @@
     <ClInclude Include="audio_noise_suppression.h" />
     <ClInclude Include="audio_resample.h" />
     <ClInclude Include="audio_voice_check.h" />
+    <ClInclude Include="backward_redundant_frame.h" />
     <ClInclude Include="G7221Interface.h" />
     <ClInclude Include="header.h" />
   </ItemGroup>

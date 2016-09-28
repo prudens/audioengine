@@ -114,7 +114,7 @@ size_t AACFileReader::ReadSamples( size_t num_samples, int16_t* samples )
     }
     if ( m_advace_pos + num_samples <= OUTPUT_BUF_SIZE )
     {
-        memcpy( samples, m_outBuf, num_samples * 2 );
+        memcpy( samples, m_outBuf + m_advace_pos, num_samples * 2 );
         m_advace_pos += num_samples;
         m_readSample += num_samples;
     }
@@ -193,13 +193,13 @@ bool AACFileReader::ReadFrame()
         for ( ;; )
         {
             err = aacDecoder_DecodeFrame( m_hAACDecoder, m_outBuf, OUTPUT_BUF_SIZE, 0 );
-            if ( err == AAC_DEC_NOT_ENOUGH_BITS )
+            if ( err == AAC_DEC_NOT_ENOUGH_BITS || err == AAC_DEC_TRANSPORT_SYNC_ERROR)
             {
                 break;
             }
             else if ( err != AAC_DEC_OK )
             {
-                return false;
+                break;
             }
             else
             {

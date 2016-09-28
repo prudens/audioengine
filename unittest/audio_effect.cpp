@@ -303,16 +303,16 @@ bool AudioEffect::GetRecordingData( void* data, size_t size_in_byte, bool bNoCac
        // scale = 0;
         printf( "scale=%f cur_level=%d, before_level=%f\n", scale, m_level, after_levelsum );
         count++;
-        itCur->level = after_levelsum;
+        itCur->level = (int)after_levelsum;
     }
 
     if (scale < 1)
     {
         //printf( "scale=%f\n", scale );
         int16_t* p = (int16_t*)pInput;
-        for (  int j = 0; j < size_in_byte/2;j++)
+        for (  size_t j = 0; j < size_in_byte/2;j++)
         {
-            p[j] = p[j] * scale;
+            p[j] = (int16_t)p[j] * scale;
         }
     }
     memcpy( data, pInput, size_in_byte );

@@ -50,6 +50,7 @@ struct ByteType {
 class Buffer {
  public:
   Buffer();                   // An empty buffer.
+  ~Buffer() {}
   Buffer(const Buffer& buf);  // Copy size and contents of an existing buffer.
   Buffer(Buffer&& buf);       // Move contents from an existing buffer.
 
@@ -73,7 +74,6 @@ class Buffer {
   Buffer(const T(&array)[N])
       : Buffer(array, N) {}
 
-  ~Buffer();
 
   // Get a pointer to the data. Just .data() will give you a (const) uint8_t*,
   // but you may also use .data<int8_t>() and .data<char>().

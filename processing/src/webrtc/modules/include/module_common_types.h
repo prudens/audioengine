@@ -24,6 +24,12 @@
 
 namespace webrtc {
 
+enum VideoRotation {
+    kVideoRotation_0 = 0,
+    kVideoRotation_90 = 90,
+    kVideoRotation_180 = 180,
+    kVideoRotation_270 = 270
+};
 struct RTPAudioHeader {
   uint8_t numEnergy;                  // number of valid entries in arrOfEnergy
   uint8_t arrOfEnergy[kRtpCsrcSize];  // one energy byte (0-9) per channel
@@ -234,9 +240,31 @@ enum RtpVideoCodecTypes {
   kRtpVideoVp9,
   kRtpVideoH264
 };
+// Since RTPVideoHeader is used as a member of a union, it can't have a
+// non-trivial default constructor.
+struct RTPVideoHeader {
+  uint16_t width;  // size
+  uint16_t height;
+  VideoRotation rotation;
 
+  bool isFirstPacket;    // first packet in frame
+  uint8_t simulcastIdx;  // Index if the simulcast encoder creating
+                         // this frame, 0 if not using simulcast.
+  RtpVideoCodecTypes codec;
+  RTPVideoTypeHeader codecHeader;
+};
+union RTPTypeHeader {
+  RTPAudioHeader Audio;
+  RTPVideoHeader Video;
+};
 
-
+struct WebRtcRTPHeader {
+  RTPHeader header;
+  FrameType frameType;
+  RTPTypeHeader type;
+  // NTP time of the capture time in local timebase in milliseconds.
+  int64_t ntp_time_ms;
+};
 
 class RTPFragmentationHeader {
  public:
@@ -313,6 +341,7 @@ class RTPFragmentationHeader {
   }
 
   void VerifyAndAllocateFragmentationHeader(const size_t size) {
+    assert(size <= (std::numeric_limits<uint16_t>::max)());
     const uint16_t size16 = static_cast<uint16_t>(size);
     if (fragmentationVectorSize < size16) {
       uint16_t oldVectorSize = fragmentationVectorSize;

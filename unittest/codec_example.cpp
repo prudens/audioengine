@@ -2,18 +2,21 @@
 #include "codec/aac/libAACenc/include/aacenc_lib.h"
 #include "io/include/audioencoder.h"
 #include "io/include/audiodecoder.h"
+#include "backward_redundant_frame.h"
+
 void test_aac_enc()
 {
-    WavReader reader( "E:\\CloudMusic\\Mariage.wav" );
+    WavReader reader( "d:/es01-16000.wav" );
     int channel = reader.NumChannels();
     int samplerate = reader.SampleRate();
 
-    auto aacfile = AudioWriter::Create( "D:/Mariage.aac", samplerate, channel, AFT_AAC );
-    int frame = 882;
+    auto aacfile = AudioWriter::Create( "D:/es01-16000.aac", samplerate, channel, AFT_AAC );
+    int frame = 4096;
     int16_t*buf = new int16_t[frame];
+    memset( buf, 0, frame );
     for ( ;; )
     {
-        auto len = reader.ReadSamples( 882, buf );
+        auto len = reader.ReadSamples( frame, buf );
         if ( len > 0 )
         {
             aacfile->WriteSamples( buf, len );
@@ -31,8 +34,36 @@ void test_aac_enc()
 #include "codec/aac/libAACdec/include/aacdecoder_lib.h"
 void test_aac_dec()
 {
+    AudioReader*pReader = AudioReader::Create( "D:/es01-16000.aac", AFT_AAC );
+    if (!pReader)
+    {
+        return;
+    }
+    AudioWriter*pWriter = AudioWriter::Create( "D:/es01-pro-16000.wav", pReader->SampleRate(), pReader->NumChannels(), AFT_WAV );
+    if (!pWriter)
+    {
+        pReader->Destroy();
+        return;
+    }
+    const int frame_size = 4096;
+    int16_t buf[frame_size] = { 0 };
+    for ( ;; )
+    {
+        int len = pReader->ReadSamples( frame_size, buf );
+        if (len>0)
+        {
+            pWriter->WriteSamples( buf, len );
+        }
+        else
+        {
+            break;
+        }
+    }
+    pReader->Destroy();
+    pWriter->Destroy();
+#if 0 
     WavWriter* writer = nullptr;// ( "D:/myvoice.wav" );
-    FILE* file = fopen( "D:/myvoice.aac", "rb" );
+    FILE* file = fopen( "D:/Mariage.aac", "rb" );
     HANDLE_AACDECODER aacDecoderInfo = aacDecoder_Open( TT_MP4_ADTS, 1 );
 
     AAC_DECODER_ERROR err;
@@ -90,6 +121,7 @@ void test_aac_dec()
     if ( writer )delete writer;
     delete[] buf;
     delete[] outbuf;
+#endif
 }
 struct AACDecHeader
 {
@@ -499,15 +531,80 @@ void test_hk_g722_decode()
 }
 #endif
 
+// 测试看看一个AAC包能多携带3倍的数据而不影响音质。AAC至少要开5k的bitrate
+void test_encode_backward_redundant_frame()
+{
+    AudioReader* pReader = AudioReader::Create( "D:/log/test-16000.wav", AFT_WAV );
+    if (!pReader)
+    {
+        return;
+    }
+    AudioWriter* pWriter = AudioWriter::Create( "D:/log/test-48000-2.wav", 48000,2, AFT_WAV );
+    if (!pWriter)
+    {
+        pReader->Destroy();
+        return;
+    }
+    int frame_size = pReader->SampleRate() / 100*2;
+    BackwardRedunantFrame frame48000;
+    frame48000.Init(pReader->SampleRate());
+
+    int16_t frame[160*2] = { 0 };
+    int16_t outFrame[960] = { 0 };
+    for ( ;; )
+    {
+        int len = pReader->ReadSamples(frame_size,frame);
+        if (len == 0)
+        {
+            break;
+        }
+        int outLen = 0;
+        frame48000.Process( frame, frame_size, outFrame, outLen );
+        assert( outLen == 960 );
+        pWriter->WriteSamples( outFrame, outLen );
+    }
+
+    pReader->Destroy();
+    pWriter->Destroy();
+    pReader = nullptr;
+    pWriter = nullptr;
+}
+
+void test_decode_backward_redundant_frame()
+{
+    AudioReader* pReader = AudioReader::Create( "D:/log/test-48000-2.wav", AFT_WAV );
+    if ( !pReader )
+    {
+        return;
+    }
+    AudioWriter* pWriter = AudioWriter::Create( "D:/log/test-48000-2.wav", 24000, 1, AFT_WAV );
+    if ( !pWriter )
+    {
+        pReader->Destroy();
+        return;
+    }
+    int16_t frame[240] = { 0 };
+    int16_t outFrame[960] = { 0 };
+    for ( ;; )
+    {
+        int len = pReader->ReadSamples( 960, outFrame );
+
+    }
+}
+
 void test_codec()
 {
-    run_wav2mp3( "C:/Users/zhangnaigan/Desktop/歌曲.wav", "C:/Users/zhangnaigan/Desktop/歌曲1.mp3" );
+    
+   // run_wav2mp3( "C:/Users/zhangnaigan/Desktop/歌曲.wav", "C:/Users/zhangnaigan/Desktop/歌曲1.mp3" );
    // run_wav2mp3( "E:/CloudMusic/Mariage.wav", "C:/Users/zhangnaigan/Desktop/Mariage.mp3" );
    // run_mp32wav( "E:/CloudMusic/Mariage.mp3" );
    // test_encoder_g7221();
    // test_g7221_encode();
-    test_g7221_decode();
+    //test_g7221_decode();
    // test_g722_encode();
    // test_g722_decode();
-
+   // test_aac_enc();
+   // test_aac_dec();
+    test_encode_backward_redundant_frame();
+    //test_decode_backward_redundant_frame();
 }
