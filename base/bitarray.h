@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
-
+// 默认网络序，字节内部是从又到左，但是切分block的时候，不再是以字节为单位。
 class bitarray
 {
 public:
@@ -63,7 +63,8 @@ public:
     size_t bits()const;
     void set( size_t pos, uint32_t value, int nbit);
     void set( size_t pos, bool value = true );
-    bool set(int start, std::vector<std::pair< int, int>> v );//start 是位数的基数。第一个是int 是value,第二个是去最低的有效位数。从0开始累加
+    bool set(int pos, std::vector<std::pair< int, int>> v );//start 是位数的基数。第一个是int 是value,第二个是去最低的有效位数。从0开始累加
+    bool get( int pos, std::vector<std::pair<int, int>>&blocks );
     bool test( size_t pos )const;
     reference operator []( size_t pos );
     bool operator[]( size_t _Pos )const;
@@ -71,7 +72,8 @@ public:
     bitarray&flip(size_t pos);
     std::string to_string();
     std::vector<uint32_t> to_uint32s();
-    uint32_t              to_uint32();
+    uint32_t              to_uint32(); // 大端，网络序
+    uint32_t              to_uint32l();//小端
     uint8_t*data();
 
 private:

@@ -1,7 +1,11 @@
 #include "bitarray.h"
 #include <stdexcept>
 #include <cassert>
-uint8_t op_and[8] = { 0xfe, 0xfd, 0xfb, 0xf7, 0xef, 0xdf, 0xbf, 0x7f };
+uint32_t op_and[32] = { 0xfffffffe, 0xfffffffd, 0xfffffffb, 0xfffffff7, 0xffffffef, 0xffffffdf, 0xffffffbf, 0xffffff7f,
+                       0xfffffeff, 0xfffffdff, 0xfffffbff, 0xfffff7ff, 0xffffefff, 0xffffdfff, 0xffffbfff, 0xffff7fff, 
+                       0xfffeffff, 0xfffdffff, 0xfffbffff, 0xfff7ffff, 0xffefffff, 0xffdfffff, 0xffbfffff, 0xff7fffff,
+                       0xfeffffff, 0xfdffffff, 0xfbffffff, 0xf7ffffff, 0xefffffff, 0xdfffffff, 0xbfffffff, 0x7fffffff };
+
 bitarray::bitarray( size_t N )
 {
     assert( N % 8 == 0 ) ;
@@ -47,7 +51,7 @@ void bitarray::set( size_t pos, bool value /*= true */ )
     }
     else
     {
-        m_array[cur_byte] &= op_and[idx];
+        m_array[cur_byte] &= (uint8_t)op_and[idx];
     }
 }
 
@@ -79,10 +83,46 @@ bool bitarray::set( int start, std::vector<std::pair< int, int>>slice_list )
             }
             else
             {
-                m_array[cur_byte] &= op_and[idx];
+                m_array[cur_byte] &= (uint8_t)op_and[idx];
             }
         }
     }
+    return true;
+}
+
+bool bitarray::get( int pos, std::vector<std::pair<int, int>>&blocks )
+{
+    size_t max = pos;
+    for (const auto&v: blocks)
+    {
+        max += v.second;
+        if (max>=m_nBits)
+        {
+            return false;
+        }
+        if (v.second>32)
+        {
+            return false;
+        }
+    }
+
+    for ( auto& v : blocks )
+    {
+        for ( int i = v.second - 1; i >= 0; i--, pos++ )
+        {
+            size_t cur_byte = pos / 8;
+            size_t idx = 7 - pos % 8;
+            if ( m_array[cur_byte] & (1 << idx) )
+            {
+                v.first |= 1 << i;
+            }
+            else
+            {
+                 v.first &= op_and[i];
+            }
+        }
+    }
+
     return true;
 }
 
@@ -110,7 +150,7 @@ bitarray & bitarray::flip()
 {
     for ( size_t i = 0; i < m_bytes;i++ )
     {
-        m_array[i] ^= m_array[i];
+        m_array[i] = ~m_array[i];
     }
     return *this;
 }
@@ -200,4 +240,29 @@ uint8_t* bitarray::data()
 {
     return m_array;
 }
+
+uint32_t bitarray::to_uint32l()
+{
+    size_t i = 0;
+    uint32_t v = 0;
+    if ( i < m_bytes )
+    {
+        v += m_array[i++] ;
+    }
+    if ( i < m_bytes )
+    {
+        v += (uint32_t)m_array[i++] << 8;
+    }
+    if ( i < m_bytes )
+    {
+        v += (uint32_t)m_array[i++] << 16;
+    }
+    if ( i < m_bytes )
+    {
+        v += (uint32_t)m_array[i]<<24;
+    }
+    return v;
+}
+
+
 
