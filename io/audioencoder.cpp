@@ -1,7 +1,7 @@
 #include "include/audioencoder.h"
 #include "g7721encoder.h"
-
-AudioEncoder*AudioEncoder::Create( AudioFileType type )
+#include "aacencoder.h"
+AudioEncoder*AudioEncoder::Create( AudioFileType type,int samplerate,int16_t channel,int bitrate )
 {
     AudioEncoder* pEncoder = nullptr;
     switch ( type )
@@ -15,9 +15,10 @@ AudioEncoder*AudioEncoder::Create( AudioFileType type )
     case AFT_MP3:
         break;
     case AFT_AAC:
+        pEncoder = new AACEncoder( samplerate, channel, bitrate );
         break;
     case AFT_G7221:
-        pEncoder = new G7221Encoder(16000,1);
+        pEncoder = new G7221Encoder(samplerate,channel, bitrate);
         break;
     default:
         break;

@@ -1,6 +1,6 @@
 #include "include/audiodecoder.h"
 #include "g7221decoder.h"
-
+#include "aacdecoder.h"
 AudioDecoder*AudioDecoder::Create( AudioFileType type )
 {
     AudioDecoder* pEncoder = nullptr;
@@ -15,6 +15,7 @@ AudioDecoder*AudioDecoder::Create( AudioFileType type )
     case AFT_MP3:
         break;
     case AFT_AAC:
+        pEncoder = new AACDecoder();
         break;
     case AFT_G7221:
         pEncoder = new G7221Decoder(16000,1);

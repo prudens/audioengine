@@ -39,6 +39,7 @@ AudioReader* AudioReader::Create( const char*filename, AudioFileType type )
         }
         return pReader;
     }
+    break;
     case AFT_AAC:
     {
         auto pReader = new AACFileReader( filename );

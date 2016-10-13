@@ -26,6 +26,27 @@ bool AudioResample::ToMono( int16_t*src, int num_samples )
     return ToMono( src, num_samples, src );
 }
 
+bool AudioResample::ToMono( int16_t*src, int16_t num_samples, int16_t*left, int16_t*right )
+{
+    if (!src || num_samples == 0 || (!left && !right))
+    {
+        return false;
+    }
+
+    for ( int i = 0; i < num_samples/2;i++ )
+    {
+        if (left)
+        {
+            left[i] = src[i*2];
+        }
+        if (right)
+        {
+            right[i] = src[i * 2 + 1];
+        }
+    }
+    return true;
+}
+
 bool AudioResample::Tostereo( int16_t*src, int num_samples, int16_t*dst )
 {
     if (src == dst)
@@ -53,6 +74,20 @@ bool AudioResample::Tostereo( int16_t*src, int num_samples )
     {
         dst[i*2+1] = src[i];
         dst[i * 2] = src[i];
+    }
+    return true;
+}
+
+bool AudioResample::Tostereo( int16_t* left, int16_t*right, int num_samples, int16_t*dst )
+{
+    if (left == 0 || right == 0 || num_samples == 0 || dst == 0)
+    {
+        return false;
+    }
+    for ( int i = 0; i < num_samples; i++ )
+    {
+        dst[i*2]       = left[i];
+        dst[i * 2 + 1] = right[i];
     }
     return true;
 }

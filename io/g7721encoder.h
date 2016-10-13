@@ -5,9 +5,9 @@
 class G7221Encoder :public AudioEncoder
 {
 public:
-    G7221Encoder( int32_t samplerate, int16_t channel );
+    G7221Encoder( int32_t samplerate, int16_t channel,int bitrate );
     virtual void Release();
-    virtual bool Encode( int16_t* pcmData, int inLen, void* encodeData, int& outLen )override;
+    virtual bool Encode( int16_t* pcmData, int inLen, char* encodeData, int& outLen )override;
     virtual bool SetBitRate( int32_t bitRate );
 private:
     int16_t m_pcm[MAX_FRAME_SIZE];

@@ -2,13 +2,14 @@
 #include <string>
 #include <algorithm>
 #include "g7721encoder.h"
-G7221Encoder::G7221Encoder(int32_t samplerate,int16_t )
+G7221Encoder::G7221Encoder(int32_t samplerate,int16_t,int bitrate )
 {
     m_encoder = g722_1_encode_init( nullptr, 16000, samplerate );
     if (!m_encoder)
     {
         return;
     }
+    SetBitRate( bitrate );
     m_init = true;
     m_frameSize = samplerate / 50;
 }
@@ -23,7 +24,7 @@ void G7221Encoder::Release()
     delete this;
 }
 
-bool G7221Encoder::Encode( int16_t* pcmData, int inLen, void* encodeData, int& outLen )
+bool G7221Encoder::Encode( int16_t* pcmData, int inLen, char* encodeData, int& outLen )
 {
     size_t pcmLen = inLen / 2;
     size_t advance = 0;

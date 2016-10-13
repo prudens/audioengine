@@ -26,7 +26,7 @@ public:
     {
         m_channel = channel;
 
-        encoder = AudioEncoder::Create( AFT_G7221 );
+        encoder = AudioEncoder::Create( AFT_G7221,16000,1,2000 );
         decoder = AudioDecoder::Create( AFT_G7221 );
         if (samplerate == 44100)
         {
@@ -39,7 +39,7 @@ public:
     {
         _callback = callback;
         m_channel = channel;
-        encoder = AudioEncoder::Create( AFT_G7221 );
+        encoder = AudioEncoder::Create( AFT_G7221,16000, 1, 2000 );
         decoder = AudioDecoder::Create( AFT_G7221 );
         if ( samplerate == 44100 )
         {

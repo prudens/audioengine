@@ -3,14 +3,15 @@
 #include "io/include/audioencoder.h"
 #include "io/include/audiodecoder.h"
 #include "backward_redundant_frame.h"
+#include "audio_resample.h"
 
 void test_aac_enc()
 {
-    WavReader reader( "d:/es01-16000.wav" );
+    WavReader reader( "d:/泉水叮咚响.wav" );
     int channel = reader.NumChannels();
     int samplerate = reader.SampleRate();
 
-    auto aacfile = AudioWriter::Create( "D:/es01-16000.aac", samplerate, channel, AFT_AAC );
+    auto aacfile = AudioWriter::Create( "D:/泉水叮咚响3500.aac", samplerate, channel, AFT_AAC );
     int frame = 4096;
     int16_t*buf = new int16_t[frame];
     memset( buf, 0, frame );
@@ -34,12 +35,12 @@ void test_aac_enc()
 #include "codec/aac/libAACdec/include/aacdecoder_lib.h"
 void test_aac_dec()
 {
-    AudioReader*pReader = AudioReader::Create( "D:/es01-16000.aac", AFT_AAC );
+    AudioReader*pReader = AudioReader::Create( "D:/diff-40ms.aac", AFT_AAC );
     if (!pReader)
     {
         return;
     }
-    AudioWriter*pWriter = AudioWriter::Create( "D:/es01-pro-16000.wav", pReader->SampleRate(), pReader->NumChannels(), AFT_WAV );
+    AudioWriter*pWriter = AudioWriter::Create( "D:/diff-40ms111.wav", pReader->SampleRate(), pReader->NumChannels(), AFT_WAV );
     if (!pWriter)
     {
         pReader->Destroy();
@@ -385,7 +386,7 @@ void test_encoder_g7221()
 void test_g7221_encode()
 {
     FILE* file = fopen( "D:/rec.pak","wb+" );
-    auto pG7221 = AudioEncoder::Create( AFT_G7221 );
+    auto pG7221 = AudioEncoder::Create( AFT_G7221, 16000, 1, 2000 );
     WavReader reader( "D:/直接采集PCM音频.wav" );
     int16_t pcm[16000 * FRAME_SIZE / 1000] = { 0 };
     int16_t encBuf[80 * 2] = {0};
@@ -396,7 +397,7 @@ void test_g7221_encode()
         {
             break;
         }
-        pG7221->Encode( pcm, FRAME_SIZE * 16 * 2, encBuf, bufLen );
+        pG7221->Encode( pcm, FRAME_SIZE * 16 * 2, (char*)encBuf, bufLen );
         fwrite( encBuf, 1, 80, file );
     }
     fclose(file);
@@ -592,6 +593,126 @@ void test_decode_backward_redundant_frame()
     }
 }
 
+
+void test_aacencoder()
+{
+    FILE* file = fopen( "D:/diff-40ms.aac","wb+" );
+    if (!file)
+    {
+        return;
+    }
+    AudioReader*pReader = AudioReader::Create( "D:/es01.wav", AFT_WAV );
+    AudioEncoder* pEncoder = AudioEncoder::Create( AFT_AAC, pReader->SampleRate(), 2, 8 * 3000 );//2channel,3k
+    
+    int16_t input_buf[4096] = { 0 };
+    int16_t input_buf_s[4096] = { 0 };
+    char output_buf[768] = { 0 };
+    int outLen = 0;
+
+    //缓存4个包
+    const int DELAY_PACKET = 4;
+    int16_t vecbuf[DELAY_PACKET][4096] = {0};
+    int num_sample = 4096;
+
+    for ( ;; )
+    {
+        int len = pReader->ReadSamples( 4096, input_buf );
+        if (pReader->NumChannels() == 2)
+        {
+            AudioResample::ToMono( input_buf, num_sample );
+        }
+        AudioResample::Tostereo( input_buf, vecbuf[0], num_sample/2, input_buf_s );
+        memcpy( vecbuf[0], vecbuf[1], 3 * num_sample*2 );
+        memcpy( vecbuf[3], input_buf, num_sample );
+
+        pEncoder->Encode( input_buf_s, len, output_buf, outLen );
+        if (outLen>0)
+        {
+            fwrite( &outLen, sizeof( int ), 1, file );
+            fwrite( output_buf, 1, outLen, file );
+            outLen = 0;
+        }
+        if (len == 0)
+        {
+            break;
+        }
+    }
+    pReader->Destroy();
+    pEncoder->Release();
+    fclose(file);
+}
+
+void test_aacdecoder()
+{
+    AudioDecoder* pDecoder = AudioDecoder::Create( AFT_AAC );
+    AudioWriter* pWriter = AudioWriter::Create("D:/diff-40ms-dec.wav",48000,1,AFT_WAV);
+    FILE*aacfile =  fopen("D:/diff-40ms.aac","rb+");
+    int16_t output_buf[4096] = { 0 };
+    char input_buf[768*2] = { 0 };
+    int lost = 0;
+    //缓存4个包
+    const int DELAY_PACKET = 5;
+    int16_t vecbuf[DELAY_PACKET][4096] = { 0 };
+    int num_sample =4096;
+    int16_t input_buf_s[4096] = { 0 };
+    int lost_list[5];
+    memset( lost_list, 0, sizeof( int )*5 );
+    for ( ;; )
+    {
+        int framelen = 0;
+        int len = fread( &framelen, 4, 1, aacfile );
+        if ( framelen > 0 )
+        {
+            len = fread( input_buf, 1, framelen, aacfile );
+           if (len != framelen)
+           {
+               break;
+           }
+           if (lost++ < 0)
+           {
+               printf( "[%d]lost\n", lost );
+
+               memcpy( lost_list, lost_list + 1, sizeof( int ) * 4 );
+               lost_list[4] = 1;
+           }
+           else
+           {
+               if (lost%8==0)
+               {
+                   lost = 0;
+               }
+               printf( "[%d]normal\n", lost );
+               if ( pDecoder->Decode( input_buf, framelen, output_buf, framelen ) )
+               {
+                   memcpy( input_buf_s, vecbuf[0], num_sample );
+                   memcpy( vecbuf[0], vecbuf[1], 4 * num_sample * 2 );
+                   memcpy( vecbuf[4], output_buf, num_sample * 2 );
+                   memcpy( lost_list, lost_list + 1, sizeof( int ) * 4 );
+                   lost_list[4] = 0;
+               }
+           }   
+
+           if (lost_list[0] )
+           {
+               AudioResample::ToMono( vecbuf[4], num_sample, nullptr, vecbuf[0] );
+              // AudioResample::ToMono( vecbuf[3], num_sample, nullptr, vecbuf[0] );
+           }
+           else
+           {
+               AudioResample::ToMono( vecbuf[0], num_sample);
+           }
+           pWriter->WriteSamples( input_buf_s, num_sample / 2 );
+        }
+        else
+        {
+            break;
+        }
+    }
+    pDecoder->Release();
+    fclose( aacfile );
+    pWriter->Destroy();
+}
+
 void test_codec()
 {
     
@@ -605,6 +726,11 @@ void test_codec()
    // test_g722_decode();
    // test_aac_enc();
    // test_aac_dec();
-    test_encode_backward_redundant_frame();
+    //test_encode_backward_redundant_frame();
     //test_decode_backward_redundant_frame();
+
+    //test_aacencoder();
+
+    test_aacdecoder();
+
 }
