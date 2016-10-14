@@ -1,7 +1,8 @@
 #include "include/audiodecoder.h"
 #include "g7221decoder.h"
 #include "aacdecoder.h"
-AudioDecoder*AudioDecoder::Create( AudioFileType type )
+#include "opusdecoder.h"
+AudioDecoder*AudioDecoder::Create( AudioFileType type, int samplerate, int channel )
 {
     AudioDecoder* pEncoder = nullptr;
     switch ( type )
@@ -18,8 +19,10 @@ AudioDecoder*AudioDecoder::Create( AudioFileType type )
         pEncoder = new AACDecoder();
         break;
     case AFT_G7221:
-        pEncoder = new G7221Decoder(16000,1);
+        pEncoder = new G7221Decoder( samplerate, (int16_t)channel );
         break;
+    case AFT_OPUS:
+        pEncoder = new OPUSDecoder( samplerate, channel );
     default:
         break;
     }

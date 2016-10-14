@@ -713,6 +713,96 @@ void test_aacdecoder()
     pWriter->Destroy();
 }
 
+void test_opusencoder()
+{
+    FILE* out = fopen( "d:/v1014.opus", "wb+" );
+    AudioReader*pReader = AudioReader::Create( "D:/es01.wav", AFT_WAV );
+    int channel = pReader->NumChannels();
+    AudioEncoder*pEncoder = AudioEncoder::Create( AFT_OPUS, pReader->SampleRate(), channel, 24000 );
+    const int frame_size = pReader->SampleRate() / 1000 * 40*channel;
+    int16_t* src = new int16_t[frame_size];
+    char encbuf[1024];
+    for ( ;; )
+    {
+        int nSamples = pReader->ReadSamples( frame_size, src );
+        if (nSamples == 0)
+        {
+            break;
+        }
+        if (nSamples < frame_size)
+        {
+            memset( src+nSamples, 0, 2*(frame_size-nSamples));
+        }
+        int outLen = 0;
+        if ( !pEncoder->Encode( src, frame_size, encbuf, outLen ) )
+        {
+            break;
+        }
+        fwrite( encbuf, 1, outLen, out );
+    }
+
+    fclose( out );
+    pReader->Destroy();
+    pEncoder->Release();
+    delete src;
+};
+
+static uint32_t char_to_int( unsigned char ch[4] )
+{
+    return ( (uint32_t)ch[0] << 24 ) | ( (uint32_t)ch[1] << 16 )
+        | ( (uint32_t)ch[2] << 8 ) | (uint32_t)ch[3];
+}
+
+void test_opusdecoder()
+{
+    const int max_payload_bytes = 1500;
+    FILE* fin = fopen( "d:/v1014.opus", "rb+" );
+    if (!fin)
+    {
+        return;
+    }
+    AudioWriter*pWriter = AudioWriter::Create( "d:/v10141.wav", 48000, 2, AFT_WAV );
+    AudioDecoder*pDecoder = AudioDecoder::Create( AFT_OPUS,48000,2 );
+    int16_t outBuf[1920 * 2] = {0};
+    unsigned char inBuf[max_payload_bytes] = {0};
+    for ( int i=0;;i++ )
+    {
+        unsigned char ch[4];
+        int err = fread( ch, 1, 4, fin );
+        if ( feof( fin ) )
+            break;
+        int len = char_to_int( ch );
+        if ( len > max_payload_bytes || len < 0 )
+        {
+            fprintf( stderr, "Invalid payload length: %d\n", len );
+            break;
+        }
+        err = fread( ch, 1, 4, fin );
+        int enc_final_range = char_to_int( ch );
+        err = fread( inBuf, 1, len, fin );
+        if ( err < len )
+        {
+            fprintf( stderr, "Ran out of input, "
+                     "expecting %d bytes got %d\n",
+                     len, err );
+            break;
+        }
+        int outLen = 0;
+        if (i%8>4)//选择性的丢包
+        {
+            len = 0;
+        }
+        pDecoder->Decode( inBuf, len, outBuf, outLen );
+        if (outLen>0)
+        {
+            pWriter->WriteSamples( outBuf, outLen );
+        }
+    }
+    fclose( fin );
+    pWriter->Destroy();
+    pDecoder->Release();
+}
+
 void test_codec()
 {
     
@@ -730,7 +820,8 @@ void test_codec()
     //test_decode_backward_redundant_frame();
 
     //test_aacencoder();
+   // test_aacdecoder();
 
-    test_aacdecoder();
-
+    test_opusencoder();
+    test_opusdecoder();
 }

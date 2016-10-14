@@ -8,7 +8,7 @@
 #pragma comment(lib,"../build/winx/Debug/libmp3lame.lib")
 #pragma comment(lib,"../build/winx/Debug/aac.lib")
 #pragma comment(lib,"../build/winx/Debug/g7221.lib")
-//#pragma comment(lib,"../build/winx/Debug/g722.lib")
+#pragma comment(lib,"../build/winx/Debug/opus.lib")
 #else
 #pragma comment(lib,"../build/winx/Release/audio_device.lib")
 #pragma comment(lib,"../build/winx/Release/audio_effect.lib")
@@ -19,7 +19,7 @@
 #pragma comment(lib,"../build/winx/Release/libmp3lame.lib")
 #pragma comment(lib,"../build/winx/Release/aac.lib")
 #pragma comment(lib,"../build/winx/Release/g7221.lib")
-//#pragma comment(lib,"../build/winx/Release/g722.lib")
+#pragma comment(lib,"../build/winx/Release/opus.lib")
 #endif
 #pragma comment(lib, "ws2_32")
 #pragma comment(lib, "strmiids")

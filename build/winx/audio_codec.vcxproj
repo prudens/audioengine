@@ -13,6 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0654BEA5-1434-45BD-80AF-1D1595AABB71}</ProjectGuid>
     <RootNamespace>audio_codec</RootNamespace>
+    <ProjectName>audio_codec1</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
