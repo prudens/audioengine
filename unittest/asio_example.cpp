@@ -103,8 +103,6 @@ private:
         {
             if ( !ec )
             {
-                //std::cout << "local host ip: " << acceptor_.local_endpoint( ec ).address().to_string() << std::endl;
-                //std::cout <<"recv client ip:" << socket_.remote_endpoint( ec ).address().to_string() << std::endl;
                 std::make_shared<session>( std::move( socket_ ) )->start();
             }
 

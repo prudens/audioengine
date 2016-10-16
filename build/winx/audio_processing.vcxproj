@@ -358,6 +358,15 @@
     <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\vad\voice_activity_detector.h" />
     <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\vad\voice_gmm_tables.h" />
     <ClInclude Include="..\..\processing\src\webrtc\modules\audio_processing\voice_detection_impl.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\include\fec_receiver.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\include\receive_statistics.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\include\remote_ntp_time_estimator.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\include\rtp_cvo.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\include\rtp_header_parser.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\include\rtp_payload_registry.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\include\rtp_receiver.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\include\rtp_rtcp.h" />
+    <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\include\rtp_rtcp_defines.h" />
     <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\source\bitrate.h" />
     <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\source\byte_io.h" />
     <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\source\dtmf_queue.h" />

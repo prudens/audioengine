@@ -88,6 +88,7 @@
     <ClCompile Include="G7221Interface.cpp" />
     <ClCompile Include="import_lib.cpp" />
     <ClCompile Include="numeric_example.cpp" />
+    <ClCompile Include="simulate_internet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio_effect.h" />
@@ -99,6 +100,7 @@
     <ClInclude Include="backward_redundant_frame.h" />
     <ClInclude Include="G7221Interface.h" />
     <ClInclude Include="header.h" />
+    <ClInclude Include="simulate_internet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
