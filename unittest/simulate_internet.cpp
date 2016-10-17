@@ -1,5 +1,6 @@
 #include "simulate_internet.h"
-
+static std::atomic<int> session_count = 0;
+static std::atomic<int> room_member_count = 0;
 class RoomServer;
 std::unique_ptr<RoomServer> room_server;
 
@@ -11,27 +12,45 @@ void test_simulate_internet( int argc, char** argv )
     auto f = std::async( [&] () { context.run(); } );
     tcp::endpoint ep( asio::ip::make_address( server_ip ), 8888 );
 
-    Client*client[100];
-    for ( int i = 0; i < 100; i++ )
+    const int num_client = 200;
+    Client*client[num_client];
+
+    for ( int i = 0; i < num_client; i++ )
     {
         client[i] = new Client( context, ep );
         client[i]->SetClientID( i+1 );
         client[i]->Login();
-        std::this_thread::sleep_for( std::chrono::milliseconds( 5 ) );
-        client[i]->ReqVoip();
+         std::this_thread::sleep_for( std::chrono::milliseconds( 5 ) );
+         client[i]->ReqVoip();
     }
-    std::this_thread::sleep_for( std::chrono::seconds(60) );
-    for ( int i = 0; i < 100;i++ )
+    std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
+    std::this_thread::sleep_for( std::chrono::seconds(3) );
+    for ( int i = 0; i < num_client; i++ )
+    {
+        client[i]->Logout();
+        client[i]->Stop();
+    }
+    printf( "end..." );
+  //  std::this_thread::sleep_for( std::chrono::seconds( 5 ) );
+    context.stop();
+    f.get();
+    for ( int i = 0; i < num_client; i++ )
     {
         delete client[i];
     }
-    f.get();
-    printf("end...");
 }
 
 RoomMember::RoomMember( tcp::socket socket, RoomServer& server ) :socket_( std::move( socket ) ),
 host_( server )
 {
+    room_member_count++;
+    printf( "[RoomMember]room_member_count=%d\n", room_member_count );
+}
+
+RoomMember::~RoomMember()
+{
+    room_member_count--;
+    printf( "[RoomMember]remove room member, room_member_count=%d\n", room_member_count );
 
 }
 
@@ -43,12 +62,12 @@ void RoomMember::Start()
 void RoomMember::Read()
 {
     auto self( shared_from_this() );
-    socket_.async_read_some( asio::buffer( data_, max_length ),
+    socket_.async_read_some( asio::buffer( rdata_, max_length ),
                              [this, self] ( std::error_code ec, std::size_t length )
     {
         if ( !ec )
         {
-            stVoipData* voipData = (stVoipData *)data_;
+            stVoipData* voipData = (stVoipData *)rdata_;
             uint32_t client_key = voipData->client_key;
             if ( key_ == 0 || key_ != client_key )
             {
@@ -64,21 +83,26 @@ void RoomMember::Read()
                 }
             }
 
-            host_.RecvData( data_, length,self );
+            host_.RecvData( rdata_, length, self );
             Read();
 
+        }
+        else
+        {
+            host_.RemoveRoomMember( self );
         }
     } );
 }
 
 void RoomMember::Write( char* data, std::size_t length )
 {
-    asio::async_write( socket_, asio::buffer(data,length),
+    memcpy( data_, data, length );
+    asio::async_write( socket_, asio::buffer(data_,length),
                        [this] (asio::error_code ec,std::size_t length)
     {
         if (ec)
         {
-            printf( "[%u]–¥»Î ß∞‹£¨¥ÌŒÛ¬Î£∫%d\n",ec );
+            printf( "[%u]server:–¥»Î ß∞‹£¨¥ÌŒÛ¬Î£∫%d\n",key_,ec );
         }
     } );
 }
@@ -93,39 +117,27 @@ uint32_t RoomMember::GetKey()
     return key_;
 }
 
-void RoomDataDispatch::AddMember( std::shared_ptr<RoomMember> member )
+void RoomMember::Stop()
 {
-    members_.push_back( member );
+    
 }
 
-void RoomDataDispatch::RemoveMember( std::shared_ptr<RoomMember> member )
-{
-    std::find( members_.begin(), members_.end(), member );
-}
-
-void RoomDataDispatch::Process( char*data, std::size_t length, std::shared_ptr<RoomMember> member )
-{
-    if ( length <= 4 )
-    {
-        return;
-    }
-
-    for ( auto&mem : members_ )
-    {
-        if ( mem->GetKey() == member->GetKey() )
-        {
-            continue;
-        }
-        mem->Write( data, length );
-    }
-}
 
 RoomServer::RoomServer( asio::io_context& io_context, short port, uint32_t room_id ) : acceptor_( io_context, tcp::endpoint( tcp::v4(), port ) ),
 socket_( io_context ),
 room_id_( room_id )
 {
-    room_disptch_ = std::make_unique<RoomDataDispatch>();
     Accept();
+}
+
+RoomServer::~RoomServer()
+{
+    acceptor_.close();
+    for (auto& v : members_)
+    {
+        v.reset();
+    }
+    printf( "[%d]RoomServer stop", room_id_ );
 }
 
 void RoomServer::AddClientKey(uint32_t key)
@@ -135,17 +147,33 @@ void RoomServer::AddClientKey(uint32_t key)
 
 void RoomServer::AddRoomMember( std::shared_ptr<RoomMember> member )
 {
-    room_disptch_->AddMember( member );
+    members_.push_back( member );
 }
 
 void RoomServer::RemoveRoomMember( std::shared_ptr<RoomMember> member )
 {
-    room_disptch_->RemoveMember( member );
+    if (members_.empty())
+    {
+        return;
+    }
+    members_.erase(std::remove( members_.begin(), members_.end(), member ));
 }
 
 void RoomServer::RecvData( char* data, std::size_t length, std::shared_ptr<RoomMember> member )
 {
-    room_disptch_->Process( data, length, member );
+    if ( length <= 4 )
+    {
+        return;
+    }
+
+    for ( auto& mem : members_ )
+    {
+        if ( !mem || mem->GetKey() == member->GetKey() )
+        {
+            continue;
+        }
+        mem->Write( data, length );
+    }
 }
 
 bool RoomServer::QueuyValidKey( uint32_t key )
@@ -162,15 +190,33 @@ void RoomServer::Accept()
         {
             auto p = std::make_shared<RoomMember>( std::move( socket_ ), *this );
             p->Start();
-        }
 
+        }
+        if ( ec == asio::error::operation_aborted )
+        {
+            return;
+        }
         Accept();
     } );
 }
 
-Session::Session( tcp::socket socket ) : socket_( std::move( socket ) )
-{
 
+
+Session::Session(asio::io_context& context, tcp::socket socket ) : socket_( std::move( socket ) ), context_(context)
+{
+    session_count++;
+    printf( "new connection,session_count=%d\n",session_count );
+}
+
+
+Session::~Session()
+{
+    session_count--;
+    printf( "close connection session_count=%d\n", session_count );
+    if (session_count==0)
+    {
+        room_server.reset();
+    }
 }
 
 void Session::Start()
@@ -202,7 +248,6 @@ void Session::Write( char*data, std::size_t length )
         if ( ec )
         {
             printf( "[%u]server:–¥»Î ß∞‹£¨¥ÌŒÛ¬Î£∫%d", ec );
-           // Read();
         }
     } );
 }
@@ -228,16 +273,17 @@ void Session::Process( std::size_t length )
         }
         case CLIENT_REQ_SEND_VOIP_DATA:
         {
-            stClientResVoipData res;
-            res.ipv4 = asio::ip::make_address_v4( "127.0.0.1" ).to_uint();
-            res.port = 8889;
-            res.key = _client_id;
+            stClientResVoipData* res = (stClientResVoipData*)data_;
+            res->msg_id = CLIENT_RES_SEND_VOIP_DATA;
+            res->ipv4 = asio::ip::make_address_v4( "127.0.0.1" ).to_uint();
+            res->port = 8889;
+            res->key = _client_id;
             if ( !room_server )
             {
-                room_server = std::move( std::make_unique<RoomServer>( socket_.get_io_context(), 8889, 1 ) );
+                room_server = std::move( std::make_unique<RoomServer>( context_, 8889, 1 ) );
             }
             room_server->AddClientKey( _client_id );
-            Write( (char*)&res, sizeof( res ) );
+            Write( data_, sizeof( stClientResVoipData ) );
         }
         break;
         default:
@@ -246,8 +292,9 @@ void Session::Process( std::size_t length )
     }
 }
 
+
 Server::Server( asio::io_context& io_context, short port ) : acceptor_( io_context, tcp::endpoint( tcp::v4(), port ) ),
-socket_( io_context )
+socket_(io_context), context_(io_context)
 {
     Accept();
 }
@@ -260,14 +307,14 @@ void Server::Accept()
         printf( "coming a new connection...\n" );
         if ( !ec )
         {
-            std::make_shared<Session>( std::move( socket_ ) )->Start();
+            std::make_shared<Session>( context_, std::move( socket_ ) )->Start();
         }
 
         Accept();
     } );
 }
 
-Client::Client( asio::io_context& io_context, tcp::endpoint ep ) :_socket( io_context )
+Client::Client(asio::io_context& io_context, tcp::endpoint ep) :_socket(io_context), context_(io_context)
 {
     asio::error_code ec;
     _socket.connect( ep, ec );
@@ -330,7 +377,7 @@ void Client::Process( std::size_t length )
         printf( "[%u]ø…“‘∑¢”Ô“Ù ˝æ›¡À\n",client_id_ );
         stClientResVoipData* res = (stClientResVoipData*)rdata_;
         tcp::endpoint ep( asio::ip::address_v4(res->ipv4), res->port );
-        channel_ = std::make_unique<Channel>(_socket.get_io_context(),ep);
+        channel_ = std::make_unique<Channel>( context_, ep );
         channel_->SetKey( res->key );
         channel_->Start();
     }
@@ -362,6 +409,19 @@ void Client::ReqVoip()
     Write( &req, sizeof( req ) );
 }
 
+Client::~Client()
+{
+    channel_.reset();
+}
+
+void Client::Stop()
+{
+    if (channel_)
+    {
+        channel_->Stop();
+    }
+}
+
 Channel::Channel( asio::io_context& io_context, tcp::endpoint ep ) :_socket( io_context )
 , timer_( io_context )
 {
@@ -371,6 +431,13 @@ Channel::Channel( asio::io_context& io_context, tcp::endpoint ep ) :_socket( io_
     {
         printf( "¡¨Ω”∑˛ŒÒ∆˜≥ˆ¥Ì£¨¥ÌŒÛ¬Î£∫%d\n", ec );
     }
+}
+
+Channel::~Channel()
+{
+//    Stop();
+
+
 }
 
 void Channel::SetKey( uint32_t key )
@@ -384,22 +451,31 @@ void Channel::Start()
     Process();
 }
 
+void Channel::Stop()
+{
+    timer_.cancel();
+    _socket.close();
+}
+
 void Channel::Process()
 {
     timer_.expires_from_now( std::chrono::milliseconds( 2000 ) );
     timer_.async_wait( [this] ( asio::error_code ec )
     {
-
-        stVoipData *data = (stVoipData*)data_;
-        data->client_key = key_;
-        data->len = 4;
-        ( *(int*)data->data ) = count_++;
-        if ( count_ > 1000 )
+        if (!ec)
         {
-            return;
+            stVoipData *data = (stVoipData*)data_;
+            data->client_key = key_;
+            data->len = 4;
+            data->count = count_++;
+            if ( count_ > 1000 )
+            {
+                return;
+            }
+            Write( sizeof( stVoipData ) );
+            Process();
         }
-        Write(sizeof(stVoipData)+data->len);
-        Process();
+
     } );
 }
 
@@ -408,14 +484,22 @@ void Channel::Read()
     _socket.async_read_some(asio::buffer(rdata_, max_length),
                              [this] (asio::error_code ec,std::size_t length)
     {
-        printf("[%u]recv data\n",key_);
-        Read();
+        if (!ec)
+        {
+            printf( "[%u]recv data\n", key_ );
+            Read();
+        }
+        else
+        {
+            printf( "[%u]recv data failed,error code=%d\n", key_, ec );
+        }
+
     } );
 }
 
 void Channel::Write(std::size_t length)
 {
-    asio::async_write( _socket, asio::buffer( data_, length ),
+    _socket.async_write_some( asio::buffer( data_, length ),
                        [this] ( asio::error_code ec, std::size_t length )
     {
         if (!ec)
@@ -424,3 +508,7 @@ void Channel::Write(std::size_t length)
         }
     } );
 }
+
+
+
+

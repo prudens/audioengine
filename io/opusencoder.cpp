@@ -27,9 +27,9 @@ OPUSEncoder::OPUSEncoder( int samplerate, int16_t channel,int bitrate )
 //     //opus_encoder_ctl( enc, OPUS_SET_FORCE_CHANNELS( forcechannels ) );
      opus_encoder_ctl( _enc, OPUS_SET_DTX( 1 ) );
      opus_encoder_ctl( _enc, OPUS_SET_PACKET_LOSS_PERC( 50 ) );
-//     opus_int32 skip;
-//     opus_encoder_ctl( _enc, OPUS_GET_LOOKAHEAD( &skip ) );
-//     opus_encoder_ctl( _enc, OPUS_SET_LSB_DEPTH( 16 ) );
+     opus_int32 skip;
+     opus_encoder_ctl( _enc, OPUS_GET_LOOKAHEAD( &skip ) );
+     opus_encoder_ctl( _enc, OPUS_SET_LSB_DEPTH( 16 ) );
 //     opus_encoder_ctl( _enc, OPUS_SET_EXPERT_FRAME_DURATION( OPUS_FRAMESIZE_ARG ) );
 }
 

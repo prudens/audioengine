@@ -1,5 +1,8 @@
 ﻿#include "header.h"
-
+#include <algorithm>
+#include <string>
+#include <iostream>
+#include <cctype>
 //#include "dispatch_example.cpp"
 
 // Example: main calls myfunc
@@ -118,7 +121,6 @@ int main( int argc, char** argv )
    // test_fft();
     
    // test_voice_scale();
-
 
     test_simulate_internet(argc,argv);
     system( "pause" );

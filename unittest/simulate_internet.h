@@ -58,7 +58,7 @@ struct stVoipData
 {
     uint32_t client_key;
     std::size_t len;
-    char data[0];
+    int count;
 };
 
 class RoomServer;
@@ -66,7 +66,9 @@ class RoomMember :public std::enable_shared_from_this<RoomMember>
 {
 public:
     RoomMember( tcp::socket socket, RoomServer& server );
+    ~RoomMember();
     void Start();
+    void Stop();
     void Read();
     void Write( char* data, std::size_t length );
     void SetKey( uint32_t key );
@@ -77,32 +79,16 @@ private:
     uint32_t key_ = 0;
     enum { max_length = 1024 };
     char data_[max_length];
+    char rdata_[max_length];
+    bool stop_=false;
 };
 
-
-class RoomDataDispatch
-{
-public:
-    RoomDataDispatch()
-    {
-
-    }
-
-    void AddMember( std::shared_ptr<RoomMember> member );
-
-    void RemoveMember( std::shared_ptr<RoomMember> member );
-
-    void Process( char*data, std::size_t length, std::shared_ptr<RoomMember> member );
-private:
-    enum { max_length = 1024 };
-    char data_[max_length];
-    std::vector<std::shared_ptr<RoomMember> > members_;
-};
 
 class RoomServer
 {
 public:
     RoomServer( asio::io_context& io_context, short port, uint32_t room_id );
+    ~RoomServer();
     void Run()
     {
         Accept();
@@ -112,24 +98,22 @@ public:
     void RemoveRoomMember(std::shared_ptr<RoomMember> member);
     void RecvData( char* data, std::size_t length, std::shared_ptr<RoomMember> member );
     bool QueuyValidKey( uint32_t key );
+
 private:
     void Accept();
 
     tcp::acceptor acceptor_;
     tcp::socket socket_;
     uint32_t room_id_;
-    std::unique_ptr<RoomDataDispatch> room_disptch_;
     std::set<uint32_t> keys_;
+    std::vector<std::shared_ptr<RoomMember> > members_;
 };
 
 class Session : public std::enable_shared_from_this < Session >
 {
 public:
-    Session( tcp::socket socket );
-    ~Session()
-    {
-        printf( "[%u]client logout\n", _client_id );
-    }
+    Session(asio::io_context&context, tcp::socket socket );
+    ~Session();
     void Start();
 private:
     void Read();
@@ -141,6 +125,7 @@ private:
     enum { max_length = 1024 };
     char data_[max_length];
     uint32_t _client_id = 0;
+    asio::io_context& context_;
 };
 class Server
 {
@@ -150,6 +135,7 @@ private:
     void Accept();
     tcp::acceptor acceptor_;
     tcp::socket socket_;
+    asio::io_context& context_;
 };
 
 class Channel;
@@ -157,6 +143,7 @@ class Client
 {
 public:
     Client( asio::io_context& io_context, tcp::endpoint ep );
+    ~Client();
     void SetClientID( uint32_t client_id );
     uint32_t ClientID();
     void Write( stClientBase* client_base, std::size_t length );
@@ -177,6 +164,7 @@ public:
     void Login();
     void Logout();
     void ReqVoip();
+    void Stop();
 private:
     tcp::socket _socket;
     enum { max_length = 1024 };
@@ -184,15 +172,18 @@ private:
     char rdata_[max_length];
     uint32_t client_id_;
     std::unique_ptr<Channel> channel_;
+    asio::io_context& context_;
 };
 
 class Channel
 {
 public:
     Channel( asio::io_context& io_context, tcp::endpoint ep );
+    ~Channel();
     void SetKey(uint32_t key);
     void Start();
     void Process();
+    void Stop();
 private:
     void Read();
     void Write(std::size_t length);

@@ -788,7 +788,7 @@ void test_opusdecoder()
             break;
         }
         int outLen = 0;
-        if (i%8>4)//选择性的丢包
+        if (i%2>0)//选择性的丢包
         {
             len = 0;
         }
@@ -822,6 +822,6 @@ void test_codec()
     //test_aacencoder();
    // test_aacdecoder();
 
-    test_opusencoder();
+    //test_opusencoder();
     test_opusdecoder();
 }
