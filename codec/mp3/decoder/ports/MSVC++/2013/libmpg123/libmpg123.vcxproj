@@ -139,27 +139,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.21006.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_Generic|Win32'">$(ProjectDir)Debug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_Generic|Win32'">Debug\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_Generic|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_Generic|Win32'">$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectName)$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_Generic_Dll|Win32'">$(ProjectDir)Debug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_Generic_Dll|Win32'">Debug\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_Generic_Dll|Win32'">$(ProjectDir)Release\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_Generic_Dll|Win32'">Release\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_Generic_Dll|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_Generic_Dll|Win32'">$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_Generic_Dll|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_Generic_Dll|Win32'">$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_x86|Win32'">$(ProjectDir)Release\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_x86|Win32'">Release\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll|Win32'">$(ProjectDir)Debug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll|Win32'">Debug\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll|Win32'">$(ProjectDir)Release\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll|Win32'">Release\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_x86|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_x86|Win32'">$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll|Win32'">$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll|Win32'">$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll|Win32'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll_Minimal|Win32'">$(ProjectDir)Debug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll_Minimal|Win32'">Debug\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|Win32'">$(ProjectDir)Release\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|Win32'">Release\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll_Minimal|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll_Minimal|Win32'">$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|Win32'">$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|Win32'">false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Generic|Win32'">

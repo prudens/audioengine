@@ -1,0 +1,270 @@
+#include "real_audio_device_interface.h"
+
+#include <string>
+#include <list>
+#include <mutex>
+#include <memory>
+#include <vector>
+#include "device/include/audio_device.h"
+#include "audio_effect.h"
+
+
+class CAudioBufferProc : public  AudioBufferProc
+{
+public:
+    typedef std::lock_guard<std::mutex> lockguard;
+    std::list<char*> m_list;
+    std::mutex   m_lock;
+    AudioEffect* pEffect;
+    LPRECORDINGDATACALLBACK RecordingData;
+    size_t frame_size_;
+    std::vector<char> rec_cache_;
+    std::vector<char> ply_cache_;
+
+public:
+    CAudioBufferProc( uint32_t rec_sample_rate,
+                      uint16_t rec_channel,
+                      uint32_t ply_sample_rate,
+                      uint16_t ply_channel )
+    {
+        pEffect = new AudioEffect;
+        pEffect->RecordingReset(rec_sample_rate, rec_channel, AudioEffect::kTargetRecSampleRate, rec_channel );
+        pEffect->PlayoutReset( AudioEffect::kTargetPlySampleRate, ply_channel, ply_sample_rate, ply_channel );
+        frame_size_ = 320 * rec_channel;// д╛хо10ms
+    }
+    ~CAudioBufferProc()
+    {
+        delete pEffect;
+    }
+
+    virtual void RecordingDataIsAvailable( const void*data, size_t samples )
+    {
+        if ( !RecordingData )
+        {
+            return;
+        }
+        {
+            size_t outSize = 0;
+            pEffect->ProcessCaptureStream( (int16_t*)data, samples, (int16_t*)data, outSize );
+            rec_cache_.insert( rec_cache_.end(), (char*)data, (char*)data + outSize );
+            if ( rec_cache_.size() >= frame_size_ )
+            {
+                RecordingData( rec_cache_.data(), frame_size_ );
+                if ( rec_cache_.size() == frame_size_ )
+                {
+                    rec_cache_.clear();
+                }
+                else
+                {
+                    rec_cache_.erase( rec_cache_.begin(), rec_cache_.begin() + frame_size_ );
+                }
+            }
+            else
+            {
+                return;
+            }
+        }
+    }
+
+    virtual size_t NeedMorePlayoutData( void* data, size_t len_of_byte )
+    {
+        lockguard lg( m_lock );
+          
+        if ( ply_cache_.size() >= len_of_byte )
+        {
+            memcpy( data, &ply_cache_[0], len_of_byte );
+            ply_cache_.erase( ply_cache_.begin(), ply_cache_.begin() + len_of_byte );
+        }
+        return len_of_byte;
+    }
+
+    virtual void ErrorOccurred( AudioError aeCode ) {}
+
+    void FillPlayoutData(const void* pcm16_data, int len_of_byte)
+    {
+        if (len_of_byte == 0 || pcm16_data == nullptr)
+        {
+            return;
+        }
+        lockguard lg( m_lock );
+        ply_cache_.insert(ply_cache_.end(), (char*)pcm16_data, (char*)pcm16_data + len_of_byte );
+    }
+
+    void SetFrameSize(size_t len_of_byte)
+    {
+        frame_size_ = len_of_byte;
+        rec_cache_.reserve( frame_size_ );
+        ply_cache_.reserve( frame_size_ );
+    }
+
+    size_t GetFrameSize()
+    {
+        return frame_size_;
+    }
+};
+
+struct RealAudioDevice
+{
+    AudioDevice* pWinDevice;
+    CAudioBufferProc* pAudioBufferProc;
+    int32_t rec_sample_rate;
+    int16_t rec_channel;
+    int32_t ply_sample_rate; 
+    int16_t ply_channel;
+};
+
+ long REAL_AUDIO_CALL CreateDevice()
+{
+    RealAudioDevice* pInstance = new RealAudioDevice;
+    AudioDevice* pWinDevice = AudioDevice::Create();
+    pWinDevice->Initialize();
+    pWinDevice->InitPlayout();
+    pWinDevice->InitRecording();
+    uint32_t rec_sample_rate, ply_sample_rate;
+    uint16_t rec_channel, ply_channel;
+    pWinDevice->GetRecordingFormat( rec_sample_rate, rec_channel );
+    pWinDevice->GetPlayoutFormat( ply_sample_rate, ply_channel );
+
+    CAudioBufferProc* proc = new CAudioBufferProc( rec_sample_rate, rec_channel,
+                                                   ply_sample_rate, ply_channel );
+    pWinDevice->SetAudioBufferCallback( proc );
+    pInstance->pWinDevice = pWinDevice;
+    pInstance->pAudioBufferProc = proc;
+    return (long)pInstance;
+}
+
+void REAL_AUDIO_CALL DestroyDevice( long device_id )
+{
+    if ( device_id == 0 ) return;
+    RealAudioDevice* pInstance = (RealAudioDevice*)device_id;
+    if (!pInstance->pWinDevice)
+    {
+        return;
+    }
+    pInstance->pWinDevice->Terminate();
+    pInstance->pWinDevice = nullptr;
+    delete pInstance->pAudioBufferProc;
+}
+
+void REAL_AUDIO_CALL SetSampleRate( long device_id, int32_t rec_sample_rate, int16_t rec_channel, int32_t ply_sample_rate, int16_t ply_channel )
+{
+    RealAudioDevice* pInstance = (RealAudioDevice*)device_id;
+    if ( 0 == device_id )
+    {
+        return;
+    }
+    auto pEffect = pInstance->pAudioBufferProc->pEffect;
+    uint32_t sample_rate;
+    uint16_t channel;
+    pInstance->pWinDevice->GetRecordingFormat( sample_rate ,channel);
+    pEffect->RecordingReset( sample_rate, channel, rec_sample_rate, rec_channel );
+    pInstance->pWinDevice->GetPlayoutFormat( sample_rate, channel );
+    pEffect->RecordingReset( ply_sample_rate, ply_channel, sample_rate, channel );
+    pInstance->rec_sample_rate = rec_sample_rate;
+    pInstance->rec_channel = rec_channel;
+    pInstance->ply_sample_rate = ply_sample_rate;
+    pInstance->ply_channel = ply_channel;
+}
+
+void REAL_AUDIO_CALL GetSampleRate( long device_id,
+                                    int32_t* rec_sample_rate, 
+                                    int16_t* rec_channel,
+                                    int32_t* ply_sample_rate,
+                                    int16_t* ply_channel )
+{
+    if ( 0 == device_id )
+    {
+        return;
+    }
+    RealAudioDevice* pInstance = (RealAudioDevice*)device_id;
+
+    *rec_sample_rate = pInstance->rec_sample_rate;
+    *rec_channel = pInstance->rec_channel;
+    *ply_sample_rate = pInstance->ply_sample_rate;
+    *ply_channel = pInstance->ply_channel;
+}
+
+
+void REAL_AUDIO_CALL SetRecordingDataCallback( long device_id, LPRECORDINGDATACALLBACK  cb )
+{
+    if ( 0 == device_id )
+    {
+        return;
+    }
+    RealAudioDevice* pInstance = (RealAudioDevice*)device_id;
+    pInstance->pAudioBufferProc->RecordingData = cb;
+}
+
+void REAL_AUDIO_CALL FillPlayoutData( long device_id, const void*pcm16_data, int len_of_byte )
+{
+    if ( 0 == device_id )
+    {
+        return;
+    }
+    RealAudioDevice* pInstance = (RealAudioDevice*)device_id;
+    pInstance->pAudioBufferProc->FillPlayoutData( pcm16_data, len_of_byte );
+}
+
+bool REAL_AUDIO_CALL StartRecording( long device_id )
+{
+    if ( 0 == device_id )
+    {
+        return false;
+    }
+    RealAudioDevice* pInstance = (RealAudioDevice*)device_id;
+    return pInstance->pWinDevice->StartRecording();
+}
+
+void REAL_AUDIO_CALL StopRecording( long device_id )
+{
+    if ( 0 == device_id )
+    {
+        return;
+    }
+    RealAudioDevice* pInstance = (RealAudioDevice*)device_id;
+    pInstance->pWinDevice->StopRecording();
+}
+
+bool REAL_AUDIO_CALL StartPlayout( long device_id )
+{
+    if ( 0 == device_id )
+    {
+        return false;
+    }
+    RealAudioDevice* pInstance = (RealAudioDevice*)device_id;
+
+    return pInstance->pWinDevice->StartPlayout();
+}
+
+void REAL_AUDIO_CALL StopPlayout( long device_id )
+{
+    if ( 0 == device_id )
+    {
+        return;
+    }
+    RealAudioDevice* pInstance = (RealAudioDevice*)device_id;
+
+    pInstance->pWinDevice->StopPlayout();
+}
+
+void REAL_AUDIO_CALL SetFrameSize( long device_id, int32_t len_of_byte )
+{
+    if ( 0 == device_id )
+    {
+        return;
+    }
+    RealAudioDevice* pInstance = (RealAudioDevice*)device_id;
+
+    pInstance->pAudioBufferProc->SetFrameSize( len_of_byte );
+}
+
+int32_t REAL_AUDIO_CALL GetFrameSize( long device_id )
+{
+    if ( 0 == device_id )
+    {
+        return 0 ;
+    }
+    RealAudioDevice* pInstance = (RealAudioDevice*)device_id;
+
+    return pInstance->pAudioBufferProc->GetFrameSize();
+}

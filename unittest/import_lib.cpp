@@ -9,7 +9,7 @@
 #pragma comment(lib,"../build/winx/Debug/aac.lib")
 #pragma comment(lib,"../build/winx/Debug/g7221.lib")
 #pragma comment(lib,"../build/winx/Debug/opus.lib")
-#pragma comment(lib,"msc.lib")
+//#pragma comment(lib,"../effect/speechtotext/winx/lib/msc.lib")
 #else
 #pragma comment(lib,"../build/winx/Release/audio_device.lib")
 #pragma comment(lib,"../build/winx/Release/audio_effect.lib")

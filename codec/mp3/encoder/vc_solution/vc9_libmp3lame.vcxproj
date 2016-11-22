@@ -74,11 +74,19 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir>$(ProjectName)$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir>$(ProjectName)$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNASM|Win32'">
+    <IntDir>$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseSSE2|Win32'">
+    <IntDir>$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNASM|Win32'">
     <ClCompile>

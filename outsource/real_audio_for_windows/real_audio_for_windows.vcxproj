@@ -10,29 +10,19 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\device\winx\windows_audio_device_helper.cpp" />
-    <ClCompile Include="..\..\device\winx\windows_core_audio.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\device\include\audio_device.h" />
-    <ClInclude Include="..\..\device\winx\media_buffer.h" />
-    <ClInclude Include="..\..\device\winx\windows_audio_device_helper.h" />
-    <ClInclude Include="..\..\device\winx\windows_core_audio.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{30837D62-4B2F-41DC-8204-376064311D73}</ProjectGuid>
-    <RootNamespace>audio_device</RootNamespace>
+    <ProjectGuid>{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}</ProjectGuid>
+    <RootNamespace>real_audio_for_windows</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -56,34 +46,44 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>../../</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\;..\..\processing\src;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_MBCS;WEBRTC_WIN;REAL_AUDIO_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>../../</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\;..\..\processing\src;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_MBCS;WEBRTC_WIN;REAL_AUDIO_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="audio_effect.cpp" />
+    <ClCompile Include="audio_resample.cpp" />
+    <ClCompile Include="import_library.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="real_audio_device_impl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="audio_effect.h" />
+    <ClInclude Include="audio_resample.h" />
+    <ClInclude Include="real_audio_device_interface.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

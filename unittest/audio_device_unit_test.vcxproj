@@ -40,6 +40,10 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetName>$(ProjectName)</TargetName>
+    <IntDir>$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IntDir>$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -90,8 +94,6 @@
     <ClCompile Include="import_lib.cpp" />
     <ClCompile Include="numeric_example.cpp" />
     <ClCompile Include="simulate_internet.cpp" />
-    <ClCompile Include="sound2text.cpp" />
-    <ClCompile Include="voicetotext.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio_effect.h" />
@@ -104,8 +106,6 @@
     <ClInclude Include="G7221Interface.h" />
     <ClInclude Include="header.h" />
     <ClInclude Include="simulate_internet.h" />
-    <ClInclude Include="tcpconnection.h" />
-    <ClInclude Include="voicetotext.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -13,7 +13,7 @@ static uint32_t GetTimeStamp()
 AudioEffect::AudioEffect()
 { 
     m_apm = AudioProcessing::Create();
-    m_apm->echo_cancellation()->Enable( false );
+    m_apm->echo_cancellation()->Enable( true );
     m_apm->echo_control_mobile()->Enable( false );
     m_apm->echo_control_mobile()->set_routing_mode( EchoControlMobile::kSpeakerphone );
     m_apm->echo_control_mobile()->enable_comfort_noise( false );

@@ -6,67 +6,6 @@
 #include "io/include/audioencoder.h"
 #include "io/include/audiodecoder.h"
 
-template <class T>
-void conv( T *x, T* h, T *y, size_t xn, size_t hn, size_t yn )
-{
-    memset( y, 0, sizeof( T ) * yn );
-    for ( size_t n = 0; n < yn; n++ )
-        for ( size_t j = 0; j < xn; j++ )
-            if ( n - j >= 0 && n - j < hn )
-                y[n] += x[j] * h[n - j];
-}
-
-#define TEST_CONV
-void convolution( const float*input, Complex*irc, float *output, int nFFT, int nFil, int nSig )
-{
-#ifdef TEST_CONV
-    for ( int i = 0; i < nFFT; i++ )
-    {
-        if ( i < nSig )
-        {
-            output[i] = input[i];
-        }
-        else
-        {
-            output[i] = 0;
-        }
-    }
-    return;
-#endif
-
-    Complex*inc, *outc;
-    inc = new Complex[nFFT];
-    for ( int i = 0; i < nFFT; i++ )
-    {
-        if ( i < nSig )
-        {
-            inc[i] = Complex( (float)input[i] );
-        }
-        else
-        {
-            inc[i] = Complex( 0 );
-        }
-    }
-
-    CFFT::Forward( inc, nFFT );
-    outc = new Complex[nFFT];
-    for ( int i = 0; i < nFFT; i++ )
-    {
-        outc[i] = inc[i] * irc[i];
-    }
-
-    CFFT::Inverse( outc, nFFT );
-
-    for ( int i = 0; i < nFFT; i++ )
-    {
-        output[i] = (float)( outc[i].real() );
-    }
-    delete[] inc;
-    delete[] outc;
-}
-
-
-
 class CAudioBufferProc : public  AudioBufferProc
 {
     bool m_processhrtf;
@@ -75,13 +14,18 @@ class CAudioBufferProc : public  AudioBufferProc
     Mixer3D m_Mixer3D;
     AudioEffect* pEffect;
 public:
-    CAudioBufferProc( bool processhrtf ) :m_processhrtf( processhrtf ), m_Mixer3D( 48000 )
+    CAudioBufferProc( bool processhrtf, 
+                      uint32_t rec_sample_rate,
+                      uint16_t rec_channel,
+                      uint32_t ply_sample_rate,
+                      uint16_t ply_channel )
+        :m_processhrtf( processhrtf ), m_Mixer3D( 48000 )
     {
         int nAzimuth = 90;
         int nElevation = 0;
         m_Mixer3D.updateAngles( nAzimuth, nElevation );
         pEffect = new AudioEffect;
-        pEffect->Init( 48000, 2, 48000, 2 );
+        pEffect->Init( rec_sample_rate, rec_channel, ply_sample_rate, ply_channel );
     }
 
     virtual void RecordingDataIsAvailable( const void*data, size_t samples )
@@ -147,38 +91,6 @@ public:
     }
 };
 
-
-void test_conv()
-{
-    // test conv time remains
-    int16_t x[3] = { 1, 2, 3 };
-    int16_t h[5] = { 1, 3, 5, 7, 9 };
-    int16_t y[10] = { 0 };
-    conv( x, h, y, 3, 5, 10 );
-    int16_t res[10] = { 1, 5, 14, 26, 38, 39, 27, 0, 0, 0 };
-    assert( !memcmp( y, res, sizeof( int16_t ) * 10 ) );
-    conv( h, x, y, 5, 3, 10 );
-    assert( !memcmp( y, res, sizeof( int16_t ) * 10 ) );
-    for ( int i = 0; i < 10; i++ )
-    {
-        //std::cout << y[i] << "\t";
-    }
-    std::cout << endl;
-    Complex data[] = { 1, 2, 3, 4 };
-    bool b = CFFT::Forward( data, 4 );
-    assert( b );
-    b = CFFT::Inverse( data, 4 );
-    assert( b );
-    for ( int i = 0; i < 4; i++ )
-    {
-        // cout << data[i].re() << ",";
-        assert( data[i].real() == i + 1 );
-    }
-
-    //test convolution
-
-}
-
 void test_windows_core_audio()
 {
     AudioDevice* pWinDevice = AudioDevice::Create();
@@ -186,8 +98,11 @@ void test_windows_core_audio()
     pWinDevice->Initialize();
     pWinDevice->InitPlayout();
     pWinDevice->InitRecording();
-
-    CAudioBufferProc cb( false );
+    uint32_t rec_sample_rate,ply_sample_rate;
+    uint16_t rec_channel,ply_channel;
+    pWinDevice->GetRecordingFormat(rec_sample_rate,rec_channel);
+    pWinDevice->GetPlayoutFormat( ply_sample_rate, ply_channel );
+    CAudioBufferProc cb( false,rec_sample_rate,rec_channel,ply_sample_rate,ply_channel );
     pWinDevice->SetAudioBufferCallback( &cb );
     pWinDevice->StartPlayout();
     pWinDevice->StartRecording();
@@ -206,43 +121,6 @@ void test_windows_core_audio()
     pWinDevice->Release();
 }
 
-void test_hrtf( int nAzimuth, int nElevation, const char* inputfile, const char*outputfile )
-{
-
-    WavReader reader( inputfile );
-    int len = reader.NumChannels();
-
-    const int nFFT = 4096;
-    float pLeft[nFFT] = { 0 };
-    float pRight[nFFT] = { 0 };
-    int nFil = mit_hrtf_get( &nAzimuth, &nElevation, reader.SampleRate(), 0, pLeft, pRight );
-    if ( nFil == 0 ) return;
-    Complex flt[nFFT] = { 0 };
-    for ( int i = 0; i < nFil; i++ )
-    {
-        flt[i] = Complex( pLeft[i] );
-
-    }
-    CFFT::Forward( flt, nFFT );
-
-    WavWriter writer( outputfile, reader.SampleRate(), 1 );
-    int channels =  reader.NumChannels();
-    int16_t pSrc[nFFT * 2];
-    reader.ReadSamples( nFFT*channels, pSrc );
-    reader.ReadSamples( nFFT*channels, pSrc );
-    reader.ReadSamples( nFFT*channels, pSrc );
-    int16_t pMono[nFFT];
-    DownmixInterleavedToMono( pSrc, nFFT, channels, pMono );
-    writer.WriteSamples( pMono, nFFT );
-    float pData[nFFT];
-    S16ToFloat( pMono, nFFT, pData );
-    float output[nFFT];
-    convolution( pData, flt, output, nFFT, nFil, nFFT );
-    FloatToS16( output, nFFT, pSrc );
-
-    writer.WriteSamples( pSrc, nFFT );
-}
-
 void test_real_time_3d()
 {
     int nAzimuth = 0; int nElevation = 0;
@@ -252,8 +130,12 @@ void test_real_time_3d()
     pWinDevice->SetPlayoutFormat( 48000, 2 );
     pWinDevice->InitPlayout();
     pWinDevice->InitRecording();
+    uint32_t rec_sample_rate, ply_sample_rate;
+    uint16_t rec_channel, ply_channel;
+    pWinDevice->GetRecordingFormat( rec_sample_rate, rec_channel );
 
-    CAudioBufferProc cb( true );
+    pWinDevice->GetPlayoutFormat( ply_sample_rate, ply_channel );
+    CAudioBufferProc cb( true, rec_sample_rate, rec_channel, ply_sample_rate, ply_channel );
     pWinDevice->SetAudioBufferCallback( &cb );
     pWinDevice->StartPlayout();
     pWinDevice->StartRecording();
@@ -264,7 +146,6 @@ void test_real_time_3d()
         std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
         if ( _kbhit() )
         {
-
             ch = _getch();
             switch ( ch )
             {
@@ -436,5 +317,6 @@ void test_opus_codec()
 
 void test_audio_device()
 {
-    test_opus_codec();
+    test_windows_core_audio();
+    //test_opus_codec();
 }

@@ -39,11 +39,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IntDir>$(ProjectName)$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
     <IncludePath>F:\repo\audioengine\codec\mp3\decoder\ports\MSVC++;F:\repo\audioengine\codec\mp3\decoder\src\libmpg123;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IntDir>$(ProjectName)$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

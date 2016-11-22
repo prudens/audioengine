@@ -882,6 +882,33 @@
     <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\source\rtcp_packet\transport_feedback.h">
       <Filter>webrtc\modules\rtp_rtcp</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\include\fec_receiver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\include\receive_statistics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\include\remote_ntp_time_estimator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\include\rtp_cvo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\include\rtp_header_parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\include\rtp_payload_registry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\include\rtp_receiver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\include\rtp_rtcp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\processing\src\webrtc\modules\rtp_rtcp\include\rtp_rtcp_defines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\processing\src\webrtc\common_audio\signal_processing\auto_corr_to_refl_coef.c">

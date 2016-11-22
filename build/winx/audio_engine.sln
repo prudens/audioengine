@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audio_device", "audio_device.vcxproj", "{30837D62-4B2F-41DC-8204-376064311D73}"
 EndProject
@@ -35,6 +35,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "audio_codec", "audio_codec", "{087526D0-9917-43BF-9F8C-BB0A7714B572}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "opus", "..\..\codec\opus\win32\VS2015\opus.vcxproj", "{219EC965-228A-1824-174D-96449D05F88A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "real_audio_for_windows", "..\..\outsource\real_audio_for_windows\real_audio_for_windows.vcxproj", "{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -868,6 +870,60 @@ Global
 		{219EC965-228A-1824-174D-96449D05F88A}.ReleaseSSE2|Win32.Build.0 = ReleaseDLL|Win32
 		{219EC965-228A-1824-174D-96449D05F88A}.ReleaseSSE2|x64.ActiveCfg = ReleaseDLL|x64
 		{219EC965-228A-1824-174D-96449D05F88A}.ReleaseSSE2|x64.Build.0 = ReleaseDLL|x64
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Debug_Generic_Dll|Win32.ActiveCfg = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Debug_Generic_Dll|Win32.Build.0 = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Debug_Generic_Dll|x64.ActiveCfg = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Debug_Generic|Win32.ActiveCfg = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Debug_Generic|Win32.Build.0 = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Debug_Generic|x64.ActiveCfg = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Debug_x86_Dll_Minimal|Win32.ActiveCfg = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Debug_x86_Dll_Minimal|Win32.Build.0 = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Debug_x86_Dll_Minimal|x64.ActiveCfg = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Debug_x86_Dll|Win32.ActiveCfg = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Debug_x86_Dll|Win32.Build.0 = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Debug_x86_Dll|x64.ActiveCfg = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Debug_x86|Win32.ActiveCfg = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Debug_x86|Win32.Build.0 = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Debug_x86|x64.ActiveCfg = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Debug|Win32.Build.0 = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Debug|x64.ActiveCfg = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.DebugDLL_fixed|Win32.ActiveCfg = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.DebugDLL_fixed|Win32.Build.0 = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.DebugDLL_fixed|x64.ActiveCfg = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.DebugDLL|Win32.ActiveCfg = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.DebugDLL|Win32.Build.0 = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.DebugDLL|x64.ActiveCfg = Debug|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Release_Generic_Dll|Win32.ActiveCfg = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Release_Generic_Dll|Win32.Build.0 = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Release_Generic_Dll|x64.ActiveCfg = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Release_Generic|Win32.ActiveCfg = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Release_Generic|Win32.Build.0 = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Release_Generic|x64.ActiveCfg = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Release_x86_Dll_Minimal|Win32.ActiveCfg = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Release_x86_Dll_Minimal|Win32.Build.0 = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Release_x86_Dll_Minimal|x64.ActiveCfg = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Release_x86_Dll|Win32.ActiveCfg = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Release_x86_Dll|Win32.Build.0 = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Release_x86_Dll|x64.ActiveCfg = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Release_x86|Win32.ActiveCfg = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Release_x86|Win32.Build.0 = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Release_x86|x64.ActiveCfg = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Release|Win32.ActiveCfg = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Release|Win32.Build.0 = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.Release|x64.ActiveCfg = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.ReleaseDLL_fixed|Win32.ActiveCfg = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.ReleaseDLL_fixed|Win32.Build.0 = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.ReleaseDLL_fixed|x64.ActiveCfg = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.ReleaseDLL|Win32.ActiveCfg = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.ReleaseDLL|Win32.Build.0 = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.ReleaseDLL|x64.ActiveCfg = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.ReleaseNASM|Win32.ActiveCfg = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.ReleaseNASM|Win32.Build.0 = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.ReleaseNASM|x64.ActiveCfg = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.ReleaseSSE2|Win32.ActiveCfg = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.ReleaseSSE2|Win32.Build.0 = Release|Win32
+		{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}.ReleaseSSE2|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

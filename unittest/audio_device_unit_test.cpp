@@ -138,9 +138,9 @@ int main( int argc, char** argv )
   // test_chrono();
     //test_array();
   //  test_codec();
-    test_audio_processing(argc,argv);
+   // test_audio_processing(argc,argv);
    // test_async_task();
-   // test_audio_device();
+    test_audio_device();
    // test_conv();
    // test_hrtf(45,0,"C:/Users/zhangnaigan/Desktop/3D_test_Audio/es01.wav","D:/pro-48000-1.wav");
    // test_real_time_3d();
