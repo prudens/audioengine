@@ -3,6 +3,7 @@
 #include "base/bitarray.h"
 #include <assert.h>
 #include <bitset>
+#include <map>
 void test_valarray()
 {
     using namespace std;
@@ -73,6 +74,7 @@ void test_bitarray()
     std::cout << std::hex << u<<std::endl;
 }
 
+
 void test_array()
 {
   //  test_bitarray();
@@ -84,5 +86,6 @@ void test_array()
     const char* pp = str.c_str();
     size_t len = str.length();
     len = str.size();
-    std::cout  << str<<len << std::endl;
+    std::cout<< str<<len << std::endl;
+
 }

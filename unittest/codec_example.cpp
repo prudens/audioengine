@@ -715,7 +715,7 @@ void test_aacdecoder()
 
 void test_opusencoder()
 {
-    FILE* out = fopen( "d:/v1014.opus", "wb+" );
+    FILE* out = fopen( "d:/v1114.opus", "wb+" );
     AudioReader*pReader = AudioReader::Create( "D:/es01.wav", AFT_WAV );
     int channel = pReader->NumChannels();
     AudioEncoder*pEncoder = AudioEncoder::Create( AFT_OPUS, pReader->SampleRate(), channel, 24000 );
@@ -823,5 +823,8 @@ void test_codec()
    // test_aacdecoder();
 
     //test_opusencoder();
-    test_opusdecoder();
+    auto t1 = std::thread( test_opusdecoder );
+    auto t2 = std::thread( test_opusencoder );
+    t1.join();
+    t2.join();
 }

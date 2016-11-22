@@ -1,11 +1,11 @@
 #include "header.h"
 void test_audio_effect()
 {
-    WavReader reader_rec( "C:\\Users\\zhangnaigan\\Desktop\\空气噪声-人声.wav" );
+    WavReader reader_rec( "C:\\Users\\zhangnaigan\\Downloads\\K14513_CD_Files\\MATLAB_code\\statistical_based\\sp04_babble_sn10.wav" );
     int samplerate = reader_rec.SampleRate();
     int channel = reader_rec.NumChannels();
 
-    WavWriter writer( "C:\\Users\\zhangnaigan\\Desktop\\人声.wav", samplerate, channel );
+    WavWriter writer( "d:/sp04_babble_sn10-pro.wav", samplerate, channel );
     AudioEffect ae;
     ae.Init( samplerate, channel, samplerate, channel );
     int frames = samplerate / 100 * channel;
@@ -432,8 +432,68 @@ void test_audio_mixer()
     }
 }
 
-void test_audio_processing()
+
+
+#include "audio_noise_suppression.h"
+void test_AudioNoiseSuppression( int argc, char** argv )
 {
+    if (argc != 3)
+    {
+        printf("请输入两个文件名...");
+        return;
+    }
+    std::string file1 = argv[1];
+    std::string file2 = argv[2];
+    AudioNoiseSuppression ans;
+    ans.Init( 16000, 2 );
+    AudioReader* pReader = AudioReader::Create( argv[1], AFT_WAV );
+    int16_t buf[256*2];
+    std::vector<int> idx_list;
+    int nframe = 100;
+    for ( int i = 0; i < nframe; i++ )
+    {
+        int len = pReader->ReadSamples( 256*2, buf );
+        if (len == 0)
+        {
+            break;
+        }
+        idx_list.push_back(ans.Analyze( buf, 256 * 2, false ));
+    }
+    auto it = std::max_element( idx_list.begin(), idx_list.end() );
+    std::size_t dist = std::distance( idx_list.begin(),it );
+    pReader->Destroy();
+    pReader = AudioReader::Create( argv[2], AFT_WAV );
+    idx_list.clear();
+    for ( int i = 0; i < nframe; i++ )
+    {
+        int len = pReader->ReadSamples( 256 * 2, buf );
+        if ( len == 0 )
+        {
+            break;
+        }
+        idx_list.push_back( ans.Analyze( buf, 256 * 2, false ) );
+    }
+    it = std::max_element( idx_list.begin(), idx_list.end() );
+    std::size_t dist2 = std::distance( idx_list.begin(), it );
+    int i, j;
+    if (dist2 > dist)
+    {
+        i = 2;
+        j = 1;
+    }
+    else
+    {
+        i = 1;
+        j = 2;
+    }
+    int diff = std::abs( (int)dist2 - (int)dist ) * 256 / 160*10;
+    printf( "两个文件相差%dms,并且%s比%s先采集\n", diff, argv[i],argv[j]);
+    pReader->Destroy();
+
+}
+void test_audio_processing(int argc,char** argv)
+{
+   // test_AudioNoiseSuppression(argc,argv);
     test_audio_effect();
    // test_audio_mixer();
 }

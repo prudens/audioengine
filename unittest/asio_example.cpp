@@ -24,6 +24,7 @@
 #include "base/time_cvt.hpp"
 #include <functional>
 #include <atomic>
+#include "base/io_context_pool.h"
 using asio::ip::tcp;
 static std::atomic<int> count = 0;
 class session
@@ -518,12 +519,58 @@ void test_ntp()
     io_context.run();
 }
 
+namespace std
+{
+    namespace chrono
+    {
+        struct steady_clock1
+        {
+            typedef _LONGLONG rep;
+            typedef ratio_multiply<ratio<_XTIME_NSECS_PER_TICK, 1>, nano> period;
+            typedef chrono::duration<rep, period> duration;
+            typedef chrono::time_point<steady_clock1> time_point;
+            static const bool is_steady = true;
+            static time_point now()
+            {
+                static rep t = 900000000;
+                t -= 10000000;
+                return time_point( duration( t ) );
+            }
+        };
+    }
+}
+
+
+void test_asio_timer()
+{
+    asio::io_context context;
+    typedef asio::basic_waitable_timer<std::chrono::steady_clock1>  steady_timer;
+   steady_timer timer( context );
+    printf( "now %s", timestamptostring().c_str() );
+    timer.expires_from_now( std::chrono::seconds( 6 ) );
+    timer.async_wait( [] (asio::error_code ec) {
+        printf( "now %s", timestamptostring().c_str() );
+    } );
+    context.run();
+}
+
+void test_io_context_pool()
+{
+    io_context_pool pool(5);
+    pool.run();
+    auto context = pool.get_io_context( io_context_pool::TASK_UI );
+    context->post( [] () {
+        printf( "redraw ui" );
+    } );
+}
+
 void test_asio( int argc, char** argv )
 {
     //test_base_ip();
     //test_tcp_iostream( argc, argv );
-   // return;
-
+   // test_io_context_pool();
+    test_asio_timer();
+    return;
     test_ntp();
     return;
     if ( argc == 2 )

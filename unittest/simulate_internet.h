@@ -61,6 +61,12 @@ struct stVoipData
     int count;
 };
 
+struct stReqRetransData
+{
+    uint32_t client_key;
+    int count;
+    uint32_t arr[1];
+};
 class RoomServer;
 class RoomMember :public std::enable_shared_from_this<RoomMember>
 {
@@ -80,10 +86,10 @@ private:
     enum { max_length = 1024 };
     char data_[max_length];
     char rdata_[max_length];
-    bool stop_=false;
+    asio::steady_timer timer_;
 };
 
-
+//  不是线程安全的
 class RoomServer
 {
 public:
@@ -147,19 +153,7 @@ public:
     void SetClientID( uint32_t client_id );
     uint32_t ClientID();
     void Write( stClientBase* client_base, std::size_t length );
-    void Read( std::size_t length )
-    {
-        _socket.async_read_some( asio::buffer( rdata_, max_length ),
-                                 [this] ( std::error_code ec, std::size_t length )
-        {
-            if ( !ec )
-            {
-                // process
-                Process( length );
-                Read( max_length );
-            }
-        } );
-    }
+    void Read( std::size_t length );
     void Process( std::size_t length );
     void Login();
     void Logout();
@@ -171,11 +165,11 @@ private:
     char data_[max_length];
     char rdata_[max_length];
     uint32_t client_id_;
-    std::unique_ptr<Channel> channel_;
+    std::shared_ptr<Channel> channel_;
     asio::io_context& context_;
 };
 
-class Channel
+class Channel:public std::enable_shared_from_this<Channel>
 {
 public:
     Channel( asio::io_context& io_context, tcp::endpoint ep );
@@ -192,6 +186,6 @@ private:
     char data_[max_length];
     char rdata_[max_length];
     asio::steady_timer timer_;
-    uint32_t count_;
+    uint32_t count_=0;
     uint32_t key_;
 };

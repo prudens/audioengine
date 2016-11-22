@@ -1,12 +1,6 @@
 #include "opusencoder.h"
 #include <assert.h>
-static void int_to_char( opus_uint32 i, unsigned char ch[4] )
-{
-    ch[0] = i >> 24;
-    ch[1] = ( i >> 16 ) & 0xFF;
-    ch[2] = ( i >> 8 ) & 0xFF;
-    ch[3] = i & 0xFF;
-}
+
 OPUSEncoder::OPUSEncoder( int samplerate, int16_t channel,int bitrate )
 {
     _samplerate = samplerate;
@@ -30,7 +24,8 @@ OPUSEncoder::OPUSEncoder( int samplerate, int16_t channel,int bitrate )
      opus_int32 skip;
      opus_encoder_ctl( _enc, OPUS_GET_LOOKAHEAD( &skip ) );
      opus_encoder_ctl( _enc, OPUS_SET_LSB_DEPTH( 16 ) );
-//     opus_encoder_ctl( _enc, OPUS_SET_EXPERT_FRAME_DURATION( OPUS_FRAMESIZE_ARG ) );
+//     opus_encoder_ctl( _enc, OPUS_SET_EXPERT_FRAME_DURATION( OPUS_FRAMESIZE_ARG ) );
+
 }
 
 OPUSEncoder::~OPUSEncoder()
@@ -52,23 +47,13 @@ bool OPUSEncoder::SetBitRate( int32_t bitRate )
 bool OPUSEncoder::Encode( int16_t* pcmData, int nSamples, char* encodeData, int& outLen )
 {
     int frame_size = nSamples/_channel;
-     int err;
-    outLen = opus_encode( _enc, pcmData, frame_size, (unsigned char*)encodeData + 8, 1500 );
+    outLen = opus_encode( _enc, pcmData, frame_size, (unsigned char*)encodeData, outLen );
     if ( outLen < 0 )
     {
         return false;
     }
-    int nb_encoded = opus_packet_get_samples_per_frame( (unsigned char*)encodeData+8, _samplerate )*opus_packet_get_nb_frames( (unsigned char*)encodeData+8, outLen );
+    int nb_encoded = opus_packet_get_samples_per_frame( (unsigned char*)encodeData, _samplerate )*opus_packet_get_nb_frames( (unsigned char*)encodeData, outLen );
     assert(nb_encoded == frame_size);
-    frame_size -= nb_encoded;
-    unsigned char *int_field = (unsigned char*)encodeData;
-    int_to_char( (opus_int32)outLen, int_field );
-    opus_uint32 enc_final_range;
-    err = opus_encoder_ctl( _enc, OPUS_GET_FINAL_RANGE( &enc_final_range ) );
-    int_field += 4;
-    int_to_char( enc_final_range, int_field );
-    outLen += 8;
-
     return true;
 }
 

@@ -109,6 +109,20 @@ int AudioNoiseSuppression::Analyze( int16_t*speech_frame, int size, bool isSilen
         bands[i] /= ( end - start );
     }
 
+    int max_idx = 0;
+    for ( int i = 0; i < BAND_NUM-1; i++ )
+    {
+        if (bands[i] > 0.01)
+        {
+            max_idx++;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+   // printf( "%d,\t", max_idx);
     float sum = 0;
 
     for ( int i = 0; i < BAND_NUM; i++ )
@@ -120,7 +134,11 @@ int AudioNoiseSuppression::Analyze( int16_t*speech_frame, int size, bool isSilen
         sum += bi[i].v;
     }
     std::sort( bi, bi + BAND_NUM, [] ( const bandinfo& l, const bandinfo& r ) { return l.v > r.v; } );
-
+//     for ( int i = 0; i < BAND_NUM;i++ )
+//     {
+//         printf( "%d\t", bi[i].idx);
+//     }
+//    printf( "\n" );
     int index = 0;
     // ºÏ²¢
     for ( int i = 0; i < BAND_NUM; i++ )
@@ -217,7 +235,7 @@ int AudioNoiseSuppression::Analyze( int16_t*speech_frame, int size, bool isSilen
     {
         type = Consonant;
     }
-    return type;
+    return max_idx;
 }
 
 AudioNoiseSuppression::VoiceFrame* AudioNoiseSuppression::Proceess( int16_t* data, int size, int level, int silent, int noise_type )

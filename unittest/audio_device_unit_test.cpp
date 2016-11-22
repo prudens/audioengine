@@ -20,6 +20,7 @@ void test_async_task()
 
 #include "webrtc/common_audio/real_fourier.h"
 #include "base/time_cvt.hpp"
+#include <unordered_map>
 void test_fft()
 {
     const int order = 512;
@@ -88,18 +89,58 @@ void test_voice_scale()
 
 
 void test_array();
-void test_audio_processing();
+void test_audio_processing(int argc,char**argv);
 void test_codec();
 void test_asio( int argc, char** argv );
 void test_simulate_internet( int argc, char** argv );
+void test_sound_to_text();
+void test_audio_device();
+void test_chrono();
+#include <tuple>
+
+void debug_out( const char* format, int argc, ... )
+{
+    
+}
+
+#define MACRO(format,...) debug_out(format,std::tuple_size<decltype(std::make_tuple(__VA_ARGS__))>::value, __VA_ARGS__ )
+ 
+template <typename T>
+T Argument( T value )
+{
+    return value;
+}
+
+template <typename ... Args>
+void Print( char const * const format,
+            Args const & ... args )
+{
+    std::cout<<sizeof...( args )<<std::endl;
+    if ( sizeof...( args ) == 0 )
+    {
+        printf("%s",format);
+    }
+    else
+    {
+        char buf[512];// = { 0 };
+        sprintf( buf, format, Argument( args ) ... );
+        std::cout << buf << "\n";
+    }
+
+}
+
+
+
 int main( int argc, char** argv )
 {
-    //test_asio(argc,argv);
+  //  Print( "%s%s" );
+   // test_asio(argc,argv);
+  // test_chrono();
     //test_array();
-   // test_codec();
-    //test_audio_processing();
+  //  test_codec();
+    test_audio_processing(argc,argv);
    // test_async_task();
-   // test_windows_core_audio();
+   // test_audio_device();
    // test_conv();
    // test_hrtf(45,0,"C:/Users/zhangnaigan/Desktop/3D_test_Audio/es01.wav","D:/pro-48000-1.wav");
    // test_real_time_3d();
@@ -122,7 +163,8 @@ int main( int argc, char** argv )
     
    // test_voice_scale();
 
-    test_simulate_internet(argc,argv);
+   // test_simulate_internet(argc,argv);
+   // test_sound_to_text();
     system( "pause" );
     return 0;
 

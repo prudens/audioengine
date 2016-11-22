@@ -36,6 +36,12 @@
     <ClCompile Include="..\..\base\bitarray.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\base\io_context_pool.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\jvm_manager.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\base\asyntask.h">
@@ -133,6 +139,12 @@
     </ClInclude>
     <ClInclude Include="..\..\base\bitarray.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\io_context_pool.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\jvm_manager.h">
+      <Filter>source</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

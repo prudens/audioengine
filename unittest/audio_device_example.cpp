@@ -3,6 +3,8 @@
 //y(n)=sum(x(k)h(n-k)), 其中 n-k>0,0<n<N,0<k<M
 // 参见《信号与系统》第50页
 #include "header.h"
+#include "io/include/audioencoder.h"
+#include "io/include/audiodecoder.h"
 
 template <class T>
 void conv( T *x, T* h, T *y, size_t xn, size_t hn, size_t yn )
@@ -357,4 +359,82 @@ void test_circular_buffer()
     int16_t data10[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
     assert( 10 == buffer.write( data10, 10 ) );
     assert( 0 == buffer.write( data, 4 ) );
+}
+
+
+
+class OpusBufferProc : public AudioBufferProc
+{
+public:
+    OpusBufferProc()
+    {
+        encoder_ = AudioEncoder::Create( AFT_OPUS,48000,2,24000 );
+        decoder_ = AudioDecoder::Create( AFT_OPUS );
+    }
+    virtual void RecordingDataIsAvailable( const void*data, size_t size_in_byte )
+    {
+        std::pair<char*, int> frame;
+        frame.first = new char[512];
+        frame.second = 512;
+        if ( encoder_->Encode( (int16_t*)data, size_in_byte / 2, frame.first, frame.second ) )
+        {
+            std::lock_guard<std::mutex> lg(lock_);
+            buf_list_.push_back( frame );
+            printf("encode len = %d\n",frame.second);
+        }
+        else
+        {
+            printf("编码失败");
+            delete frame.first;
+        }
+
+    }
+    virtual size_t NeedMorePlayoutData( void*data, size_t size_in_byte )
+    {
+        std::lock_guard<std::mutex> lg( lock_ );
+        if (buf_list_.size() > 50)
+        {
+            auto frame = buf_list_.front();
+            int size;
+            if ( !decoder_->Decode( frame.first, frame.second, (int16_t*)data, size ) )
+            {
+                printf( "解码失败" );
+            }
+            buf_list_.pop_front();
+            delete frame.first;
+            size_in_byte = size*2;
+        }
+
+        return size_in_byte;
+    }
+private:
+    AudioEncoder* encoder_;
+    AudioDecoder* decoder_;
+    std::mutex lock_;
+    std::list < std::pair<char*, int> > buf_list_;
+};
+void test_opus_codec()
+{
+    AudioDevice* pWinDevice = AudioDevice::Create();
+
+    pWinDevice->Initialize();
+    pWinDevice->InitPlayout();
+    pWinDevice->InitRecording();
+
+    OpusBufferProc cb ;
+    pWinDevice->SetAudioBufferCallback( &cb );
+    pWinDevice->StartPlayout();
+    pWinDevice->StartRecording();
+
+    system( "pause" );
+
+    pWinDevice->StopRecording();
+    pWinDevice->StopPlayout();
+    pWinDevice->Terminate();
+    pWinDevice->Release();
+}
+
+void test_audio_device()
+{
+    test_opus_codec();
 }

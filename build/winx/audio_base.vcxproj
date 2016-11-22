@@ -51,9 +51,10 @@
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>../../</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../;../../network/asio/asio/include</AdditionalIncludeDirectories>
       <AdditionalOptions>/D_CRT_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4127</DisableSpecificWarnings>
+      <PreprocessorDefinitions>_MBCS;ASIO_STANDALONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -82,7 +83,9 @@
     <ClCompile Include="..\..\base\audio_util.cc" />
     <ClCompile Include="..\..\base\bitarray.cpp" />
     <ClCompile Include="..\..\base\fft.cpp" />
+    <ClCompile Include="..\..\base\jvm_manager.cpp" />
     <ClCompile Include="..\..\base\rgba.cpp" />
+    <ClCompile Include="..\..\base\io_context_pool.cpp" />
     <ClCompile Include="..\..\base\vcl\instrset_detect.cpp" />
     <ClCompile Include="..\..\base\vcl\special\ranvec1.cpp" />
   </ItemGroup>
@@ -93,9 +96,11 @@
     <ClInclude Include="..\..\base\circular_buffer.hpp" />
     <ClInclude Include="..\..\base\common_defines.h" />
     <ClInclude Include="..\..\base\fft.h" />
+    <ClInclude Include="..\..\base\jvm_manager.h" />
     <ClInclude Include="..\..\base\min_max_heap.hpp" />
     <ClInclude Include="..\..\base\rgba.h" />
     <ClInclude Include="..\..\base\string_cvt.h" />
+    <ClInclude Include="..\..\base\io_context_pool.h" />
     <ClInclude Include="..\..\base\time_cvt.hpp" />
     <ClInclude Include="..\..\base\vcl\instrset.h" />
     <ClInclude Include="..\..\base\vcl\special\complexvec.h" />

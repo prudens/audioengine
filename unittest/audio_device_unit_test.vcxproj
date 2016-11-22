@@ -47,7 +47,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../;../processing/src;../codec/aac/libAACenc/include;../codec/aac/;../codec/aac/libFDK/include;../codec/aac/libsys/include;../network/asio/asio/include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>ASIO_STANDALONE;_MBCS;G7221_EXPORTS;%(PreprocessorDefinitions);DEBUG;WEBRTC_WIN;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ASIO_STANDALONE;_MBCS;G7221_EXPORTS;WIN32;%(PreprocessorDefinitions);DEBUG;WEBRTC_WIN;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -83,12 +83,15 @@
     <ClCompile Include="audio_resample.cpp" />
     <ClCompile Include="audio_voice_check.cpp" />
     <ClCompile Include="backward_redundant_frame.cpp" />
+    <ClCompile Include="chrono_example.cpp" />
     <ClCompile Include="codec_example.cpp" />
     <ClCompile Include="dispatch_example.cpp" />
     <ClCompile Include="G7221Interface.cpp" />
     <ClCompile Include="import_lib.cpp" />
     <ClCompile Include="numeric_example.cpp" />
     <ClCompile Include="simulate_internet.cpp" />
+    <ClCompile Include="sound2text.cpp" />
+    <ClCompile Include="voicetotext.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio_effect.h" />
@@ -101,6 +104,8 @@
     <ClInclude Include="G7221Interface.h" />
     <ClInclude Include="header.h" />
     <ClInclude Include="simulate_internet.h" />
+    <ClInclude Include="tcpconnection.h" />
+    <ClInclude Include="voicetotext.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
