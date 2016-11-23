@@ -14,7 +14,8 @@ static uint32_t GetTimeStamp()
 AudioEffect::AudioEffect()
 { 
     m_apm = AudioProcessing::Create();
-    m_apm->echo_cancellation()->Enable( true );
+    m_apm->echo_cancellation()->Enable( false );
+    m_apm->echo_cancellation()->set_suppression_level( EchoCancellation::kHighSuppression );
     m_apm->echo_control_mobile()->Enable( false );
     m_apm->echo_control_mobile()->set_routing_mode( EchoControlMobile::kSpeakerphone );
     m_apm->echo_control_mobile()->enable_comfort_noise( false );
@@ -53,6 +54,7 @@ void AudioEffect::RecordingReset( size_t inFreq, size_t inChannel, size_t outFre
     rec_resample.inchannel = inChannel;
     rec_resample.outchannel = outChannel;
     rec_resample.channel = (std::min)( inChannel, outChannel );
+    rec_resample.frame_size = inFreq * inChannel * 2 / 100;
     m_recResample.ResetIfNeeded( rec_resample.infreq/1000*1000, kTargetRecSampleRate, rec_resample.channel );
     m_recReverseResample.ResetIfNeeded( kTargetRecSampleRate, rec_resample.outfreq/1000*1000, rec_resample.channel);
 }
@@ -63,8 +65,10 @@ void AudioEffect::PlayoutReset( size_t inFreq, size_t inChannel, size_t outFreq,
     ply_resample.infreq = inFreq;
     ply_resample.outfreq = outFreq;
     ply_resample.inchannel = inChannel;
-    ply_resample.outchannel =( std::min)( inChannel, outChannel );
-    m_plyResample.ResetIfNeeded( ply_resample.infreq/1000*1000, kTargetPlySampleRate, ply_resample.outchannel );
+    ply_resample.outchannel = outChannel;
+    ply_resample.channel = ( std::min )( inChannel, outChannel );
+    ply_resample.frame_size = inFreq * inChannel * 2 / 100;
+    m_plyResample.ResetIfNeeded( ply_resample.infreq/1000*1000, kTargetPlySampleRate, ply_resample.channel );
     m_plyReverseResample.ResetIfNeeded( ply_resample.infreq/1000*1000, ply_resample.outfreq/1000*1000, ply_resample.channel );
 }
 
@@ -102,19 +106,19 @@ void AudioEffect::ProcessCaptureStream( int16_t* audio_samples, size_t frame_byt
         return;
     }
 
-    af.UpdateFrame( 0,
-                    GetTimeStamp(),
-                    af.data_,
-                    kTargetRecSampleRate/100,
-                    kTargetRecSampleRate,
-                    AudioFrame::kNormalSpeech,
-                    AudioFrame::kVadUnknown,
-                    rec_resample.channel );
-    m_apm->set_stream_delay_ms( m_stream_delay );
-    if ( 0 != (err = m_apm->ProcessStream( &af )) )
-    {
-       return;
-    }
+//     af.UpdateFrame( 0,
+//                     GetTimeStamp(),
+//                     af.data_,
+//                     kTargetRecSampleRate/100,
+//                     kTargetRecSampleRate,
+//                     AudioFrame::kNormalSpeech,
+//                     AudioFrame::kVadUnknown,
+//                     rec_resample.channel );
+//     m_apm->set_stream_delay_ms( m_stream_delay );
+//     if ( 0 != (err = m_apm->ProcessStream( &af )) )
+//     {
+//        return;
+//     }
 
 
     size_t inLen = outLen;
@@ -161,7 +165,7 @@ void AudioEffect::ProcessRenderStream( int16_t*  inSamples, size_t frame_byte_si
     }
     if ( ply_resample.infreq == 44100 )
     {
-        frame_byte_size = 880 * m_recChannel;
+        frame_byte_size = 880 * ply_resample.inchannel;
     }
     if ( ply_resample.inchannel == 2 && ply_resample.channel == 1 )
     {
@@ -195,37 +199,36 @@ void AudioEffect::ProcessRenderStream( int16_t*  inSamples, size_t frame_byte_si
     }
     if (ply_resample.infreq == ply_resample.outfreq)
     {
-        if (ply_resample.outchannel == 2 && ply_resample.inchannel == 1)
+        if (ply_resample.inchannel == 1 && ply_resample.outchannel == 2)
         {
-            AudioResample::Tostereo( inSamples, frame_byte_size / 2 );
-            frame_byte_size *= 2;
+            AudioResample::Tostereo( inSamples, frame_byte_size/2, outSample );
         }
-        else if ( ply_resample.inchannel == 2 && ply_resample.outchannel == 1)
-        {
-            AudioResample::ToMono( inSamples, frame_byte_size / 2 );
-            frame_byte_size /= 2;
-        }
-        len_of_byte = frame_byte_size;
-        if ( inSamples != outSample )
+        else if ( inSamples != outSample )
         {
             memcpy( outSample, inSamples, len_of_byte );
         }
+        len_of_byte = ply_resample.outfreq / 100 * 2 * ply_resample.outchannel;
         return;
     }
+
     size_t inLen = outLen;
-    if ( 0 != ( err = m_plyReverseResample.Push( af.data_,
-        inLen,
-        outSample,
-        sizeof( af.data_ ),
-        outLen ) ) )
+    if (ply_resample.infreq != ply_resample.outfreq || inSamples != outSample)
     {
-        return;
+        if ( 0 != ( err = m_plyReverseResample.Push( inSamples,
+            frame_byte_size / 2,
+            outSample,
+            1920,
+            outLen ) ) )
+        {
+            return;
+        }
     }
 
-    if (ply_resample.outchannel == 2 && ply_resample.channel == 1)
+    if ( ply_resample.inchannel == 1 && ply_resample.outchannel == 2)
     {
-
+        AudioResample::Tostereo( outSample, outLen );
     }
+
     if ( ply_resample.outfreq == 44100 )
     {
         if ( ply_resample.outchannel == 1 )

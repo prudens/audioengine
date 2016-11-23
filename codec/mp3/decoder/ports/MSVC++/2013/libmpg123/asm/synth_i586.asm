@@ -490,8 +490,8 @@
 	.balign 8
 .text
 
-.globl _INT123_synth_1to1_i586_asm
-_INT123_synth_1to1_i586_asm:
+.globl INT123_synth_1to1_i586_asm
+INT123_synth_1to1_i586_asm:
 	subl $12,%esp
 	pushl %ebp
 	pushl %edi
@@ -541,7 +541,7 @@ _INT123_synth_1to1_i586_asm:
 	leal (%ecx,%ebp,4),%eax
 .L74:
 	pushl %eax
-	call _INT123_dct64_i386
+	call INT123_dct64_i386
 	addl $12,%esp
 
 	movl 16(%esp),%edx

@@ -94,7 +94,7 @@ private:
     int16_t                                 m_plyDevIndex = 0;
 
     bool                                    m_bUseDMO = false;
-    bool                                    m_DMOIsAvailble = false;
+    bool                                    m_DMOIsAvailble = true;
     bool                                    m_bInitialize = false;
     bool                                    m_recIsInitialized = false;
     bool                                    m_playIsInitialized = false;

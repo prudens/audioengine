@@ -5,25 +5,61 @@
       <Configuration>Debug_Generic_Dll</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_Generic_Dll|x64">
+      <Configuration>Debug_Generic_Dll</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug_Generic|Win32">
       <Configuration>Debug_Generic</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_Generic|x64">
+      <Configuration>Debug_Generic</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Debug_x86_Dll_Minimal|Win32">
       <Configuration>Debug_x86_Dll_Minimal</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_x86_Dll_Minimal|x64">
+      <Configuration>Debug_x86_Dll_Minimal</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug_x86_Dll|Win32">
       <Configuration>Debug_x86_Dll</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_x86_Dll|x64">
+      <Configuration>Debug_x86_Dll</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release_Generic_Dll|Win32">
       <Configuration>Release_Generic_Dll</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_Generic_Dll|x64">
+      <Configuration>Release_Generic_Dll</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_x86_Dll_Minimal|x64">
+      <Configuration>Release_x86_Dll_Minimal</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_x86_Dll|x64">
+      <Configuration>Release_x86_Dll</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_x86|x64">
+      <Configuration>Release_x86</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
@@ -41,6 +77,26 @@
       <Configuration>Release_x86</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="x64-Debug|Win32">
+      <Configuration>x64-Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="x64-Debug|x64">
+      <Configuration>x64-Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="x64-Release|Win32">
+      <Configuration>x64-Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="x64-Release|x64">
+      <Configuration>x64-Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{67CAA87B-7CF1-4F93-BB67-21C513F40803}</ProjectGuid>
@@ -53,7 +109,18 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll_Minimal|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll_Minimal|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v120</PlatformToolset>
@@ -64,7 +131,18 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v120</PlatformToolset>
@@ -75,7 +153,18 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_x86|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v120</PlatformToolset>
@@ -86,7 +175,30 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Generic_Dll|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='x64-Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='x64-Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Generic_Dll|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Generic_Dll|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v120</PlatformToolset>
@@ -97,9 +209,26 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Generic|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Generic|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='x64-Debug|Win32'">
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='x64-Debug|x64'" Label="Configuration">
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -109,31 +238,67 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll_Minimal|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll_Minimal|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_x86|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_x86|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Generic_Dll|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Generic_Dll|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='x64-Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='x64-Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Generic_Dll|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Generic_Dll|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Generic|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Generic|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -146,7 +311,9 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_Generic_Dll|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_Generic_Dll|Win32'">$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_Generic_Dll|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='x64-Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_Generic_Dll|Win32'">$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='x64-Release|Win32'">$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_x86|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
@@ -156,11 +323,16 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll|Win32'">$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll|x64'">false</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll_Minimal|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll_Minimal|Win32'">$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|Win32'">$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|x64'">false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IntDir>$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Generic|Win32'">
     <ClCompile>
@@ -182,7 +354,77 @@
       <OutputFile>$(ProjectDir)Debug\$(ProjectName).lib</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Generic|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../..;../../../../src/libmpg123;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;OPT_GENERIC;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(ProjectDir)Debug\$(ProjectName).lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>../..;../../../../src/libmpg123;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;OPT_GENERIC;OPT_MULTI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+    <PreBuildEvent>
+      <Command>cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\dct36_3dnow.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\dct36_3dnowext.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\dct36_sse.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\dct64_3dnow.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\dct64_3dnowext.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\dct64_mmx.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\dct64_sse.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\dct64_sse_float.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\equalizer_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\equalizer_3dnow.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\getcpuflags.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\getcpuflags.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_3dnow.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_3dnowext.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_i586.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_i586.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_mmx.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_sse.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_sse_float.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_stereo_sse_float.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\tabinit_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\tabinit_mmx.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_accurate.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_sse_accurate.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_s32.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_sse_s32.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_accurate.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_stereo_sse_accurate.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_s32.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_stereo_sse_s32.asm"</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -259,7 +501,127 @@ cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_s
       <FixedBaseAddress>true</FixedBaseAddress>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Generic_Dll|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../..;../../../../src/libmpg123;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;OPT_GENERIC;_DEBUG;BUILD_MPG123_DLL;ACCURATE_ROUNDING;IEEE_FLOAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <OutputFile>$(ProjectDir)Debug\$(ProjectName).dll</OutputFile>
+      <AdditionalLibraryDirectories>$(ProjectDir)\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <BaseAddress>0x63000000</BaseAddress>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <FixedBaseAddress>true</FixedBaseAddress>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Generic_Dll|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>../..;../../../../src/libmpg123;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;OPT_GENERIC;BUILD_MPG123_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <OutputFile>$(ProjectDir)Release\$(ProjectName).dll</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <BaseAddress>0x63000000</BaseAddress>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <FixedBaseAddress>true</FixedBaseAddress>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Generic_Dll|x64'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>../..;../../../../src/libmpg123;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;OPT_GENERIC;BUILD_MPG123_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <OutputFile>$(ProjectDir)Release\$(ProjectName).dll</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <BaseAddress>0x63000000</BaseAddress>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <FixedBaseAddress>true</FixedBaseAddress>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='x64-Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>../..;../../../../src/libmpg123;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;OPT_GENERIC;BUILD_MPG123_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <OutputFile>$(ProjectDir)Release\$(ProjectName).dll</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <BaseAddress>0x63000000</BaseAddress>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <FixedBaseAddress>true</FixedBaseAddress>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='x64-Release|x64'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -340,7 +702,160 @@ cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_a
 cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_s32.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_stereo_sse_s32.asm"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../..;../../../../src/libmpg123;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS;OPT_MULTI;OPT_GENERIC;OPT_I386;OPT_I586;OPT_MMX;OPT_3DNOW;OPT_3DNOWEXT;OPT_SSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <PreLinkEvent>
+      <Command>
+      </Command>
+    </PreLinkEvent>
+    <Lib>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+    <PreBuildEvent>
+      <Command>cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\dct36_3dnow.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\dct36_3dnowext.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\dct36_sse.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\dct64_3dnow.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\dct64_3dnowext.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\dct64_mmx.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\dct64_sse.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\dct64_sse_float.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\equalizer_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\equalizer_3dnow.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\getcpuflags.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\getcpuflags.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_3dnow.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_3dnowext.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_i586.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_i586.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_mmx.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_sse.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_sse_float.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_stereo_sse_float.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\tabinit_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\tabinit_mmx.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_accurate.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_sse_accurate.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_s32.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_sse_s32.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_accurate.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_stereo_sse_accurate.asm"
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_s32.S" /nologo &gt; "$(ProjectDir)..\libmpg123\asm\synth_stereo_sse_s32.asm"</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_x86|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>../..;../../../../src/libmpg123;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;OPT_MULTI;OPT_GENERIC;OPT_I386;OPT_I586;OPT_MMX;OPT_3DNOW;OPT_3DNOWEXT;OPT_SSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <PreLinkEvent>
+      <Command>cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_3dnow.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_3dnow.o" "$(ProjectDir)..\libmpg123\Release\dct36_3dnow.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_3dnowext.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_3dnowext.o" "$(ProjectDir)..\libmpg123\Release\dct36_3dnowext.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_avx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_avx.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_avx.o" "$(ProjectDir)..\libmpg123\Release\dct36_avx.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_sse.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_sse.o" "$(ProjectDir)..\libmpg123\Release\dct36_sse.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_neon.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_neon.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_neon.o" "$(ProjectDir)..\libmpg123\Release\dct36_neon.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_3dnow.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct64_3dnow.o" "$(ProjectDir)..\libmpg123\Release\dct64_3dnow.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_3dnowext.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct64_3dnowext.o" "$(ProjectDir)..\libmpg123\Release\dct64_3dnowext.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_mmx.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct64_mmx.o" "$(ProjectDir)..\libmpg123\Release\dct64_mmx.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_sse.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct64_sse.o" "$(ProjectDir)..\libmpg123\Release\dct64_sse.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_sse_float.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\dct64_sse_float.o" "$(ProjectDir)..\libmpg123\Release\dct64_sse_float.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\equalizer_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\equalizer_3dnow.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\equalizer_3dnow.o" "$(ProjectDir)..\libmpg123\Release\equalizer_3dnow.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\getcpuflags.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\getcpuflags.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\getcpuflags.o" "$(ProjectDir)..\libmpg123\Release\getcpuflags.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_3dnow.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_3dnow.o" "$(ProjectDir)..\libmpg123\Release\synth_3dnow.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_3dnowext.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_3dnowext.o" "$(ProjectDir)..\libmpg123\Release\synth_3dnowext.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_i586.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_i586.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_i586.o" "$(ProjectDir)..\libmpg123\Release\synth_i586.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_mmx.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_mmx.o" "$(ProjectDir)..\libmpg123\Release\synth_mmx.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_sse.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_sse.o" "$(ProjectDir)..\libmpg123\Release\synth_sse.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_sse_float.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_sse_float.o" "$(ProjectDir)..\libmpg123\Release\synth_sse_float.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_float.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_float.o" "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_float.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\tabinit_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\tabinit_mmx.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\tabinit_mmx.o" "$(ProjectDir)..\libmpg123\Release\tabinit_mmx.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_accurate.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_sse_accurate.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_sse_accurate.o" "$(ProjectDir)..\libmpg123\Release\synth_sse_accurate.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_s32.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_sse_s32.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_sse_s32.o" "$(ProjectDir)..\libmpg123\Release\synth_sse_s32.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_accurate.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_accurate.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_accurate.o" "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_accurate.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_s32.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_s32.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_s32.o" "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_s32.asm"
+</Command>
+    </PreLinkEvent>
+    <Lib>
+      <AdditionalDependencies>dct36_3dnow.o;dct36_3dnowext.o;dct64_3dnow.o;dct64_3dnowext.o;dct64_mmx.o;dct64_sse.o;dct64_sse_float.o;equalizer_3dnow.o;getcpuflags.o;synth_3dnow.o;synth_3dnowext.o;synth_i586.o;synth_mmx.o;synth_sse.o;synth_sse_float.o;synth_stereo_sse_float.o;tabinit_mmx.o;synth_sse_accurate.o;synth_sse_s32.o;synth_stereo_sse_accurate.o;synth_stereo_sse_s32.o;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(ProjectDir)Release\$(ProjectName).lib</OutputFile>
+      <AdditionalLibraryDirectories>$(ProjectDir)\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <Verbose>true</Verbose>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_x86|x64'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -546,7 +1061,225 @@ yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\
       <FixedBaseAddress>false</FixedBaseAddress>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../..;../../../../src/libmpg123;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;BUILD_MPG123_DLL;OPT_MULTI;OPT_GENERIC;OPT_I386;OPT_I586;OPT_MMX;OPT_3DNOW;OPT_3DNOWEXT;OPT_SSE;_BIND_TO_CURRENT_VCLIBS_VERSION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <PreLinkEvent>
+      <Command>cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_3dnow.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_3dnow.o" "$(ProjectDir)..\libmpg123\Release\dct36_3dnow.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_3dnowext.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_3dnowext.o" "$(ProjectDir)..\libmpg123\Release\dct36_3dnowext.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_avx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_avx.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_avx.o" "$(ProjectDir)..\libmpg123\Release\dct36_avx.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_sse.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_sse.o" "$(ProjectDir)..\libmpg123\Release\dct36_sse.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_neon.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_neon.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_neon.o" "$(ProjectDir)..\libmpg123\Release\dct36_neon.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_3dnow.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct64_3dnow.o" "$(ProjectDir)..\libmpg123\Release\dct64_3dnow.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_3dnowext.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct64_3dnowext.o" "$(ProjectDir)..\libmpg123\Release\dct64_3dnowext.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_mmx.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct64_mmx.o" "$(ProjectDir)..\libmpg123\Release\dct64_mmx.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_sse.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct64_sse.o" "$(ProjectDir)..\libmpg123\Release\dct64_sse.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_sse_float.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\dct64_sse_float.o" "$(ProjectDir)..\libmpg123\Release\dct64_sse_float.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\equalizer_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\equalizer_3dnow.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\equalizer_3dnow.o" "$(ProjectDir)..\libmpg123\Release\equalizer_3dnow.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\getcpuflags.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\getcpuflags.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\getcpuflags.o" "$(ProjectDir)..\libmpg123\Release\getcpuflags.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_3dnow.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_3dnow.o" "$(ProjectDir)..\libmpg123\Release\synth_3dnow.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_3dnowext.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_3dnowext.o" "$(ProjectDir)..\libmpg123\Release\synth_3dnowext.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_i586.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_i586.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_i586.o" "$(ProjectDir)..\libmpg123\Release\synth_i586.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_mmx.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_mmx.o" "$(ProjectDir)..\libmpg123\Release\synth_mmx.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_sse.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_sse.o" "$(ProjectDir)..\libmpg123\Release\synth_sse.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_sse_float.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_sse_float.o" "$(ProjectDir)..\libmpg123\Release\synth_sse_float.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_float.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_float.o" "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_float.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\tabinit_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\tabinit_mmx.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\tabinit_mmx.o" "$(ProjectDir)..\libmpg123\Release\tabinit_mmx.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_accurate.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_sse_accurate.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_sse_accurate.o" "$(ProjectDir)..\libmpg123\Release\synth_sse_accurate.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_s32.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_sse_s32.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_sse_s32.o" "$(ProjectDir)..\libmpg123\Release\synth_sse_s32.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_accurate.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_accurate.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_accurate.o" "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_accurate.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_s32.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_s32.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_s32.o" "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_s32.asm"
+</Command>
+    </PreLinkEvent>
+    <Link>
+      <AdditionalDependencies>dct36_3dnow.o;dct36_3dnowext.o;dct64_3dnow.o;dct64_3dnowext.o;dct64_mmx.o;dct64_sse.o;dct64_sse_float.o;equalizer_3dnow.o;getcpuflags.o;synth_3dnow.o;synth_3dnowext.o;synth_i586.o;synth_mmx.o;synth_sse.o;synth_sse_float.o;synth_stereo_sse_float.o;tabinit_mmx.o;synth_sse_accurate.o;synth_sse_s32.o;synth_stereo_sse_accurate.o;synth_stereo_sse_s32.o;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(ProjectDir)Debug\$(ProjectName).dll</OutputFile>
+      <AdditionalLibraryDirectories>$(ProjectDir)\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <BaseAddress>0x63000000</BaseAddress>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <FixedBaseAddress>false</FixedBaseAddress>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll|Win32'">
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>../..;../../../../src/libmpg123;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;BUILD_MPG123_DLL;OPT_MULTI;OPT_GENERIC;OPT_I386;OPT_I586;OPT_MMX;OPT_3DNOW;OPT_3DNOWEXT;OPT_SSE;_BIND_TO_CURRENT_VCLIBS_VERSION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <PreLinkEvent>
+      <Command>cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_3dnow.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_3dnow.o" "$(ProjectDir)..\libmpg123\Release\dct36_3dnow.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_3dnowext.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_3dnowext.o" "$(ProjectDir)..\libmpg123\Release\dct36_3dnowext.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_avx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_avx.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_avx.o" "$(ProjectDir)..\libmpg123\Release\dct36_avx.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_sse.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_sse.o" "$(ProjectDir)..\libmpg123\Release\dct36_sse.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_neon.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_neon.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_neon.o" "$(ProjectDir)..\libmpg123\Release\dct36_neon.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_3dnow.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct64_3dnow.o" "$(ProjectDir)..\libmpg123\Release\dct64_3dnow.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_3dnowext.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct64_3dnowext.o" "$(ProjectDir)..\libmpg123\Release\dct64_3dnowext.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_mmx.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct64_mmx.o" "$(ProjectDir)..\libmpg123\Release\dct64_mmx.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_sse.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct64_sse.o" "$(ProjectDir)..\libmpg123\Release\dct64_sse.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_sse_float.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\dct64_sse_float.o" "$(ProjectDir)..\libmpg123\Release\dct64_sse_float.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\equalizer_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\equalizer_3dnow.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\equalizer_3dnow.o" "$(ProjectDir)..\libmpg123\Release\equalizer_3dnow.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\getcpuflags.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\getcpuflags.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\getcpuflags.o" "$(ProjectDir)..\libmpg123\Release\getcpuflags.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_3dnow.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_3dnow.o" "$(ProjectDir)..\libmpg123\Release\synth_3dnow.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_3dnowext.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_3dnowext.o" "$(ProjectDir)..\libmpg123\Release\synth_3dnowext.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_i586.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_i586.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_i586.o" "$(ProjectDir)..\libmpg123\Release\synth_i586.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_mmx.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_mmx.o" "$(ProjectDir)..\libmpg123\Release\synth_mmx.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_sse.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_sse.o" "$(ProjectDir)..\libmpg123\Release\synth_sse.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_sse_float.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_sse_float.o" "$(ProjectDir)..\libmpg123\Release\synth_sse_float.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_float.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_float.o" "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_float.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\tabinit_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\tabinit_mmx.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\tabinit_mmx.o" "$(ProjectDir)..\libmpg123\Release\tabinit_mmx.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_accurate.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_sse_accurate.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_sse_accurate.o" "$(ProjectDir)..\libmpg123\Release\synth_sse_accurate.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_s32.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_sse_s32.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_sse_s32.o" "$(ProjectDir)..\libmpg123\Release\synth_sse_s32.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_accurate.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_accurate.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_accurate.o" "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_accurate.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_s32.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_s32.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_s32.o" "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_s32.asm"
+</Command>
+    </PreLinkEvent>
+    <Link>
+      <AdditionalDependencies>dct36_3dnow.o;dct36_3dnowext.o;dct64_3dnow.o;dct64_3dnowext.o;dct64_mmx.o;dct64_sse.o;dct64_sse_float.o;equalizer_3dnow.o;getcpuflags.o;synth_3dnow.o;synth_3dnowext.o;synth_i586.o;synth_mmx.o;synth_sse.o;synth_sse_float.o;synth_stereo_sse_float.o;tabinit_mmx.o;synth_sse_accurate.o;synth_sse_s32.o;synth_stereo_sse_accurate.o;synth_stereo_sse_s32.o;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(ProjectDir)Release\$(ProjectName).dll</OutputFile>
+      <AdditionalLibraryDirectories>$(ProjectDir)\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <BaseAddress>0x63000000</BaseAddress>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <FixedBaseAddress>true</FixedBaseAddress>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll|x64'">
     <PreBuildEvent>
       <Command>
       </Command>
@@ -765,7 +1498,226 @@ yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\
       <FixedBaseAddress>false</FixedBaseAddress>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll_Minimal|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../..;../../../../src/libmpg123;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;BUILD_MPG123_DLL;OPT_MULTI;OPT_GENERIC;OPT_I386;OPT_I586;OPT_MMX;OPT_3DNOW;OPT_3DNOWEXT;OPT_SSE;NO_STRING;NO_ID3V2;NO_ICY;NO_DOWNSAMPLE;_BIND_TO_CURRENT_VCLIBS_VERSION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <PreLinkEvent>
+      <Command>cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_3dnow.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_3dnow.o" "$(ProjectDir)..\libmpg123\Release\dct36_3dnow.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_3dnowext.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_3dnowext.o" "$(ProjectDir)..\libmpg123\Release\dct36_3dnowext.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_avx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_avx.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_avx.o" "$(ProjectDir)..\libmpg123\Release\dct36_avx.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_sse.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_sse.o" "$(ProjectDir)..\libmpg123\Release\dct36_sse.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_neon.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_neon.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_neon.o" "$(ProjectDir)..\libmpg123\Release\dct36_neon.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_3dnow.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct64_3dnow.o" "$(ProjectDir)..\libmpg123\Release\dct64_3dnow.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_3dnowext.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct64_3dnowext.o" "$(ProjectDir)..\libmpg123\Release\dct64_3dnowext.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_mmx.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct64_mmx.o" "$(ProjectDir)..\libmpg123\Release\dct64_mmx.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_sse.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct64_sse.o" "$(ProjectDir)..\libmpg123\Release\dct64_sse.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_sse_float.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\dct64_sse_float.o" "$(ProjectDir)..\libmpg123\Release\dct64_sse_float.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\equalizer_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\equalizer_3dnow.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\equalizer_3dnow.o" "$(ProjectDir)..\libmpg123\Release\equalizer_3dnow.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\getcpuflags.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\getcpuflags.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\getcpuflags.o" "$(ProjectDir)..\libmpg123\Release\getcpuflags.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_3dnow.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_3dnow.o" "$(ProjectDir)..\libmpg123\Release\synth_3dnow.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_3dnowext.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_3dnowext.o" "$(ProjectDir)..\libmpg123\Release\synth_3dnowext.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_i586.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_i586.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_i586.o" "$(ProjectDir)..\libmpg123\Release\synth_i586.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_mmx.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_mmx.o" "$(ProjectDir)..\libmpg123\Release\synth_mmx.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_sse.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_sse.o" "$(ProjectDir)..\libmpg123\Release\synth_sse.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_sse_float.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_sse_float.o" "$(ProjectDir)..\libmpg123\Release\synth_sse_float.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_float.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_float.o" "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_float.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\tabinit_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\tabinit_mmx.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\tabinit_mmx.o" "$(ProjectDir)..\libmpg123\Release\tabinit_mmx.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_accurate.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_sse_accurate.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_sse_accurate.o" "$(ProjectDir)..\libmpg123\Release\synth_sse_accurate.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_s32.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_sse_s32.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_sse_s32.o" "$(ProjectDir)..\libmpg123\Release\synth_sse_s32.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_accurate.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_accurate.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_accurate.o" "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_accurate.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_s32.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_s32.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_s32.o" "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_s32.asm"
+
+</Command>
+    </PreLinkEvent>
+    <Link>
+      <AdditionalDependencies>dct36_3dnow.o;dct36_3dnowext.o;dct64_3dnow.o;dct64_3dnowext.o;dct64_mmx.o;dct64_sse.o;dct64_sse_float.o;equalizer_3dnow.o;getcpuflags.o;synth_3dnow.o;synth_3dnowext.o;synth_i586.o;synth_mmx.o;synth_sse.o;synth_sse_float.o;synth_stereo_sse_float.o;tabinit_mmx.o;synth_sse_accurate.o;synth_sse_s32.o;synth_stereo_sse_accurate.o;synth_stereo_sse_s32.o;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(ProjectDir)Debug\$(ProjectName).dll</OutputFile>
+      <AdditionalLibraryDirectories>$(ProjectDir)\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <BaseAddress>0x63000000</BaseAddress>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <FixedBaseAddress>false</FixedBaseAddress>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|Win32'">
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>../..;../../../../src/libmpg123;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;BUILD_MPG123_DLL;OPT_MULTI;OPT_GENERIC;OPT_I386;OPT_I586;OPT_MMX;OPT_3DNOW;OPT_3DNOWEXT;OPT_SSE;NO_STRING;NO_ID3V2;NO_ICY;NO_DOWNSAMPLE;_BIND_TO_CURRENT_VCLIBS_VERSION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <PreLinkEvent>
+      <Command>cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_3dnow.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_3dnow.o" "$(ProjectDir)..\libmpg123\Release\dct36_3dnow.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_3dnowext.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_3dnowext.o" "$(ProjectDir)..\libmpg123\Release\dct36_3dnowext.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_avx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_avx.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_avx.o" "$(ProjectDir)..\libmpg123\Release\dct36_avx.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_sse.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_sse.o" "$(ProjectDir)..\libmpg123\Release\dct36_sse.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct36_neon.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct36_neon.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct36_neon.o" "$(ProjectDir)..\libmpg123\Release\dct36_neon.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_3dnow.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct64_3dnow.o" "$(ProjectDir)..\libmpg123\Release\dct64_3dnow.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_3dnowext.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct64_3dnowext.o" "$(ProjectDir)..\libmpg123\Release\dct64_3dnowext.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_mmx.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct64_mmx.o" "$(ProjectDir)..\libmpg123\Release\dct64_mmx.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_sse.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o  "$(ProjectDir)..\libmpg123\Release\dct64_sse.o" "$(ProjectDir)..\libmpg123\Release\dct64_sse.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\dct64_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\dct64_sse_float.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\dct64_sse_float.o" "$(ProjectDir)..\libmpg123\Release\dct64_sse_float.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\equalizer_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\equalizer_3dnow.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\equalizer_3dnow.o" "$(ProjectDir)..\libmpg123\Release\equalizer_3dnow.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\getcpuflags.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\getcpuflags.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\getcpuflags.o" "$(ProjectDir)..\libmpg123\Release\getcpuflags.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_3dnow.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_3dnow.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_3dnow.o" "$(ProjectDir)..\libmpg123\Release\synth_3dnow.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_3dnowext.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_3dnowext.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_3dnowext.o" "$(ProjectDir)..\libmpg123\Release\synth_3dnowext.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_i586.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_i586.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_i586.o" "$(ProjectDir)..\libmpg123\Release\synth_i586.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_mmx.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_mmx.o" "$(ProjectDir)..\libmpg123\Release\synth_mmx.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_sse.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_sse.o" "$(ProjectDir)..\libmpg123\Release\synth_sse.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_sse_float.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_sse_float.o" "$(ProjectDir)..\libmpg123\Release\synth_sse_float.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_float.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_float.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_float.o" "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_float.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\tabinit_mmx.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\tabinit_mmx.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\tabinit_mmx.o" "$(ProjectDir)..\libmpg123\Release\tabinit_mmx.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_accurate.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_sse_accurate.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_sse_accurate.o" "$(ProjectDir)..\libmpg123\Release\synth_sse_accurate.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_sse_s32.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_sse_s32.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_sse_s32.o" "$(ProjectDir)..\libmpg123\Release\synth_sse_s32.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_accurate.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_accurate.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_accurate.o" "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_accurate.asm"
+
+cl /I "..\.." /EP /TC "$(ProjectDir)..\..\..\..\src\libmpg123\synth_stereo_sse_s32.S" /nologo &gt; "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_s32.asm"
+yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_s32.o" "$(ProjectDir)..\libmpg123\Release\synth_stereo_sse_s32.asm"
+</Command>
+    </PreLinkEvent>
+    <Link>
+      <AdditionalDependencies>dct36_3dnow.o;dct36_3dnowext.o;dct64_3dnow.o;dct64_3dnowext.o;dct64_mmx.o;dct64_sse.o;dct64_sse_float.o;equalizer_3dnow.o;getcpuflags.o;synth_3dnow.o;synth_3dnowext.o;synth_i586.o;synth_mmx.o;synth_sse.o;synth_sse_float.o;synth_stereo_sse_float.o;tabinit_mmx.o;synth_sse_accurate.o;synth_sse_s32.o;synth_stereo_sse_accurate.o;synth_stereo_sse_s32.o;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(ProjectDir)Release\$(ProjectName).dll</OutputFile>
+      <AdditionalLibraryDirectories>$(ProjectDir)\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <BaseAddress>0x63000000</BaseAddress>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <FixedBaseAddress>true</FixedBaseAddress>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|x64'">
     <PreBuildEvent>
       <Command>
       </Command>
@@ -885,21 +1837,39 @@ yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\
     <ClCompile Include="..\..\..\..\src\libmpg123\dct64.c" />
     <ClCompile Include="..\..\..\..\src\libmpg123\dct64_i386.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Generic_Dll|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Generic_Dll|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Generic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Generic|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Generic_Dll|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Generic_Dll|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='x64-Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='x64-Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\libmpg123\dct64_i486.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Generic_Dll|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Generic_Dll|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Generic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Generic|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll_Minimal|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll_Minimal|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Generic_Dll|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Generic_Dll|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='x64-Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='x64-Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_x86|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_x86|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\libmpg123\equalizer.c" />
     <ClCompile Include="..\..\..\..\src\libmpg123\feature.c" />
@@ -907,7 +1877,9 @@ yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\
     <ClCompile Include="..\..\..\..\src\libmpg123\frame.c" />
     <ClCompile Include="..\..\..\..\src\libmpg123\icy.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll_Minimal|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll_Minimal|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\libmpg123\icy2utf8.c" />
     <ClCompile Include="..\..\..\..\src\libmpg123\id3.c" />
@@ -926,15 +1898,27 @@ yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(ProjectDir)..\libmpg123\
     <ClCompile Include="..\..\..\..\src\libmpg123\synth_8bit.c" />
     <ClCompile Include="..\..\..\..\src\libmpg123\synth_i486.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Generic_Dll|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Generic_Dll|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Generic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Generic|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll_Minimal|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll_Minimal|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_x86_Dll|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Generic_Dll|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Generic_Dll|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='x64-Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='x64-Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_x86|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_x86|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\libmpg123\synth_real.c" />
     <ClCompile Include="..\..\..\..\src\libmpg123\synth_s32.c" />

@@ -473,13 +473,13 @@
 
 
 	.balign 32
-_scale_s32:
+scale_s32:
 	.long   1199570944 
 	.long   1199570944
 	.long   1199570944
 	.long   1199570944
 	.balign 16
-_maxmin_s32:
+maxmin_s32:
 	.long   1191182335 
 	.long   1191182335
 	.long   1191182335
@@ -490,8 +490,8 @@ _maxmin_s32:
 	.long   -956301312
 	.text
 	.balign 16
-.globl _INT123_synth_1to1_s32_sse_asm
-_INT123_synth_1to1_s32_sse_asm:
+.globl INT123_synth_1to1_s32_sse_asm
+INT123_synth_1to1_s32_sse_asm:
 	pushl		%ebp
 	movl		%esp, %ebp
 	pushl		%ebx
@@ -586,9 +586,9 @@ _INT123_synth_1to1_s32_sse_asm:
 	
 	movaps		%xmm0, %xmm1
 	movaps		%xmm0, %xmm2
-	mulps		_scale_s32, %xmm0
-	cmpnleps	_maxmin_s32, %xmm1
-	cmpltps		_maxmin_s32+16, %xmm2
+	mulps		scale_s32, %xmm0
+	cmpnleps	maxmin_s32, %xmm1
+	cmpltps		maxmin_s32+16, %xmm2
 	cvtps2pi	%xmm0, %mm0
 	movhlps		%xmm0, %xmm0
 	cvtps2pi	%xmm0, %mm1
@@ -698,9 +698,9 @@ _INT123_synth_1to1_s32_sse_asm:
 	
 	movaps		%xmm0, %xmm1
 	movaps		%xmm0, %xmm2
-	mulps		_scale_s32, %xmm0
-	cmpnleps	_maxmin_s32, %xmm1
-	cmpltps		_maxmin_s32+16, %xmm2
+	mulps		scale_s32, %xmm0
+	cmpnleps	maxmin_s32, %xmm1
+	cmpltps		maxmin_s32+16, %xmm2
 	cvtps2pi	%xmm0, %mm0
 	movhlps		%xmm0, %xmm0
 	cvtps2pi	%xmm0, %mm1

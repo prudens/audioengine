@@ -459,9 +459,9 @@
 
 
 
-	.globl _INT123_dct64_3dnow
+	.globl INT123_dct64_3dnow
 
-_INT123_dct64_3dnow:
+INT123_dct64_3dnow:
 	subl $256,%esp
 	pushl %ebp
 	pushl %edi
@@ -476,7 +476,7 @@ _INT123_dct64_3dnow:
 	
 
 	
-	movl _INT123_pnts,%eax
+	movl INT123_pnts,%eax
 	movq 0(%edi),%mm0
         movq %mm0,%mm1
 	movd 124(%edi),%mm2
@@ -575,7 +575,7 @@ _INT123_dct64_3dnow:
 	movd %mm5,64(%ebx)
 	
 	
-	movl _INT123_pnts+4,%eax
+	movl INT123_pnts+4,%eax
 	
 	movq 0(%ebx),%mm0
 	movq %mm0,%mm1
@@ -678,7 +678,7 @@ _INT123_dct64_3dnow:
 	movd %mm5,96(%esi)
 
 	
-	movl _INT123_pnts+8,%eax
+	movl INT123_pnts+8,%eax
 	movq 0(%eax),%mm0
 	movq 8(%eax),%mm1
 	
@@ -779,7 +779,7 @@ _INT123_dct64_3dnow:
 	movd %mm6,112(%ebx)
 	
 	
-	movl _INT123_pnts+12,%eax
+	movl INT123_pnts+12,%eax
 	movq 0(%eax),%mm0
 	
 	movq 0(%ebx),%mm1
@@ -889,7 +889,7 @@ _INT123_dct64_3dnow:
 	pi2fd %mm0,%mm0	
 	movd %eax,%mm1
 	pi2fd %mm1,%mm1
-	movl _INT123_pnts+16,%eax
+	movl INT123_pnts+16,%eax
 	movd 0(%eax),%mm2
 	
 	punpckldq %mm2,%mm1

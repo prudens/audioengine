@@ -54,10 +54,6 @@ private:
     bool m_bInit;
     AudioProcessing *m_apm;
     bool m_bEnable;
-    size_t m_recSampleRate;
-    size_t m_recChannel;
-    size_t m_plySampleRate;
-    size_t m_plyChannel;
     Resampler m_recResample;
     Resampler m_plyResample;
     Resampler m_recReverseResample;
@@ -69,12 +65,14 @@ private:
     bool m_bSilent;
     std::list<int16_t*> m_audiolist;
     rtc::scoped_ptr<webrtc::RealFourier> m_fft;
+public:
     struct {
         size_t infreq = 48000;
         size_t outfreq = 16000;
         size_t inchannel = 2;
         size_t outchannel = 2;
         size_t channel = 2;
+        size_t frame_size;
     }rec_resample,ply_resample;
 
 };

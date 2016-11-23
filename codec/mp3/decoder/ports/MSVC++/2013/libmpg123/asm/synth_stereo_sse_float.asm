@@ -475,15 +475,15 @@
 
 
 	.balign 32
-_scale_sse:
+scale_sse:
 	.long   939524096
 	.long   939524096
 	.long   939524096
 	.long   939524096
 	.text
 	.balign 16
-.globl _INT123_synth_1to1_real_s_sse_asm
-_INT123_synth_1to1_real_s_sse_asm:
+.globl INT123_synth_1to1_real_s_sse_asm
+INT123_synth_1to1_real_s_sse_asm:
 	pushl		%ebp
 	movl		%esp, %ebp
 	andl		$-16, %esp
@@ -663,8 +663,8 @@ _INT123_synth_1to1_real_s_sse_asm:
 	subps		%xmm1, %xmm0
 	addps		%xmm4, %xmm0
 	
-	mulps		_scale_sse, %xmm5
-	mulps		_scale_sse, %xmm0
+	mulps		scale_sse, %xmm5
+	mulps		scale_sse, %xmm0
 	movaps		%xmm5, %xmm1
 	unpcklps	%xmm0, %xmm5
 	unpckhps	%xmm0, %xmm1
@@ -836,8 +836,8 @@ _INT123_synth_1to1_real_s_sse_asm:
 	addps		%xmm1, %xmm0
 	addps		%xmm4, %xmm0
 	
-	mulps		_scale_sse, %xmm5
-	mulps		_scale_sse, %xmm0
+	mulps		scale_sse, %xmm5
+	mulps		scale_sse, %xmm0
 	movaps		%xmm5, %xmm1
 	unpcklps	%xmm0, %xmm5
 	unpckhps	%xmm0, %xmm1

@@ -21,7 +21,8 @@
 #pragma comment(lib,"../build/winx/Release/aac.lib")
 #pragma comment(lib,"../build/winx/Release/g7221.lib")
 #pragma comment(lib,"../build/winx/Release/opus.lib")
-#pragma comment(lib,"msc.lib")
+#pragma comment(linker,"/nodefaultlib:LIBCMT.lib")
+//#pragma comment(lib,"../effect/speechtotext/ifly/winx/lib/msc.lib")
 #endif
 #pragma comment(lib, "ws2_32")
 #pragma comment(lib, "strmiids")
@@ -29,3 +30,4 @@
 #pragma comment(lib, "dmoguids")
 #pragma comment(lib, "wmcodecdspuuid")
 #pragma comment(lib,"winmm.lib")
+

@@ -1195,6 +1195,7 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
             {
                 keepRecording = false;
                 assert( false );
+                m_audiolock.unlock();
                 break;
             }
 
@@ -1207,6 +1208,7 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
             {
                 keepRecording = false;
                 assert( false );
+                m_audiolock.unlock();
                 break;
             }
 
@@ -1214,7 +1216,7 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
 
             if ( bytesProduced > 0 )
             {
-                const int kSamplesProduced = bytesProduced / 2 / m_recChannels;
+                const int kSamplesProduced = bytesProduced;
                 // TODO(andrew): verify that this is always satisfied. It might
                 // be that ProcessOutput will try to return more than 10 ms if
                 // we fail to call it frequently enough.
@@ -1232,6 +1234,7 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
             hr = m_spMediaBuffer->SetLength( 0 );
             if ( FAILED( hr ) )
             {
+                m_audiolock.unlock();
                 keepRecording = false;
                 assert( false );
                 break;
@@ -1242,14 +1245,17 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
                 // The DMO cannot currently produce more data. This is the
                 // normal case; otherwise it means the DMO had more than 10 ms
                 // of data available and ProcessOutput should be called again.
+                m_audiolock.unlock();
                 break;
             }
+            m_audiolock.unlock();
         }
+
     }
     // ---------------------------- THREAD LOOP ---------------------------- <<
 
     RevertThreadPriority( hMmTask );
-    m_audiolock.unlock();
+
     return hr;
 }
 

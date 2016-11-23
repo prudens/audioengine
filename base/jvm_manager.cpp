@@ -167,7 +167,7 @@ std::pair<jobject,jmethodID> JVMManager::GetMethodID(  int key, const char* name
     auto it = m_objlist.find( key );
     if ( it == m_objlist.end() )
     {
-        return{};
+        return{}; 
     }
     jmethodID mid = env->GetMethodID( it->second.second, name, signature );
     return{ it->second.first, mid};

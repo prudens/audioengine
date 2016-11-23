@@ -55,7 +55,7 @@ bool AudioResample::Tostereo( int16_t*src, int num_samples, int16_t*dst )
     }
     int16_t*pSrc = src;
     int16_t*pDst = dst;
-    for ( int i = 0,j=0; i < num_samples;j=2, i++ )
+    for ( int i = 0,j=0; i < num_samples;j+=2, i++ )
     {
         pDst[j]   = pSrc[i];
         pDst[j + 1] = pSrc[i];
