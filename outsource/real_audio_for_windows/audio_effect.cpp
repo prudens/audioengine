@@ -25,13 +25,13 @@ AudioEffect::AudioEffect()
     m_apm->gain_control()->set_target_level_dbfs( 9 );
     m_apm->gain_control()->set_mode( GainControl::kAdaptiveDigital );
     m_apm->gain_control()->set_compression_gain_db( 90 );
-    m_apm->voice_detection()->Enable( true );
-    m_apm->noise_suppression()->Enable( true );
-    m_apm->high_pass_filter()->Enable( true );
+    m_apm->voice_detection()->Enable( false );
+    m_apm->noise_suppression()->Enable( false );
+    m_apm->high_pass_filter()->Enable( false );
 
     m_apm->noise_suppression()->set_level( webrtc::NoiseSuppression::kVeryHigh );
     m_apm->voice_detection()->set_likelihood( VoiceDetection::kLowLikelihood );
-    m_apm->level_estimator()->Enable( true );
+    m_apm->level_estimator()->Enable( false );
 	 
     m_bEnable = true;
     m_nCheckVad = 0;
@@ -106,26 +106,26 @@ void AudioEffect::ProcessCaptureStream( int16_t* audio_samples, size_t frame_byt
         return;
     }
 
-//     af.UpdateFrame( 0,
-//                     GetTimeStamp(),
-//                     af.data_,
-//                     kTargetRecSampleRate/100,
-//                     kTargetRecSampleRate,
-//                     AudioFrame::kNormalSpeech,
-//                     AudioFrame::kVadUnknown,
-//                     rec_resample.channel );
-//     m_apm->set_stream_delay_ms( m_stream_delay );
-//     if ( 0 != (err = m_apm->ProcessStream( &af )) )
-//     {
-//        return;
-//     }
+    af.UpdateFrame( 0,
+                    GetTimeStamp(),
+                    af.data_,
+                    kTargetRecSampleRate/100,
+                    kTargetRecSampleRate,
+                    AudioFrame::kNormalSpeech,
+                    AudioFrame::kVadUnknown,
+                    rec_resample.channel );
+    m_apm->set_stream_delay_ms( m_stream_delay );
+    if ( 0 != (err = m_apm->ProcessStream( &af )) )
+    {
+       return;
+    }
 
 
     size_t inLen = outLen;
     if ( 0 != ( err = m_recReverseResample.Push( af.data_,
         inLen,
         outSample,
-        sizeof( af.data_ ),
+        len_of_byte/2,
         outLen ) ) )
     {
         return;
