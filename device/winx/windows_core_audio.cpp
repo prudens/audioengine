@@ -931,7 +931,7 @@ bool WindowsCoreAudio::InitRecordingDMO()
     }
     m_recSampleRate = ptrWav->nSamplesPerSec;
     m_recChannels = ptrWav->nChannels;
-    hr = CMediaBuffer::Create( ptrWav->nBlockAlign * ptrWav->nSamplesPerSec, (IMediaBuffer**)&m_spMediaBuffer );
+    hr = CMediaBuffer::Create( ptrWav->nBlockAlign * ptrWav->nSamplesPerSec/100, (IMediaBuffer**)&m_spMediaBuffer );
     if ( FAILED( hr ) )
     {
         return false;
@@ -1183,7 +1183,6 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
                 DMO_OUTPUT_DATA_BUFFER dmoBuffer = { 0 };
                 dmoBuffer.pBuffer = m_spMediaBuffer;
                 dmoBuffer.pBuffer->AddRef();
-
                 // Poll the DMO for AEC processed capture data. The DMO will
                 // copy available data to |dmoBuffer|, and should only return
                 // 10 ms frames. The value of |dwStatus| should be ignored.

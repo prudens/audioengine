@@ -1,5 +1,5 @@
 #include "real_audio_device_interface.h"
-
+#include <atomic>
 #include <string>
 #include <list>
 #include <mutex>
@@ -7,7 +7,7 @@
 #include <vector>
 #include "device/include/audio_device.h"
 #include "audio_effect.h"
-
+#include "base/time_cvt.hpp"
 
 class CAudioBufferProc : public  AudioBufferProc
 {
@@ -19,9 +19,9 @@ public:
     size_t frame_size_;
     std::vector<char> rec_cache_;
     std::vector<char> ply_cache_;
-   // FILE* file1;
-   // FILE* file2;
-
+    FILE* file1;
+    FILE* file2;
+    std::atomic<int> count_;
 public:
     CAudioBufferProc( uint32_t rec_sample_rate,
                       uint16_t rec_channel,
@@ -32,22 +32,37 @@ public:
         pEffect->RecordingReset(rec_sample_rate, rec_channel, AudioEffect::kTargetRecSampleRate, rec_channel );
         pEffect->PlayoutReset( AudioEffect::kTargetPlySampleRate, ply_channel, ply_sample_rate, ply_channel );
         frame_size_ = 320 * rec_channel;// д╛хо10ms
-        //file1 = fopen( "d:/dmo.pcm","wb+" );
-        //file2 = fopen( "d:/dmo2.pcm", "wb+" );
+        file1 = fopen( "d:/dmo.pcm","wb+" );
+        file2 = fopen( "d:/dmo2.pcm", "wb+" );
+        count_ = 1;
 
     }
     ~CAudioBufferProc()
     {
         delete pEffect;
-        //fclose( file1 );
-        //fclose( file2 );
+        fclose( file1 );
+        fclose( file2 );
 
     }
 
     virtual void RecordingDataIsAvailable( const void*data, size_t samples )
     {
+        count_++;
+//        static int data_len = 0;
+//         data_len += samples;
+//         static uint64_t ts = timestamp();
+//         if (count_  == 500)
+//         {
+//             auto t = timestamp() - ts;
+//             printf( "[%I64u] RecordingDataIsAvailable %d, data_len = %d \n", timestamp(), data_len / (int)t, data_len );
+//             count_ = 0;
+//             data_len = 0;
+//             ts = timestamp();
+//         }
+        printf( "[%I64u] RecordingDataIsAvailable %d  \n", timestamp(), count_ );
        // printf( "samples = %d\n",samples );
-      //  fwrite( data, 1, samples, file1 );
+        fwrite( data,1, samples, file2 );
+       // return;
         if ( !RecordingData )
         {
             return;
@@ -55,14 +70,13 @@ public:
         {
             size_t outSize = samples;
             pEffect->ProcessCaptureStream( (int16_t*)data, samples, (int16_t*)data, outSize );
-           // fwrite( data, 1, outSize, file2 );
-           // printf( "outSize=%d,samples=%d", (int32_t)outSize, (int32_t)samples );
             rec_cache_.insert( rec_cache_.end(), (char*)data, (char*)data + outSize );  
             
             if ( rec_cache_.size() >= frame_size_ )
             {
-                
+
                 RecordingData( rec_cache_.data(), frame_size_ );
+                fwrite( rec_cache_.data(), 1, frame_size_, file1 );
                 if ( rec_cache_.size() == frame_size_ )
                 {
                     rec_cache_.clear();
@@ -81,11 +95,13 @@ public:
 
     virtual size_t NeedMorePlayoutData( void* data, size_t len_of_byte )
     {
+        count_--;
+        printf( "[%I64u] NeedMorePlayoutData %d  \n", timestamp(), count_ );
         lockguard lg( m_lock );
         size_t frame_size = pEffect->ply_resample.frame_size;
         if ( ply_cache_.size() >= frame_size )
         {
-
+            
             pEffect->ProcessRenderStream( (int16_t*)ply_cache_.data(), frame_size, (int16_t*)data, len_of_byte );
 
             ply_cache_.erase( ply_cache_.begin(), ply_cache_.begin() + frame_size );
@@ -101,7 +117,7 @@ public:
         {
             return;
         }
-       // fwrite( pcm16_data, 1, len_of_byte, file2 );
+        fwrite( pcm16_data, 1, len_of_byte, file2 );
         lockguard lg( m_lock );
         ply_cache_.insert(ply_cache_.end(), (char*)pcm16_data, (char*)pcm16_data + len_of_byte );
     }

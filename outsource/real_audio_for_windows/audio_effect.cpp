@@ -14,7 +14,7 @@ static uint32_t GetTimeStamp()
 AudioEffect::AudioEffect()
 { 
     m_apm = AudioProcessing::Create();
-    m_apm->echo_cancellation()->Enable( false );
+    m_apm->echo_cancellation()->Enable( true );
     m_apm->echo_cancellation()->set_suppression_level( EchoCancellation::kHighSuppression );
     m_apm->echo_control_mobile()->Enable( false );
     m_apm->echo_control_mobile()->set_routing_mode( EchoControlMobile::kSpeakerphone );
@@ -72,7 +72,7 @@ void AudioEffect::PlayoutReset( size_t inFreq, size_t inChannel, size_t outFreq,
     m_plyReverseResample.ResetIfNeeded( ply_resample.infreq/1000*1000, ply_resample.outfreq/1000*1000, ply_resample.channel );
 }
 
-void AudioEffect::ProcessCaptureStream( int16_t* audio_samples, size_t frame_byte_size, int16_t*outSample, size_t& len_of_byte )
+void AudioEffect::ProcessCaptureStream( int16_t* audio_samples, size_t frame_byte_size, int16_t* outSample, size_t& len_of_byte )
 {
     if ( !m_bInit )
     {

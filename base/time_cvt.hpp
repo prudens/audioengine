@@ -22,7 +22,7 @@
     {
         /*system_clock::now() is current time by second,
           and default construct is start GMT time */
-        return duration_cast<seconds>(
+        return duration_cast<milliseconds>(
             system_clock::now() - time_point<system_clock>() ).count();
 
         // return time( nullptr );

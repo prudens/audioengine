@@ -93,7 +93,7 @@ private:
     int16_t                                 m_recDevIndex = 0;
     int16_t                                 m_plyDevIndex = 0;
 
-    bool                                    m_bUseDMO = false;
+    bool                                    m_bUseDMO = true;
     bool                                    m_DMOIsAvailble = true;
     bool                                    m_bInitialize = false;
     bool                                    m_recIsInitialized = false;
