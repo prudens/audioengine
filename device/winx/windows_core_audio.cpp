@@ -1177,7 +1177,7 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
 
         while ( keepRecording )
         {
-            m_audiolock.lock();
+            std::unique_lock<std::mutex> ul(m_audiolock);
             DWORD dwStatus = 0;
             {
                 DMO_OUTPUT_DATA_BUFFER dmoBuffer = { 0 };
@@ -1194,7 +1194,6 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
             {
                 keepRecording = false;
                 assert( false );
-                m_audiolock.unlock();
                 break;
             }
 
@@ -1207,7 +1206,6 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
             {
                 keepRecording = false;
                 assert( false );
-                m_audiolock.unlock();
                 break;
             }
 
@@ -1221,19 +1219,18 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
                 // we fail to call it frequently enough.
 
 
-                m_audiolock.unlock();  // Release lock while making the callback.
+                ul.unlock();  // Release lock while making the callback.
                 if ( m_pBufferProc )
                 {
                     m_pBufferProc->RecordingDataIsAvailable( (int16_t*)data, kSamplesProduced );
                 }
-                m_audiolock.lock();
+                ul.lock();
             }
 
             // Reset length to indicate buffer availability.
             hr = m_spMediaBuffer->SetLength( 0 );
             if ( FAILED( hr ) )
             {
-                m_audiolock.unlock();
                 keepRecording = false;
                 assert( false );
                 break;
@@ -1244,10 +1241,8 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
                 // The DMO cannot currently produce more data. This is the
                 // normal case; otherwise it means the DMO had more than 10 ms
                 // of data available and ProcessOutput should be called again.
-                m_audiolock.unlock();
                 break;
             }
-            m_audiolock.unlock();
         }
 
     }
