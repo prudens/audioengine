@@ -48,35 +48,22 @@ public:
     virtual void RecordingDataIsAvailable( const void*data, size_t samples )
     {
         count_++;
-//        static int data_len = 0;
-//         data_len += samples;
-//         static uint64_t ts = timestamp();
-//         if (count_  == 500)
-//         {
-//             auto t = timestamp() - ts;
-//             printf( "[%I64u] RecordingDataIsAvailable %d, data_len = %d \n", timestamp(), data_len / (int)t, data_len );
-//             count_ = 0;
-//             data_len = 0;
-//             ts = timestamp();
-//         }
+
         printf( "[%I64u] RecordingDataIsAvailable %d  \n", timestamp(), count_ );
-       // printf( "samples = %d\n",samples );
-        fwrite( data,1, samples, file2 );
-       // return;
         if ( !RecordingData )
         {
             return;
         }
         {
             size_t outSize = samples;
-            pEffect->ProcessCaptureStream( (int16_t*)data, samples, (int16_t*)data, outSize );
+           // pEffect->ProcessCaptureStream( (int16_t*)data, samples, (int16_t*)data, outSize );
             rec_cache_.insert( rec_cache_.end(), (char*)data, (char*)data + outSize );  
             
             if ( rec_cache_.size() >= frame_size_ )
             {
 
                 RecordingData( rec_cache_.data(), frame_size_ );
-                fwrite( rec_cache_.data(), 1, frame_size_, file1 );
+               // fwrite( rec_cache_.data(), 1, frame_size_, file1 );
                 if ( rec_cache_.size() == frame_size_ )
                 {
                     rec_cache_.clear();
@@ -117,7 +104,7 @@ public:
         {
             return;
         }
-        fwrite( pcm16_data, 1, len_of_byte, file2 );
+        //fwrite( pcm16_data, 1, len_of_byte, file2 );
         lockguard lg( m_lock );
         ply_cache_.insert(ply_cache_.end(), (char*)pcm16_data, (char*)pcm16_data + len_of_byte );
     }
@@ -151,8 +138,8 @@ DID REAL_AUDIO_CALL CreateDevice()
     AudioDevice* pWinDevice = AudioDevice::Create();
     pWinDevice->Initialize();
     int32_t v = 1;
-    pWinDevice->SetPropertie( ID_ENABLE_AEC, &v );
-    pWinDevice->SetPropertie( ID_ENBALE_NS, &v );
+    //pWinDevice->SetPropertie( ID_ENABLE_AEC, &v );
+    //pWinDevice->SetPropertie( ID_ENBALE_NS, &v );
     pWinDevice->InitPlayout();
     pWinDevice->InitRecording();
     uint32_t rec_sample_rate, ply_sample_rate;

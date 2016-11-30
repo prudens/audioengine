@@ -49,6 +49,8 @@ WindowsCoreAudio::WindowsCoreAudio()
             break;
         }
     }
+
+    m_DMOIsAvailble = false;
 }
 
 WindowsCoreAudio::~WindowsCoreAudio()
@@ -1140,7 +1142,7 @@ Exit:
 DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
 {
     bool keepRecording = true;
-
+    printf("Start Recording Thread with dmo");
     // Initialize COM as MTA in this thread.
     ScopedCOMInitializer comInit( ScopedCOMInitializer::kMTA );
     if ( !comInit.succeeded() )
@@ -1249,6 +1251,7 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
     // ---------------------------- THREAD LOOP ---------------------------- <<
 
     RevertThreadPriority( hMmTask );
+    printf( "Stop Recording Thread with dmo" );
 
     return hr;
 }

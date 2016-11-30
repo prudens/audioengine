@@ -26,7 +26,7 @@ AudioEffect::AudioEffect()
     m_apm->gain_control()->set_mode( GainControl::kAdaptiveDigital );
     m_apm->gain_control()->set_compression_gain_db( 90 );
     m_apm->voice_detection()->Enable( false );
-    m_apm->noise_suppression()->Enable( false );
+    m_apm->noise_suppression()->Enable( true );
     m_apm->high_pass_filter()->Enable( false );
 
     m_apm->noise_suppression()->set_level( webrtc::NoiseSuppression::kVeryHigh );

@@ -16,7 +16,7 @@ void REAL_AUDIO_CALL RecordingData( const void* pcm16_data, int len_of_byte )
 
 int main()
 {
-    const size_t time = 10;//ms
+    const size_t time = 40;//ms
     const int32_t sample_rate = 16000;
     const size_t frame_size = sample_rate / 1000 * 2 * time;
     const int32_t channel = 1;
@@ -30,5 +30,6 @@ int main()
     StopPlayout( id );
     StopRecording( id );
     DestroyDevice(id);
+    system( "pause" );
     return 0;
 }
