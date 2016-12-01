@@ -25,7 +25,7 @@ public:
         int16_t index,
         wchar_t name[kAdmMaxDeviceNameSize],
         wchar_t guid[kAdmMaxGuidSize] )override;
-    virtual bool RecordingDeviceName(
+    virtual bool GetRecordingDeviceName(
         int16_t index,
         wchar_t name[kAdmMaxDeviceNameSize],
         wchar_t guid[kAdmMaxGuidSize] )override;

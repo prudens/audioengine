@@ -93,7 +93,7 @@ public:
 
 void test_windows_core_audio()
 {
-    AudioDevice* pWinDevice = AudioDevice::Create();
+    AudioDevice* pWinDevice = AudioDevice::Create(AudioDevice::eDSound);
 
     pWinDevice->Initialize();
     pWinDevice->InitPlayout();
@@ -124,7 +124,7 @@ void test_windows_core_audio()
 void test_real_time_3d()
 {
     int nAzimuth = 0; int nElevation = 0;
-    AudioDevice* pWinDevice = AudioDevice::Create();
+    AudioDevice* pWinDevice = AudioDevice::Create( AudioDevice::eCoreAudio );
     pWinDevice->Initialize();
     pWinDevice->SetRecordingFormat( 48000, 2 );
     pWinDevice->SetPlayoutFormat( 48000, 2 );
@@ -296,7 +296,7 @@ private:
 };
 void test_opus_codec()
 {
-    AudioDevice* pWinDevice = AudioDevice::Create();
+    AudioDevice* pWinDevice = AudioDevice::Create( AudioDevice::eCoreAudio );
 
     pWinDevice->Initialize();
     pWinDevice->InitPlayout();
@@ -315,8 +315,46 @@ void test_opus_codec()
     pWinDevice->Release();
 }
 
+
+void test_dsound()
+{
+    AudioDevice* pDeivce = AudioDevice::Create( AudioDevice::eDSound );
+    size_t num = pDeivce->GetRecordingDeviceNum();
+    for ( size_t i = 0; i < num; i++ )
+    {
+        wchar_t dev_name[128] = { 0 };
+        wchar_t guid[128] = { 0 };
+        pDeivce->GetRecordingDeviceName( i, dev_name, guid );
+        wprintf( L"rec device name = %s, device guid = %s\n", dev_name, guid );
+    }
+
+    num = pDeivce->GetPlayoutDeviceNum();
+    for ( size_t i = 0; i < num; i++ )
+    {
+        wchar_t dev_name[128] = { 0 };
+        wchar_t guid[128] = { 0 };
+        pDeivce->GetPlayoutDeviceName( i, dev_name, guid );
+        wprintf( L"ply device name = %s, device guid = %s\n", dev_name, guid );
+    }
+
+    pDeivce->SetPlayoutDevice( 0 );
+    pDeivce->SetRecordingDevice( 0 );
+    pDeivce->Initialize();
+
+    pDeivce->SetPlayoutFormat( 16000, 1 );
+    pDeivce->SetRecordingFormat( 16000, 1 );
+
+    pDeivce->InitPlayout();
+    pDeivce->InitRecording();
+    pDeivce->StartPlayout();
+    pDeivce->StartRecording();
+    system( "pause" );
+    pDeivce->Terminate();
+    pDeivce->Release();
+}
 void test_audio_device()
 {
     test_windows_core_audio();
     //test_opus_codec();
+   // test_dsound();
 }

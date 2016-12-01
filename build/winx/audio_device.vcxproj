@@ -35,13 +35,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\device\winx\audio_device.cpp" />
     <ClCompile Include="..\..\device\winx\windows_audio_device_helper.cpp" />
+    <ClCompile Include="..\..\device\winx\windows_audio_dsound.cpp" />
     <ClCompile Include="..\..\device\winx\windows_core_audio.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\device\include\audio_device.h" />
     <ClInclude Include="..\..\device\winx\media_buffer.h" />
     <ClInclude Include="..\..\device\winx\windows_audio_device_helper.h" />
+    <ClInclude Include="..\..\device\winx\windows_audio_dsound.h" />
     <ClInclude Include="..\..\device\winx\windows_core_audio.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -140,6 +143,7 @@
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>../../</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -185,6 +189,7 @@
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>false</TreatWarningAsError>
       <AdditionalIncludeDirectories>../../</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS ;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

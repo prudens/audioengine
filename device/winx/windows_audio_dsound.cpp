@@ -2,16 +2,22 @@
 #include <dsound.h>
 #include <Strsafe.h>
 #include <algorithm>
+#include "base\time_cvt.hpp"
+#include <thread>
 WindowsAudioDSound::WindowsAudioDSound()
 {
     HRESULT hr = S_OK;
-    hr = DirectSoundEnumerate( &WindowsAudioDSound::EnumCaptrueCallback, &capture_devices_ );
-    hr = DirectSoundCaptureEnumerate( &WindowsAudioDSound::EnumCaptrueCallback, &render_devices_ );
+    hr = DirectSoundEnumerate( &WindowsAudioDSound::EnumCaptrueCallback, &render_devices_ );
+    hr = DirectSoundCaptureEnumerate( &WindowsAudioDSound::EnumCaptrueCallback, &capture_devices_ );
+    wait_playout_thread_start_handle_ = ::CreateEvent( NULL, FALSE, FALSE, NULL );
+    wait_recording_thread_start_handle_ = ::CreateEvent( NULL, FALSE, FALSE, NULL );
 }
 
 WindowsAudioDSound::~WindowsAudioDSound()
 {
-
+    Terminate();
+    RELEASE_HANDLE( wait_recording_thread_start_handle_ );
+    RELEASE_HANDLE( wait_recording_thread_start_handle_ );
 }
 
 void WindowsAudioDSound::Release()
@@ -21,22 +27,45 @@ void WindowsAudioDSound::Release()
 
 bool WindowsAudioDSound::Initialize()
 {
-    if (render_device_index_ == -1)
+    if ( initialize_ )
     {
-        return false;
+        return true;
     }
-    GUID guid;
-    CLSIDFromString( render_devices_[render_device_index_].szDeviceID, &guid );
 
     HRESULT hr = S_OK;
-    hr = DirectSoundCreate( &guid, &render_direct_sound_, NULL );
-    HWND hWnd = GetDesktopWindow();
-    hr = render_direct_sound_->SetCooperativeLevel( hWnd, DSSCL_PRIORITY );
-    if (FAILED(hr))
-    {
-        return false;
+    GUID guid = GUID_NULL;
+
+    {// render device initialize
+        if ( render_device_index_ >= 0 && render_device_index_ < (int)render_devices_.size() )
+        {
+            CLSIDFromString( render_devices_[render_device_index_].szDeviceID, &guid );
+        }
+        hr = DirectSoundCreate( &guid, &render_direct_sound_, NULL );
+        if ( FAILED( hr ) )
+        {
+            return false;
+        }
+        HWND hWnd = GetDesktopWindow();
+        hr = render_direct_sound_->SetCooperativeLevel( hWnd, DSSCL_PRIORITY );
+
     }
 
+    hr = S_OK;
+    guid = GUID_NULL;
+
+    {//capture device initialize
+        if ( capture_device_index_ >= 0 && capture_device_index_ < (int)capture_devices_.size() )
+        {
+            CLSIDFromString( capture_devices_[capture_device_index_].szDeviceID, &guid );
+        }
+        hr = DirectSoundCaptureCreate( &guid, &capture_direct_sound_, NULL );
+        if (FAILED(hr))
+        {
+            return false;
+        }
+    }
+
+    initialize_ = true;
     return initialize_;
 }
 
@@ -48,6 +77,27 @@ void WindowsAudioDSound::Terminate()
     }
     StopRecording();
     StopPlayout();
+
+    if ( capture_direct_sound_buf_ )
+    {
+        capture_direct_sound_buf_->Release();
+    }
+    if ( render_direct_sound_buf_ )
+    {
+        render_direct_sound_buf_->Release();
+    }
+
+    if (capture_direct_sound_)
+    {
+        capture_direct_sound_->Release();
+    }
+    if (render_direct_sound_)
+    {
+        render_direct_sound_->Release();
+    }
+
+
+    initialize_ = false;
 }
 
 size_t WindowsAudioDSound::GetRecordingDeviceNum() const
@@ -62,8 +112,6 @@ size_t WindowsAudioDSound::GetPlayoutDeviceNum() const
 
 bool WindowsAudioDSound::GetPlayoutDeviceName( int16_t index, wchar_t name[kAdmMaxDeviceNameSize], wchar_t guid[kAdmMaxGuidSize] )
 {
-    std::lock_guard<std::mutex> lg( render_lock_ );
-
     if ( index >= (int16_t)render_devices_.size() )
     {
         return false;
@@ -74,7 +122,7 @@ bool WindowsAudioDSound::GetPlayoutDeviceName( int16_t index, wchar_t name[kAdmM
         {
             if ( render_devices_[i].bDefaultDevice )
             {
-                index = i;
+                index = static_cast<int16_t>(i);
                 break;
             }
         }
@@ -85,10 +133,8 @@ bool WindowsAudioDSound::GetPlayoutDeviceName( int16_t index, wchar_t name[kAdmM
     return true;
 }
 
-bool WindowsAudioDSound::RecordingDeviceName( int16_t index, wchar_t name[kAdmMaxDeviceNameSize], wchar_t guid[kAdmMaxGuidSize] )
+bool WindowsAudioDSound::GetRecordingDeviceName( int16_t index, wchar_t name[kAdmMaxDeviceNameSize], wchar_t guid[kAdmMaxGuidSize] )
 {
-    std::lock_guard<std::mutex> lg( capture_lock_ );
-
     if ( index >= (int16_t)capture_devices_.size() )
     {
         return false;
@@ -99,7 +145,7 @@ bool WindowsAudioDSound::RecordingDeviceName( int16_t index, wchar_t name[kAdmMa
         {
             if ( capture_devices_[i].bDefaultDevice )
             {
-                index = i;
+                index = static_cast<int16_t>( i );
                 break;
             }
         }
@@ -112,12 +158,11 @@ bool WindowsAudioDSound::RecordingDeviceName( int16_t index, wchar_t name[kAdmMa
 
 bool WindowsAudioDSound::SetPlayoutDevice( int16_t index )
 {
-    std::lock_guard<std::mutex>  lg( render_lock_ );
-    if ( !initialize_ )
+    if ( initialize_ )
     {
         return false;
     }
-    if ( index <= (int16_t)render_devices_.size() )
+    if ( index >= (int16_t)render_devices_.size()  || index < 0)
     {
         return false;
     }
@@ -128,37 +173,491 @@ bool WindowsAudioDSound::SetPlayoutDevice( int16_t index )
 
 bool WindowsAudioDSound::SetRecordingDevice( int16_t index )
 {
-    std::lock_guard<std::mutex>  lg( capture_lock_ );
-    if ( !initialize_ )
+    if ( initialize_ )
     {
         return false;
     }
-    if ( index <= (int16_t)capture_devices_.size() )
+    if ( index >= (int16_t)capture_devices_.size() )
     {
         return false;
     }
 
-    render_device_index_ = index;
+    capture_device_index_ = index;
     return true;
 }
 
 bool WindowsAudioDSound::IsRecordingFormatSupported( uint32_t nSampleRate, uint16_t nChannels )
 {
-    return true;
+    if (!initialize_)
+    {
+        return false;
+    }
+    return TrySetRecordingFormat( nSampleRate, nChannels,false );
 }
 
 bool WindowsAudioDSound::IsPlayoutFormatSupported( uint32_t nSampleRate, uint16_t nChannels )
 {
-    return true;
+    if ( !initialize_ )
+    {
+        return false;
+    }
+    return TrySetPlayoutFormat( nSampleRate, nChannels, false );
 }
 
 bool WindowsAudioDSound::SetRecordingFormat( uint32_t nSampleRate, uint16_t nChannels )
 {
-
+    if ( !initialize_ )
+    {
+        return false;
+    }
+    if ( !TrySetRecordingFormat( nSampleRate, nChannels, false ) )
+    {
+        return false;
+    }
+    capture_sample_rate_ = nSampleRate;
+    capture_channel_ = nChannels;
+    return true;
 }
 
 bool WindowsAudioDSound::SetPlayoutFormat( uint32_t nSampleRate, uint16_t nChannels )
 {
+    if ( !initialize_ )
+    {
+        return false;
+    }
+    bool ret = TrySetPlayoutFormat( nSampleRate, nChannels, false );
+    if (!ret)
+    {
+        return false;
+    }
+    render_channel_ = nChannels;
+    render_sample_rate_ = nSampleRate;
+    return true;
+}
+
+bool WindowsAudioDSound::GetRecordingFormat( uint32_t& nSampleRate, uint16_t& nChannels )
+{
+    if ( !initialize_ )
+    {
+        return false;
+    }
+    nSampleRate = static_cast<uint32_t>(capture_sample_rate_);
+    nChannels = static_cast<uint16_t>( capture_channel_);
+    return true;
+}
+
+bool WindowsAudioDSound::GetPlayoutFormat( uint32_t& nSampleRate, uint16_t& nChannels )
+{
+    if ( !initialize_ )
+    {
+        return false;
+    }
+    nSampleRate = static_cast<uint32_t>( render_sample_rate_);
+    nChannels = static_cast<uint16_t>( render_channel_);
+    return true;
+}
+
+bool WindowsAudioDSound::InitPlayout()
+{   
+    if ( !initialize_ )
+    {
+        return false;
+    }
+    if ( !TrySetPlayoutFormat( (uint32_t)render_sample_rate_, (uint16_t)render_channel_, true ) )
+    {
+        init_playout_ = false;
+        return false;
+    }
+    init_playout_ = true;
+    return init_playout_;
+}
+
+bool WindowsAudioDSound::InitRecording()
+{
+    if ( !initialize_ )
+    {
+        return false;
+    }
+    if (!TrySetRecordingFormat((uint32_t)capture_sample_rate_,(uint16_t)capture_channel_,true))
+    {
+        init_recording_ = false;
+        return false;
+    }
+    init_recording_ = true;
+    return true;
+}
+
+bool WindowsAudioDSound::StartPlayout()
+{
+    if ( !initialize_ )
+    {
+        return false;
+    }
+
+    if ( playout_thread_handle_ != NULL )
+    {
+        return true;
+    }
+
+    if ( playing_ )
+    {
+        return true;
+    }
+
+    {
+        playing_ = true;
+        std::lock_guard<std::mutex> lg( render_lock_ );
+        // Create thread which will drive the rendering.
+        playout_thread_handle_ = CreateThread(
+            NULL,
+            0,
+            WSAPIRenderThread,
+            this,
+            0,
+            NULL );
+        if ( playout_thread_handle_ == NULL )
+        {
+            return false;
+        }
+
+        // Set thread priority to highest possible.
+        ::SetThreadPriority( playout_thread_handle_, THREAD_PRIORITY_TIME_CRITICAL );
+    }  // critScoped
+
+    DWORD ret = WaitForSingleObject( wait_playout_thread_start_handle_, 1000 );
+    if ( ret != WAIT_OBJECT_0 )
+    {
+        playing_ = false;
+        RELEASE_HANDLE( playout_thread_handle_ );
+        return false;
+    }
+
+    return true;
+}
+
+bool WindowsAudioDSound::StopPlayout()
+{
+    if (!init_playout_ || !initialize_)
+    {
+        return false;
+    }
+    playing_ = false; // ֹͣ
+    DWORD ret = WaitForSingleObject( playout_thread_handle_, 2000 );
+    if ( ret != WAIT_OBJECT_0 )
+    {
+        // the thread did not stop as it should
+        printf( "failed to close down dsound_capture_thread" );
+        RELEASE_HANDLE( playout_thread_handle_ );
+        return false;
+    }
+    RELEASE_HANDLE( playout_thread_handle_ );
+    return true;
+}
+
+bool WindowsAudioDSound::Playing() const
+{
+    return playing_;
+}
+
+bool WindowsAudioDSound::StartRecording()
+{
+    if ( !initialize_ )
+    {
+        return false;
+    }
+
+    if ( recording_thread_handle_ != NULL )
+    {
+        return true;
+    }
+
+    if ( recording_ )
+    {
+        return true;
+    }
+
+    {
+        std::lock_guard<std::mutex> lg( render_lock_ );
+        recording_ = true;
+        // Create thread which will drive the rendering.
+        recording_thread_handle_ = CreateThread(
+            NULL,
+            0,
+            WSAPICaptureThread,
+            this,
+            0,
+            NULL );
+        if ( recording_thread_handle_ == NULL )
+        {
+            return false;
+        }
+
+        // Set thread priority to highest possible.
+        ::SetThreadPriority( recording_thread_handle_, THREAD_PRIORITY_TIME_CRITICAL );
+    }  
+
+    DWORD ret = WaitForSingleObject( wait_recording_thread_start_handle_, 1000 );
+    if ( ret != WAIT_OBJECT_0 )
+    {
+        recording_ = false;
+        return false;
+    }
+
+    return true;
+}
+
+bool WindowsAudioDSound::StopRecording()
+{
+    if ( !init_recording_ || !initialize_ )
+    {
+        return false;
+    }
+    recording_ = false; // ֹͣ
+    DWORD ret = WaitForSingleObject( recording_thread_handle_, 2000 );
+    if ( ret != WAIT_OBJECT_0 )
+    {
+        // the thread did not stop as it should
+        printf( "failed to close down dsound_capture_thread" );
+        RELEASE_HANDLE( recording_thread_handle_ );
+        return false;
+    }
+    RELEASE_HANDLE( recording_thread_handle_ );
+    return true;
+}
+
+bool WindowsAudioDSound::Recording() const
+{
+    return recording_;
+}
+
+void WindowsAudioDSound::SetAudioBufferCallback( AudioBufferProc* pCallback )
+{
+    audio_buffer_proc_ = pCallback;
+}
+
+AudioBufferProc* WindowsAudioDSound::GetAudioBufferCallback() const
+{
+    return audio_buffer_proc_;
+}
+
+bool WindowsAudioDSound::SetPropertie( AudioPropertyID /*id*/, void* )
+{
+    
+    return false;
+}
+
+bool WindowsAudioDSound::GetProperty( AudioPropertyID /*id*/, void* )
+{
+    return false;
+}
+
+
+BOOL CALLBACK WindowsAudioDSound::EnumCaptrueCallback( GUID* pGUID, LPCSTR szDesc, LPCSTR /*szDrvName*/, void* pContext )
+{
+    AUDIO_DEVICE_INFO_LIST *devices = (AUDIO_DEVICE_INFO_LIST*)pContext;
+
+    if ( pGUID )
+    {
+        AUDIO_DEVICE_INFO info;
+        StringFromGUID2( *pGUID, info.szDeviceID, sizeof( info.szDeviceID ) / sizeof(info.szDeviceID[0]) );
+        std::mbstowcs( info.szDeviceName, szDesc, sizeof( info.szDeviceName ) / sizeof( info.szDeviceName[0] ) );
+        devices->push_back( info );
+    }
+
+    return TRUE;
+}
+
+DWORD  WindowsAudioDSound::DoRenderThread( )
+{
+    if (!initialize_)
+    {
+        return 0;
+    }
+
+    WAVEFORMATEX wfx;
+    wfx.cbSize = 0;
+    HRESULT hr = S_OK;
+    hr = render_direct_sound_buf_->GetFormat( &wfx, sizeof(wfx), nullptr);
+    int           frameSize = render_sample_rate_ / 100 * wfx.nChannels * 2;
+    int           framedelay = ( std::max )( 5UL, 1000 * frameSize / wfx.nAvgBytesPerSec );
+    unsigned long dwBufferSize = ( std::max )( 2, ( MAX_DELAY / framedelay ) ) * frameSize + frameSize;
+    unsigned long safe_delay = std::max<unsigned long>( 2, ( SAFE_DELAY / framedelay ) ) * frameSize;
+    unsigned long min_delay = std::max<unsigned long>( 2, ( MIN_DELAY / framedelay ) ) * frameSize;
+    //fill silience
+    {
+        void*         plockedbuffer = NULL;
+        unsigned long dwlockedsize = dwBufferSize;
+        if ( FAILED( render_direct_sound_buf_->Lock( 0, 0, &plockedbuffer, &dwlockedsize, NULL, NULL, DSBLOCK_ENTIREBUFFER ) ) )
+            goto err;
+
+     //   memset( (BYTE*)plockedbuffer, 0, dwlockedsize );
+        render_direct_sound_buf_->Unlock( plockedbuffer, dwlockedsize, NULL, 0 );
+    }
+
+    render_direct_sound_buf_->SetCurrentPosition( 0 );
+    if ( FAILED( render_direct_sound_buf_->Play( 0, 0, DSBPLAY_LOOPING ) ) )
+        goto err;
+
+    // play data
+    {
+        unsigned long nNextOffset = frameSize;
+        unsigned long dwCurDevPos = 0;
+        unsigned long dwCurDataPos = 0;
+
+        unsigned long filldelay_ttl = MIN_DELAY;
+        DWORD          less_timepoint = GetTickCount();
+
+        SetEvent( wait_playout_thread_start_handle_ );
+        while ( playing_ )
+        {
+            if ( FAILED( hr = render_direct_sound_buf_->GetCurrentPosition( &dwCurDevPos, &dwCurDataPos ) ) )
+            {
+                break;
+            }
+
+            LONG datasize = nNextOffset - dwCurDataPos;
+            if ( datasize < 0 )
+                datasize += dwBufferSize;
+
+            if ( datasize <= (long)min_delay )
+            {
+                if ( datasize < (long)safe_delay )
+                    filldelay_ttl = std::min<unsigned long>( dwBufferSize - frameSize, filldelay_ttl + frameSize );
+                less_timepoint = GetTickCount();
+            }
+            else if ( GetTickCount() - less_timepoint > 4000 )
+            {
+                filldelay_ttl = std::max<unsigned long>( min_delay, filldelay_ttl - frameSize );
+                less_timepoint = GetTickCount();
+            }
+
+
+            if ( datasize <= (LONG)filldelay_ttl )
+            {
+                void*         pbCaptureData = NULL;
+                unsigned long dwLockedSize = 0;
+                hr = render_direct_sound_buf_->Lock( nNextOffset, frameSize, &pbCaptureData, &dwLockedSize, NULL, NULL, 0L );
+
+                if ( FAILED( hr ) )
+                    break;
+
+                if ( DSBSTATUS_BUFFERLOST == hr )
+                {
+                    while ( playing_ )
+                    {
+                        hr = render_direct_sound_buf_->Restore();
+                        if ( hr == DSERR_BUFFERLOST )
+                            Sleep( 5 );
+                        else
+                            break;
+                    }
+
+
+                    hr = render_direct_sound_buf_->Lock( nNextOffset, frameSize, &pbCaptureData, &dwLockedSize, NULL, NULL, 0L );
+
+                    if ( FAILED( hr ) )
+                        break;
+                }
+
+                LONG delayLength = nNextOffset - dwCurDevPos;
+                if ( delayLength < 0 )
+                    delayLength += dwBufferSize;
+
+                size_t nReaded = 0;
+                if (audio_buffer_proc_)
+                {
+                    nReaded = audio_buffer_proc_->NeedMorePlayoutData( pbCaptureData, dwLockedSize );
+                   
+                }
+               // printf( "NeedMorePlayoutData len=%d\n", dwLockedSize );
+                if ( 0 == nReaded )
+                    memset( pbCaptureData, 0, frameSize );
+
+                render_direct_sound_buf_->Unlock( pbCaptureData, dwLockedSize, NULL, NULL );
+
+                nNextOffset += frameSize;
+                if ( nNextOffset == dwBufferSize )
+                    nNextOffset = 0;
+            }
+            else
+            {
+                Sleep( framedelay / 2 );
+            }
+        }
+
+    }
+err:
+    return 0;
+}
+
+
+DWORD WINAPI WindowsAudioDSound::WSAPICaptureThread( LPVOID context )
+{
+    return reinterpret_cast<WindowsAudioDSound*>( context )->
+        DoCaptureThread();
+}
+
+bool WindowsAudioDSound::TrySetRecordingFormat( uint32_t nSampleRate, uint16_t nChannels, bool alloc_buffer )
+{
+    if (!initialize_)
+    {
+        return false;
+    }
+    // Get the primary buffer 
+    HRESULT hr = S_OK;
+
+    WAVEFORMATEX wfx;
+    wfx.cbSize = 0;
+    wfx.wFormatTag = WAVE_FORMAT_PCM;
+    wfx.nChannels = nChannels;
+    wfx.nSamplesPerSec = nSampleRate;
+    wfx.wBitsPerSample = 16;
+    wfx.nBlockAlign = wfx.wBitsPerSample * nChannels / 8;
+    wfx.nAvgBytesPerSec = wfx.nBlockAlign * wfx.nSamplesPerSec;
+
+    int frameSize = wfx.nSamplesPerSec / 100 * wfx.nChannels * 2;
+    int framedelay = std::max<int>( 5, 1000 * frameSize / wfx.nAvgBytesPerSec );
+    DWORD dwBufferSize = std::max<DWORD>( 2, ( MAX_DELAY / framedelay ) ) * frameSize + frameSize;
+
+    DSCBUFFERDESC                 dscbd;
+    memset( &dscbd, 0, sizeof( DSCBUFFERDESC ) );
+    dscbd.dwSize = sizeof( DSCBUFFERDESC );
+    dscbd.dwBufferBytes = dwBufferSize;
+    dscbd.lpwfxFormat = &wfx;
+
+    LPDIRECTSOUNDCAPTUREBUFFER  pDSBPrimary = NULL;
+
+    hr = capture_direct_sound_->CreateCaptureBuffer( &dscbd, &pDSBPrimary, NULL );
+    if ( FAILED( hr ) || !pDSBPrimary )
+    {
+        return false;
+    }
+
+
+    if (alloc_buffer)
+    {
+        if (capture_direct_sound_buf_)
+        {
+            capture_direct_sound_buf_->Release();
+        }
+        capture_direct_sound_buf_ = pDSBPrimary;
+    }
+    else
+    {
+        if (pDSBPrimary)
+        {
+            pDSBPrimary->Release();
+        }
+    }
+    return true;
+}
+
+bool WindowsAudioDSound::TrySetPlayoutFormat( uint32_t nSampleRate, uint16_t nChannels, bool alloc_buffer )
+{
+    if (!initialize_)
+    {
+        return false;
+    }
     // Get the primary buffer 
     HRESULT hr = S_OK;
     DSBUFFERDESC                 dscbd;
@@ -182,9 +681,9 @@ bool WindowsAudioDSound::SetPlayoutFormat( uint32_t nSampleRate, uint16_t nChann
     wfx.nBlockAlign = wfx.wBitsPerSample * nChannels / 8;
     wfx.nAvgBytesPerSec = wfx.nBlockAlign * wfx.nSamplesPerSec;
 
-    int frameSize = wfx.nSamplesPerSec / 100;
+    int frameSize = wfx.nSamplesPerSec / 100 * wfx.nChannels * 2;
     int           framedelay = ( std::max )( 5UL, 1000 * frameSize / wfx.nAvgBytesPerSec );
-    unsigned long dwBufferSize = ( std::max )( 2, ( MA_DELAY / framedelay ) ) * frameSize + frameSize;
+    unsigned long dwBufferSize = ( std::max )( 2, ( MAX_DELAY / framedelay ) ) * frameSize + frameSize;
 
 
     hr = pDSBPrimary->SetFormat( &wfx );
@@ -197,7 +696,16 @@ bool WindowsAudioDSound::SetPlayoutFormat( uint32_t nSampleRate, uint16_t nChann
         pDSBPrimary->Release();
         pDSBPrimary = NULL;
     }
+    if ( !alloc_buffer )
+    {
+        return true;
+    }
 
+
+    if (render_direct_sound_buf_)
+    {
+        render_direct_sound_buf_->Release();
+    }
     dscbd.dwFlags = DSBCAPS_CTRLVOLUME | DSBCAPS_GETCURRENTPOSITION2
         | DSBCAPS_LOCSOFTWARE | DSBCAPS_GLOBALFOCUS;
 
@@ -215,258 +723,100 @@ bool WindowsAudioDSound::SetPlayoutFormat( uint32_t nSampleRate, uint16_t nChann
             return false;
     }
 
-
-    render_channel_ = nChannels;
-    render_sample_rate_ = nSampleRate;
-    init_playout_ = true;
+    render_sample_rate_ = wfx.nSamplesPerSec;
+    render_channel_ = wfx.nChannels;
     return true;
 }
 
-bool WindowsAudioDSound::GetRecordingFormat( uint32_t& nSampleRate, uint16_t& nChannels )
+DWORD WindowsAudioDSound::DoCaptureThread()
 {
-    nSampleRate = capture_sample_rate_;
-    nChannels = capture_channel_;
-    return true;
-}
-
-bool WindowsAudioDSound::GetPlayoutFormat( uint32_t& nSampleRate, uint16_t& nChannels )
-{
-    nSampleRate = render_sample_rate_;
-    nChannels = render_channel_;
-    return true;
-}
-
-bool WindowsAudioDSound::InitPlayout()
-{   
-    if ( !init_playout_ )
+    if (!initialize_)
     {
-        init_playout_ = SetPlayoutFormat(16000,2);
+        return 0;
     }
-    return init_playout_;
-}
-
-bool WindowsAudioDSound::InitRecording()
-{
-    return true;
-}
-
-bool WindowsAudioDSound::StartPlayout()
-{
-    if ( !initialize_ )
+    if (!init_recording_)
     {
-        return false;
+        return 0;
     }
 
-    if ( playout_thread_handle_ != NULL )
-    {
-        return true;
-    }
+    HRESULT hr = S_OK;
 
-    if ( playing_ )
-    {
-        return true;
-    }
-
-    {
-        std::lock_guard<std::mutex> lg( render_lock_ );
-        // Create thread which will drive the rendering.
-        playout_thread_handle_ = CreateThread(
-            NULL,
-            0,
-            WSAPIRenderThread,
-            this,
-            0,
-            NULL );
-        if ( playout_thread_handle_ == NULL )
-        {
-            return false;
-        }
-
-        // Set thread priority to highest possible.
-        ::SetThreadPriority( playout_thread_handle_, THREAD_PRIORITY_TIME_CRITICAL );
-    }  // critScoped
-
-    DWORD ret = WaitForSingleObject( wait_recording_thread_start_handle_, 1000 );
-    if ( ret != WAIT_OBJECT_0 )
-    {
-        return false;
-    }
-
-    playing_ = true;
-
-    return true;
-}
-
-bool WindowsAudioDSound::StopPlayout()
-{
-
-}
-
-bool WindowsAudioDSound::Playing() const
-{
-
-}
-
-bool WindowsAudioDSound::StartRecording()
-{
-
-}
-
-bool WindowsAudioDSound::StopRecording()
-{
-
-}
-
-bool WindowsAudioDSound::Recording() const
-{
-
-}
-
-void WindowsAudioDSound::SetAudioBufferCallback( AudioBufferProc* pCallback )
-{
-
-}
-
-AudioBufferProc* WindowsAudioDSound::GetAudioBufferCallback() const
-{
-
-}
-
-bool WindowsAudioDSound::SetPropertie( AudioPropertyID id, void* )
-{
-
-}
-
-bool WindowsAudioDSound::GetProperty( AudioPropertyID id, void* )
-{
-
-}
-
-
-BOOL CALLBACK WindowsAudioDSound::EnumCaptrueCallback( GUID* pGUID, LPCSTR szDesc, LPCSTR /*szDrvName*/, void* pContext )
-{
-    AUDIO_DEVICE_INFO_LIST *devices = (AUDIO_DEVICE_INFO_LIST*)pContext;
-
-    if ( pGUID )
-    {
-        AUDIO_DEVICE_INFO info;
-        StringFromGUID2( *pGUID, info.szDeviceID, sizeof( info.szDeviceID ) / sizeof(info.szDeviceID[0]) );
-        std::mbstowcs( info.szDeviceName, szDesc, sizeof( info.szDeviceName ) / sizeof( info.szDeviceName[0] ) );
-        devices->push_back( info );
-    }
-
-    return TRUE;
-}
-
-DWORD  WindowsAudioDSound::DoRenderThread( )
-{
     WAVEFORMATEX wfx;
     wfx.cbSize = 0;
+    wfx.wFormatTag = WAVE_FORMAT_PCM;
+    wfx.nChannels = (WORD)capture_channel_;
+    wfx.nSamplesPerSec = capture_sample_rate_;
+    wfx.wBitsPerSample = 16;
+    wfx.nBlockAlign = wfx.wBitsPerSample * wfx.nChannels / 8;
+    wfx.nAvgBytesPerSec = wfx.nBlockAlign * wfx.nSamplesPerSec;
+    int           frameSize = capture_sample_rate_ / 100 * capture_channel_ * 2;
+    int           framedelay = std::max<int>( 5, 1000 * frameSize / wfx.nAvgBytesPerSec );
+    unsigned long dwBufferSize = std::max<unsigned long>( 2, ( MAX_DELAY / framedelay ) ) * frameSize + frameSize;
 
-        render_direct_sound_buf_->GetFormat( &wfx, );
-    int frameSize = render_sample_rate_ / 100;
-    int           framedelay = ( std::max )( 5UL, 1000 * frameSize / wfx.nAvgBytesPerSec );
-    unsigned long dwBufferSize = ( std::max )( 2, ( MA_DELAY / framedelay ) ) * frameSize + frameSize;
-    //fill silience
+    hr = capture_direct_sound_buf_->Start( DSCBSTART_LOOPING );
+    if (FAILED(hr))
     {
-        void*         plockedbuffer = NULL;
-        unsigned long dwlockedsize = dwBufferSize;
-        if ( FAILED( pDSB->Lock( 0, 0, &plockedbuffer, &dwlockedsize, NULL, NULL, DSBLOCK_ENTIREBUFFER ) ) )
-            goto err;
-
-        memset( (BYTE*)plockedbuffer, 0, dwlockedsize );
-        pDSB->Unlock( plockedbuffer, dwlockedsize, NULL, 0 );
+        return 0;
     }
 
-    pDSB->SetCurrentPosition( 0 );
-    if ( FAILED( pDSB->Play( 0, 0, DSBPLAY_LOOPING ) ) )
-        goto err;
-
-    m_openstatus = DEVICE_OPEN_SUCCEED;
-
-    // play data
+    // capture data
     {
-        long          nNextOffset = m_frameSize;
+        long          nNextOffset = 0;
         unsigned long dwCurDevPos = 0;
         unsigned long dwCurDataPos = 0;
-
-        unsigned long filldelay_ttl = min_delay;
-        bool          less_timepoint = GetTickCount();
-
-
-        while ( m_opened )
+        SetEvent( wait_recording_thread_start_handle_ );
+        while ( recording_ )
         {
-            if ( FAILED( hr = pDSB->GetCurrentPosition( &dwCurDevPos, &dwCurDataPos ) ) )
+            if ( FAILED( hr = capture_direct_sound_buf_->GetCurrentPosition( &dwCurDevPos, &dwCurDataPos ) ) )
                 break;
 
-            LONG datasize = nNextOffset - dwCurDataPos;
+            LONG datasize = dwCurDataPos - nNextOffset;
             if ( datasize < 0 )
                 datasize += dwBufferSize;
 
-            if ( datasize <= min_delay )
-            {
-                if ( datasize < safe_delay )
-                    filldelay_ttl = __min( dwBufferSize - m_frameSize, filldelay_ttl + m_frameSize );
-                less_timepoint = GetTickCount();
-            }
-            else if ( GetTickCount() - less_timepoint > 4000 )
-            {
-                int oldttl = filldelay_ttl;
-
-                filldelay_ttl = __max( min_delay, filldelay_ttl - m_frameSize );
-                less_timepoint = GetTickCount();
-            }
-
-
-            if ( datasize <= filldelay_ttl )
+            while ( datasize > frameSize )
             {
                 void*         pbCaptureData = NULL;
                 unsigned long dwLockedSize = 0;
-                hr = pDSB->Lock( nNextOffset, m_frameSize, &pbCaptureData, &dwLockedSize, NULL, NULL, 0L );
+                hr = capture_direct_sound_buf_->Lock( nNextOffset, frameSize,
+                                 &pbCaptureData, &dwLockedSize,
+                                 NULL, NULL, 0L );
 
                 if ( FAILED( hr ) )
                     break;
 
-                if ( DSBSTATUS_BUFFERLOST == hr )
+               if (audio_buffer_proc_)
+               {
+                   audio_buffer_proc_->RecordingDataIsAvailable( pbCaptureData, dwLockedSize );
+                   printf( "[%I64u]RecordingDataIsAvailable:%d\n", timestamp(), dwLockedSize );
+               }
+
+               capture_direct_sound_buf_->Unlock( pbCaptureData, dwLockedSize, NULL, NULL );
+                datasize -= dwLockedSize;
                 {
-                    while ( m_opened )
-                    {
-                        hr = pDSB->Restore();
-                        if ( hr == DSERR_BUFFERLOST )
-                            Sleep( 5 );
-                        else
-                            break;
-                    }
-
-                    LOG( "buffer lost\n" );
-
-                    hr = pDSB->Lock( nNextOffset, m_frameSize, &pbCaptureData, &dwLockedSize, NULL, NULL, 0L );
-
-                    if ( FAILED( hr ) )
-                        break;
+                    LONG delayLength = dwCurDevPos - nNextOffset;
+                    if ( delayLength < 0 )
+                        delayLength += dwBufferSize;
                 }
 
-                LONG delayLength = nNextOffset - dwCurDevPos;
-                if ( delayLength < 0 )
-                    delayLength += dwBufferSize;
-
-                bool breset = false;
-                int nReaded = m_callback->ReadPlayoutSamples( pbCaptureData, dwLockedSize, delayLength, breset, m_userdata );
-
-                if ( 0 == nReaded )
-                    memset( pbCaptureData, 0, m_frameSize );
-
-                pDSB->Unlock( pbCaptureData, dwLockedSize, NULL, NULL );
-
-                nNextOffset += m_frameSize;
-                if ( nNextOffset == dwBufferSize )
+                nNextOffset += frameSize;
+                if ( nNextOffset == (long)dwBufferSize )
                     nNextOffset = 0;
             }
-            else
-            {
-                Sleep( framedelay / 2 );
-            }
+            std::this_thread::sleep_for( milliseconds( framedelay / 2 ) );
+            //Sleep( framedelay / 2 );
         }
 
     }
+
+
+    capture_direct_sound_buf_->Stop();
+
+    return 0;
+}
+
+DWORD WINAPI WindowsAudioDSound::WSAPIRenderThread( LPVOID context )
+{
+    return reinterpret_cast<WindowsAudioDSound*>( context )->
+        DoRenderThread();
 }

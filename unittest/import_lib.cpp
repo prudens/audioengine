@@ -29,5 +29,5 @@
 #pragma comment(lib, "msdmo")
 #pragma comment(lib, "dmoguids")
 #pragma comment(lib, "wmcodecdspuuid")
-#pragma comment(lib,"winmm.lib")
-
+#pragma comment(lib, "winmm.lib")
+#pragma comment(lib, "dsound.lib")

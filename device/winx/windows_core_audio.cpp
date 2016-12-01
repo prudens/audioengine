@@ -6,10 +6,6 @@
 #define PARTID_MASK 0x0000ffff //HQH 增加一行
 
 
-AudioDevice* AudioDevice::Create()
-{
-    return new WindowsCoreAudio();
-}
 
 WindowsCoreAudio::WindowsCoreAudio()
 {
@@ -134,7 +130,7 @@ bool WindowsCoreAudio::GetPlayoutDeviceName( int16_t index, wchar_t name[kAdmMax
 }
 
 
-bool WindowsCoreAudio::RecordingDeviceName( int16_t index, wchar_t name[kAdmMaxDeviceNameSize], wchar_t guid[kAdmMaxGuidSize] )
+bool WindowsCoreAudio::GetRecordingDeviceName( int16_t index, wchar_t name[kAdmMaxDeviceNameSize], wchar_t guid[kAdmMaxGuidSize] )
 {
     lock_guard lg( m_audiolock );
 

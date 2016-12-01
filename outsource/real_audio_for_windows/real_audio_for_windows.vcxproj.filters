@@ -30,6 +30,9 @@
     <ClCompile Include="audio_resample.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="audio_device_dsound.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="real_audio_device_interface.h">

@@ -18,6 +18,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wave_generate", "wave_generate.vcxproj", "{4156F605-1D81-4896-ACD7-80FFDB02C59A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audio_device_unit_test", "..\..\unittest\audio_device_unit_test.vcxproj", "{A2E42C7C-0394-490A-9B3B-358FBB7ABD25}"
+	ProjectSection(ProjectDependencies) = postProject
+		{30837D62-4B2F-41DC-8204-376064311D73} = {30837D62-4B2F-41DC-8204-376064311D73}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmpg123", "..\..\codec\mp3\decoder\ports\MSVC++\2013\libmpg123\libmpg123.vcxproj", "{67CAA87B-7CF1-4F93-BB67-21C513F40803}"
 EndProject

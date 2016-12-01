@@ -38,7 +38,12 @@ public:
 class AudioDevice
 {
 public:
-    static AudioDevice* Create();
+    enum DeviceAPI
+    {
+        eCoreAudio,
+        eDSound,
+    };
+    static AudioDevice* Create(DeviceAPI api);
     virtual void Release()=0;
     virtual bool Initialize() = 0;
     virtual void Terminate() = 0;
@@ -50,7 +55,7 @@ public:
         int16_t index,
         wchar_t name[kAdmMaxDeviceNameSize],
         wchar_t guid[kAdmMaxGuidSize] ) = 0;
-    virtual bool RecordingDeviceName(
+    virtual bool GetRecordingDeviceName(
         int16_t index,
         wchar_t name[kAdmMaxDeviceNameSize],
         wchar_t guid[kAdmMaxGuidSize] ) = 0;

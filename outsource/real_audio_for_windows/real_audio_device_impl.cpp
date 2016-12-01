@@ -8,7 +8,7 @@
 #include "device/include/audio_device.h"
 #include "audio_effect.h"
 #include "base/time_cvt.hpp"
-
+#if 1
 class CAudioBufferProc : public  AudioBufferProc
 {
 public:
@@ -33,7 +33,7 @@ public:
         pEffect->PlayoutReset( AudioEffect::kTargetPlySampleRate, ply_channel, ply_sample_rate, ply_channel );
         frame_size_ = 320 * rec_channel;// д╛хо10ms
         file1 = fopen( "d:/dmo.pcm","wb+" );
-        file2 = fopen( "d:/dmo2.pcm", "wb+" );
+        file2 = fopen( "d:/src_rec.pcm", "rb+" );
         count_ = 1;
 
     }
@@ -49,7 +49,7 @@ public:
     {
         count_++;
 
-        printf( "[%I64u] RecordingDataIsAvailable %d  \n", timestamp(), count_ );
+        //printf( "[%I64u] RecordingDataIsAvailable %d  \n", timestamp(), count_ );
         if ( !RecordingData )
         {
             return;
@@ -63,7 +63,7 @@ public:
             {
 
                 RecordingData( rec_cache_.data(), frame_size_ );
-               // fwrite( rec_cache_.data(), 1, frame_size_, file1 );
+                fwrite( rec_cache_.data(), 1, frame_size_, file1 );
                 if ( rec_cache_.size() == frame_size_ )
                 {
                     rec_cache_.clear();
@@ -82,8 +82,10 @@ public:
 
     virtual size_t NeedMorePlayoutData( void* data, size_t len_of_byte )
     {
+//        len_of_byte = fread( data, 1, len_of_byte, file2 );
+//        return len_of_byte;
         count_--;
-        printf( "[%I64u] NeedMorePlayoutData %d  \n", timestamp(), count_ );
+       // printf( "[%I64u] NeedMorePlayoutData %d  \n", timestamp(), count_ );
         lockguard lg( m_lock );
         size_t frame_size = pEffect->ply_resample.frame_size;
         if ( ply_cache_.size() >= frame_size )
@@ -135,7 +137,7 @@ struct RealAudioDevice
 DID REAL_AUDIO_CALL CreateDevice()
 {
     RealAudioDevice* pInstance = new RealAudioDevice;
-    AudioDevice* pWinDevice = AudioDevice::Create();
+    AudioDevice* pWinDevice = AudioDevice::Create(AudioDevice::eDSound);
     pWinDevice->Initialize();
     int32_t v = 1;
     //pWinDevice->SetPropertie( ID_ENABLE_AEC, &v );
@@ -290,3 +292,5 @@ int32_t REAL_AUDIO_CALL GetFrameSize( DID device_id )
 
     return pInstance->pAudioBufferProc->GetFrameSize();
 }
+
+#endif 

@@ -56,7 +56,7 @@ public:
     virtual void RecordingDataIsAvailable( const void*data, size_t size_in_byte )
     {
         int16_t*pData = (int16_t*)data;
-        int len = size_in_byte / 2;
+        size_t len = size_in_byte / 2;
         if ( m_channel == 2 )
         {
             len /= 2;
@@ -145,7 +145,7 @@ public:
 
 void* G7221_CALL CreateEncoder( LPENCODEDATACALLBACK cb )
 {
-    AudioDevice* pWinDevice = AudioDevice::Create();
+    AudioDevice* pWinDevice = AudioDevice::Create( AudioDevice::eCoreAudio );
     pWinDevice->Initialize();
     pWinDevice->SetRecordingFormat( 16000, 2 );
     pWinDevice->InitPlayout();
@@ -186,7 +186,7 @@ void G7221_CALL DeleteEncoder( void* encoder )
 
 void* G7221_CALL CreateDecoder( LPENCODEDATACALLBACK  cb )
 {
-    AudioDevice* pWinDevice = AudioDevice::Create();
+    AudioDevice* pWinDevice = AudioDevice::Create( AudioDevice::eCoreAudio );
     pWinDevice->Initialize();
     pWinDevice->SetRecordingFormat( 16000, 2 );
     pWinDevice->InitPlayout();

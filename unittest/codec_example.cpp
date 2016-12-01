@@ -303,7 +303,7 @@ public:
 
 void test_play_mp3()
 {
-    AudioDevice* pWinDevice = AudioDevice::Create();
+    AudioDevice* pWinDevice = AudioDevice::Create(AudioDevice::eCoreAudio);
     pWinDevice->Initialize();
     pWinDevice->InitPlayout();
     pWinDevice->InitRecording();

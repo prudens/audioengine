@@ -15,7 +15,7 @@ AudioEffect::AudioEffect()
 { 
     m_apm = AudioProcessing::Create();
     m_apm->echo_cancellation()->Enable( true );
-    m_apm->echo_cancellation()->set_suppression_level( EchoCancellation::kHighSuppression );
+    m_apm->echo_cancellation()->set_suppression_level( EchoCancellation::kModerateSuppression );
     m_apm->echo_control_mobile()->Enable( false );
     m_apm->echo_control_mobile()->set_routing_mode( EchoControlMobile::kSpeakerphone );
     m_apm->echo_control_mobile()->enable_comfort_noise( false );
@@ -27,7 +27,7 @@ AudioEffect::AudioEffect()
     m_apm->gain_control()->set_compression_gain_db( 90 );
     m_apm->voice_detection()->Enable( false );
     m_apm->noise_suppression()->Enable( true );
-    m_apm->high_pass_filter()->Enable( false );
+    m_apm->high_pass_filter()->Enable( true );
 
     m_apm->noise_suppression()->set_level( webrtc::NoiseSuppression::kVeryHigh );
     m_apm->voice_detection()->set_likelihood( VoiceDetection::kLowLikelihood );
