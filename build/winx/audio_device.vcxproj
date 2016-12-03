@@ -38,6 +38,7 @@
     <ClCompile Include="..\..\device\winx\audio_device.cpp" />
     <ClCompile Include="..\..\device\winx\windows_audio_device_helper.cpp" />
     <ClCompile Include="..\..\device\winx\windows_audio_dsound.cpp" />
+    <ClCompile Include="..\..\device\winx\windows_audio_wave.cpp" />
     <ClCompile Include="..\..\device\winx\windows_core_audio.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -45,6 +46,7 @@
     <ClInclude Include="..\..\device\winx\media_buffer.h" />
     <ClInclude Include="..\..\device\winx\windows_audio_device_helper.h" />
     <ClInclude Include="..\..\device\winx\windows_audio_dsound.h" />
+    <ClInclude Include="..\..\device\winx\windows_audio_wave.h" />
     <ClInclude Include="..\..\device\winx\windows_core_audio.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

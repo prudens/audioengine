@@ -96,7 +96,10 @@ void WindowsAudioDSound::Terminate()
         render_direct_sound_->Release();
     }
 
-
+    playing_ = false;
+    recording_ = false;
+    init_playout_ = false;
+    init_recording_ = false;
     initialize_ = false;
 }
 
@@ -351,6 +354,7 @@ bool WindowsAudioDSound::StopPlayout()
         return false;
     }
     RELEASE_HANDLE( playout_thread_handle_ );
+
     return true;
 }
 
@@ -586,7 +590,13 @@ DWORD  WindowsAudioDSound::DoRenderThread( )
         }
 
     }
+    render_direct_sound_buf_->Stop();
 err:
+    if ( render_direct_sound_buf_)
+    {
+        render_direct_sound_buf_->Release();
+        render_direct_sound_buf_ = nullptr;
+    }
     return 0;
 }
 
@@ -756,7 +766,7 @@ DWORD WindowsAudioDSound::DoCaptureThread()
     hr = capture_direct_sound_buf_->Start( DSCBSTART_LOOPING );
     if (FAILED(hr))
     {
-        return 0;
+        goto err;
     }
 
     // capture data
@@ -806,11 +816,15 @@ DWORD WindowsAudioDSound::DoCaptureThread()
             std::this_thread::sleep_for( milliseconds( framedelay / 2 ) );
             //Sleep( framedelay / 2 );
         }
-
     }
-
-
     capture_direct_sound_buf_->Stop();
+
+err:
+    if (capture_direct_sound_buf_)
+    {
+        capture_direct_sound_buf_->Release();
+        capture_direct_sound_buf_ = nullptr;
+    }
 
     return 0;
 }

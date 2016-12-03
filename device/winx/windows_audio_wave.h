@@ -1,26 +1,20 @@
 #pragma once
-
 #include "device/include/audio_device.h"
 #include "windows_audio_device_helper.h"
 #include <mutex>
 #include <dsound.h>
 #include <atomic>
-class WindowsAudioDSound : public AudioDevice
+
+class WindowsAudioWave : public AudioDevice
 {
-    struct DEVICE_INFO
-    {
-        GUID guid;
-        char name[256];
-    };
-    typedef std::vector<DEVICE_INFO> DEVICE_INFO_LIST;
-    enum {
-        MAX_DELAY = 120,
-        MIN_DELAY = 40UL,
-        SAFE_DELAY = 40,
+    enum{
+        N_BUFFERS_OUT = 200,
+        N_BUFFERS_IN  = 200,
     };
 public:
-    WindowsAudioDSound();
-    virtual ~WindowsAudioDSound();
+    
+    WindowsAudioWave();
+    ~WindowsAudioWave();
     virtual void Release() override;
     virtual bool Initialize()override;
     virtual void Terminate()override;
@@ -63,40 +57,37 @@ public:
     virtual bool SetPropertie( AudioPropertyID id, void* );
     virtual bool GetProperty( AudioPropertyID id, void* );
 private:
-    bool TrySetRecordingFormat( uint32_t nSampleRate, uint16_t nChannels, bool alloc_buffer );
-    bool TrySetPlayoutFormat( uint32_t nSampleRate, uint16_t nChannels,bool alloc_buffer );
-    static BOOL CALLBACK EnumCaptrueCallback( GUID* pGUID, LPCSTR szDesc, LPCSTR szDrvName, void* pContext );
-     DWORD  DoRenderThread();
-     DWORD DoCaptureThread();
-     static DWORD WINAPI WSAPIRenderThread( LPVOID context );
-    static DWORD WINAPI WSAPICaptureThread( LPVOID context );
-private:
+    void GetCaptureDeviceList();
+    void GetRenderDeviceList();
+    void TraceWaveInError( MMRESULT error ) const;
+    void TraceWaveOutError( MMRESULT error ) const;
+
     AUDIO_DEVICE_INFO_LIST capture_devices_;
     AUDIO_DEVICE_INFO_LIST render_devices_;
+    int capture_device_index_ = 0;
+    int render_device_index_ = 0; //default
     bool initialize_ = false;
-    std::mutex capture_lock_;
-    std::mutex render_lock_;
-
-    int capture_device_index_=-1;
-    int render_device_index_ = -1; //default
-
-    int capture_sample_rate_ = 16000;
-    int render_sample_rate_ = 16000;
-    int capture_channel_ = 1;
-    int render_channel_ = 1;
-
-    LPDIRECTSOUNDCAPTURE capture_direct_sound_ = nullptr;
-    LPDIRECTSOUND render_direct_sound_ = nullptr;
-    LPDIRECTSOUNDBUFFER  render_direct_sound_buf_ = nullptr;
-    LPDIRECTSOUNDCAPTUREBUFFER  capture_direct_sound_buf_ = nullptr;
-    bool init_playout_ = false;
-    bool init_recording_ = false;
+    std::atomic<bool> init_playout_ = false;
+    std::atomic<bool> init_recording_ = false;
     std::atomic<bool> playing_ = false;
     std::atomic<bool> recording_ = false;
 
-    HANDLE     playout_thread_handle_;
-    HANDLE     recording_thread_handle_;
-    HANDLE     wait_playout_thread_start_handle_;
-    HANDLE     wait_recording_thread_start_handle_;
+    HANDLE     playout_thread_handle_ = nullptr;
+    HANDLE     recording_thread_handle_ = nullptr;
+    HANDLE     wait_playout_thread_start_handle_ = nullptr;
+    HANDLE     wait_recording_thread_start_handle_ = nullptr;
+
+    int capture_sample_rate_ = 16000;
+    int render_sample_rate_ = 16000;
+    uint16_t capture_channel_ = 1;
+    uint16_t render_channel_ = 1;
+
+    HWAVEOUT render_wave_handle_ = nullptr;
+    HWAVEIN capture_wave_handle_ = nullptr;
+
+    WAVEHDR _waveHeaderIn[N_BUFFERS_IN];
+    WAVEHDR wave_header_out_[N_BUFFERS_OUT];
+    std::vector < char > ply_buffer_;
+
     AudioBufferProc* audio_buffer_proc_;
 };

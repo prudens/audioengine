@@ -1,7 +1,7 @@
 #include "real_audio_device_interface.h"
 #include <stdlib.h>
 #include <vector>
-#include "winx/Device_Winx.h"
+//#include "winx/Device_Winx.h"
 intptr_t id = 0;
 std::vector<char> vec;
 void REAL_AUDIO_CALL RecordingData( const void* pcm16_data, int len_of_byte )

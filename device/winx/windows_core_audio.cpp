@@ -124,7 +124,7 @@ bool WindowsCoreAudio::GetPlayoutDeviceName( int16_t index, wchar_t name[kAdmMax
         index = m_plyDevIndex;
     }
 
-    StringCchCopyW( name, kAdmMaxGuidSize - 1, m_RenderDevices[index].szDeviceName );
+    StringCchCopyW( name, kAdmMaxDeviceNameSize - 1, m_RenderDevices[index].szDeviceName );
     StringCchCopyW( guid, kAdmMaxGuidSize - 1, m_RenderDevices[index].szDeviceID );
     return true;
 }
@@ -142,7 +142,7 @@ bool WindowsCoreAudio::GetRecordingDeviceName( int16_t index, wchar_t name[kAdmM
     {
         index = m_recDevIndex;
     }
-    StringCchCopyW( name, kAdmMaxGuidSize - 1, m_CaptureDevices[index].szDeviceName );
+    StringCchCopyW( name, kAdmMaxDeviceNameSize - 1, m_CaptureDevices[index].szDeviceName );
     StringCchCopyW( guid, kAdmMaxGuidSize - 1, m_CaptureDevices[index].szDeviceID );
     return true;
 }
