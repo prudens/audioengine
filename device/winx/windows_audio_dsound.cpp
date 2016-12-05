@@ -98,8 +98,6 @@ void WindowsAudioDSound::Terminate()
 
     playing_ = false;
     recording_ = false;
-    init_playout_ = false;
-    init_recording_ = false;
     initialize_ = false;
 }
 
@@ -260,35 +258,6 @@ bool WindowsAudioDSound::GetPlayoutFormat( uint32_t& nSampleRate, uint16_t& nCha
     return true;
 }
 
-bool WindowsAudioDSound::InitPlayout()
-{   
-    if ( !initialize_ )
-    {
-        return false;
-    }
-    if ( !TrySetPlayoutFormat( (uint32_t)render_sample_rate_, (uint16_t)render_channel_, true ) )
-    {
-        init_playout_ = false;
-        return false;
-    }
-    init_playout_ = true;
-    return init_playout_;
-}
-
-bool WindowsAudioDSound::InitRecording()
-{
-    if ( !initialize_ )
-    {
-        return false;
-    }
-    if (!TrySetRecordingFormat((uint32_t)capture_sample_rate_,(uint16_t)capture_channel_,true))
-    {
-        init_recording_ = false;
-        return false;
-    }
-    init_recording_ = true;
-    return true;
-}
 
 bool WindowsAudioDSound::StartPlayout()
 {
@@ -305,6 +274,11 @@ bool WindowsAudioDSound::StartPlayout()
     if ( playing_ )
     {
         return true;
+    }
+
+    if ( !TrySetPlayoutFormat( (uint32_t)render_sample_rate_, (uint16_t)render_channel_, true ) )
+    {
+        return false;
     }
 
     {
@@ -340,7 +314,7 @@ bool WindowsAudioDSound::StartPlayout()
 
 bool WindowsAudioDSound::StopPlayout()
 {
-    if (!init_playout_ || !initialize_)
+    if ( !initialize_)
     {
         return false;
     }
@@ -380,6 +354,11 @@ bool WindowsAudioDSound::StartRecording()
         return true;
     }
 
+    if ( !TrySetRecordingFormat( (uint32_t)capture_sample_rate_, (uint16_t)capture_channel_, true ) )
+    {
+        return false;
+    }
+
     {
         std::lock_guard<std::mutex> lg( render_lock_ );
         recording_ = true;
@@ -412,7 +391,7 @@ bool WindowsAudioDSound::StartRecording()
 
 bool WindowsAudioDSound::StopRecording()
 {
-    if ( !init_recording_ || !initialize_ )
+    if ( !initialize_ )
     {
         return false;
     }
@@ -741,10 +720,6 @@ bool WindowsAudioDSound::TrySetPlayoutFormat( uint32_t nSampleRate, uint16_t nCh
 DWORD WindowsAudioDSound::DoCaptureThread()
 {
     if (!initialize_)
-    {
-        return 0;
-    }
-    if (!init_recording_)
     {
         return 0;
     }

@@ -48,7 +48,7 @@ public:
     virtual void RecordingDataIsAvailable( const void*data, size_t samples )
     {
         count_++;
-
+        fwrite( data, 1, samples, file1 );
         //printf( "[%I64u] RecordingDataIsAvailable %d  \n", timestamp(), count_ );
         if ( !RecordingData )
         {
@@ -63,7 +63,7 @@ public:
             {
 
                 RecordingData( rec_cache_.data(), frame_size_ );
-                fwrite( rec_cache_.data(), 1, frame_size_, file1 );
+
                 if ( rec_cache_.size() == frame_size_ )
                 {
                     rec_cache_.clear();
@@ -106,7 +106,7 @@ public:
         {
             return;
         }
-        //fwrite( pcm16_data, 1, len_of_byte, file2 );
+        fwrite( pcm16_data, 1, len_of_byte, file2 );
         lockguard lg( m_lock );
         ply_cache_.insert(ply_cache_.end(), (char*)pcm16_data, (char*)pcm16_data + len_of_byte );
     }
@@ -137,13 +137,11 @@ struct RealAudioDevice
 DID REAL_AUDIO_CALL CreateDevice()
 {
     RealAudioDevice* pInstance = new RealAudioDevice;
-    AudioDevice* pWinDevice = AudioDevice::Create(AudioDevice::eDSound);
+    AudioDevice* pWinDevice = AudioDevice::Create(AudioDevice::eCoreAudio);
     pWinDevice->Initialize();
     int32_t v = 1;
     //pWinDevice->SetPropertie( ID_ENABLE_AEC, &v );
     //pWinDevice->SetPropertie( ID_ENBALE_NS, &v );
-    pWinDevice->InitPlayout();
-    pWinDevice->InitRecording();
     uint32_t rec_sample_rate, ply_sample_rate;
     uint16_t rec_channel, ply_channel;
     pWinDevice->GetRecordingFormat( rec_sample_rate, rec_channel );
@@ -151,9 +149,10 @@ DID REAL_AUDIO_CALL CreateDevice()
 
     CAudioBufferProc* proc = new CAudioBufferProc( rec_sample_rate, rec_channel,
                                                    ply_sample_rate, ply_channel );
+    pInstance->pAudioBufferProc = proc;
     pWinDevice->SetAudioBufferCallback( proc );
     pInstance->pWinDevice = pWinDevice;
-    pInstance->pAudioBufferProc = proc;
+
     return (DID)pInstance;
 }
 

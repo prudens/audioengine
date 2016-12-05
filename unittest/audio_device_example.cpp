@@ -93,11 +93,9 @@ public:
 
 void test_windows_core_audio()
 {
-    AudioDevice* pWinDevice = AudioDevice::Create(AudioDevice::eDSound);
+    AudioDevice* pWinDevice = AudioDevice::Create(AudioDevice::eWave);
 
     pWinDevice->Initialize();
-    pWinDevice->InitPlayout();
-    pWinDevice->InitRecording();
     uint32_t rec_sample_rate,ply_sample_rate;
     uint16_t rec_channel,ply_channel;
     pWinDevice->GetRecordingFormat(rec_sample_rate,rec_channel);
@@ -112,8 +110,6 @@ void test_windows_core_audio()
     pWinDevice->StopRecording();
     pWinDevice->StopPlayout();
     system( "pause" );
-    pWinDevice->InitPlayout();
-    pWinDevice->InitRecording();
     pWinDevice->StartPlayout();
     pWinDevice->StartRecording();
     system( "pause" );
@@ -128,8 +124,6 @@ void test_real_time_3d()
     pWinDevice->Initialize();
     pWinDevice->SetRecordingFormat( 48000, 2 );
     pWinDevice->SetPlayoutFormat( 48000, 2 );
-    pWinDevice->InitPlayout();
-    pWinDevice->InitRecording();
     uint32_t rec_sample_rate, ply_sample_rate;
     uint16_t rec_channel, ply_channel;
     pWinDevice->GetRecordingFormat( rec_sample_rate, rec_channel );
@@ -299,8 +293,6 @@ void test_opus_codec()
     AudioDevice* pWinDevice = AudioDevice::Create( AudioDevice::eCoreAudio );
 
     pWinDevice->Initialize();
-    pWinDevice->InitPlayout();
-    pWinDevice->InitRecording();
 
     OpusBufferProc cb ;
     pWinDevice->SetAudioBufferCallback( &cb );
@@ -318,7 +310,7 @@ void test_opus_codec()
 
 void test_dsound()
 {
-    AudioDevice* pDeivce = AudioDevice::Create( AudioDevice::eDSound );
+    AudioDevice* pDeivce = AudioDevice::Create( AudioDevice::eWave );
     size_t num = pDeivce->GetRecordingDeviceNum();
     for ( size_t i = 0; i < num; i++ )
     {
@@ -344,8 +336,6 @@ void test_dsound()
     pDeivce->SetPlayoutFormat( 16000, 1 );
     pDeivce->SetRecordingFormat( 16000, 1 );
 
-    pDeivce->InitPlayout();
-    pDeivce->InitRecording();
     pDeivce->StartPlayout();
     pDeivce->StartRecording();
     system( "pause" );
@@ -356,5 +346,5 @@ void test_audio_device()
 {
     test_windows_core_audio();
     //test_opus_codec();
-   // test_dsound();
+    //test_dsound();
 }

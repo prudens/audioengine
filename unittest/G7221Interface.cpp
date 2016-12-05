@@ -148,8 +148,6 @@ void* G7221_CALL CreateEncoder( LPENCODEDATACALLBACK cb )
     AudioDevice* pWinDevice = AudioDevice::Create( AudioDevice::eCoreAudio );
     pWinDevice->Initialize();
     pWinDevice->SetRecordingFormat( 16000, 2 );
-    pWinDevice->InitPlayout();
-    pWinDevice->InitRecording();
     uint32_t samplerate;
     uint16_t channel;
     pWinDevice->GetRecordingFormat( samplerate, channel );
@@ -189,8 +187,6 @@ void* G7221_CALL CreateDecoder( LPENCODEDATACALLBACK  cb )
     AudioDevice* pWinDevice = AudioDevice::Create( AudioDevice::eCoreAudio );
     pWinDevice->Initialize();
     pWinDevice->SetRecordingFormat( 16000, 2 );
-    pWinDevice->InitPlayout();
-    pWinDevice->InitRecording();
     uint32_t samplerate;
     uint16_t channel;
     pWinDevice->GetRecordingFormat( samplerate, channel );

@@ -47,9 +47,6 @@ public:
     virtual bool GetRecordingFormat( uint32_t& nSampleRate, uint16_t& nChannels )override;
     virtual bool GetPlayoutFormat( uint32_t& nSampleRate, uint16_t& nChannels )override;
 
-    virtual bool InitPlayout()override;
-    virtual bool InitRecording()override;
-
     virtual bool StartPlayout()override;
     virtual bool StopPlayout()override;
     virtual bool Playing() const override;

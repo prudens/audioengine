@@ -1,6 +1,7 @@
 #include "device/include/audio_device.h"
 #include "windows_core_audio.h"
 #include "windows_audio_dsound.h"
+#include "windows_audio_wave.h"
 
 AudioDevice* AudioDevice::Create( DeviceAPI api )
 {
@@ -11,6 +12,10 @@ AudioDevice* AudioDevice::Create( DeviceAPI api )
     else if ( api == eDSound )
     {
         return new WindowsAudioDSound();
+    }
+    else if ( api == eWave)
+    {
+        return new WindowsAudioWave();
     }
     return nullptr;
 }

@@ -42,6 +42,7 @@ public:
     {
         eCoreAudio,
         eDSound,
+        eWave,
     };
     static AudioDevice* Create(DeviceAPI api);
     virtual void Release()=0;
@@ -69,9 +70,6 @@ public:
     virtual bool SetPlayoutFormat( uint32_t nSampleRate, uint16_t nChannels ) = 0;
     virtual bool GetRecordingFormat( uint32_t& nSampleRate, uint16_t& nChannels ) = 0;
     virtual bool GetPlayoutFormat( uint32_t& nSampleRate, uint16_t& nChannels ) = 0;
-
-    virtual bool InitPlayout() = 0;
-    virtual bool InitRecording() = 0;
 
     virtual bool StartPlayout() = 0;
     virtual bool StopPlayout() = 0;

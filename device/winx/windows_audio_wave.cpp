@@ -1,4 +1,4 @@
-#include "windows_audio_wave.h"
+﻿#include "windows_audio_wave.h"
 #include <Strsafe.h>
 
 #define DRV_RESERVED                      0x0800
@@ -31,12 +31,12 @@ bool WindowsAudioWave::Initialize()
     {
         return true;
     }
-    if (!capture_devices_.empty())
+    if (capture_devices_.empty())
     {
         return false;
     }
 
-    if (!render_devices_.empty())
+    if (render_devices_.empty())
     {
         return false;
     }
@@ -218,224 +218,71 @@ bool WindowsAudioWave::GetPlayoutFormat( uint32_t& nSampleRate, uint16_t& nChann
     return true;
 }
 
-bool WindowsAudioWave::InitPlayout()
+bool WindowsAudioWave::StartPlayout()
 {
-    if (render_wave_handle_)
+    if ( !initialize_ )
     {
-        waveOutClose( render_wave_handle_ );
-        render_wave_handle_ = nullptr;
-    }
-    HWAVEOUT hWaveOut( NULL );
-    MMRESULT res( MMSYSERR_ERROR );
-
-    // Set the output wave format
-    //
-    WAVEFORMATEX waveFormat;
-
-    waveFormat.wFormatTag = WAVE_FORMAT_PCM;
-    waveFormat.nChannels = render_channel_;  // mono <=> 1, stereo <=> 2
-    waveFormat.nSamplesPerSec = render_sample_rate_;
-    waveFormat.wBitsPerSample = 16;
-    waveFormat.nBlockAlign = waveFormat.nChannels * ( waveFormat.wBitsPerSample / 8 );
-    waveFormat.nAvgBytesPerSec = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
-    waveFormat.cbSize = 0;
-
-
-    if (render_device_index_ >= 0 )
-    {
-
-        res = waveOutOpen( NULL, render_device_index_, &waveFormat, 0, 0, CALLBACK_NULL | WAVE_FORMAT_QUERY );
-        if ( MMSYSERR_NOERROR == res )
-        {
-            // open the given waveform-audio output device for recording
-            res = waveOutOpen( &hWaveOut, render_device_index_, &waveFormat, 0, 0, CALLBACK_NULL );
-        }
-    }
-
-    if (!hWaveOut)
-    {
-        // check if it is possible to open the default communication device (supported on Windows 7)
-        res = waveOutOpen( NULL, WAVE_MAPPER, &waveFormat, 0, 0, CALLBACK_NULL | WAVE_MAPPED_DEFAULT_COMMUNICATION_DEVICE | WAVE_FORMAT_QUERY );
-        if ( MMSYSERR_NOERROR == res )
-        {
-            // if so, open the default communication device for real
-            res = waveOutOpen( &hWaveOut, WAVE_MAPPER, &waveFormat, 0, 0, CALLBACK_NULL | WAVE_MAPPED_DEFAULT_COMMUNICATION_DEVICE );
-        }
-        else
-        {
-            // use default device since default communication device was not avaliable
-            res = waveOutOpen( &hWaveOut, WAVE_MAPPER, &waveFormat, 0, 0, CALLBACK_NULL );
-        }
-    }
-
-    if (!hWaveOut)
-    {
-        if ( MMSYSERR_NOERROR != res )
-        {
-            TraceWaveOutError( res );
-        }
         return false;
     }
 
-    // Log information about the acquired output device
-    //
-    WAVEOUTCAPS caps;
-
-    res = waveOutGetDevCaps( (UINT_PTR)hWaveOut, &caps, sizeof( WAVEOUTCAPS ) );
-    if ( res != MMSYSERR_NOERROR )
-    {
-        TraceWaveOutError( res );
-    }
-
-    UINT deviceID( 0 );
-    res = waveOutGetID( hWaveOut, &deviceID );
-    if ( res != MMSYSERR_NOERROR )
-    {
-        TraceWaveOutError( res );
-    }
-
-    // Store valid handle for the open waveform-audio output device
-    render_wave_handle_ = hWaveOut;
-
-    const size_t bytes_per_frame = 2 * render_channel_ * render_sample_rate_ / 100;// 10ms per frame
-    ply_buffer_.resize( N_BUFFERS_OUT * bytes_per_frame ); 
-
-    for ( int n = 0; n < N_BUFFERS_OUT; n++ )
-    {
-        // set up the output wave header
-        wave_header_out_[n].lpData = reinterpret_cast<LPSTR>( ply_buffer_.data() + n* bytes_per_frame );
-        wave_header_out_[n].dwBufferLength = bytes_per_frame;
-        wave_header_out_[n].dwFlags = 0;
-        wave_header_out_[n].dwLoops = 0;
-
-        // The waveOutPrepareHeader function prepares a waveform-audio data block for playback.
-        // The lpData, dwBufferLength, and dwFlags members of the WAVEHDR structure must be set
-        // before calling this function.
-        //
-        res = waveOutPrepareHeader( render_wave_handle_, &wave_header_out_[n], sizeof( WAVEHDR ) );
-        if ( MMSYSERR_NOERROR != res )
-        {
-            TraceWaveOutError( res );
-        }
-
-        // perform extra check to ensure that the header is prepared
-        if ( wave_header_out_[n].dwFlags != WHDR_PREPARED )
-        {
-            printf( "waveOutPrepareHeader(%d) failed (dwFlags != WHDR_PREPARED)", n );
-        }
-    }
-
-    return true;
-}
-
-bool WindowsAudioWave::InitRecording()
-{
-    if (!initialize_)
-    {
-        return false;
-    }
-    if (init_recording_)
+    if ( playout_thread_handle_ != NULL )
     {
         return true;
     }
 
-    // Start by closing any existing wave-input devices
-    //
-    MMRESULT res( MMSYSERR_ERROR );
-
-    if ( capture_wave_handle_ )
+    if ( playing_ )
     {
-        res = waveInClose( capture_wave_handle_ );
-        capture_wave_handle_ = nullptr;
-        if ( MMSYSERR_NOERROR != res )
-        {
-            TraceWaveInError( res );
-        }
+        return true;
     }
 
-    // Set the input wave format
-    //
-    WAVEFORMATEX waveFormat;
-
-    waveFormat.wFormatTag = WAVE_FORMAT_PCM;
-    waveFormat.nChannels = capture_channel_;  // mono <=> 1, stereo <=> 2
-    waveFormat.nSamplesPerSec = capture_sample_rate_;
-    waveFormat.wBitsPerSample = 16;
-    waveFormat.nBlockAlign = waveFormat.nChannels * ( waveFormat.wBitsPerSample / 8 );
-    waveFormat.nAvgBytesPerSec = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
-    waveFormat.cbSize = 0;
-
-    // Open the given waveform-audio input device for recording
-    //
-    HWAVEIN hWaveIn( NULL );
-
-    if ( capture_device_index_ >= 0 )
     {
-        // verify settings first
-        res = waveInOpen( NULL, capture_device_index_, &waveFormat, 0, 0, CALLBACK_NULL | WAVE_FORMAT_QUERY );
-        if ( MMSYSERR_NOERROR == res )
+        playing_ = true;
+        // Create thread which will drive the rendering.
+        playout_thread_handle_ = CreateThread(
+            NULL,
+            0,
+            WSAPIRenderThread,
+            this,
+            0,
+            NULL );
+        if ( playout_thread_handle_ == NULL )
         {
-            // open the given waveform-audio input device for recording
-            res = waveInOpen( &hWaveIn, capture_device_index_, &waveFormat, 0, 0, CALLBACK_NULL );
+            playing_ = false;
+            return false;
         }
-    }
-    if (!hWaveIn)
+
+        // Set thread priority to highest possible.
+        ::SetThreadPriority( playout_thread_handle_, THREAD_PRIORITY_TIME_CRITICAL );
+    }  // critScoped
+
+    DWORD ret = WaitForSingleObject( wait_playout_thread_start_handle_, 2000 );
+    if ( ret != WAIT_OBJECT_0 )
     {
-        res = waveInOpen( NULL, WAVE_MAPPER, &waveFormat, 0, 0, CALLBACK_NULL | WAVE_MAPPED_DEFAULT_COMMUNICATION_DEVICE | WAVE_FORMAT_QUERY );
-        if ( MMSYSERR_NOERROR == res )
-        {
-            // if so, open the default communication device for real
-            res = waveInOpen( &hWaveIn, WAVE_MAPPER, &waveFormat, 0, 0, CALLBACK_NULL | WAVE_MAPPED_DEFAULT_COMMUNICATION_DEVICE );
-        }
-        else
-        {
-            // use default device since default communication device was not avaliable
-            res = waveInOpen( &hWaveIn, WAVE_MAPPER, &waveFormat, 0, 0, CALLBACK_NULL );
-        }
-    }
-   
-    if ( MMSYSERR_NOERROR != res )
-    {
-        TraceWaveInError( res );
+        playing_ = false;
+        RELEASE_HANDLE ( playout_thread_handle_ );
         return false;
     }
-    if (!hWaveIn)
-    {
-        return false;
-    }
-    // Log information about the acquired input device
-    //
-    WAVEINCAPS caps;
 
-    res = waveInGetDevCaps( (UINT_PTR)hWaveIn, &caps, sizeof( WAVEINCAPS ) );
-    if ( res != MMSYSERR_NOERROR )
-    {
-        printf( "waveInGetDevCaps() failed (err=%d)", res );
-        TraceWaveInError( res );
-    }
-
-    UINT deviceID( 0 );
-    res = waveInGetID( hWaveIn, &deviceID );
-    if ( res != MMSYSERR_NOERROR )
-    {
-        printf( "waveInGetID() failed (err=%d)", res );
-        TraceWaveInError( res );
-    }
-
-    // Store valid handle for the open waveform-audio input device
-    capture_wave_handle_ = hWaveIn;
-    init_recording_ = true;
-    return true;
-}
-
-bool WindowsAudioWave::StartPlayout()
-{
     return true;
 }
 
 bool WindowsAudioWave::StopPlayout()
 {
-    playing_ = false;
+    if ( !initialize_ )
+    {
+        return false;
+    }
+    playing_ = false; // ֹͣ
+    DWORD ret = WaitForSingleObject( playout_thread_handle_, 2000 );
+    if ( ret != WAIT_OBJECT_0 )
+    {
+        // the thread did not stop as it should
+        printf( "failed to close down wave_render_thread" );
+        RELEASE_HANDLE( playout_thread_handle_ );
+        return false;
+    }
+    RELEASE_HANDLE( playout_thread_handle_ );
+
     return true;
 }
 
@@ -446,11 +293,66 @@ bool WindowsAudioWave::Playing() const
 
 bool WindowsAudioWave::StartRecording()
 {
-    return false;
+    if ( !initialize_ )
+    {
+        return false;
+    }
+
+    if ( recording_thread_handle_ != NULL )
+    {
+        return true;
+    }
+
+    if ( recording_ )
+    {
+        return true;
+    }
+
+    {
+        recording_ = true;
+        // Create thread which will drive the rendering.
+        recording_thread_handle_ = CreateThread(
+            NULL,
+            0,
+            WSAPICaptureThread,
+            this,
+            0,
+            NULL );
+        if ( recording_thread_handle_ == NULL )
+        {
+            return false;
+        }
+
+        // Set thread priority to highest possible.
+        ::SetThreadPriority( recording_thread_handle_, THREAD_PRIORITY_TIME_CRITICAL );
+    }
+
+    DWORD ret = WaitForSingleObject( wait_recording_thread_start_handle_, 2000 );
+    if ( ret != WAIT_OBJECT_0 )
+    {
+        recording_ = false;
+        return false;
+    }
+
+    return true;
 }
 
 bool WindowsAudioWave::StopRecording()
 {
+    if ( !initialize_ )
+    {
+        return false;
+    }
+    recording_ = false; // ֹͣ
+    DWORD ret = WaitForSingleObject( recording_thread_handle_, 2000 );
+    if ( ret != WAIT_OBJECT_0 )
+    {
+        // the thread did not stop as it should
+        printf( "failed to close down dsound_capture_thread" );
+        RELEASE_HANDLE( recording_thread_handle_ );
+        return false;
+    }
+    RELEASE_HANDLE( recording_thread_handle_ );
     return true;
 }
 
@@ -482,7 +384,7 @@ bool WindowsAudioWave::GetProperty( AudioPropertyID /*id*/, void* )
 void WindowsAudioWave::GetCaptureDeviceList()
 {
     capture_devices_.clear();
-    int devnum = GetRecordingDeviceNum();
+    int devnum = waveInGetNumDevs();
     capture_devices_.reserve( devnum );
     for ( int index = 0; index < devnum; index++ )
     {
@@ -531,7 +433,7 @@ void WindowsAudioWave::GetCaptureDeviceList()
 void WindowsAudioWave::GetRenderDeviceList()
 {
     render_devices_.clear();
-    int devnum = GetPlayoutDeviceNum();
+    int devnum = waveOutGetNumDevs();
     render_devices_.reserve( devnum );
     for ( int index = 0; index < devnum; index++ )
     {
@@ -599,4 +501,326 @@ void WindowsAudioWave::TraceWaveOutError( MMRESULT error ) const
     waveOutGetErrorText( error, msg, MAXERRORLENGTH );
     StringCchCat( buf, MAXERRORLENGTH, msg );
     printf( "%s", buf );
+}
+
+DWORD WINAPI WindowsAudioWave::WSAPIRenderThread( LPVOID context )
+{
+    return reinterpret_cast<WindowsAudioWave*>( context )->
+        DoRenderThread();
+}
+
+DWORD WINAPI WindowsAudioWave::WSAPICaptureThread( LPVOID context )
+{
+    return reinterpret_cast<WindowsAudioWave*>( context )->
+        DoCaptureThread();
+}
+
+DWORD WindowsAudioWave::DoRenderThread()
+{
+    std::vector < char > render_buffer;
+
+    MMRESULT res( MMSYSERR_ERROR );
+    HWAVEOUT render_wave_handle = OpenRenderDevice();
+    if (!render_wave_handle)
+    {
+        return 0;
+    }
+
+    const size_t bytes_per_frame = 2 * render_channel_ * render_sample_rate_ / 100;// 10ms per frame
+    render_buffer.resize( N_BUFFERS_OUT * bytes_per_frame );
+   WAVEHDR wave_header_out[N_BUFFERS_OUT];
+    for ( int n = 0; n < N_BUFFERS_OUT; n++ )
+    {
+        // set up the output wave header
+        wave_header_out[n].lpData = reinterpret_cast<LPSTR>( &render_buffer[n* bytes_per_frame]);
+        wave_header_out[n].dwBufferLength = bytes_per_frame;
+        wave_header_out[n].dwFlags = 0;
+        wave_header_out[n].dwLoops = 0;
+
+        // The waveOutPrepareHeader function prepares a waveform-audio data block for playback.
+        // The lpData, dwBufferLength, and dwFlags members of the WAVEHDR structure must be set
+        // before calling this function.
+        //
+        res = waveOutPrepareHeader( render_wave_handle, &wave_header_out[n], sizeof( WAVEHDR ) );
+        if ( MMSYSERR_NOERROR != res )
+        {
+            TraceWaveOutError( res );
+        }
+        res = waveOutWrite( render_wave_handle, &wave_header_out[n], sizeof( WAVEHDR ) );
+    }
+
+    SetEvent( wait_playout_thread_start_handle_ );
+   MSG msg;
+    while ( playing_ && GetMessage( &msg, 0, 0, 0 ) )
+    {
+        if ( MM_WOM_DONE == msg.message )
+        {
+            WAVEHDR* wheader = (WAVEHDR*)msg.lParam;
+            waveOutPrepareHeader( render_wave_handle, wheader, sizeof( WAVEHDR ) );
+            wheader->dwBufferLength = bytes_per_frame;
+            if ( audio_buffer_proc_ )
+            {
+                size_t len = audio_buffer_proc_->NeedMorePlayoutData( wheader->lpData, wheader->dwBufferLength );
+                if ( len < wheader->dwBufferLength )
+                {
+                    memset( wheader->lpData + len, 0, wheader->dwBufferLength - len );
+                }
+            }
+            else
+            {
+                printf( "NeedMorePlayoutData :%d\n",wheader->dwBufferLength );
+            }
+            waveOutPrepareHeader( render_wave_handle, wheader, sizeof( WAVEHDR ) );
+            waveOutWrite( render_wave_handle, wheader, sizeof( WAVEHDR ) );
+        }
+        else if ( MM_WOM_CLOSE == msg.message )
+        {
+            break;
+        }
+    }
+
+    if ( render_wave_handle )
+    {
+        waveOutClose( render_wave_handle );
+    }
+    return 0;
+}
+
+DWORD WindowsAudioWave::DoCaptureThread()
+{
+    if ( !initialize_ )
+    {
+        return 0;
+    }
+    if ( !recording_ )
+    {
+        return 0;
+    }
+    // Start by closing any existing wave-input devices
+    //
+    MMRESULT res( MMSYSERR_ERROR );
+
+    // Store valid handle for the open waveform-audio input device
+    HWAVEIN capture_wave_handle = OpenCaptureDevice();
+    if ( !capture_wave_handle )
+    {
+        return 0;
+    }
+    std::vector < char > capture_buffer;
+    const size_t bytes_per_frame = 2 * capture_channel_ * capture_sample_rate_ / 100;// 10ms per frame
+    capture_buffer.resize( N_BUFFERS_IN * bytes_per_frame );
+    WAVEHDR wave_header_in[N_BUFFERS_IN];
+
+    for ( int n = 0; n < N_BUFFERS_IN; n++ )
+    {
+        // set up the output wave header
+        wave_header_in[n].lpData = reinterpret_cast<LPSTR>( &capture_buffer[n* bytes_per_frame] );
+        wave_header_in[n].dwBufferLength = bytes_per_frame;
+        wave_header_in[n].dwFlags = 0;
+        wave_header_in[n].dwLoops = 0;
+
+        // The waveOutPrepareHeader function prepares a waveform-audio data block for playback.
+        // The lpData, dwBufferLength, and dwFlags members of the WAVEHDR structure must be set
+        // before calling this function.
+        //
+        res = waveInPrepareHeader( capture_wave_handle, &wave_header_in[n], sizeof( WAVEHDR ) );
+        res = waveInAddBuffer( capture_wave_handle, &wave_header_in[n], sizeof( WAVEHDR ) );
+        if ( MMSYSERR_NOERROR != res )
+        {
+            TraceWaveInError( res );
+        }
+
+    }
+
+    /////////////////start recording ///////////////////////
+    if ( MMSYSERR_NOERROR == waveInStart( capture_wave_handle ) )
+    {
+        SetEvent( wait_recording_thread_start_handle_ );
+        MSG msg;
+        while ( GetMessage( &msg, 0, 0, 0 ) && recording_ )
+        {
+            if ( MM_WIM_DATA == msg.message )
+            {
+                WAVEHDR* wheader = (WAVEHDR*)msg.lParam;
+                waveInPrepareHeader( capture_wave_handle, wheader, sizeof( WAVEHDR ) );
+                if ( wheader->dwBytesRecorded == bytes_per_frame )
+                {
+                    if ( audio_buffer_proc_ )
+                    {
+                        audio_buffer_proc_->RecordingDataIsAvailable( wheader->lpData, wheader->dwBytesRecorded );
+                    }
+                    else
+                    {
+                        printf( "RecordingDataIsAvailable :%d\n", wheader->dwBytesRecorded );
+                    }
+                }
+                waveInPrepareHeader( capture_wave_handle, wheader, sizeof( WAVEHDR ) );
+                waveInAddBuffer( capture_wave_handle, wheader, sizeof( WAVEHDR ) );
+            }
+            else if ( MM_WIM_CLOSE == msg.message )
+            {
+                break;
+            }
+        }
+    }
+
+    /////////////////end recording ///////////////////////
+
+    if ( capture_wave_handle )
+    {
+        waveInClose( capture_wave_handle );
+    }
+
+    return 0;
+}
+
+HWAVEOUT WindowsAudioWave::OpenRenderDevice()
+{
+    HWAVEOUT hWaveOut( NULL );
+    MMRESULT res( MMSYSERR_ERROR );
+
+    // Set the output wave format
+    //
+    WAVEFORMATEX waveFormat;
+
+    waveFormat.wFormatTag = WAVE_FORMAT_PCM;
+    waveFormat.nChannels = render_channel_;  // mono <=> 1, stereo <=> 2
+    waveFormat.nSamplesPerSec = render_sample_rate_;
+    waveFormat.wBitsPerSample = 16;
+    waveFormat.nBlockAlign = waveFormat.nChannels * ( waveFormat.wBitsPerSample / 8 );
+    waveFormat.nAvgBytesPerSec = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
+    waveFormat.cbSize = 0;
+
+
+    if ( render_device_index_ >= 0 )
+    {
+        res = waveOutOpen( NULL, render_device_index_, &waveFormat, GetCurrentThreadId(), 0, CALLBACK_THREAD | WAVE_FORMAT_QUERY );
+        if ( MMSYSERR_NOERROR == res )
+        {
+            // open the given waveform-audio output device for recording
+            res = waveOutOpen( &hWaveOut, render_device_index_, &waveFormat, GetCurrentThreadId(), 0, CALLBACK_THREAD );
+        }
+    }
+
+    if ( !hWaveOut )
+    {
+        // check if it is possible to open the default communication device (supported on Windows 7)
+        res = waveOutOpen( NULL, WAVE_MAPPER, &waveFormat, GetCurrentThreadId(), 0, CALLBACK_THREAD | WAVE_MAPPED_DEFAULT_COMMUNICATION_DEVICE | WAVE_FORMAT_QUERY );
+        if ( MMSYSERR_NOERROR == res )
+        {
+            // if so, open the default communication device for real
+            res = waveOutOpen( &hWaveOut, WAVE_MAPPER, &waveFormat, GetCurrentThreadId(), 0, CALLBACK_THREAD | WAVE_MAPPED_DEFAULT_COMMUNICATION_DEVICE );
+        }
+        else
+        {
+            // use default device since default communication device was not avaliable
+            res = waveOutOpen( &hWaveOut, WAVE_MAPPER, &waveFormat, GetCurrentThreadId(), 0, CALLBACK_THREAD );
+        }
+    }
+
+    if ( !hWaveOut )
+    {
+        if ( MMSYSERR_NOERROR != res )
+        {
+            TraceWaveOutError( res );
+        }
+        return 0;
+    }
+
+    // Log information about the acquired output device
+    //
+    WAVEOUTCAPS caps;
+
+    res = waveOutGetDevCaps( (UINT_PTR)hWaveOut, &caps, sizeof( WAVEOUTCAPS ) );
+    if ( res != MMSYSERR_NOERROR )
+    {
+        TraceWaveOutError( res );
+    }
+
+    UINT deviceID( 0 );
+    res = waveOutGetID( hWaveOut, &deviceID );
+    if ( res != MMSYSERR_NOERROR )
+    {
+        TraceWaveOutError( res );
+    }
+
+    // Store valid handle for the open waveform-audio output device
+    return hWaveOut;
+}
+
+HWAVEIN WindowsAudioWave::OpenCaptureDevice()
+{
+    // Set the input wave format
+    //
+    MMRESULT res( MMSYSERR_ERROR );
+
+    WAVEFORMATEX waveFormat;
+
+    waveFormat.wFormatTag = WAVE_FORMAT_PCM;
+    waveFormat.nChannels = capture_channel_;  // mono <=> 1, stereo <=> 2
+    waveFormat.nSamplesPerSec = capture_sample_rate_;
+    waveFormat.wBitsPerSample = 16;
+    waveFormat.nBlockAlign = waveFormat.nChannels * ( waveFormat.wBitsPerSample / 8 );
+    waveFormat.nAvgBytesPerSec = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
+    waveFormat.cbSize = 0;
+
+    // Open the given waveform-audio input device for recording
+    //
+    HWAVEIN hWaveIn( NULL );
+
+    if ( capture_device_index_ >= 0 )
+    {
+        // verify settings first
+        res = waveInOpen( NULL, capture_device_index_, &waveFormat, GetCurrentThreadId(), 0, CALLBACK_THREAD | WAVE_FORMAT_QUERY );
+        if ( MMSYSERR_NOERROR == res )
+        {
+            // open the given waveform-audio input device for recording
+            res = waveInOpen( &hWaveIn, capture_device_index_, &waveFormat, GetCurrentThreadId(), 0, CALLBACK_THREAD );
+        }
+    }
+    if ( !hWaveIn )
+    {
+        res = waveInOpen( NULL, WAVE_MAPPER, &waveFormat, GetCurrentThreadId(), 0, CALLBACK_THREAD | WAVE_MAPPED_DEFAULT_COMMUNICATION_DEVICE | WAVE_FORMAT_QUERY );
+        if ( MMSYSERR_NOERROR == res )
+        {
+            // if so, open the default communication device for real
+            res = waveInOpen( &hWaveIn, WAVE_MAPPER, &waveFormat, GetCurrentThreadId(), 0, CALLBACK_THREAD | WAVE_MAPPED_DEFAULT_COMMUNICATION_DEVICE );
+        }
+        else
+        {
+            // use default device since default communication device was not avaliable
+            res = waveInOpen( &hWaveIn, WAVE_MAPPER, &waveFormat, GetCurrentThreadId(), 0, CALLBACK_THREAD );
+        }
+    }
+
+    if ( MMSYSERR_NOERROR != res )
+    {
+        TraceWaveInError( res );
+        return 0;
+    }
+    if ( !hWaveIn )
+    {
+        return 0;
+    }
+    // Log information about the acquired input device
+    //
+    WAVEINCAPS caps;
+
+    res = waveInGetDevCaps( (UINT_PTR)hWaveIn, &caps, sizeof( WAVEINCAPS ) );
+    if ( res != MMSYSERR_NOERROR )
+    {
+        printf( "waveInGetDevCaps() failed (err=%d)", res );
+        TraceWaveInError( res );
+    }
+
+    UINT deviceID( 0 );
+    res = waveInGetID( hWaveIn, &deviceID );
+    if ( res != MMSYSERR_NOERROR )
+    {
+        printf( "waveInGetID() failed (err=%d)", res );
+        TraceWaveInError( res );
+    }
+
+    // Store valid handle for the open waveform-audio input device
+    return hWaveIn;
 }

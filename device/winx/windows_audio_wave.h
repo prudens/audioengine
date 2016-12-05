@@ -8,8 +8,8 @@
 class WindowsAudioWave : public AudioDevice
 {
     enum{
-        N_BUFFERS_OUT = 200,
-        N_BUFFERS_IN  = 200,
+        N_BUFFERS_OUT = 100,
+        N_BUFFERS_IN  = 100,
     };
 public:
     
@@ -41,9 +41,6 @@ public:
     virtual bool GetRecordingFormat( uint32_t& nSampleRate, uint16_t& nChannels )override;
     virtual bool GetPlayoutFormat( uint32_t& nSampleRate, uint16_t& nChannels )override;
 
-    virtual bool InitPlayout()override;
-    virtual bool InitRecording()override;
-
     virtual bool StartPlayout()override;
     virtual bool StopPlayout()override;
     virtual bool Playing() const override;
@@ -59,16 +56,20 @@ public:
 private:
     void GetCaptureDeviceList();
     void GetRenderDeviceList();
+    HWAVEOUT OpenRenderDevice();
+    HWAVEIN  OpenCaptureDevice();
     void TraceWaveInError( MMRESULT error ) const;
     void TraceWaveOutError( MMRESULT error ) const;
 
+    DWORD  DoRenderThread();
+    DWORD DoCaptureThread();
+    static DWORD WINAPI WSAPIRenderThread( LPVOID context );
+    static DWORD WINAPI WSAPICaptureThread( LPVOID context );
     AUDIO_DEVICE_INFO_LIST capture_devices_;
     AUDIO_DEVICE_INFO_LIST render_devices_;
     int capture_device_index_ = 0;
     int render_device_index_ = 0; //default
     bool initialize_ = false;
-    std::atomic<bool> init_playout_ = false;
-    std::atomic<bool> init_recording_ = false;
     std::atomic<bool> playing_ = false;
     std::atomic<bool> recording_ = false;
 
@@ -82,12 +83,5 @@ private:
     uint16_t capture_channel_ = 1;
     uint16_t render_channel_ = 1;
 
-    HWAVEOUT render_wave_handle_ = nullptr;
-    HWAVEIN capture_wave_handle_ = nullptr;
-
-    WAVEHDR _waveHeaderIn[N_BUFFERS_IN];
-    WAVEHDR wave_header_out_[N_BUFFERS_OUT];
-    std::vector < char > ply_buffer_;
-
-    AudioBufferProc* audio_buffer_proc_;
+    AudioBufferProc* audio_buffer_proc_ = nullptr;
 };

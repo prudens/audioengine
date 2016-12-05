@@ -9,57 +9,57 @@
 
 WindowsCoreAudio::WindowsCoreAudio()
 {
-    m_hRenderSamplesReadyEvent = ::CreateEvent( NULL, FALSE, FALSE, NULL );
-    m_hCaptureSamplesReadyEvent = ::CreateEvent( NULL, FALSE, FALSE, NULL );
-    m_hShutdownRenderEvent = ::CreateEvent( NULL, FALSE, FALSE, NULL );
-    m_hShutdownCaptureEvent = ::CreateEvent( NULL, TRUE, FALSE, NULL );
-    m_hRenderStartedEvent = ::CreateEvent( NULL, FALSE, FALSE, NULL );
-    m_hCaptureStartedEvent = ::CreateEvent( NULL, FALSE, FALSE, NULL );
+    render_samples_ready_evnet_ = ::CreateEvent( NULL, FALSE, FALSE, NULL );
+    capture_samples_ready_event_ = ::CreateEvent( NULL, FALSE, FALSE, NULL );
+    shutdown_render_event_ = ::CreateEvent( NULL, FALSE, FALSE, NULL );
+    shutdown_capture_event_ = ::CreateEvent( NULL, TRUE, FALSE, NULL );
+    render_started_event_ = ::CreateEvent( NULL, FALSE, FALSE, NULL );
+    capture_start_event_ = ::CreateEvent( NULL, FALSE, FALSE, NULL );
     HRESULT hr = CoCreateInstance( CLSID_CWMAudioAEC,
                                    NULL,
                                    CLSCTX_INPROC_SERVER,
                                    IID_IMediaObject,
-                                   reinterpret_cast<void**>( &m_spDmo ) );
-    if ( FAILED( hr ) || !m_spDmo )
+                                   reinterpret_cast<void**>( &dmo_ ) );
+    if ( FAILED( hr ) || !dmo_ )
     {
-        m_DMOIsAvailble = false; // audio effect such as aec ns etc.
+        dmo_is_available_ = false; // audio effect such as aec ns etc.
     }
 
-    hr = EnumDevice( eCapture, m_CaptureDevices );
-    hr = EnumDevice( eRender, m_RenderDevices );
-    int16_t size = (int16_t)m_CaptureDevices.size();
+    hr = EnumDevice( eCapture, capture_device_list_ );
+    hr = EnumDevice( eRender, render_device_list_ );
+    int16_t size = (int16_t)capture_device_list_.size();
     for ( int16_t i = 0; i < size; i++ )
     {
-        if ( m_CaptureDevices[i].bDefaultDevice )
+        if ( capture_device_list_[i].bDefaultDevice )
         {
-            m_recDevIndex = i;
+            capture_device_index_ = i;
             break;
         }
     }
-    size = (int16_t)m_RenderDevices.size();
+    size = (int16_t)render_device_list_.size();
     for ( int16_t i = 0; i < size; i++ )
     {
-        if ( m_RenderDevices[i].bDefaultDevice )
+        if ( render_device_list_[i].bDefaultDevice )
         {
-            m_plyDevIndex = i;
+            render_device_index_ = i;
             break;
         }
     }
 
-    m_DMOIsAvailble = false;
+    dmo_is_available_ = false;
 }
 
 WindowsCoreAudio::~WindowsCoreAudio()
 {
     Terminate();
-    RELEASE_HANDLE( m_hRenderSamplesReadyEvent );
-    RELEASE_HANDLE( m_hCaptureSamplesReadyEvent );
-    RELEASE_HANDLE( m_hShutdownRenderEvent );
-    RELEASE_HANDLE( m_hShutdownCaptureEvent );
-    RELEASE_HANDLE( m_hRenderStartedEvent );
-    RELEASE_HANDLE( m_hCaptureStartedEvent );
+    RELEASE_HANDLE( render_samples_ready_evnet_ );
+    RELEASE_HANDLE( capture_samples_ready_event_ );
+    RELEASE_HANDLE( shutdown_render_event_ );
+    RELEASE_HANDLE( shutdown_capture_event_ );
+    RELEASE_HANDLE( render_started_event_ );
+    RELEASE_HANDLE( capture_start_event_ );
 
-    m_spDmo.Release();
+    dmo_.Release();
 }
 
 void WindowsCoreAudio::Release()
@@ -68,151 +68,188 @@ void WindowsCoreAudio::Release()
 }
 bool WindowsCoreAudio::Initialize()
 {
-    lock_guard lg(m_audiolock);
-    if ( m_bInitialize )
     {
-        return true;
+        lock_guard lg( audio_lock_ );
+        if ( initialize_ )
+        {
+            return true;
+        }
+        DeviceBindTo( eCapture, capture_device_index_, &audio_client_in_, nullptr, nullptr );
+        DeviceBindTo( eRender, render_device_index_, &audio_client_out_, nullptr, nullptr );
+        if ( !audio_client_in_ || !audio_client_in_ )
+        {
+            return false;
+        }
     }
-    DeviceBindTo( eCapture, m_recDevIndex, &m_spClientIn, nullptr, nullptr );
-    DeviceBindTo( eRender, m_plyDevIndex, &m_spClientOut, nullptr, nullptr );
-    if (!m_spClientIn || !m_spClientOut )
+    initialize_ = true;
+    for ( uint32_t sample_rate : {48000,44100,32000,16000,8000} )
     {
-        return false;
+        for ( auto channel : {2,1} )
+        {
+            if ( IsRecordingFormatSupported( sample_rate, (uint16_t)channel ) )
+            {
+                capture_sample_rate_ = sample_rate;
+                capture_channel_ = (int16_t)channel;
+                break;
+            }
+        }
+        if (capture_channel_ != 0 )
+        {
+            break;
+        }
     }
-    m_bInitialize = true;
+
+    for ( uint32_t sample_rate : { 48000, 44100, 32000, 16000, 8000 } )
+    {
+        for ( auto channel : { 2, 1 } )
+        {
+            if ( IsPlayoutFormatSupported( sample_rate, (uint16_t)channel ) )
+            {
+                render_sample_rate_ = sample_rate;
+                render_channel_ = (int16_t)channel;
+                break;
+            }
+        }
+        if (render_channel_ != 0)
+        {
+            break;
+        }
+    }
+
+
     return true;
 }
 
 void WindowsCoreAudio::Terminate()
 {
 
-    if (!m_bInitialize)
+    if (!initialize_)
     {
         return;
     }
     StopRecording();
     StopPlayout();
-    lock_guard lg( m_audiolock );
-    m_spClientIn.Release();
-    m_spClientOut.Release();
-    m_recDevIndex = 0;
-    m_plyDevIndex = 0;
-    m_bInitialize = false;
-    m_setEffect.reset();
+    lock_guard lg( audio_lock_ );
+    audio_client_in_.Release();
+    audio_client_out_.Release();
+    capture_device_index_ = 0;
+    render_device_index_ = 0;
+    initialize_ = false;
+    set_effect_.reset();
 }
 
 size_t WindowsCoreAudio::GetRecordingDeviceNum() const
 {
-    return m_CaptureDevices.size();
+    return capture_device_list_.size();
 }
 
 size_t WindowsCoreAudio::GetPlayoutDeviceNum() const
 {
-    return m_RenderDevices.size();
+    return render_device_list_.size();
 }
 
 bool WindowsCoreAudio::GetPlayoutDeviceName( int16_t index, wchar_t name[kAdmMaxDeviceNameSize], wchar_t guid[kAdmMaxGuidSize] )
 {
-    lock_guard lg( m_audiolock );
+    lock_guard lg( audio_lock_ );
 
-    if ( index >= (int16_t)m_RenderDevices.size() )
+    if ( index >= (int16_t)render_device_list_.size() )
     {
         return false;
     }
     if ( index  < 0)
     {
-        index = m_plyDevIndex;
+        index = render_device_index_;
     }
 
-    StringCchCopyW( name, kAdmMaxDeviceNameSize - 1, m_RenderDevices[index].szDeviceName );
-    StringCchCopyW( guid, kAdmMaxGuidSize - 1, m_RenderDevices[index].szDeviceID );
+    StringCchCopyW( name, kAdmMaxDeviceNameSize - 1, render_device_list_[index].szDeviceName );
+    StringCchCopyW( guid, kAdmMaxGuidSize - 1, render_device_list_[index].szDeviceID );
     return true;
 }
 
 
 bool WindowsCoreAudio::GetRecordingDeviceName( int16_t index, wchar_t name[kAdmMaxDeviceNameSize], wchar_t guid[kAdmMaxGuidSize] )
 {
-    lock_guard lg( m_audiolock );
+    lock_guard lg( audio_lock_ );
 
-    if ( index <= (int16_t)m_CaptureDevices.size() )
+    if ( index <= (int16_t)capture_device_list_.size() )
     {
         return false;
     }
     if ( index < 0 )
     {
-        index = m_recDevIndex;
+        index = capture_device_index_;
     }
-    StringCchCopyW( name, kAdmMaxDeviceNameSize - 1, m_CaptureDevices[index].szDeviceName );
-    StringCchCopyW( guid, kAdmMaxGuidSize - 1, m_CaptureDevices[index].szDeviceID );
+    StringCchCopyW( name, kAdmMaxDeviceNameSize - 1, capture_device_list_[index].szDeviceName );
+    StringCchCopyW( guid, kAdmMaxGuidSize - 1, capture_device_list_[index].szDeviceID );
     return true;
 }
 
 
 bool WindowsCoreAudio::SetPlayoutDevice( int16_t index )
 {
-    lock_guard lg( m_audiolock );
-    if (m_bInitialize)
+    lock_guard lg( audio_lock_ );
+    if (initialize_)
     {
         return false;
     }
-    if ( index <= (int16_t)m_RenderDevices.size() )
+    if ( index <= (int16_t)render_device_list_.size() )
     {
         return false;
     }
 
-    m_plyDevIndex = index;
+    render_device_index_ = index;
     return true;
 }
 
 bool WindowsCoreAudio::SetRecordingDevice( int16_t index )
 {
-    lock_guard lg( m_audiolock );
-    if (m_bInitialize)
+    lock_guard lg( audio_lock_ );
+    if ( initialize_ )
     {
         return false;
     }
-    if ( index <= (int16_t)m_CaptureDevices.size() )
+    if ( index <= (int16_t)capture_device_list_.size() )
     {
         return false;
     }
 
-    m_recDevIndex = index;
+    capture_device_index_ = index;
     return true;
 }
 
 bool WindowsCoreAudio::IsRecordingFormatSupported( uint32_t nSampleRate, uint16_t nChannels )
 {
-    lock_guard lg( m_audiolock );
-    if ( !m_bInitialize )
+    lock_guard lg( audio_lock_ );
+    if ( !initialize_ )
     {
         return false;
     }
 
-    return IsFormatSupported( m_spClientIn, nSampleRate, nChannels );
+    return IsFormatSupported( audio_client_in_, nSampleRate, nChannels );
 }
 
 bool WindowsCoreAudio::IsPlayoutFormatSupported( uint32_t nSampleRate, uint16_t nChannels )
 {
-    lock_guard lg( m_audiolock );
-    if ( !m_bInitialize )
+    lock_guard lg( audio_lock_ );
+    if ( !initialize_ )
     {
         return false;
     }
-    return IsFormatSupported( m_spClientOut, nSampleRate, nChannels );
+    return IsFormatSupported( audio_client_out_, nSampleRate, nChannels );
 }
 
 bool WindowsCoreAudio::SetRecordingFormat( uint32_t nSampleRate, uint16_t nChannels )
 {
-    lock_guard lg( m_audiolock );
-    if ( !m_bInitialize )
+    lock_guard lg( audio_lock_ );
+    if ( !initialize_ )
     {
         return false;
     }
 
-    if ( IsFormatSupported(m_spClientIn, nSampleRate, nChannels) )
+    if ( IsFormatSupported(audio_client_in_, nSampleRate, nChannels) )
     {
-        m_recSampleRate = nSampleRate;
-        m_recChannels = static_cast<uint8_t>( nChannels );
+        capture_sample_rate_ = nSampleRate;
+        capture_channel_ = static_cast<uint8_t>( nChannels );
         return true;
     }
     return false;
@@ -221,15 +258,15 @@ bool WindowsCoreAudio::SetRecordingFormat( uint32_t nSampleRate, uint16_t nChann
 
 bool WindowsCoreAudio::SetPlayoutFormat( uint32_t nSampleRate, uint16_t nChannels )
 {
-    lock_guard lg( m_audiolock );
-    if (!m_bInitialize)
+    lock_guard lg( audio_lock_ );
+    if (!initialize_)
     {
         return false;
     }
-    if ( IsFormatSupported( m_spClientOut, nSampleRate, nChannels ) )
+    if ( IsFormatSupported( audio_client_out_, nSampleRate, nChannels ) )
     {
-        m_plySampleRate = nSampleRate;
-        m_plyChannels = static_cast<uint8_t>( nChannels);
+        render_sample_rate_ = nSampleRate;
+        render_channel_ = static_cast<uint8_t>( nChannels);
         return true;
     }
     return false;
@@ -238,53 +275,50 @@ bool WindowsCoreAudio::SetPlayoutFormat( uint32_t nSampleRate, uint16_t nChannel
 
 bool WindowsCoreAudio::GetRecordingFormat( uint32_t& nSampleRate, uint16_t& nChannels )
 {
-    lock_guard lg( m_audiolock );
-    if (!m_bInitialize)
+    lock_guard lg( audio_lock_ );
+    if (!initialize_)
     {
         return false;
     }
-    if (m_recSampleRate == 0 || m_recChannels == 0)
+    if (capture_sample_rate_ == 0 || capture_channel_ == 0)
     {
         return false;
     }
-    nSampleRate = m_recSampleRate;
-    nChannels = m_recChannels;
+    nSampleRate = capture_sample_rate_;
+    nChannels = capture_channel_;
     return true;
 
 }
 
 bool WindowsCoreAudio::GetPlayoutFormat( uint32_t& nSampleRate, uint16_t& nChannels )
 {
-    lock_guard lg( m_audiolock );
-    if ( !m_bInitialize )
+    lock_guard lg( audio_lock_ );
+    if ( !initialize_ )
     {
         return false;
     }
 
-    if ( m_plySampleRate == 0 || m_plyChannels == 0 )
+    if ( render_sample_rate_ == 0 || render_channel_ == 0 )
     {
         return false;
     }
 
-    nSampleRate = m_plySampleRate;
-    nChannels = m_plyChannels;
+    nSampleRate = render_sample_rate_;
+    nChannels = render_channel_;
     return true;
 
 }
 
 bool WindowsCoreAudio::InitPlayout()
 {
-    lock_guard lg( m_audiolock );
-    if ( !m_bInitialize )
+    lock_guard lg( audio_lock_ );
+    if ( !initialize_ )
     {
         return false;
     }
-    if ( m_playIsInitialized )
-    {
-        return true;
-    }
 
-    if ( m_bUseDMO && m_recIsInitialized )
+
+    if ( use_dmo_ )
     {
         // Ensure the correct render device is configured in case
         // InitRecording() was called before InitPlayout().
@@ -312,7 +346,7 @@ bool WindowsCoreAudio::InitPlayout()
     // ****************************************************************************
     //
     REFERENCE_TIME hnsBufferDuration = 0;  // ask for minimum buffer size (default)
-    if ( m_plySampleRate == 44100 )
+    if ( render_sample_rate_ == 44100 )
     {
         // Ask for a larger buffer size (30ms) when using 44.1kHz as render rate.
         // There seems to be a larger risk of underruns for 44.1 compared
@@ -323,15 +357,15 @@ bool WindowsCoreAudio::InitPlayout()
         hnsBufferDuration = 30 * 10000;
     }
     HRESULT hr = S_OK;
-    m_spClientOut.Release();
+    audio_client_out_.Release();
 
-    DeviceBindTo( eRender, m_plyDevIndex, &m_spClientOut, nullptr, nullptr );
-    if ( m_plySampleRate == 0 || m_plyChannels == 0 )
+    DeviceBindTo( eRender, render_device_index_, &audio_client_out_, nullptr, nullptr );
+    if ( render_sample_rate_ == 0 || render_channel_ == 0 )
     {
         WAVEFORMATEX* pWfxOut = NULL;
-        hr = m_spClientOut->GetMixFormat( &pWfxOut );
-        m_plySampleRate = pWfxOut->nSamplesPerSec;
-        m_plyChannels = pWfxOut->nChannels;
+        hr = audio_client_out_->GetMixFormat( &pWfxOut );
+        render_sample_rate_ = pWfxOut->nSamplesPerSec;
+        render_channel_ = pWfxOut->nChannels;
         ::CoTaskMemFree( pWfxOut );
     }
 
@@ -340,12 +374,12 @@ bool WindowsCoreAudio::InitPlayout()
     Wfx.wFormatTag = WAVE_FORMAT_PCM;
     Wfx.wBitsPerSample = 16;
     Wfx.cbSize = 0;
-    Wfx.nChannels = m_plyChannels;
-    Wfx.nSamplesPerSec = m_plySampleRate;
+    Wfx.nChannels = render_channel_;
+    Wfx.nSamplesPerSec = render_sample_rate_;
     Wfx.nBlockAlign = Wfx.nChannels * Wfx.wBitsPerSample / 8;
     Wfx.nAvgBytesPerSec = Wfx.nSamplesPerSec * Wfx.nBlockAlign;
 
-    hr = m_spClientOut->Initialize(
+    hr = audio_client_out_->Initialize(
         AUDCLNT_SHAREMODE_SHARED,             // share Audio Engine with other applications
         AUDCLNT_STREAMFLAGS_EVENTCALLBACK,    // processing of the audio buffer by the client will be event driven
         hnsBufferDuration,                    // requested buffer capacity as a time value (in 100-nanosecond units)
@@ -356,35 +390,34 @@ bool WindowsCoreAudio::InitPlayout()
     IF_FAILED_EXIT( hr );
     
 
-    hr = m_spClientOut->SetEventHandle(
-        m_hRenderSamplesReadyEvent );
+    hr = audio_client_out_->SetEventHandle(
+        render_samples_ready_evnet_ );
     IF_FAILED_EXIT( hr );
 
     // Get an IAudioRenderClient interface.
-    m_spRenderClient.Release();// 有可能上次没释放成功
-    hr = m_spClientOut->GetService(
+    render_client_.Release();// 有可能上次没释放成功
+    hr = audio_client_out_->GetService(
         __uuidof( IAudioRenderClient ),
-        (void**)&m_spRenderClient );
+        (void**)&render_client_ );
     IF_FAILED_EXIT( hr );
 
-    m_playIsInitialized = true;
     return true;
 
 Exit:
-    m_spRenderClient.Release();
+    render_client_.Release();
     return false;
 
 }
 
 bool WindowsCoreAudio::InitRecording()
 {
-    lock_guard lg( m_audiolock );
-    if (!m_bInitialize)
+    lock_guard lg( audio_lock_ );
+    if ( !initialize_ )
     {
         return false;
     }
 
-    if ( m_bUseDMO )
+    if ( use_dmo_ )
     {
         return InitRecordingDMO();
     }
@@ -396,103 +429,109 @@ bool WindowsCoreAudio::InitRecording()
 
 bool WindowsCoreAudio::StartPlayout()
 {
-    if ( !m_playIsInitialized )
+    if ( !initialize_ )
     {
         return false;
     }
 
-    if ( m_hPlayThread != NULL )
+
+    if ( playout_thread_handle_ != NULL )
     {
         return true;
     }
 
-    if ( m_playing )
+    if ( playing_ )
     {
         return true;
     }
 
+    if ( !InitPlayout() )
     {
-        std::lock_guard<std::mutex> lg(m_audiolock);
+        return false;
+    }
+
+    {
+        std::lock_guard<std::mutex> lg(audio_lock_);
         // Create thread which will drive the rendering.
-        m_hPlayThread = CreateThread(
+        playout_thread_handle_ = CreateThread(
             NULL,
             0,
             WSAPIRenderThread,
             this,
             0,
             NULL );
-        if ( m_hPlayThread == NULL )
+        if ( playout_thread_handle_ == NULL )
         {
             return false;
         }
 
         // Set thread priority to highest possible.
-        ::SetThreadPriority( m_hPlayThread, THREAD_PRIORITY_TIME_CRITICAL );
+        ::SetThreadPriority( playout_thread_handle_, THREAD_PRIORITY_TIME_CRITICAL );
     }  // critScoped
 
-    DWORD ret = WaitForSingleObject( m_hRenderStartedEvent, 1000 );
+    DWORD ret = WaitForSingleObject( render_started_event_, 1000 );
     if ( ret != WAIT_OBJECT_0 )
     {
         return false;
     }
 
-    m_playing = true;
+    playing_ = true;
 
     return true;
 }
 
 bool WindowsCoreAudio::StopPlayout()
 {
-    if ( !m_playIsInitialized )
+    if ( !initialize_ )
     {
         return true;
     }
-
+    if (!playing_)
     {
-        std::lock_guard<std::mutex> lg( m_audiolock );
+        return true;
+    }
+    {
+        std::lock_guard<std::mutex> lg( audio_lock_ );
 
-        if ( m_hPlayThread == NULL )
+        if ( playout_thread_handle_ == NULL )
         {
             printf("no rendering stream is active => close down WASAPI only" );
-            m_spRenderClient.Release();
-            m_playIsInitialized = false;
-            m_playing = false;
+            render_client_.Release();
+            playing_ = false;
             return true;
         }
 
         printf( "closing down the webrtc_core_audio_render_thread..." );
-        SetEvent( m_hShutdownRenderEvent );
+        SetEvent( shutdown_render_event_ );
     }  // critScoped
 
-    DWORD ret = WaitForSingleObject( m_hPlayThread, 2000 );
+    DWORD ret = WaitForSingleObject( playout_thread_handle_, 2000 );
     if ( ret != WAIT_OBJECT_0 )
     {
         // the thread did not stop as it should
         printf("failed to close down webrtc_core_audio_render_thread" );
-        CloseHandle( m_hPlayThread );
-        m_hPlayThread = NULL;
-        m_playIsInitialized = false;
-        m_playing = false;
+        CloseHandle( playout_thread_handle_ );
+        playout_thread_handle_ = NULL;
+        playing_ = false;
         return false;
     }
 
     {
-        std::lock_guard<std::mutex> lg( m_audiolock );
+        std::lock_guard<std::mutex> lg( audio_lock_ );
         printf("windows_core_audio_render_thread is now closed" );
 
         // to reset this event manually at each time we finish with it,
         // in case that the render thread has exited before StopPlayout(),
         // this event might be caught by the new render thread within same VoE instance.
-        ResetEvent( m_hShutdownRenderEvent );
+        ResetEvent( shutdown_render_event_ );
 
-        m_spRenderClient.Release();
-        m_playIsInitialized = false;
-        m_playing = false;
+        render_client_.Release();
+        playing_ = false;
 
-        CloseHandle( m_hPlayThread );
-        m_hPlayThread = NULL;
+        CloseHandle( playout_thread_handle_ );
+        playout_thread_handle_ = NULL;
 
-        if ( m_bUseDMO && m_recording )
+        if ( use_dmo_ && recording_ )
         {
             // The DMO won't provide us captured output data unless we
             // give it render data to process.
@@ -509,38 +548,43 @@ bool WindowsCoreAudio::StopPlayout()
 
 bool WindowsCoreAudio::Playing() const
 {
-    return m_playing;
+    return playing_;
 
 }
 
 bool WindowsCoreAudio::StartRecording()
 {
-    if ( !m_recIsInitialized )
+    if (!initialize_)
     {
         return false;
     }
 
-    if ( m_hRecThread != NULL )
+    if ( recording_thread_handle_ != NULL )
     {
         return true;
     }
 
-    if ( m_recording )
+    if ( recording_ )
     {
         return true;
     }
 
+    if ( !InitRecording() )
     {
-        std::lock_guard<std::mutex> lg(m_audiolock);
+        return false;
+    }
+
+    {
+        std::lock_guard<std::mutex> lg(audio_lock_);
 
         // Create thread which will drive the capturing
         LPTHREAD_START_ROUTINE lpStartAddress = WSAPICaptureThread;
-        if ( m_bUseDMO )
+        if ( use_dmo_ )
         {
             // Redirect to the DMO polling method.
             lpStartAddress = WSAPICaptureThreadPollDMO;
 
-            if ( !m_playing )
+            if ( !playing_ )
             {
                 // The DMO won't provide us captured output data unless we
                 // give it render data to process.
@@ -549,26 +593,26 @@ bool WindowsCoreAudio::StartRecording()
             }
         }
 
-        assert( m_hRecThread == NULL );
-        m_hRecThread = CreateThread( NULL,
+        assert( recording_thread_handle_ == NULL );
+        recording_thread_handle_ = CreateThread( NULL,
                                     0,
                                     lpStartAddress,
                                     this,
                                     0,
                                     NULL );
-        if ( m_hRecThread == NULL )
+        if ( recording_thread_handle_ == NULL )
         {
             printf( "failed to create the recording thread" );
             return false;
         }
 
         // Set thread priority to highest possible
-        ::SetThreadPriority( m_hRecThread, THREAD_PRIORITY_TIME_CRITICAL );
+        ::SetThreadPriority( recording_thread_handle_, THREAD_PRIORITY_TIME_CRITICAL );
 
 
     }  // critScoped
 
-    DWORD ret = WaitForSingleObject( m_hCaptureStartedEvent, 1000 );
+    DWORD ret = WaitForSingleObject( capture_start_event_, 1000 );
     if ( ret != WAIT_OBJECT_0 )
     {
         printf( "capturing did not start up properly" );
@@ -577,7 +621,7 @@ bool WindowsCoreAudio::StartRecording()
     printf( "capture audio stream has now started..." );
 
 
-    m_recording = true;
+    recording_ = true;
     return true;
 }
 
@@ -585,31 +629,30 @@ bool WindowsCoreAudio::StopRecording()
 {
     bool err = true;
 
-    if ( !m_recIsInitialized )
+    if ( !initialize_ )
     {
         return 0;
     }
 
     
     {
-        lock_guard lg( m_audiolock );
-        if ( m_hRecThread == NULL )
+        lock_guard lg( audio_lock_ );
+        if ( recording_thread_handle_ == NULL )
         {
             printf( "no capturing stream is active => close down WASAPI only" );
-            m_spCaptureClient.Release();
+            capture_client_.Release();
 
-            m_recIsInitialized = false;
-            m_recording = false;
+            recording_ = false;
             return 0;
         }
 
         // Stop the driving thread...
         printf( "closing down the webrtc_core_audio_capture_thread..." );
         // Manual-reset event; it will remain signalled to stop all capture threads.
-        SetEvent( m_hShutdownCaptureEvent );
+        SetEvent( shutdown_capture_event_ );
     }
 
-    DWORD ret = WaitForSingleObject( m_hRecThread, 2000 );
+    DWORD ret = WaitForSingleObject( recording_thread_handle_, 2000 );
     if ( ret != WAIT_OBJECT_0 )
     {
         printf( "failed to close down webrtc_core_audio_capture_thread" );
@@ -620,26 +663,25 @@ bool WindowsCoreAudio::StopRecording()
         printf("webrtc_core_audio_capture_thread is now closed" );
     }
 
-    lock_guard lg( m_audiolock );
+    lock_guard lg( audio_lock_ );
 
-    ResetEvent( m_hShutdownCaptureEvent ); // Must be manually reset.
+    ResetEvent( shutdown_capture_event_ ); // Must be manually reset.
     // Ensure that the thread has released these interfaces properly.
 
 
-    m_recIsInitialized = false;
-    m_recording = false;
+    recording_ = false;
 
     // These will create thread leaks in the result of an error,
     // but we can at least resume the call.
-    CloseHandle( m_hRecThread );
-    m_hRecThread = NULL;
+    CloseHandle( recording_thread_handle_ );
+    recording_thread_handle_ = NULL;
 
-    if ( m_bUseDMO )
+    if ( use_dmo_ )
     {
-        assert( m_spDmo );
+        assert( dmo_ );
         // This is necessary. Otherwise the DMO can generate garbage render
         // audio even after rendering has stopped.
-        HRESULT hr = m_spDmo->FreeStreamingResources();
+        HRESULT hr = dmo_->FreeStreamingResources();
         if ( FAILED( hr ) )
         {
             err = false;
@@ -652,17 +694,17 @@ bool WindowsCoreAudio::StopRecording()
 
 bool WindowsCoreAudio::Recording() const
 {
-    return m_recording;
+    return recording_;
 }
 
 void WindowsCoreAudio::SetAudioBufferCallback( AudioBufferProc* pCallback )
 {
-    m_pBufferProc = pCallback;
+    audio_buffer_proc_ = pCallback;
 }
 
 AudioBufferProc* WindowsCoreAudio::GetAudioBufferCallback()const
 {
-    return m_pBufferProc;
+    return audio_buffer_proc_;
 }
 
 bool WindowsCoreAudio::SetPropertie( AudioPropertyID id, void*value )
@@ -674,37 +716,37 @@ bool WindowsCoreAudio::SetPropertie( AudioPropertyID id, void*value )
     case ID_ENBALE_NS:
     case ID_ENBALE_VAD:
     {
-        if ( !m_DMOIsAvailble )
+        if ( !dmo_is_available_ )
         {
             return false;
         }
         bool var = *(int32_t*)value != 0;
-        m_setEffect.set( ID_ENABLE_AEC, var );     
+        set_effect_.set( ID_ENABLE_AEC, var );     
         {
-            m_setEffect.set( id, var );
+            set_effect_.set( id, var );
         }
     }
     break;
     }
 
-    if (m_setEffect.to_ulong() & (ID_ENABLE_AEC | ID_ENBALE_AGC | ID_ENBALE_NS | ID_ENBALE_VAD) )
+    if (set_effect_.to_ulong() & (ID_ENABLE_AEC | ID_ENBALE_AGC | ID_ENBALE_NS | ID_ENBALE_VAD) )
     {
-        m_bUseDMO = true;
+        use_dmo_ = true;
     }
     else
     {
-        m_bUseDMO = false;
+        use_dmo_ = false;
     }
     return true;
 }
 
 bool WindowsCoreAudio::GetProperty( AudioPropertyID id, void*value )
 {
-    if ( !m_bUseDMO )
+    if ( !use_dmo_ )
     {
         return false;
     }
-    *(int32_t*)value = m_setEffect.test( id ) ? 1 : 0;
+    *(int32_t*)value = set_effect_.test( id ) ? 1 : 0;
     return true;
 }
 
@@ -737,16 +779,16 @@ bool WindowsCoreAudio::IsFormatSupported( CComPtr<IAudioClient> audioClient, DWO
 bool WindowsCoreAudio::SetDMOProperties()
 {
     HRESULT hr = S_OK;
-    assert( m_spDmo != NULL );
+    assert( dmo_ != NULL );
 
     CComPtr<IPropertyStore> ps;
-    hr = m_spDmo->QueryInterface( IID_IPropertyStore,
+    hr = dmo_->QueryInterface( IID_IPropertyStore,
                                   reinterpret_cast<void**>( &ps ) );
     IF_FAILED_EXIT( hr );
 
     // Set the AEC system mode.
     // SINGLE_CHANNEL_AEC - AEC processing only.
-    bool var = m_setEffect.test( ID_ENABLE_AEC );
+    bool var = set_effect_.test( ID_ENABLE_AEC );
     hr = SetVtI4Property( ps,
                           MFPKEY_WMAAECMA_SYSTEM_MODE,
                           var ? SINGLE_CHANNEL_AEC: SINGLE_CHANNEL_NSAGC );
@@ -767,7 +809,7 @@ bool WindowsCoreAudio::SetDMOProperties()
                           MFPKEY_WMAAECMA_FEATURE_MODE,
                           VARIANT_TRUE );
     IF_FAILED_EXIT( hr );
-    var = m_setEffect.test( ID_ENBALE_AGC );
+    var = set_effect_.test( ID_ENBALE_AGC );
     // Disable analog AGC (default enabled).
     hr = SetBoolProperty( ps,
                           MFPKEY_WMAAECMA_MIC_GAIN_BOUNDER,
@@ -776,13 +818,13 @@ bool WindowsCoreAudio::SetDMOProperties()
 
     // Disable noise suppression (default enabled).
     // 0 - Disabled, 1 - Enabled
-    var = m_setEffect.test( ID_ENBALE_NS );
+    var = set_effect_.test( ID_ENBALE_NS );
     hr = SetVtI4Property( ps,
                           MFPKEY_WMAAECMA_FEATR_NS,
                           var ? 1 : 0 );
     IF_FAILED_EXIT( hr );
 
-    var = m_setEffect.test( ID_ENBALE_VAD );
+    var = set_effect_.test( ID_ENBALE_VAD );
     hr = SetVtI4Property( ps,
                           MFPKEY_WMAAECMA_FEATR_VAD,
                           var ? 1 : 0 );
@@ -802,8 +844,8 @@ bool WindowsCoreAudio::SetDMOProperties()
     // Set the devices selected by VoE. If using a default device, we need to
     // search for the device index.
 
-    DWORD devIndex = static_cast<uint32_t>( m_plyDevIndex << 16 ) +
-        static_cast<uint32_t>( 0x0000ffff & m_recDevIndex );
+    DWORD devIndex = static_cast<uint32_t>( render_device_index_ << 16 ) +
+        static_cast<uint32_t>( 0x0000ffff & capture_device_index_ );
     hr = SetVtI4Property( ps,
                           MFPKEY_WMAAECMA_DEVICE_INDEXES,
                           devIndex );
@@ -814,21 +856,21 @@ Exit:
 
 bool WindowsCoreAudio::InitRecordingMedia()
 {
-    if ( m_recIsInitialized )
+    if ( initialize_ )
     {
         return true;
     }
 
-    m_spClientIn.Release();
-    DeviceBindTo( eCapture, m_recDevIndex, &m_spClientIn, nullptr, nullptr );
+    audio_client_in_.Release();
+    DeviceBindTo( eCapture, capture_device_index_, &audio_client_in_, nullptr, nullptr );
     HRESULT hr = S_OK;
-    if ( m_recSampleRate == 0 || m_recChannels == 0 )
+    if ( capture_sample_rate_ == 0 || capture_channel_ == 0 )
     {
         WAVEFORMATEX* pWfxIn = NULL;
-        hr = m_spClientOut->GetMixFormat( &pWfxIn );
+        hr = audio_client_out_->GetMixFormat( &pWfxIn );
         IF_FAILED_EXIT( hr );
-        m_recSampleRate = pWfxIn->nSamplesPerSec;
-        m_recChannels = pWfxIn->nChannels;
+        capture_sample_rate_ = pWfxIn->nSamplesPerSec;
+        capture_channel_ = pWfxIn->nChannels;
         ::CoTaskMemFree( pWfxIn );
     }
 
@@ -837,14 +879,14 @@ bool WindowsCoreAudio::InitRecordingMedia()
     Wfx.wFormatTag = WAVE_FORMAT_PCM;
     Wfx.wBitsPerSample = 16;
     Wfx.cbSize = 0;
-    Wfx.nChannels = m_recChannels;
-    Wfx.nSamplesPerSec = m_recSampleRate;
+    Wfx.nChannels = capture_channel_;
+    Wfx.nSamplesPerSec = capture_sample_rate_;
     Wfx.nBlockAlign = Wfx.nChannels * Wfx.wBitsPerSample / 8;
     Wfx.nAvgBytesPerSec = Wfx.nSamplesPerSec * Wfx.nBlockAlign;
 
     // Create a capturing stream.
 
-    hr = m_spClientIn->Initialize(
+    hr = audio_client_in_->Initialize(
         AUDCLNT_SHAREMODE_SHARED,             // share Audio Engine with other applications
         AUDCLNT_STREAMFLAGS_EVENTCALLBACK |   // processing of the audio buffer by the client will be event driven
         AUDCLNT_STREAMFLAGS_NOPERSIST,        // volume and mute settings for an audio session will not persist across system restarts
@@ -856,17 +898,16 @@ bool WindowsCoreAudio::InitRecordingMedia()
 
     // Set the event handle that the system signals when an audio buffer is ready
     // to be processed by the client.
-    hr = m_spClientIn->SetEventHandle(
-        m_hCaptureSamplesReadyEvent );
+    hr = audio_client_in_->SetEventHandle(
+        capture_samples_ready_event_ );
     IF_FAILED_EXIT( hr );
 
     // Get an IAudioCaptureClient interface.
-    m_spCaptureClient.Release();// 防止上次没有释放
-    hr = m_spClientIn->GetService(
+    capture_client_.Release();// 防止上次没有释放
+    hr = audio_client_in_->GetService(
         __uuidof( IAudioCaptureClient ),
-        (void**)&m_spCaptureClient );
+        (void**)&capture_client_ );
     IF_FAILED_EXIT( hr );
-    m_recIsInitialized = true;
     return true;
 Exit:
     return false;
@@ -879,13 +920,13 @@ Exit:
 // Reference: http://msdn.microsoft.com/en-us/library/ff819492(v=vs.85).aspx
 bool WindowsCoreAudio::InitRecordingDMO()
 {
-    if ( !m_bUseDMO || !m_spDmo )
+    if ( !use_dmo_ || !dmo_ )
     {
         return false;
     }
-    if ( m_recIsInitialized )
+    if ( !initialize_ )
     {
-        return true;
+        return false;
     }
 
     if ( !SetDMOProperties() )
@@ -919,23 +960,24 @@ bool WindowsCoreAudio::InitRecordingDMO()
     ptrWav->cbSize = 0;
 
     // Set the VoE format equal to the AEC output format.
-    if (m_recChannels != ptrWav->nChannels &&
-         m_recSampleRate != ptrWav->nSamplesPerSec )
+    if (capture_channel_ != ptrWav->nChannels &&
+         capture_sample_rate_ != ptrWav->nSamplesPerSec )
     {
-        if ( m_pBufferProc )
+        if ( audio_buffer_proc_ )
         {
-            m_pBufferProc->ErrorOccurred( AE_RECORD_FORMAT_CHANGE );
+            audio_buffer_proc_->ErrorOccurred( AE_RECORD_FORMAT_CHANGE );
         }
     }
-    m_recSampleRate = ptrWav->nSamplesPerSec;
-    m_recChannels = ptrWav->nChannels;
-    hr = CMediaBuffer::Create( ptrWav->nBlockAlign * ptrWav->nSamplesPerSec/100, (IMediaBuffer**)&m_spMediaBuffer );
+    capture_sample_rate_ = ptrWav->nSamplesPerSec;
+    capture_channel_ = ptrWav->nChannels;
+    media_buffer_ = nullptr;
+    hr = CMediaBuffer::Create( ptrWav->nBlockAlign * ptrWav->nSamplesPerSec/100, (IMediaBuffer**)&media_buffer_ );
     if ( FAILED( hr ) )
     {
         return false;
     }
     // Set the DMO output format parameters.
-    hr = m_spDmo->SetOutputType( 0, &mt, 0 );
+    hr = dmo_->SetOutputType( 0, &mt, 0 );
     ::MoFreeMediaType( &mt );
     if ( FAILED( hr ) )
     {
@@ -943,13 +985,12 @@ bool WindowsCoreAudio::InitRecordingDMO()
     }
 
     // Optional, but if called, must be after media types are set.
-    hr = m_spDmo->AllocateStreamingResources();
+    hr = dmo_->AllocateStreamingResources();
     if ( FAILED( hr ) )
     {
         return false;
     }
 
-    m_recIsInitialized = true;
 
     return true;
 }
@@ -957,7 +998,7 @@ bool WindowsCoreAudio::InitRecordingDMO()
 DWORD WindowsCoreAudio::DoRenderThread()
 {
     bool keepPlaying = true;
-    HANDLE waitArray[2] = { m_hShutdownRenderEvent, m_hRenderSamplesReadyEvent };
+    HANDLE waitArray[2] = { shutdown_render_event_, render_samples_ready_evnet_ };
     HRESULT hr = S_OK;
 
 
@@ -970,36 +1011,36 @@ DWORD WindowsCoreAudio::DoRenderThread()
 
     HANDLE hMmTask = SetThreadPriority( "windows_core_audio_render_thread" );
 
-    m_audiolock.lock();
+    audio_lock_.lock();
 
     // Get size of rendering buffer (length is expressed as the number of audio frames the buffer can hold).
     // This value is fixed during the rendering session.
     //
     UINT32 bufferLength = 0;
-    hr = m_spClientOut->GetBufferSize( &bufferLength );
+    hr = audio_client_out_->GetBufferSize( &bufferLength );
     IF_FAILED_JUMP( hr,Exit );
    
-    const size_t playBlockSize = m_plySampleRate / 100;
-    const size_t playFrameSize = 2 * m_plyChannels;
+    const size_t playBlockSize = render_sample_rate_ / 100;
+    const size_t playFrameSize = 2 * render_channel_;
     const double endpointBufferSizeMS = 10.0 * ( (double)bufferLength / (double)playBlockSize );
 
     // Before starting the stream, fill the rendering buffer with silence.
     //
     BYTE *pData = NULL;
-    hr = m_spRenderClient->GetBuffer( bufferLength, &pData );
+    hr = render_client_->GetBuffer( bufferLength, &pData );
     IF_FAILED_JUMP( hr,Exit );
 
-    hr = m_spRenderClient->ReleaseBuffer( bufferLength, AUDCLNT_BUFFERFLAGS_SILENT );
+    hr = render_client_->ReleaseBuffer( bufferLength, AUDCLNT_BUFFERFLAGS_SILENT );
     IF_FAILED_JUMP( hr, Exit );
 
     // Start up the rendering audio stream.
-    hr = m_spClientOut->Start();
+    hr = audio_client_out_->Start();
     IF_FAILED_JUMP( hr, Exit );
 
-    m_audiolock.unlock();
+    audio_lock_.unlock();
 
     // Set event which will ensure that the calling thread modifies the playing state to true.
-    SetEvent( m_hRenderStartedEvent );
+    SetEvent( render_started_event_ );
 
     // >> ------------------ THREAD LOOP ------------------
     while ( keepPlaying )
@@ -1023,20 +1064,20 @@ DWORD WindowsCoreAudio::DoRenderThread()
 
         while ( keepPlaying )
         {
-            m_audiolock.lock();
+            audio_lock_.lock();
 
             // Sanity check to ensure that essential states are not modified
             // during the unlocked period.
-            if ( !m_spRenderClient || !m_spClientOut )
+            if ( !render_client_ || !audio_client_out_ )
             {
-                m_audiolock.unlock();
+                audio_lock_.unlock();
                 printf( "output state has been modified during unlocked period\n" );
                 goto Exit;
             }
 
             // Get the number of frames of padding (queued up to play) in the endpoint buffer.
             UINT32 padding = 0;
-            hr = m_spClientOut->GetCurrentPadding( &padding );
+            hr = audio_client_out_->GetCurrentPadding( &padding );
             IF_FAILED_JUMP( hr,Exit );
 
             // Derive the amount of available space in the output buffer
@@ -1047,7 +1088,7 @@ DWORD WindowsCoreAudio::DoRenderThread()
             if ( framesAvailable < playBlockSize )
             {
                 // Not enough space in render buffer to store next render packet.
-                m_audiolock.unlock();
+                audio_lock_.unlock();
                 break;
             }
 
@@ -1056,29 +1097,29 @@ DWORD WindowsCoreAudio::DoRenderThread()
             for ( uint32_t n = 0; n < n10msBuffers; n++ )
             {
                 // Get pointer (i.e., grab the buffer) to next space in the shared render buffer.
-                hr = m_spRenderClient->GetBuffer( playBlockSize, &pData );
+                hr = render_client_->GetBuffer( playBlockSize, &pData );
                 IF_FAILED_JUMP( hr, Exit );
 
-                if ( m_pBufferProc )
+                if ( audio_buffer_proc_ )
                 {
-                    m_audiolock.unlock();
-                    int32_t nSamples = m_pBufferProc->NeedMorePlayoutData( (int16_t*)pData, playBlockSize*playFrameSize );
+                    audio_lock_.unlock();
+                    int32_t nSamples = audio_buffer_proc_->NeedMorePlayoutData( (int16_t*)pData, playBlockSize*playFrameSize );
                     nSamples /= playFrameSize;
                     // Request data to be played out (#bytes = _playBlockSize*_audioFrameSize)
                     
-                    m_audiolock.lock();
+                    audio_lock_.lock();
 
                     if ( nSamples == -1 )
                     {
-                        m_audiolock.unlock();
+                        audio_lock_.unlock();
                         printf( "failed to read data from render client\n" );
                         goto Exit;
                     }
 
                     // Sanity check to ensure that essential states are not modified during the unlocked period
-                    if ( !m_spRenderClient || !m_spClientOut )
+                    if ( !render_client_ || !audio_client_out_ )
                     {
-                        m_audiolock.unlock();
+                        audio_lock_.unlock();
                         printf( "output state has been modified during unlocked period\n" );
                         goto Exit;
                     }
@@ -1089,38 +1130,38 @@ DWORD WindowsCoreAudio::DoRenderThread()
                 }
 
                 DWORD dwFlags( 0 );
-                hr = m_spRenderClient->ReleaseBuffer( playBlockSize, dwFlags );
+                hr = render_client_->ReleaseBuffer( playBlockSize, dwFlags );
                 // See http://msdn.microsoft.com/en-us/library/dd316605(VS.85).aspx
                 // for more details regarding AUDCLNT_E_DEVICE_INVALIDATED.
                 IF_FAILED_JUMP( hr,Exit );
             }
 
-            m_audiolock.unlock();
+            audio_lock_.unlock();
         }
     }
 
     // ------------------ THREAD LOOP ------------------ <<
 
     Sleep( static_cast<DWORD>( endpointBufferSizeMS + 0.5 ) );
-    hr = m_spClientOut->Stop();
+    hr = audio_client_out_->Stop();
 
 Exit:
     if ( FAILED( hr ) )
     {
-        m_spClientOut->Stop();
-        m_audiolock.unlock();
+        audio_client_out_->Stop();
+        audio_lock_.unlock();
     }
 
     RevertThreadPriority( hMmTask );
 
-    m_audiolock.lock();
+    audio_lock_.lock();
 
     if ( keepPlaying )
     {
-        if ( m_spClientOut )
+        if ( audio_client_out_ )
         {
-            hr = m_spClientOut->Stop();
-            m_spClientOut->Reset();
+            hr = audio_client_out_->Stop();
+            audio_client_out_->Reset();
         }
         // Trigger callback from module process thread
         printf( "kPlayoutError message posted: rendering thread has ended pre-maturely" );
@@ -1130,7 +1171,7 @@ Exit:
         printf( "_Rendering thread is now terminated properly" );
     }
 
-    m_audiolock.unlock();
+    audio_lock_.unlock();
 
     return (DWORD)hr;
 }
@@ -1151,14 +1192,14 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
 
     // Set event which will ensure that the calling thread modifies the
     // recording state to true.
-    SetEvent( m_hCaptureStartedEvent );
+    SetEvent( capture_start_event_ );
     HRESULT hr = S_OK;
     // >> ---------------------------- THREAD LOOP ----------------------------
     while ( keepRecording )
     {
         // Poll the DMO every 5 ms.
         // (The same interval used in the Wave implementation.)
-        DWORD waitResult = WaitForSingleObject( m_hShutdownCaptureEvent, 5 );
+        DWORD waitResult = WaitForSingleObject( shutdown_capture_event_, 5 );
         switch ( waitResult )
         {
         case WAIT_OBJECT_0:         // _hShutdownCaptureEvent
@@ -1175,16 +1216,16 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
 
         while ( keepRecording )
         {
-            std::unique_lock<std::mutex> ul(m_audiolock);
+            std::unique_lock<std::mutex> ul(audio_lock_);
             DWORD dwStatus = 0;
             {
                 DMO_OUTPUT_DATA_BUFFER dmoBuffer = { 0 };
-                dmoBuffer.pBuffer = m_spMediaBuffer;
+                dmoBuffer.pBuffer = media_buffer_;
                 dmoBuffer.pBuffer->AddRef();
                 // Poll the DMO for AEC processed capture data. The DMO will
                 // copy available data to |dmoBuffer|, and should only return
                 // 10 ms frames. The value of |dwStatus| should be ignored.
-                hr = m_spDmo->ProcessOutput( 0, 1, &dmoBuffer, &dwStatus );
+                hr = dmo_->ProcessOutput( 0, 1, &dmoBuffer, &dwStatus );
                 dmoBuffer.pBuffer->Release();
                 dwStatus = dmoBuffer.dwStatus;
             }
@@ -1199,7 +1240,7 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
             BYTE* data;
             // Get a pointer to the data buffer. This should be valid until
             // the next call to ProcessOutput.
-            hr = m_spMediaBuffer->GetBufferAndLength( &data, &bytesProduced );
+            hr = media_buffer_->GetBufferAndLength( &data, &bytesProduced );
             if ( FAILED( hr ) )
             {
                 keepRecording = false;
@@ -1218,15 +1259,15 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
 
 
                 ul.unlock();  // Release lock while making the callback.
-                if ( m_pBufferProc )
+                if ( audio_buffer_proc_ )
                 {
-                    m_pBufferProc->RecordingDataIsAvailable( (int16_t*)data, kSamplesProduced );
+                    audio_buffer_proc_->RecordingDataIsAvailable( (int16_t*)data, kSamplesProduced );
                 }
                 ul.lock();
             }
 
             // Reset length to indicate buffer availability.
-            hr = m_spMediaBuffer->SetLength( 0 );
+            hr = media_buffer_->SetLength( 0 );
             if ( FAILED( hr ) )
             {
                 keepRecording = false;
@@ -1257,7 +1298,7 @@ DWORD WindowsCoreAudio::DoCaptureThreadPollDMO()
 DWORD WindowsCoreAudio::DoCaptureThread()
 {
     bool keepRecording = true;
-    HANDLE waitArray[2] = { m_hShutdownCaptureEvent, m_hCaptureSamplesReadyEvent };
+    HANDLE waitArray[2] = { shutdown_capture_event_, capture_samples_ready_event_ };
     HRESULT hr = S_OK;
 
     BYTE* syncBuffer = NULL;
@@ -1273,45 +1314,45 @@ DWORD WindowsCoreAudio::DoCaptureThread()
 
     HANDLE hMmTask = SetThreadPriority("windows_core_audio_capture_thread");
 
-    m_audiolock.lock();
+    audio_lock_.lock();
 
     // Get size of capturing buffer (length is expressed as the number of audio frames the buffer can hold).
     // This value is fixed during the capturing session.
     //
     UINT32 bufferLength = 0;
-    if ( !m_spClientIn )
+    if ( !audio_client_in_ )
     {
         return 1;
     }
-    hr = m_spClientIn->GetBufferSize( &bufferLength );
+    hr = audio_client_in_->GetBufferSize( &bufferLength );
     IF_FAILED_JUMP( hr,Exit );
 
     // Allocate memory for sync buffer.
     // It is used for compensation between native 44.1 and internal 44.0 and
     // for cases when the capture buffer is larger than 10ms.
     //
-    const UINT32 syncBufferSize = 2 * ( bufferLength * 2 * m_recChannels );
+    const UINT32 syncBufferSize = 2 * ( bufferLength * 2 * capture_channel_ );
     syncBuffer = new BYTE[syncBufferSize];
     if ( syncBuffer == NULL )
     {
         return (DWORD)E_POINTER;
     }
     printf( "[CAPT] size of sync buffer  : %u [bytes]\n", syncBufferSize );
-    const size_t recBlockSize = m_recSampleRate / 100;
-    const size_t recAudioFrameSize = 2 * m_recChannels;
+    const size_t recBlockSize = capture_sample_rate_ / 100;
+    const size_t recAudioFrameSize = 2 * capture_channel_;
     const double endpointBufferSizeMS = 10.0 * ( (double)bufferLength / (double)recAudioFrameSize );
     printf( "[CAPT] endpointBufferSizeMS : %3.2f\n", endpointBufferSizeMS );
 
     // Start up the capturing stream.
     //
-    hr = m_spClientIn->Start();
+    hr = audio_client_in_->Start();
     IF_FAILED_JUMP( hr,Exit );
 
-    m_audiolock.unlock();
+    audio_lock_.unlock();
 
     // Set event which will ensure that the calling thread modifies the recording state to true.
     //
-    SetEvent( m_hCaptureStartedEvent );
+    SetEvent( capture_start_event_ );
 
     // >> ---------------------------- THREAD LOOP ----------------------------
 
@@ -1342,20 +1383,20 @@ DWORD WindowsCoreAudio::DoCaptureThread()
             UINT64 recTime = 0;
             UINT64 recPos = 0;
 
-            m_audiolock.lock();
+            audio_lock_.lock();
 
             // Sanity check to ensure that essential states are not modified
             // during the unlocked period.
-            if ( !m_spCaptureClient  || !m_spClientIn )
+            if ( !capture_client_  || !audio_client_in_ )
             {
-                m_audiolock.unlock();
+                audio_lock_.unlock();
                 printf("input state has been modified during unlocked period\n" );
                 goto Exit;
             }
 
             //  Find out how much capture data is available
             //
-            hr = m_spCaptureClient->GetBuffer( &pData,           // packet which is ready to be read by used
+            hr = capture_client_->GetBuffer( &pData,           // packet which is ready to be read by used
                                                &framesAvailable, // #frames in the captured packet (can be zero)
                                                &flags,           // support flags (check)
                                                &recPos,          // device position of first audio frame in data packet
@@ -1366,7 +1407,7 @@ DWORD WindowsCoreAudio::DoCaptureThread()
                 if ( AUDCLNT_S_BUFFER_EMPTY == hr )
                 {
                     // Buffer was empty => start waiting for a new capture notification event
-                    m_audiolock.unlock();
+                    audio_lock_.unlock();
                     break;
                 }
 
@@ -1391,23 +1432,23 @@ DWORD WindowsCoreAudio::DoCaptureThread()
 
                 // Release the capture buffer
                 //
-                hr = m_spCaptureClient->ReleaseBuffer( framesAvailable );
+                hr = capture_client_->ReleaseBuffer( framesAvailable );
                 IF_FAILED_JUMP( hr,Exit );
 
                 syncBufIndex += framesAvailable;
 
                 while ( syncBufIndex >= recBlockSize )
                 {
-                    m_audiolock.unlock();
-                    if (m_pBufferProc)
+                    audio_lock_.unlock();
+                    if (audio_buffer_proc_)
                     {
-                        m_pBufferProc->RecordingDataIsAvailable( (const int16_t*)syncBuffer, recBlockSize*recAudioFrameSize );
+                        audio_buffer_proc_->RecordingDataIsAvailable( (const int16_t*)syncBuffer, recBlockSize*recAudioFrameSize );
                     }
-                    m_audiolock.lock();
+                    audio_lock_.lock();
                     // Sanity check to ensure that essential states are not modified during the unlocked period
-                    if ( !m_spCaptureClient || !m_spClientIn )
+                    if ( !capture_client_ || !audio_client_in_ )
                     {
-                        m_audiolock.unlock();
+                        audio_lock_.unlock();
                         printf( "input state has been modified during unlocked period\n" );
                         goto Exit;
                     }
@@ -1428,34 +1469,34 @@ DWORD WindowsCoreAudio::DoCaptureThread()
                 goto Exit;
             }
 
-            m_audiolock.unlock();
+            audio_lock_.unlock();
         }
     }
 
     // ---------------------------- THREAD LOOP ---------------------------- <<
 
-    if ( m_spClientIn )
+    if ( audio_client_in_ )
     {
-        hr = m_spClientIn->Stop();
+        hr = audio_client_in_->Stop();
     }
 
 Exit:
     if ( FAILED( hr ) )
     {
-        m_spClientIn->Stop();
-        m_audiolock.unlock();
+        audio_client_in_->Stop();
+        audio_lock_.unlock();
     }
 
     RevertThreadPriority(hMmTask);
 
-    m_audiolock.lock();
+    audio_lock_.lock();
 
     if ( keepRecording )
     {
-        if ( m_spClientIn )
+        if ( audio_client_in_ )
         {
-            hr = m_spClientIn->Stop();
-            m_spClientIn->Reset();
+            hr = audio_client_in_->Stop();
+            audio_client_in_->Reset();
         }
 
         // Trigger callback from module process thread
@@ -1466,9 +1507,9 @@ Exit:
         printf( "_Capturing thread is now terminated properly\n" );
     }
 
-    m_spCaptureClient.Release();
+    capture_client_.Release();
 
-    m_audiolock.unlock();
+    audio_lock_.unlock();
 
     if ( syncBuffer )
     {

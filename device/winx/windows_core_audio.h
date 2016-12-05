@@ -41,8 +41,7 @@ public:
     virtual bool GetRecordingFormat( uint32_t& nSampleRate, uint16_t& nChannels )override;
     virtual bool GetPlayoutFormat( uint32_t& nSampleRate, uint16_t& nChannels )override;
 
-    virtual bool InitPlayout()override;
-    virtual bool InitRecording()override;
+
 
     virtual bool StartPlayout()override;
     virtual bool StopPlayout()override;
@@ -61,7 +60,8 @@ private:
     bool    SetDMOProperties();
     bool    InitRecordingMedia();
     bool    InitRecordingDMO();
-
+    bool    InitPlayout();
+    bool    InitRecording();
     DWORD   DoRenderThread();
     DWORD   DoCaptureThreadPollDMO();
     DWORD   DoCaptureThread();
@@ -75,45 +75,43 @@ private:
     WindowsCoreAudio& operator=( WindowsCoreAudio& ) = delete;
     WindowsCoreAudio& operator=( WindowsCoreAudio&& ) = delete;
 private:
-    ScopedCOMInitializer                    m_comInit;
-    std::mutex                              m_audiolock;
-    CComPtr<IMediaObject>                   m_spDmo;// DirectX Media Object (DMO) for the built-in AEC.
-    CComPtr<IAudioClient>                   m_spClientIn;
-    CComPtr<IAudioClient>                   m_spClientOut;
-    CComPtr<IAudioRenderClient>             m_spRenderClient;
-    CComPtr<IAudioCaptureClient>            m_spCaptureClient;
-    CComPtr<IMediaBuffer>                   m_spMediaBuffer;
+    ScopedCOMInitializer                    com_init_;
+    std::mutex                              audio_lock_;
+    CComPtr<IMediaObject>                   dmo_;// DirectX Media Object (DMO) for the built-in AEC.
+    CComPtr<IAudioClient>                   audio_client_in_;
+    CComPtr<IAudioClient>                   audio_client_out_;
+    CComPtr<IAudioRenderClient>             render_client_;
+    CComPtr<IAudioCaptureClient>            capture_client_;
+    CComPtr<IMediaBuffer>                   media_buffer_;
 
-    AudioBufferProc*                        m_pBufferProc = nullptr;
+    AudioBufferProc*                        audio_buffer_proc_ = nullptr;
 
-    size_t                                  m_recSampleRate = 0;
-    size_t                                  m_plySampleRate = 0;
-    uint16_t                                m_recChannels = 0;
-    uint16_t                                m_plyChannels = 0;
-    int16_t                                 m_recDevIndex = 0;
-    int16_t                                 m_plyDevIndex = 0;
+    size_t                                  capture_sample_rate_ = 0;
+    size_t                                  render_sample_rate_ = 0;
+    uint16_t                                capture_channel_ = 0;
+    uint16_t                                render_channel_ = 0;
+    int16_t                                 capture_device_index_ = 0;
+    int16_t                                 render_device_index_ = 0;
 
-    bool                                    m_bUseDMO = true;
-    bool                                    m_DMOIsAvailble = true;
-    bool                                    m_bInitialize = false;
-    bool                                    m_recIsInitialized = false;
-    bool                                    m_playIsInitialized = false;
-    bool                                    m_recording = false;
-    bool                                    m_playing = false;
+    bool                                    use_dmo_ = true;
+    bool                                    dmo_is_available_ = true;
+    bool                                    initialize_ = false;
+    bool                                    recording_ = false;
+    bool                                    playing_ = false;
 
 
-    HANDLE                                  m_hRenderSamplesReadyEvent = nullptr;
-    HANDLE                                  m_hPlayThread = nullptr;
-    HANDLE                                  m_hRenderStartedEvent = nullptr;
-    HANDLE                                  m_hShutdownRenderEvent = nullptr;
+    HANDLE                                  render_samples_ready_evnet_ = nullptr;
+    HANDLE                                  playout_thread_handle_ = nullptr;
+    HANDLE                                  render_started_event_ = nullptr;
+    HANDLE                                  shutdown_render_event_ = nullptr;
 
-    HANDLE                                  m_hCaptureSamplesReadyEvent = nullptr;
-    HANDLE                                  m_hRecThread = nullptr;
-    HANDLE                                  m_hCaptureStartedEvent = nullptr;
-    HANDLE                                  m_hShutdownCaptureEvent = nullptr;
+    HANDLE                                  capture_samples_ready_event_ = nullptr;
+    HANDLE                                  recording_thread_handle_ = nullptr;
+    HANDLE                                  capture_start_event_ = nullptr;
+    HANDLE                                  shutdown_capture_event_ = nullptr;
 
-    AUDIO_DEVICE_INFO_LIST                  m_CaptureDevices;
-    AUDIO_DEVICE_INFO_LIST                  m_RenderDevices;
+    AUDIO_DEVICE_INFO_LIST                  capture_device_list_;
+    AUDIO_DEVICE_INFO_LIST                  render_device_list_;
 
-    std::bitset<sizeof( uint32_t )>           m_setEffect;
+    std::bitset<sizeof( uint32_t )>           set_effect_;
 };
