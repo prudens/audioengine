@@ -128,7 +128,7 @@ void Print( char const * const format,
     }
 
 }
-
+void test_rtp_rtcp_test( int argc, char** argv );
 
 
 int main( int argc, char** argv )
@@ -140,7 +140,7 @@ int main( int argc, char** argv )
   //  test_codec();
    // test_audio_processing(argc,argv);
    // test_async_task();
-    test_audio_device();
+  //  test_audio_device();
    // test_conv();
    // test_hrtf(45,0,"C:/Users/zhangnaigan/Desktop/3D_test_Audio/es01.wav","D:/pro-48000-1.wav");
    // test_real_time_3d();
@@ -165,6 +165,8 @@ int main( int argc, char** argv )
 
    // test_simulate_internet(argc,argv);
    // test_sound_to_text();
+
+    test_rtp_rtcp_test( argc, argv );
     system( "pause" );
     return 0;
 

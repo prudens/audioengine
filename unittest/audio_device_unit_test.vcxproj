@@ -242,6 +242,7 @@
     <ClCompile Include="G7221Interface.cpp" />
     <ClCompile Include="import_lib.cpp" />
     <ClCompile Include="numeric_example.cpp" />
+    <ClCompile Include="rtp_rtcp_example.cpp" />
     <ClCompile Include="simulate_internet.cpp" />
   </ItemGroup>
   <ItemGroup>

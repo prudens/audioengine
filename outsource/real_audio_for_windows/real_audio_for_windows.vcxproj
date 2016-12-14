@@ -212,7 +212,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="audio_device_dsound.cpp" />
     <ClCompile Include="audio_effect.cpp" />
     <ClCompile Include="audio_resample.cpp" />
     <ClCompile Include="import_library.cpp" />
