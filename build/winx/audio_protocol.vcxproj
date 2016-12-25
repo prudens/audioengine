@@ -128,7 +128,9 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <AdditionalIncludeDirectories>../../;../../processing/src;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WEBRTC_WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -153,6 +155,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <AdditionalIncludeDirectories>../../;../../processing/src;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WEBRTC_WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -183,6 +187,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <AdditionalIncludeDirectories>../../;../../processing/src;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WEBRTC_WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -205,7 +211,21 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='x64-Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>../../;../../processing/src;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WEBRTC_WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\protocol\atp.h" />
+    <ClInclude Include="..\..\protocol\rtp_impl.h" />
+    <ClInclude Include="..\..\protocol\atp_payload_type.h" />
+    <ClInclude Include="..\..\protocol\atp_typedef.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\protocol\atp.cpp" />
+    <ClCompile Include="..\..\protocol\rtp_impl.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

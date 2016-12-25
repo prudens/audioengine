@@ -199,8 +199,9 @@ void test_rtp()
                                     160 );
         std::this_thread::sleep_for(milliseconds(10));
         rtp_rtcp->Process();
-        RtpPacketLossStats* stats = nullptr;
-        rtp_rtcp->GetRtpPacketLossStats( true, rtp_rtcp->SSRC(), );
+        RtpPacketLossStats stats ;
+        rtp_rtcp->GetRtpPacketLossStats( true, rtp_rtcp->SSRC(), &stats );
+        
         //rtp_rtcp->SendRTCP( kRtcpReport );
     }
 
