@@ -1,0 +1,63 @@
+syntax = "proto3";
+package audio_engine;
+option optimize_for = LITE_RUNTIME;
+enum RAMSG
+{
+    Invalid=0;
+    Login_Request = 0x101;
+	Login_Response= 0x102;
+	Logout_Request = 0x103;
+	Logout_Response = 0x104;
+	Logout_Notify   = 0x105;
+}
+
+enum DEVICE_TYPE
+{
+    DEVICE_UNKNOWN = 0;
+    DEVICE_WINDOWS = 1;
+	DEVICE_ANDROID = 2;
+	DEVICE_IOS     = 3;
+	DEVICE_LINUX   = 4;
+	DEVICE_WEB     = 8;
+}
+
+message LoginRequest
+{
+  string userid = 1;
+  string username = 2;
+  DEVICE_TYPE type = 3;
+  string extends = 4;
+}
+
+message LoginResponse
+{
+   string userid = 1;
+   int32 login_result = 2;
+   int64 user_token = 3;
+}
+
+message LogoutRequst
+{
+    int64 user_token = 1;
+}
+
+message LogoutResponse
+{
+    int64 user_token = 1;
+	int64 logout_status = 2;
+}
+
+message LoginNotify
+{
+    int64 user_token = 1;
+	int32 reason =2;
+}
+
+message RAUserMessage{
+    RAMSG cmd = 1;
+	LoginRequest   login_requst = 2;
+	LoginResponse  login_response = 3;
+	LogoutRequst   logout_requst = 4;
+    LogoutResponse logout_response = 5;	
+    LoginNotify    logout_notify = 6;
+}

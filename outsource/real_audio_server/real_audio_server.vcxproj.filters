@@ -21,15 +21,63 @@
     <ClCompile Include="..\socket_manager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="server_module.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="import_lib.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="user_manager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\user_service.pb.cc">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\server_config.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="user.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="token_generater.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\packet.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\protobuf_packet.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\real_audio_common.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\real_audio_message.h">
+    <ClInclude Include="..\socket_manager.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\socket_manager.h">
+    <ClInclude Include="server_module.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="user_manager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\user_service.pb.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\server_config.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="user.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="token_generater.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packet.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\protobuf_packet.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -38,17 +38,22 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(IncludePath);d:\Users\zhangnaigan\Downloads\protobuf-3.3.0\src;</IncludePath>
+    <IntDir>$(SolutionDir)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\;..\..\processing\src;../../network/asio/asio/include;../;</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_MBCS;_WIN32_WINNT=0x0501;ASIO_STANDALONE; _CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;_WIN32_WINNT=0x0501;ASIO_STANDALONE; _CRT_SECURE_NO_WARNINGS;PROTOBUF_INLINE_NOT_IN_HEADERS;ASIO_ENABLE_CANCELIO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>d:\Users\zhangnaigan\Downloads\protobuf-3.3.0\bin\Debug;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libprotobuf-lited.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -70,23 +75,28 @@
     <ClCompile Include="..\packet.cpp" />
     <ClCompile Include="..\protobuf_packet.cpp" />
     <ClCompile Include="..\socket_manager.cpp" />
-    <ClCompile Include="..\task.cpp" />
+    <ClCompile Include="..\user_service.pb.cc" />
+    <ClCompile Include="audio_error.cpp" />
     <ClCompile Include="client_module.cpp" />
+    <ClCompile Include="import_lib.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="real_audio_client.cpp" />
     <ClCompile Include="server_config.cpp" />
     <ClCompile Include="user_manager.cpp" />
+    <ClCompile Include="user_service.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\packet.h" />
     <ClInclude Include="..\protobuf_packet.h" />
     <ClInclude Include="..\real_audio_common.h" />
     <ClInclude Include="..\socket_manager.h" />
-    <ClInclude Include="..\task.h" />
+    <ClInclude Include="..\user_service.pb.h" />
+    <ClInclude Include="audio_error.h" />
     <ClInclude Include="client_module.h" />
     <ClInclude Include="real_audio_client.h" />
     <ClInclude Include="server_config.h" />
     <ClInclude Include="user_manager.h" />
+    <ClInclude Include="user_service.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

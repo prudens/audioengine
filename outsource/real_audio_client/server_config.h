@@ -6,8 +6,9 @@
 class ServerConfig
 {
 public:
+    ServerConfig();
     void UpdateServerList();
-    int GetServer(int type,std::string&ip, int16_t& port);
+    bool GetServer(int type,std::string&ip, int16_t& port);
     int SetServer(int type,const std::string &ip,int16_t port);
     void RemoverServer( int type );
 private:

@@ -1,11 +1,23 @@
 #include "server_config.h"
-#include "socket_manager.h"
-void ServerConfig::UpdateServerList()
+
+#include <algorithm>
+#include "client_module.h"
+
+ServerConfig::ServerConfig()
 {
-    // load config from local file
+    UpdateServerList();
 }
 
-int ServerConfig::GetServer( int type, std::string&ip, int16_t& port )
+void ServerConfig::UpdateServerList()
+{
+    // read config from local file
+    SetServer( 1, "127.0.0.1", 8080);
+    SetServer( 2, "127.0.0.1", 8081 );
+    SetServer( 3, "127.0.0.1", 8082 );
+    SetServer( 4, "127.0.0.1", 8083 );
+}
+
+bool ServerConfig::GetServer( int type, std::string&ip, int16_t& port )
 {
     for (auto & node:_server_list)
     {
@@ -13,10 +25,10 @@ int ServerConfig::GetServer( int type, std::string&ip, int16_t& port )
         {
             ip = node.ip;
             port = node.port;
-            return 0;
+            return true;
         }   
     }
-    return -1;
+    return false;
 }
 
 int ServerConfig::SetServer( int type, const std::string&ip, int16_t port )
@@ -56,4 +68,5 @@ void ServerConfig::RemoverServer( int type )
         _server_list.erase( it );
     }
 }
+
 

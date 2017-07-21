@@ -3,28 +3,46 @@
 #include "real_audio_common.h"
 #include "asio.hpp"
 #include "socket_manager.h"
-
+#include "protobuf_packet.h"
+#include "user_service.h"
 typedef std::function<void( UID userid,int login_result )> LoginHandle;
-class UserManager
+class UserManager: ProtoPacketizer
 {
 public:
-    UserManager();
+    UserManager( std::shared_ptr<UserService>  proto_packet = nullptr );
     ~UserManager();
 public:
+    void ConnectServer();
     void SetEventCallback( LoginHandle handle );
-    int Login(UID userid);
-    int Logout( UID userid );
-    int Logining( UID userid, int &login_status );
+    int  Login(UID userid);
+    void Logout();
+    int  Logining();
 private:
-    void DoLogin(UID userid);
+    void DoLogin();
+    void DoConectServer();
+    void DisConectServer();
+public:
+    virtual bool RecvPacket( audio_engine::RAUserMessage* buf );
+    virtual bool HandleError( int server_type, std::error_code ec );
+    virtual bool HandleConnect( int server_type );
 
     struct UserInfo
     {
-        UID _user_list;
+        enum {
+            USERSTATUS_NONE,
+            USERSTATUS_LOGINING,
+            USERSTATUS_LOGINED,
+            USERSTATUS_LOGOUT,
+            USERSTATUS_LOGINFAILED,
+        };
+        UID  user_id;
+        std::string user_name;
+        std::string extend;
         int  login_status;
+        int64_t  token;
     };
-    std::list<UserInfo> _user_list;
     LoginHandle _login_handle;
-    socket_t _socket_login = 0;
-
+    std::shared_ptr<UserService> _user_service;
+    bool _connect_server = false;
+    UserInfo _my_user_info;
 };

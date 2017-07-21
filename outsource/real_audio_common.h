@@ -1,7 +1,8 @@
 #pragma once
 #include <cstdint>
 #include <memory>
-typedef uint32_t UID;
+#include <string>
+typedef std::string UID;
 typedef uint64_t RID;
 #define DEFAULT_BUFFER_SIZE (64*1024)
 struct Buffer 
@@ -43,3 +44,13 @@ struct Buffer
 };
 
 typedef std::shared_ptr<Buffer> BufferPtr;
+
+#pragma pack(1)
+struct PacketHeader
+{
+    char version : 2;
+    char prototype : 3;
+    char compress : 3;
+    uint32_t content_length;
+};
+#pragma  pack()

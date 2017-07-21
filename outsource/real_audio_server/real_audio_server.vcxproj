@@ -38,13 +38,15 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(IncludePath);d:\Users\zhangnaigan\Downloads\protobuf-3.3.0\src;</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_MBCS;ASIO_STANDALONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;ASIO_STANDALONE;ASIO_ENABLE_CANCELIO;_WIN32_WINNT=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\;..\..\processing\src;../../network/asio/asio/include;../;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -66,13 +68,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\packet.cpp" />
+    <ClCompile Include="..\protobuf_packet.cpp" />
+    <ClCompile Include="..\server_config.cpp" />
     <ClCompile Include="..\socket_manager.cpp" />
+    <ClCompile Include="..\user_service.pb.cc" />
+    <ClCompile Include="import_lib.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="server_module.cpp" />
+    <ClCompile Include="token_generater.cpp" />
+    <ClCompile Include="user.cpp" />
+    <ClCompile Include="user_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\packet.h" />
+    <ClInclude Include="..\protobuf_packet.h" />
     <ClInclude Include="..\real_audio_common.h" />
-    <ClInclude Include="..\real_audio_message.h" />
+    <ClInclude Include="..\server_config.h" />
     <ClInclude Include="..\socket_manager.h" />
+    <ClInclude Include="..\user_service.pb.h" />
+    <ClInclude Include="token_generater.h" />
+    <ClInclude Include="server_module.h" />
+    <ClInclude Include="user.h" />
+    <ClInclude Include="user_manager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

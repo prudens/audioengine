@@ -1,25 +1,28 @@
 #pragma once
 class SocketManager;
 class ServerConfig;
-class Task;
+class AsyncTask;
+class Timer;
 class ClientModule
 {
 public:
-    static ClientModule* ClientModule::GetInstance();
-    static void ClientModule::CreateInstance();
-    static void ClientModule::DestroyInstance();
+    static ClientModule* GetInstance();
+    static void CreateInstance();
+    static void DestroyInstance();
     
 public:
     SocketManager* GetSocketManager();
     ServerConfig*  GetServerCnfig();
-    Task*          GetTask();
+    AsyncTask*     GetAsyncTask();
+    Timer*         GetTimer();
 private:
     ClientModule();
     ~ClientModule();
     ClientModule( const ClientModule& ) = delete;
     ClientModule( const ClientModule&& ) = delete;
     static ClientModule* s_instance;
-    SocketManager* _socket_mgr = nullptr;
-    ServerConfig*  _server_cfg = nullptr;
-    Task*          _task = nullptr;
+    SocketManager*       _socket_mgr = nullptr;
+    ServerConfig*        _server_cfg = nullptr;
+    AsyncTask*           _task = nullptr;
+    Timer*               _timer = nullptr;
 };

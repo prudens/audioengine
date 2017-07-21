@@ -137,7 +137,7 @@ struct RealAudioDevice
 DID REAL_AUDIO_CALL CreateDevice()
 {
     RealAudioDevice* pInstance = new RealAudioDevice;
-    AudioDevice* pWinDevice = AudioDevice::Create(AudioDevice::eCoreAudio);
+    AudioDevice* pWinDevice = AudioDevice::Create(AudioDevice::eWave);
     pWinDevice->Initialize();
     int32_t v = 1;
     //pWinDevice->SetPropertie( ID_ENABLE_AEC, &v );

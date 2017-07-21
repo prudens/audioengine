@@ -22,26 +22,28 @@ public:
     void AsyncConnect( std::string ip, int16_t port, ConnectHandle handle );
     void AsyncAccept( std::string ip, int16_t port, AcceptHandle handle );
     void DisConnect( socket_t socket_id );
-    void DisAccept(std::string ip, int16_t port);
+    std::error_code DisAccept( std::string ip, int16_t port );
     void DestroyTcpSocket( socket_t socket_id );
-    int Write( socket_t socket_id, const void* buffer, size_t length );
-    int Read( socket_t socket_id, void* buffer, size_t& length );
+    std::error_code Write( socket_t socket_id, const void* buffer, size_t length );
+    std::error_code Read( socket_t socket_id, void* buffer, size_t& length );
     void AsyncWrite( socket_t socket_id, const void* buffer, size_t length, WriteHandler handle );
     void AsyncRead( socket_t socket_id, void* buffer, size_t length, ReadHandler handle );
+    bool QuerySocketInfo( socket_t socket_id, std::string& ip, int16_t& port );
+    void Cancel( socket_t socket_id );
 private:
     void DoAccept( std::shared_ptr<asio::ip::tcp::acceptor> accept, AcceptHandle handle );
     SocketManager( const SocketManager& ) = delete;
     SocketManager( const SocketManager&& ) = delete;
-    asio::io_context _context;
+    asio::io_context _io_context;
+    asio::io_service::work* _work;
+    typedef asio::basic_waitable_timer<std::chrono::steady_clock>  steady_timer;
+    steady_timer _timer;
     std::future<void> _future;
     std::map<int, std::shared_ptr<asio::ip::tcp::socket> > _tcp_list;
-    struct stAcceptor
-    {
-        asio::ip::tcp::endpoint ep;
-        std::shared_ptr<asio::ip::tcp::acceptor> accept;
-    };
     int _socket_idx = 1;
-    std::list<stAcceptor> _acceptor_list;
+    typedef std::shared_ptr<asio::ip::tcp::acceptor> AcceptorPtr;
+    std::list<std::shared_ptr<asio::ip::tcp::acceptor>> _acceptor_list;
+    std::mutex _lock;
 
     
 };
