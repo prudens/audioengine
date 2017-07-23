@@ -29,6 +29,31 @@ void UserManager::Start()
 void UserManager::Stop()
 {
     _stop = true;
+    _lock.lock();
+    for (auto & u: _users )
+    {
+        u->DettachTcp();
+    }
+    _lock.unlock();
+}
+
+void UserManager::HandleLogin( std::shared_ptr<User> user, BufferPtr buf)
+{
+    _lock.lock();
+    for ( auto u : _users )
+    {
+        if ( u->userid() == user->userid() )
+        {
+            continue;
+        }
+        u->SendPacket(1,buf);
+    }
+    _lock.unlock();
+}
+
+void UserManager::HandleLogout( std::shared_ptr<User> user, BufferPtr buf )
+{
+     
 }
 
 bool UserManager::HandleAccept( std::error_code ec, socket_t fd )
@@ -46,9 +71,11 @@ bool UserManager::HandleAccept( std::error_code ec, socket_t fd )
         {
             printf( "收到客户端新连接：%s:%u\n",ip.c_str(), (uint16_t)port );
         }
-        auto user = std::make_shared<User>();
+        auto user = std::make_shared<User>(this);
         user->AttachTcp( fd );
+        _lock.lock();
         _users.push_back(user);
+        _lock.unlock();
     }
     if ( _stop )
     {

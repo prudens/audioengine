@@ -49,8 +49,11 @@ message LogoutResponse
 
 message LoginNotify
 {
-    int64 user_token = 1;
-	int32 reason =2;
+    string userid   = 1;
+    string username = 2;
+	string extend   = 3;
+	int32 device_type = 4;
+	int32 reason    = 5;
 }
 
 message RAUserMessage{
@@ -59,5 +62,5 @@ message RAUserMessage{
 	LoginResponse  login_response = 3;
 	LogoutRequst   logout_requst = 4;
     LogoutResponse logout_response = 5;	
-    LoginNotify    logout_notify = 6;
+    LoginNotify    login_notify = 6;
 }

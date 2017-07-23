@@ -27,8 +27,10 @@ void UserService::AddServer( int server_type, std::string ip, int port )
     {
         if ( !ec )
         {
+            BufferPtr buf = _proto_packet.PullFromBufferPool();
+            buf->length = 0;
             self->SetSocket( server_type, socket_id );
-            self->Read( server_type );
+            self->Read( server_type, buf );
             self->HandleConnect( server_type );
         }
         else
@@ -84,30 +86,49 @@ void UserService::FreeProtobuf( audio_engine::RAUserMessage* pb )
     _proto_packet.FreeProtobuf( pb );
 }
 
-void UserService::Read( int server_type )
+void UserService::Read( int server_type, BufferPtr buf )
 {
-    BufferPtr buf = _proto_packet.PullFromBufferPool();
     socket_t fd = GetSocket( server_type );
     if (fd == 0)
     {
         return;
     }
     auto self = shared_from_this();
-    _socket_mgr->AsyncRead( fd, buf->data, buf->capacity, [=] ( std::error_code ec, size_t length )
+    _socket_mgr->AsyncRead( fd, buf->data+buf->length, buf->capacity - buf->length,
+                            [=] ( std::error_code ec, size_t length )
     {
-        buf->length = length;
+        buf->length += length;
         if ( !ec )
         {
-            self->_task->AndTask( [=]
+            if ( buf->length < self->_proto_packet.header_size() )
             {
-                self->_proto_packet.Parse( server_type, buf );
-            } );
-            self->Read( server_type );
+                self->Read( server_type,buf );
+            }
+            else
+            {
+                auto content_length = self->_proto_packet.content_length( buf->data );
+                auto packet_length = self->_proto_packet.header_size() + content_length;
+
+                if ( buf->length >= packet_length )
+                {
+                    auto newbuf = _proto_packet.PullFromBufferPool();
+                    newbuf->length = buf->length - packet_length;
+                    memcpy( newbuf->data, buf->data + packet_length, newbuf->length );
+                    self->_task->AndTask( [=]
+                    {
+                        self->_proto_packet.Parse( server_type, buf );
+                    } );
+                    self->Read( server_type,newbuf );
+                }
+                else
+                {
+                    self->Read(server_type, buf );
+                }
+            }
         }
         else
         {
-            HandleError( server_type, ec );
-            self->_proto_packet.PushToBufferPool( buf );
+            HandleError( server_type,ec );
         }
     } );
 }

@@ -105,6 +105,16 @@ bool UserManager::RecvPacket( audio_engine::RAUserMessage* pb )
         {
             printf("Unknown user token");
         }
+    } 
+    else if ( pb->has_login_notify() )
+    {
+        auto login_ntf = pb->login_notify();
+        UID userid = login_ntf.userid();
+        std::string username = login_ntf.username();
+        std::string extend = login_ntf.extend();
+        int dev_type = login_ntf.device_type();
+        printf( "new user online :\nuserid:%s\nusername:%s\nextend:%s\ndev_type:%d\n",
+                userid.c_str(), username.c_str(), extend.c_str(),dev_type );
     }
     else
     {

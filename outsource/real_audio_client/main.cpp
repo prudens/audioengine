@@ -6,7 +6,7 @@
 #include "base/async_task.h"
 #include "base/timer.h"
 #include "user_manager.h"
-
+#include <random>
 int main( int argc, char** argv )
 {
     ClientModule::CreateInstance();
@@ -20,7 +20,12 @@ int main( int argc, char** argv )
         }
     });
     user_mgr->ConnectServer();
-    user_mgr->Login( "123" );
+    std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    std::mt19937 gen( rd() ); //Standard mersenne_twister_engine seeded with rd()
+    std::uniform_int_distribution<> dis( 1000, 60000 );
+
+    auto userid = std::to_string( dis(gen) );
+    user_mgr->Login( userid );
     system("pause");
     user_mgr.reset();
     ClientModule::DestroyInstance();

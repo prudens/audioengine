@@ -547,15 +547,57 @@ class LoginNotify : public ::google::protobuf::MessageLite /* @@protoc_insertion
 
   // accessors -------------------------------------------------------
 
-  // int64 user_token = 1;
-  void clear_user_token();
-  static const int kUserTokenFieldNumber = 1;
-  ::google::protobuf::int64 user_token() const;
-  void set_user_token(::google::protobuf::int64 value);
+  // string userid = 1;
+  void clear_userid();
+  static const int kUseridFieldNumber = 1;
+  const ::std::string& userid() const;
+  void set_userid(const ::std::string& value);
+  #if LANG_CXX11
+  void set_userid(::std::string&& value);
+  #endif
+  void set_userid(const char* value);
+  void set_userid(const char* value, size_t size);
+  ::std::string* mutable_userid();
+  ::std::string* release_userid();
+  void set_allocated_userid(::std::string* userid);
 
-  // int32 reason = 2;
+  // string username = 2;
+  void clear_username();
+  static const int kUsernameFieldNumber = 2;
+  const ::std::string& username() const;
+  void set_username(const ::std::string& value);
+  #if LANG_CXX11
+  void set_username(::std::string&& value);
+  #endif
+  void set_username(const char* value);
+  void set_username(const char* value, size_t size);
+  ::std::string* mutable_username();
+  ::std::string* release_username();
+  void set_allocated_username(::std::string* username);
+
+  // string extend = 3;
+  void clear_extend();
+  static const int kExtendFieldNumber = 3;
+  const ::std::string& extend() const;
+  void set_extend(const ::std::string& value);
+  #if LANG_CXX11
+  void set_extend(::std::string&& value);
+  #endif
+  void set_extend(const char* value);
+  void set_extend(const char* value, size_t size);
+  ::std::string* mutable_extend();
+  ::std::string* release_extend();
+  void set_allocated_extend(::std::string* extend);
+
+  // int32 device_type = 4;
+  void clear_device_type();
+  static const int kDeviceTypeFieldNumber = 4;
+  ::google::protobuf::int32 device_type() const;
+  void set_device_type(::google::protobuf::int32 value);
+
+  // int32 reason = 5;
   void clear_reason();
-  static const int kReasonFieldNumber = 2;
+  static const int kReasonFieldNumber = 5;
   ::google::protobuf::int32 reason() const;
   void set_reason(::google::protobuf::int32 value);
 
@@ -563,7 +605,10 @@ class LoginNotify : public ::google::protobuf::MessageLite /* @@protoc_insertion
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArenaLite _internal_metadata_;
-  ::google::protobuf::int64 user_token_;
+  ::google::protobuf::internal::ArenaStringPtr userid_;
+  ::google::protobuf::internal::ArenaStringPtr username_;
+  ::google::protobuf::internal::ArenaStringPtr extend_;
+  ::google::protobuf::int32 device_type_;
   ::google::protobuf::int32 reason_;
   mutable int _cached_size_;
   friend struct protobuf_user_5fservice_2eproto::TableStruct;
@@ -668,14 +713,14 @@ class RAUserMessage : public ::google::protobuf::MessageLite /* @@protoc_inserti
   ::audio_engine::LogoutResponse* release_logout_response();
   void set_allocated_logout_response(::audio_engine::LogoutResponse* logout_response);
 
-  // .audio_engine.LoginNotify logout_notify = 6;
-  bool has_logout_notify() const;
-  void clear_logout_notify();
-  static const int kLogoutNotifyFieldNumber = 6;
-  const ::audio_engine::LoginNotify& logout_notify() const;
-  ::audio_engine::LoginNotify* mutable_logout_notify();
-  ::audio_engine::LoginNotify* release_logout_notify();
-  void set_allocated_logout_notify(::audio_engine::LoginNotify* logout_notify);
+  // .audio_engine.LoginNotify login_notify = 6;
+  bool has_login_notify() const;
+  void clear_login_notify();
+  static const int kLoginNotifyFieldNumber = 6;
+  const ::audio_engine::LoginNotify& login_notify() const;
+  ::audio_engine::LoginNotify* mutable_login_notify();
+  ::audio_engine::LoginNotify* release_login_notify();
+  void set_allocated_login_notify(::audio_engine::LoginNotify* login_notify);
 
   // .audio_engine.RAMSG cmd = 1;
   void clear_cmd();
@@ -691,7 +736,7 @@ class RAUserMessage : public ::google::protobuf::MessageLite /* @@protoc_inserti
   ::audio_engine::LoginResponse* login_response_;
   ::audio_engine::LogoutRequst* logout_requst_;
   ::audio_engine::LogoutResponse* logout_response_;
-  ::audio_engine::LoginNotify* logout_notify_;
+  ::audio_engine::LoginNotify* login_notify_;
   int cmd_;
   mutable int _cached_size_;
   friend struct protobuf_user_5fservice_2eproto::TableStruct;
@@ -1016,21 +1061,180 @@ inline void LogoutResponse::set_logout_status(::google::protobuf::int64 value) {
 
 // LoginNotify
 
-// int64 user_token = 1;
-inline void LoginNotify::clear_user_token() {
-  user_token_ = GOOGLE_LONGLONG(0);
+// string userid = 1;
+inline void LoginNotify::clear_userid() {
+  userid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::google::protobuf::int64 LoginNotify::user_token() const {
-  // @@protoc_insertion_point(field_get:audio_engine.LoginNotify.user_token)
-  return user_token_;
+inline const ::std::string& LoginNotify::userid() const {
+  // @@protoc_insertion_point(field_get:audio_engine.LoginNotify.userid)
+  return userid_.GetNoArena();
 }
-inline void LoginNotify::set_user_token(::google::protobuf::int64 value) {
+inline void LoginNotify::set_userid(const ::std::string& value) {
   
-  user_token_ = value;
-  // @@protoc_insertion_point(field_set:audio_engine.LoginNotify.user_token)
+  userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:audio_engine.LoginNotify.userid)
+}
+#if LANG_CXX11
+inline void LoginNotify::set_userid(::std::string&& value) {
+  
+  userid_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:audio_engine.LoginNotify.userid)
+}
+#endif
+inline void LoginNotify::set_userid(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:audio_engine.LoginNotify.userid)
+}
+inline void LoginNotify::set_userid(const char* value, size_t size) {
+  
+  userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:audio_engine.LoginNotify.userid)
+}
+inline ::std::string* LoginNotify::mutable_userid() {
+  
+  // @@protoc_insertion_point(field_mutable:audio_engine.LoginNotify.userid)
+  return userid_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* LoginNotify::release_userid() {
+  // @@protoc_insertion_point(field_release:audio_engine.LoginNotify.userid)
+  
+  return userid_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void LoginNotify::set_allocated_userid(::std::string* userid) {
+  if (userid != NULL) {
+    
+  } else {
+    
+  }
+  userid_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), userid);
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.LoginNotify.userid)
 }
 
-// int32 reason = 2;
+// string username = 2;
+inline void LoginNotify::clear_username() {
+  username_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& LoginNotify::username() const {
+  // @@protoc_insertion_point(field_get:audio_engine.LoginNotify.username)
+  return username_.GetNoArena();
+}
+inline void LoginNotify::set_username(const ::std::string& value) {
+  
+  username_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:audio_engine.LoginNotify.username)
+}
+#if LANG_CXX11
+inline void LoginNotify::set_username(::std::string&& value) {
+  
+  username_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:audio_engine.LoginNotify.username)
+}
+#endif
+inline void LoginNotify::set_username(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  username_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:audio_engine.LoginNotify.username)
+}
+inline void LoginNotify::set_username(const char* value, size_t size) {
+  
+  username_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:audio_engine.LoginNotify.username)
+}
+inline ::std::string* LoginNotify::mutable_username() {
+  
+  // @@protoc_insertion_point(field_mutable:audio_engine.LoginNotify.username)
+  return username_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* LoginNotify::release_username() {
+  // @@protoc_insertion_point(field_release:audio_engine.LoginNotify.username)
+  
+  return username_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void LoginNotify::set_allocated_username(::std::string* username) {
+  if (username != NULL) {
+    
+  } else {
+    
+  }
+  username_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), username);
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.LoginNotify.username)
+}
+
+// string extend = 3;
+inline void LoginNotify::clear_extend() {
+  extend_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& LoginNotify::extend() const {
+  // @@protoc_insertion_point(field_get:audio_engine.LoginNotify.extend)
+  return extend_.GetNoArena();
+}
+inline void LoginNotify::set_extend(const ::std::string& value) {
+  
+  extend_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:audio_engine.LoginNotify.extend)
+}
+#if LANG_CXX11
+inline void LoginNotify::set_extend(::std::string&& value) {
+  
+  extend_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:audio_engine.LoginNotify.extend)
+}
+#endif
+inline void LoginNotify::set_extend(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  extend_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:audio_engine.LoginNotify.extend)
+}
+inline void LoginNotify::set_extend(const char* value, size_t size) {
+  
+  extend_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:audio_engine.LoginNotify.extend)
+}
+inline ::std::string* LoginNotify::mutable_extend() {
+  
+  // @@protoc_insertion_point(field_mutable:audio_engine.LoginNotify.extend)
+  return extend_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* LoginNotify::release_extend() {
+  // @@protoc_insertion_point(field_release:audio_engine.LoginNotify.extend)
+  
+  return extend_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void LoginNotify::set_allocated_extend(::std::string* extend) {
+  if (extend != NULL) {
+    
+  } else {
+    
+  }
+  extend_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), extend);
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.LoginNotify.extend)
+}
+
+// int32 device_type = 4;
+inline void LoginNotify::clear_device_type() {
+  device_type_ = 0;
+}
+inline ::google::protobuf::int32 LoginNotify::device_type() const {
+  // @@protoc_insertion_point(field_get:audio_engine.LoginNotify.device_type)
+  return device_type_;
+}
+inline void LoginNotify::set_device_type(::google::protobuf::int32 value) {
+  
+  device_type_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.LoginNotify.device_type)
+}
+
+// int32 reason = 5;
 inline void LoginNotify::clear_reason() {
   reason_ = 0;
 }
@@ -1218,43 +1422,43 @@ inline void RAUserMessage::set_allocated_logout_response(::audio_engine::LogoutR
   // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.logout_response)
 }
 
-// .audio_engine.LoginNotify logout_notify = 6;
-inline bool RAUserMessage::has_logout_notify() const {
-  return this != internal_default_instance() && logout_notify_ != NULL;
+// .audio_engine.LoginNotify login_notify = 6;
+inline bool RAUserMessage::has_login_notify() const {
+  return this != internal_default_instance() && login_notify_ != NULL;
 }
-inline void RAUserMessage::clear_logout_notify() {
-  if (GetArenaNoVirtual() == NULL && logout_notify_ != NULL) delete logout_notify_;
-  logout_notify_ = NULL;
+inline void RAUserMessage::clear_login_notify() {
+  if (GetArenaNoVirtual() == NULL && login_notify_ != NULL) delete login_notify_;
+  login_notify_ = NULL;
 }
-inline const ::audio_engine::LoginNotify& RAUserMessage::logout_notify() const {
-  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.logout_notify)
-  return logout_notify_ != NULL ? *logout_notify_
+inline const ::audio_engine::LoginNotify& RAUserMessage::login_notify() const {
+  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.login_notify)
+  return login_notify_ != NULL ? *login_notify_
                          : *::audio_engine::LoginNotify::internal_default_instance();
 }
-inline ::audio_engine::LoginNotify* RAUserMessage::mutable_logout_notify() {
+inline ::audio_engine::LoginNotify* RAUserMessage::mutable_login_notify() {
   
-  if (logout_notify_ == NULL) {
-    logout_notify_ = new ::audio_engine::LoginNotify;
+  if (login_notify_ == NULL) {
+    login_notify_ = new ::audio_engine::LoginNotify;
   }
-  // @@protoc_insertion_point(field_mutable:audio_engine.RAUserMessage.logout_notify)
-  return logout_notify_;
+  // @@protoc_insertion_point(field_mutable:audio_engine.RAUserMessage.login_notify)
+  return login_notify_;
 }
-inline ::audio_engine::LoginNotify* RAUserMessage::release_logout_notify() {
-  // @@protoc_insertion_point(field_release:audio_engine.RAUserMessage.logout_notify)
+inline ::audio_engine::LoginNotify* RAUserMessage::release_login_notify() {
+  // @@protoc_insertion_point(field_release:audio_engine.RAUserMessage.login_notify)
   
-  ::audio_engine::LoginNotify* temp = logout_notify_;
-  logout_notify_ = NULL;
+  ::audio_engine::LoginNotify* temp = login_notify_;
+  login_notify_ = NULL;
   return temp;
 }
-inline void RAUserMessage::set_allocated_logout_notify(::audio_engine::LoginNotify* logout_notify) {
-  delete logout_notify_;
-  logout_notify_ = logout_notify;
-  if (logout_notify) {
+inline void RAUserMessage::set_allocated_login_notify(::audio_engine::LoginNotify* login_notify) {
+  delete login_notify_;
+  login_notify_ = login_notify;
+  if (login_notify) {
     
   } else {
     
   }
-  // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.logout_notify)
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.login_notify)
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS

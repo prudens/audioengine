@@ -1,1 +1,1 @@
-protoc.exe --cpp_out=. -IPATH=. user_service.proto
+protoc.exe --cpp_out=. user_service.proto

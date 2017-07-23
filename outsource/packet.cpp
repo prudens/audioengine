@@ -18,6 +18,16 @@ bool Packet::ParseHeader( PacketHeader* header )
     return true;
 }
 
+size_t Packet::content_length( const void* data ) const
+{
+    PacketHeader* header = (PacketHeader*)data;
+    if (header)
+    {
+        return header->content_length;
+    }
+    return 0;
+}
+
 void Packet::Build( int server_type, BufferPtr buf )
 {
     auto pack_buf = Pack( server_type, buf );

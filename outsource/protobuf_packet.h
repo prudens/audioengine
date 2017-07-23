@@ -20,6 +20,7 @@ public:
     explicit ProtoPacket( PacketHandle*handle );
     ~ProtoPacket();
     BufferPtr Produce( int server_type, const char* data, size_t length );
+
     audio_engine::RAUserMessage* AllocProtoBuf();
     void FreeProtobuf( audio_engine::RAUserMessage* pb);
 protected:

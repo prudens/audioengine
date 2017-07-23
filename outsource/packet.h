@@ -16,6 +16,7 @@ public:
     int version() const{ return _version; }
     int prototype() const{ return _prototype; }
     size_t header_size()const { return sizeof( PacketHeader ); }
+    size_t content_length( const void* data )const;
 public:
     void Build( int server_type, BufferPtr buf );
     void Parse( int server_type, BufferPtr buf );

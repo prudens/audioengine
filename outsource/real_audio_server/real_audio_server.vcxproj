@@ -39,7 +39,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(IncludePath);d:\Users\zhangnaigan\Downloads\protobuf-3.3.0\src;</IncludePath>
+    <IncludePath>$(IncludePath);d:\Users\zhangnaigan\Downloads\protobuf-3.3.0\src;C:\Users\admin\Downloads\protobuf-3.3.0\src</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -51,6 +51,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>d:\Users\zhangnaigan\Downloads\protobuf-3.3.0\bin\Debug;C:\Users\admin\Downloads\protobuf-3.3.0\bin\Debug</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

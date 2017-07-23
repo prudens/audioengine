@@ -34,7 +34,7 @@ public:
 private:
     socket_t GetSocket( int server_type );
     void     SetSocket( int server_type, socket_t fd );
-    void     Read( int server_type );
+    void     Read( int server_type,BufferPtr buf );
     void     Write( int server_type, BufferPtr buf );
     void     HandleConnect( int server_type );
     void     HandleError( int server_type, std::error_code ec );

@@ -246,12 +246,21 @@ void SocketManager::AsyncWrite( socket_t socket_id, const void* data, size_t len
     _lock.unlock();
     if (!s)
     {
+        ec = asio::error::not_socket;
+        handle(ec,0);
         return;
     }
     asio::async_write( *s, asio::buffer( data, length ),
                        [=] ( asio::error_code ec, std::size_t len )
     {
-        handle( ec, len );
+        if ( len < length && !ec)//一次没写完就继续写。
+        {
+            AsyncWrite( socket_id, (char*)data + len, length - len, handle );
+        }
+        else
+        {
+            handle( ec, len );
+        }
     } );
 }
 

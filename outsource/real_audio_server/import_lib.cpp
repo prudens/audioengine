@@ -13,7 +13,8 @@
 
 
 #pragma comment(lib,PATH_LIB"audio_base.lib")
-#pragma comment(lib,"d:\\Users\\zhangnaigan\\Downloads\\protobuf-3.3.0\\bin\\Debug\\libprotobuf-lited.lib")
+
+#pragma comment(lib,"libprotobuf-lited.lib")
 #pragma comment(lib, "ws2_32")
 #pragma comment(lib, "strmiids")
 #pragma comment(lib, "msdmo")
