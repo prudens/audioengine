@@ -25,26 +25,26 @@ message LoginRequest
 {
   string userid = 1;
   string username = 2;
-  DEVICE_TYPE type = 3;
+  DEVICE_TYPE devtype = 3;
   string extends = 4;
 }
 
 message LoginResponse
 {
    string userid = 1;
-   int32 login_result = 2;
-   int64 user_token = 3;
+   int32 result = 2;
+   int64 token = 3;
 }
 
 message LogoutRequst
 {
-    int64 user_token = 1;
+    int64 token = 1;
 }
 
 message LogoutResponse
 {
-    int64 user_token = 1;
-	int64 logout_status = 2;
+    int64 token = 1;
+	int64 status = 2;
 }
 
 message LoginNotify
@@ -52,8 +52,8 @@ message LoginNotify
     string userid   = 1;
     string username = 2;
 	string extend   = 3;
-	int32 device_type = 4;
-	int32 reason    = 5;
+	int32 devtype   = 4;
+	int32 status    = 5;
 }
 
 message RAUserMessage{

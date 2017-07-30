@@ -5,31 +5,34 @@
 #include "token_generater.h"
 #include "user_manager.h"
 User::User( UserManager* host )
-    :_proto_packet(this)
-    , _host(host)
+    : _host(host)
+    , _proto_packet( ServerModule::GetInstance()->GetBufferPool() )
 {
+    _buffer_pool = ServerModule::GetInstance()->GetBufferPool();
     _sm = ServerModule::GetInstance()->GetSocketManager();
     _task = ServerModule::GetInstance()->GetAsyncTask();
 }
 
 User::~User()
 {
-    if (_sock_id>0)
-    {
-        DettachTcp();
-    }
+    DettachTcp();
+    printf( "user:%s offline\n",_userid.c_str() );
 }
 
 void User::AttachTcp( socket_t fd )
 {
     _sock_id = fd;
-    BufferPtr buf = _proto_packet.PullFromBufferPool();
-    buf->length = 0;
+    BufferPtr buf = _buffer_pool->PullFromBufferPool();
+    buf->length(0);
     Read(buf);
 }
 
 void User::DettachTcp()
 {
+    if ( _sock_id == 0 )
+    {
+        return;
+    }
     _stop = true;
     _sm->Cancel( _sock_id );
     _sock_id = 0;
@@ -66,56 +69,39 @@ void User::Read(BufferPtr buf)
         return;
     }
     auto self = shared_from_this();
-    _sm->AsyncRead( _sock_id, buf->data+buf->length, buf->capacity - buf->length,
-                    [=] ( std::error_code ec, std::size_t length )
+    _sm->AsyncRead( _sock_id, buf, [=] ( std::error_code ec, std::size_t length )
     {
-        buf->length += length;
         if ( !ec )
         {
-            if (buf->length < self->_proto_packet.header_size())
+            self->_task->AddTask( [=]
             {
-                self->Read( buf );
-            }
-            else
-            {
-                auto content_length = self->_proto_packet.content_length( buf->data );
-                auto packet_length = self->_proto_packet.header_size() + content_length;
-
-                if ( buf->length >= packet_length )
-                {
-                    auto newbuf = _proto_packet.PullFromBufferPool();
-                    newbuf->length = buf->length - packet_length;
-                    memcpy( newbuf->data, buf->data + packet_length, newbuf->length );
-                    self->_task->AndTask( [=]
-                    {
-                        self->_proto_packet.Parse( 0, buf );
-                    } );
-                    self->Read(newbuf);
-                }
-                else
-                {
-                    self->Read( buf );
-                }
-            }
+                auto pb = self->_proto_packet.Parse( buf );
+                self->RecvPacket( pb );
+            } );
         }
         else
         {
             HandleError( ec );
         }
+        auto buf = _buffer_pool->PullFromBufferPool();
+        Read(buf);
     } );
 }
 
 void User::Write(int type, BufferPtr buf)
 {
-    if ( _stop )
+    if ( _sock_id == 0 || buf == nullptr )
     {
         return;
     }
     auto self = shared_from_this();
-    _sm->AsyncWrite( _sock_id, buf->data, buf->length, [=] ( std::error_code ec, std::size_t length )
+    _sm->AsyncWrite( _sock_id, buf, [=] ( std::error_code ec, std::size_t length )
     {
-        if(type == 0 )
-            self->_proto_packet.PushToBufferPool( buf );
+        if ( type == 0 )
+        {
+            self->_buffer_pool->PushToBufferPool( buf );
+        }
+
         if ( ec )
         {
             self->HandleError( ec );
@@ -123,7 +109,7 @@ void User::Write(int type, BufferPtr buf)
     } );
 }
 
-void User::RecvPacket( int server_type, audio_engine::RAUserMessage* pb )
+void User::RecvPacket( std::shared_ptr< audio_engine::RAUserMessage> pb )
 {
     if ( !pb)
     {
@@ -138,17 +124,7 @@ void User::RecvPacket( int server_type, audio_engine::RAUserMessage* pb )
     else if ( pb->has_logout_requst())
     {
         auto logout_req = pb->logout_requst();
-        auto token = logout_req.user_token();
-        if ( token != _token)
-        {
-            printf( "无效请求，token不对" );
-            return;
-        }
-        auto pb1 = _proto_packet.AllocProtoBuf();
-        auto logout_res = pb1->mutable_logout_response();
-        logout_res->set_user_token( _token );
-        logout_res->set_logout_status( 1 );
-        Send(0, pb1 );
+        HandleLogout( logout_req );
     }
     else
     {
@@ -156,33 +132,21 @@ void User::RecvPacket( int server_type, audio_engine::RAUserMessage* pb )
     }
 }
 
-void User::SendPacket( int server_type, BufferPtr buf )
-{
-    if ( server_type == 2)
-    {
-        if (_host)
-        {
-            auto self = shared_from_this();
-            _host->HandleLogin( self, buf );
-        }
-
-    }
-    else
-    {
-        Write( server_type, buf );
-    }
-}
-
 void User::HandleError( std::error_code ec )
 {
+    if (_stop)
+    {
+        return;
+    }
     if (ec)
     {
         printf( ec.message().c_str() );
         printf( "\n" );
-        _stop;
-        if (_host)
+        _stop = true;
+        if ( _host )
         {
-            
+            auto self = shared_from_this();
+            _host->HandleLogout(self);
         }
     }
 
@@ -193,31 +157,54 @@ void User::HandleLogin( const audio_engine::LoginRequest& login_req )
     _userid = login_req.userid();
     _user_name = login_req.username();
     _extend = login_req.extends();
-    _device_type = login_req.type();
-    auto pb1 = _proto_packet.AllocProtoBuf();
-    auto login_res = pb1->mutable_login_response();
+    _device_type = login_req.devtype();
+    auto pb = std::make_shared<audio_engine::RAUserMessage>();
+    auto login_res = pb->mutable_login_response();
     _token = ServerModule::GetInstance()->GetTokenGenerater()->NewToken( _userid );
-    login_res->set_user_token( _token );
+    login_res->set_token( _token );
     login_res->set_userid( _userid );
-    login_res->set_login_result( 1 );//fixme  改成枚举
-    Send(0, pb1 );
-    auto pb2 = _proto_packet.AllocProtoBuf();
-    auto login_ntf = pb2->mutable_login_notify();
-    login_ntf->set_reason( 0 );
-    login_ntf->set_userid(_userid);
-    login_ntf->set_username( _user_name );
-    login_ntf->set_extend( _extend );
-
-    auto self = shared_from_this();
-    Send( 2, pb2);
+    login_res->set_result( 1 );//fixme  改成枚举
+    Write( 0, _proto_packet.Build( pb ) );
+  
+    if (_host)
+    {
+        auto self = shared_from_this();
+        _host->HandleLogin(self);
+    }
 }
 
-void User::Send(int type, audio_engine::RAUserMessage* pb )
+void User::HandleLogout( const ::audio_engine::LogoutRequst& logout_req )
 {
-    BufferPtr buf = _proto_packet.Produce( type, (const char*)&pb, sizeof( pb ) );
     auto self = shared_from_this();
-    _task->AndTask( [=]
+    auto token = logout_req.token();
+    if ( token != _token )
     {
-        self->_proto_packet.Build( type, buf );
-    } );
+        printf( "无效请求，token不对" );
+        return;
+    }
+    auto pb = std::make_shared<audio_engine::RAUserMessage>();
+    auto logout_res = pb->mutable_logout_response();
+    logout_res->set_token( _token );
+    logout_res->set_status( 1 );
+    BufferPtr buf = _proto_packet.Build( pb );
+    if ( buf )
+    {
+        _sm->AsyncWrite( _sock_id, buf, [=] ( std::error_code ec, std::size_t length )
+        {
+            self->_buffer_pool->PushToBufferPool( buf );
+            _sm->DisConnect( _sock_id );
+            _sock_id = 0;
+            _stop = true;
+        } );
+    }
+
+    if ( _host )
+    {
+        _host->HandleLogout( self );
+    }
+}
+
+void User::Send( int type, BufferPtr buf )
+{
+    Write( type, buf );
 }

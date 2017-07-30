@@ -3,6 +3,7 @@ class SocketManager;
 class ServerConfig;
 class AsyncTask;
 class Timer;
+class BufferPool;
 class ClientModule
 {
 public:
@@ -15,6 +16,7 @@ public:
     ServerConfig*  GetServerCnfig();
     AsyncTask*     GetAsyncTask();
     Timer*         GetTimer();
+    BufferPool*      GetBufferPool();
 private:
     ClientModule();
     ~ClientModule();
@@ -25,4 +27,5 @@ private:
     ServerConfig*        _server_cfg = nullptr;
     AsyncTask*           _task = nullptr;
     Timer*               _timer = nullptr;
+    BufferPool*          _buffer_pool = nullptr;
 };

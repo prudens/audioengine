@@ -7,8 +7,6 @@
 class Packet
 {
 public:
-    explicit Packet();
-    virtual ~Packet();
     void version( int v ) { _version = v; }
     void prototype( int type ) { _prototype = type; }
     void compress( int c ) { _compress = c; }
@@ -18,20 +16,13 @@ public:
     size_t header_size()const { return sizeof( PacketHeader ); }
     size_t content_length( const void* data )const;
 public:
-    void Build( int server_type, BufferPtr buf );
-    void Parse( int server_type, BufferPtr buf );
-    void      PushToBufferPool( BufferPtr ptr );
-    BufferPtr PullFromBufferPool( size_t capacity = 64*1024 );
+    BufferPtr Build(  BufferPtr buf );
+    BufferPtr Parse( BufferPtr buf );
+
 protected:
-    virtual void Read( int server_type, void* data, size_t length );
-    virtual void Write( int server_type, BufferPtr buf );
-    virtual BufferPtr Pack( int server_type, BufferPtr buf );
-    virtual BufferPtr UnPack( int server_type, BufferPtr buf );
-    bool ParseHeader( PacketHeader* header );
+    bool ParseHeader( BufferPtr buf );
     void AddHeader( BufferPtr buf );
 private:
-    std::mutex _lock_sockets;
-    std::list<BufferPtr> _buffer_pool;
     int _version = 1;
     int _prototype = 1;
     int _compress = 0;

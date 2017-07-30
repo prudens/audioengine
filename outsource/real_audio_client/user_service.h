@@ -6,14 +6,13 @@
 class ProtoPacketizer
 {
 public:
-    virtual bool RecvPacket( audio_engine::RAUserMessage* buf ) = 0;
+    virtual bool RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb ) = 0;
     virtual bool HandleError( int server_type, std::error_code ec ) = 0;
     virtual bool HandleConnect( int server_type ) = 0;
 };
 
 class UserService :
-    public std::enable_shared_from_this<UserService>,
-    public PacketHandle
+    public std::enable_shared_from_this<UserService>
 {
 public:
     UserService();
@@ -24,13 +23,8 @@ public:
     void RegisterHandler( ProtoPacketizer *p );
     void UnRegisterHandler( ProtoPacketizer* p );
 
-    void Produce( int server_type, void* packet, size_t length );
-
-    audio_engine::RAUserMessage* AllocProtoBuf();
-    void FreeProtobuf( audio_engine::RAUserMessage* pb );
-
-    virtual void RecvPacket( int server_type, audio_engine::RAUserMessage* buf );
-    virtual void SendPacket( int server_type, BufferPtr buf );
+    virtual void RecvPacket( int server_type, std::shared_ptr<audio_engine::RAUserMessage> pb );
+    void SendPacket( int server_type, std::shared_ptr<audio_engine::RAUserMessage> pb );
 private:
     socket_t GetSocket( int server_type );
     void     SetSocket( int server_type, socket_t fd );
@@ -41,7 +35,7 @@ private:
     AsyncTask*    _task = nullptr;
     SocketManager* _socket_mgr = nullptr;
     ProtoPacket _proto_packet;
-
+    BufferPool* _buffer_pool;
     std::mutex _lock_sockets;
     std::map<int, socket_t> _sockets;
 

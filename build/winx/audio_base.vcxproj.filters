@@ -18,9 +18,6 @@
     <ClCompile Include="..\..\base\rgba.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\base\asyntask.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\base\audio_util.cc">
       <Filter>source</Filter>
     </ClCompile>
@@ -42,11 +39,11 @@
     <ClCompile Include="..\..\base\jvm_manager.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\base\timer.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\base\asyntask.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\base\min_max_heap.hpp">
       <Filter>include</Filter>
     </ClInclude>
@@ -145,6 +142,12 @@
     </ClInclude>
     <ClInclude Include="..\..\base\jvm_manager.h">
       <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\async_task.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\timer.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -23,6 +23,7 @@ AsyncTask* ClientModule::GetAsyncTask()
 
 ClientModule::ClientModule()
 {
+    _buffer_pool = new BufferPool;
     _socket_mgr = new SocketManager();
     _server_cfg = new ServerConfig();
     _task = new AsyncTask( 3 );
@@ -35,6 +36,7 @@ ClientModule::~ClientModule()
     delete _server_cfg;
     delete _task;
     delete _timer;
+    delete _buffer_pool;
 }
 
 ClientModule* ClientModule::GetInstance()
@@ -61,4 +63,9 @@ void ClientModule::DestroyInstance()
 Timer* ClientModule::GetTimer()
 {
     return _timer;
+}
+
+BufferPool* ClientModule::GetBufferPool()
+{
+    return _buffer_pool;
 }

@@ -4,6 +4,7 @@ class AsyncTask;
 class Timer;
 class ServerConfig;
 class TokenGenerater;
+class BufferPool;
 class ServerModule
 {
 public:
@@ -16,6 +17,7 @@ public:
     AsyncTask*       GetAsyncTask();
     Timer*           GetTimer();
     TokenGenerater*  GetTokenGenerater();
+    BufferPool*      GetBufferPool();
 private:
     ServerModule();
     ~ServerModule();
@@ -30,4 +32,5 @@ private:
     Timer*               _timer = nullptr;
     ServerConfig*        _srv_cfg = nullptr;
     TokenGenerater*      _token_gen = nullptr;
+    BufferPool*          _buffer_pool = nullptr;
 };

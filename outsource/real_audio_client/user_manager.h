@@ -6,6 +6,23 @@
 #include "protobuf_packet.h"
 #include "user_service.h"
 typedef std::function<void( UID userid,int login_result )> LoginHandle;
+
+struct UserInfo
+{
+    enum {
+        USERSTATUS_NONE,
+        USERSTATUS_LOGINING,
+        USERSTATUS_LOGINED,
+        USERSTATUS_LOGOUT,
+        USERSTATUS_LOGINFAILED,
+    };
+    UID  user_id;
+    std::string user_name;
+    std::string extend;
+    int  login_status;
+    int64_t  token;
+};
+
 class UserManager: ProtoPacketizer
 {
 public:
@@ -22,27 +39,11 @@ private:
     void DoConectServer();
     void DisConectServer();
 public:
-    virtual bool RecvPacket( audio_engine::RAUserMessage* buf );
+    virtual bool RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb );
     virtual bool HandleError( int server_type, std::error_code ec );
     virtual bool HandleConnect( int server_type );
-
-    struct UserInfo
-    {
-        enum {
-            USERSTATUS_NONE,
-            USERSTATUS_LOGINING,
-            USERSTATUS_LOGINED,
-            USERSTATUS_LOGOUT,
-            USERSTATUS_LOGINFAILED,
-        };
-        UID  user_id;
-        std::string user_name;
-        std::string extend;
-        int  login_status;
-        int64_t  token;
-    };
     LoginHandle _login_handle;
     std::shared_ptr<UserService> _user_service;
-    bool _connect_server = false;
     UserInfo _my_user_info;
+    bool _connect_server = false;
 };

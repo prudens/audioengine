@@ -4,11 +4,11 @@
 int main( int argc, char** argv )
 {
     ServerModule::CreateInstance();
-    UserManager* usermgr = new UserManager;
+    auto usermgr = std::make_shared<UserManager>();
     usermgr->Start();
     system( "pause" );
     usermgr->Stop();
-    delete usermgr;
+    usermgr.reset();
     ServerModule::DestroyInstance();
     return 0;
 }

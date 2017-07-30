@@ -2,6 +2,7 @@
 
 #include "base/async_task.h"
 #include "base/timer.h"
+#include "real_audio_common.h"
 
 #include "socket_manager.h"
 #include "server_config.h"
@@ -52,6 +53,7 @@ Timer* ServerModule::GetTimer()
 
 ServerModule::ServerModule()
 {
+    _buffer_pool = new BufferPool;
     _task = new AsyncTask( 4 );
     _timer = new Timer;
     _socket_mgr = new SocketManager();
@@ -66,6 +68,7 @@ ServerModule::~ServerModule()
     delete _task;
     delete _srv_cfg;
     delete _token_gen;
+    delete _buffer_pool;
 }
 
 TokenGenerater* ServerModule::GetTokenGenerater()
@@ -73,5 +76,9 @@ TokenGenerater* ServerModule::GetTokenGenerater()
     return _token_gen;
 }
 
+BufferPool* ServerModule::GetBufferPool()
+{
+    return _buffer_pool;
+}
 
 

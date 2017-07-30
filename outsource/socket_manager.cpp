@@ -133,19 +133,7 @@ void SocketManager::AsyncAccept( std::string ip, int16_t port, AcceptHandle hand
 
 void SocketManager::DisConnect( socket_t socket_id )
 {
-    std::unique_lock<std::mutex> gl(_lock);
-    using namespace asio::ip;
-    std::error_code ec;
-    auto it = _tcp_list.find( socket_id );
-    if (it == _tcp_list.end())
-    {
-        return;
-    }
-    if (it->second)
-    {
-        it->second->close(ec);
-    }
-    _tcp_list.erase( it );
+    DestroyTcpSocket( socket_id );
 }
 
 
@@ -264,6 +252,11 @@ void SocketManager::AsyncWrite( socket_t socket_id, const void* data, size_t len
     } );
 }
 
+void SocketManager::AsyncWrite( socket_t socket_id, BufferPtr buf, WriteHandler handle )
+{
+    AsyncWrite( socket_id, buf->RawData(), buf->RawLength(), handle );
+}
+
 void SocketManager::AsyncRead( socket_t socket_id, void* data, size_t length, ReadHandler handle )
 { 
     using namespace asio::ip;
@@ -279,6 +272,38 @@ void SocketManager::AsyncRead( socket_t socket_id, void* data, size_t length, Re
                        [=] ( asio::error_code ec, std::size_t len )
     {
         handle( ec, len );
+    } );
+}
+
+void SocketManager::AsyncRead( socket_t socket_id, BufferPtr buf, ReadHandler handle )
+{
+    using namespace asio::ip;
+    std::error_code ec;
+    _lock.lock();
+    auto s = _tcp_list[socket_id];
+    _lock.unlock();
+    if ( !s )
+    {
+        return;
+    }
+    // read tcp packet header
+    asio::async_read( *s, asio::buffer( buf->RawData(), RAW_HEADER_SIZE ),
+                        [=] ( asio::error_code ec, size_t length)
+    {
+        if (ec)
+        {
+            handle( ec, length );
+            return;
+        }
+        int32_t v = 0;
+        CharToInt( buf->RawData(), v );
+        // read tcp packet content
+        asio::async_read( *s, asio::buffer( buf->data(), v), [=]( asio::error_code ec, size_t length )
+        {
+            buf->length( length );
+            handle(ec, length);
+
+        } );
     } );
 }
 

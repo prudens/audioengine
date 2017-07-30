@@ -27,6 +27,8 @@ int main( int argc, char** argv )
     auto userid = std::to_string( dis(gen) );
     user_mgr->Login( userid );
     system("pause");
+    user_mgr->Logout();
+    system( "pause" );
     user_mgr.reset();
     ClientModule::DestroyInstance();
     

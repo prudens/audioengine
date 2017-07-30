@@ -7,8 +7,10 @@
 #include "user.h"
 
 UserManager::UserManager()
+    :_packet(ServerModule::GetInstance()->GetBufferPool())
 {
     _socket_mgr = ServerModule::GetInstance()->GetSocketManager();
+    _task = ServerModule::GetInstance()->GetAsyncTask();
 }
 
 UserManager::~UserManager()
@@ -37,23 +39,61 @@ void UserManager::Stop()
     _lock.unlock();
 }
 
-void UserManager::HandleLogin( std::shared_ptr<User> user, BufferPtr buf)
+void UserManager::HandleLogin( std::shared_ptr<User> user)
 {
     _lock.lock();
-    for ( auto u : _users )
-    {
-        if ( u->userid() == user->userid() )
-        {
-            continue;
-        }
-        u->SendPacket(1,buf);
-    }
+    _users.push_back( user );
     _lock.unlock();
+    auto pb2 = std::make_shared<audio_engine::RAUserMessage>();
+    auto login_ntf = pb2->mutable_login_notify();
+    login_ntf->set_status( 1 );
+    login_ntf->set_userid( user->userid() );
+    login_ntf->set_username( user->username() );
+    login_ntf->set_extend( user->extend() );
+    BufferPtr buf = _packet.Build( pb2 );
+    if ( buf )
+    {
+        _lock.lock();
+        for ( auto u : _users )
+        {
+            if ( u != user )
+            {
+                u->Send( 1, buf );
+            }
+        }
+        _lock.unlock();
+    }
 }
 
-void UserManager::HandleLogout( std::shared_ptr<User> user, BufferPtr buf )
+void UserManager::HandleLogout( std::shared_ptr<User> user )
 {
-     
+    _lock.lock();
+    if (std::find(_users.begin(),_users.end(),user) == _users.end() )
+    {
+        _lock.unlock();
+        return;
+    }
+    _users.remove( user );
+    _lock.unlock();
+    auto pb2 = std::make_shared<audio_engine::RAUserMessage>();
+    auto login_ntf = pb2->mutable_login_notify();
+    login_ntf->set_status( 0 );
+    login_ntf->set_userid( user->userid() );
+    login_ntf->set_username( user->username() );
+    login_ntf->set_extend( user->extend() );
+    BufferPtr buf = _packet.Build( pb2 );
+    if ( buf )
+    {
+        _lock.lock();
+        for ( auto u : _users )
+        {
+            if ( u != user )
+            {
+                u->Send( 1, buf );
+            }
+        }
+        _lock.unlock();
+    }
 }
 
 bool UserManager::HandleAccept( std::error_code ec, socket_t fd )
@@ -73,9 +113,6 @@ bool UserManager::HandleAccept( std::error_code ec, socket_t fd )
         }
         auto user = std::make_shared<User>(this);
         user->AttachTcp( fd );
-        _lock.lock();
-        _users.push_back(user);
-        _lock.unlock();
     }
     if ( _stop )
     {
@@ -83,4 +120,3 @@ bool UserManager::HandleAccept( std::error_code ec, socket_t fd )
     }
     return true;
 }
-

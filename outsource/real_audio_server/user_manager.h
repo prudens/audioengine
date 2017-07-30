@@ -7,7 +7,7 @@
 
 typedef int socket_t;
 class SocketManager;
-class UserManager
+class UserManager:public std::enable_shared_from_this<UserManager>
 {
 public:
     UserManager();
@@ -15,12 +15,17 @@ public:
 public:
     void Start();
     void Stop();
-    void HandleLogin( std::shared_ptr<User> user, BufferPtr buf );
-    void HandleLogout( std::shared_ptr<User> user, BufferPtr buf );
+    void HandleLogin( std::shared_ptr<User> user);
+    void HandleLogout( std::shared_ptr<User> user );
 private:
     bool HandleAccept( std::error_code ec, socket_t socket_id );
     SocketManager* _socket_mgr = nullptr;
-    bool _stop = false;
+    AsyncTask* _task = nullptr;
+    ProtoPacket _packet;
     std::mutex _lock;
     std::list<std::shared_ptr<User>> _users;
+    bool _stop = false;
+
+
+
 };

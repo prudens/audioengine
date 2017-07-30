@@ -42,10 +42,10 @@ int UserManager::Login( UID userid )
 
 void UserManager::Logout()
 {
-    auto pb = _user_service->AllocProtoBuf();
+    auto pb = std::make_shared<audio_engine::RAUserMessage>();
     auto logout_req = pb->mutable_logout_requst();
-    logout_req->set_user_token(_my_user_info.token);
-    _user_service->Produce(1, &pb, sizeof( pb ) );
+    logout_req->set_token(_my_user_info.token);
+    _user_service->SendPacket( 1, pb );
 }
 
 int UserManager::Logining( )
@@ -57,24 +57,24 @@ void UserManager::DoLogin()
 {
     if (_my_user_info.login_status == UserInfo::USERSTATUS_LOGINING)
     {
-        audio_engine::RAUserMessage* pb = _user_service->AllocProtoBuf();
+        auto pb = std::make_shared<audio_engine::RAUserMessage>();
         auto login_req = pb->mutable_login_requst();
         login_req->set_userid( _my_user_info.user_id );
         login_req->set_username( _my_user_info.user_id );
-        login_req->set_type( DEVICE_TYPE::DEVICE_UNKNOWN );
-        _user_service->Produce( 1, &pb, sizeof( pb ) );
+        login_req->set_devtype( DEVICE_TYPE::DEVICE_UNKNOWN );
+        _user_service->SendPacket(1, pb);
     }
 
 }
 
-bool UserManager::RecvPacket( audio_engine::RAUserMessage* pb )
+bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
 {
     if (pb->has_login_response())
     {
         auto login_res = pb->login_response();
-        auto login_result = login_res.login_result();
+        auto login_result = login_res.result();
         auto userid = login_res.userid();
-        auto token = login_res.user_token();
+        auto token = login_res.token();
         std::cout << " username: " << userid << "\n"
             << "login_result: " << login_result << "\n"
             << "token: " << token << "\n";
@@ -89,10 +89,11 @@ bool UserManager::RecvPacket( audio_engine::RAUserMessage* pb )
     }
     else if ( pb->has_logout_response())
     {
+        printf( "收到登出消息回复\n" );
         auto logout_res = pb->logout_response();
-        if (logout_res.user_token() == _my_user_info.token)
+        if (logout_res.token() == _my_user_info.token)
         {
-            if ( logout_res.logout_status() == UserInfo::USERSTATUS_LOGOUT)
+            if ( logout_res.status() == UserInfo::USERSTATUS_LOGOUT)
             {
                 _my_user_info.login_status = UserInfo::USERSTATUS_LOGOUT;
             }
@@ -112,12 +113,22 @@ bool UserManager::RecvPacket( audio_engine::RAUserMessage* pb )
         UID userid = login_ntf.userid();
         std::string username = login_ntf.username();
         std::string extend = login_ntf.extend();
-        int dev_type = login_ntf.device_type();
-        printf( "new user online :\nuserid:%s\nusername:%s\nextend:%s\ndev_type:%d\n",
-                userid.c_str(), username.c_str(), extend.c_str(),dev_type );
+        int dev_type = login_ntf.devtype();
+        int status = login_ntf.status();
+        if (status == 1)
+        {
+            printf( "new user online :\nuserid:%s\nusername:%s\nextend:%s\ndev_type:%d\n",
+                    userid.c_str(), username.c_str(), extend.c_str(), dev_type );
+        }
+        else
+        {
+            printf( "new user offline :\nuserid:%s\nusername:%s\n",
+                    userid.c_str(), username.c_str() );
+        }
     }
     else
     {
+        printf( "收到不识别的buffer\n" );
         return false;
     }
     return true;
@@ -136,6 +147,7 @@ bool UserManager::HandleError( int server_type, std::error_code ec )
             }
         }
     }
+    DisConectServer();
     _connect_server = false;
     //DoConectServer();
     return true;

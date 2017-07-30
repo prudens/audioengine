@@ -5,8 +5,10 @@
 #include "base/async_task.h"
 
 UserService::UserService()
-    :_proto_packet(this)
+    :_proto_packet(ClientModule::GetInstance()->GetBufferPool())
+
 {
+    _buffer_pool = ClientModule::GetInstance()->GetBufferPool();
     _task = ClientModule::GetInstance()->GetAsyncTask();
     _socket_mgr = ClientModule::GetInstance()->GetSocketManager();
 }
@@ -27,11 +29,15 @@ void UserService::AddServer( int server_type, std::string ip, int port )
     {
         if ( !ec )
         {
-            BufferPtr buf = _proto_packet.PullFromBufferPool();
-            buf->length = 0;
             self->SetSocket( server_type, socket_id );
+            BufferPtr buf = _buffer_pool->PullFromBufferPool();
+            buf->length( 0 );
             self->Read( server_type, buf );
-            self->HandleConnect( server_type );
+            _task->AddTask( [=]
+            {
+                self->HandleConnect( server_type );
+            } );
+
         }
         else
         {
@@ -52,16 +58,6 @@ void UserService::RemoveServer( int server_type )
     _lock_sockets.unlock();
 }
 
-void UserService::Produce( int server_type, void* data, size_t length )
-{
-    BufferPtr buf = _proto_packet.Produce( server_type, (const char*)data, length );
-    auto self = shared_from_this();
-    _task->AndTask( [=]
-    {
-        self->_proto_packet.Build( server_type, buf );
-    } );
-}
-
 void UserService::RegisterHandler( ProtoPacketizer *p )
 {
     _lock_handle.lock();
@@ -76,16 +72,6 @@ void UserService::UnRegisterHandler( ProtoPacketizer* p )
     _lock_handle.unlock();
 }
 
-audio_engine::RAUserMessage* UserService::AllocProtoBuf()
-{
-    return _proto_packet.AllocProtoBuf();
-}
-
-void UserService::FreeProtobuf( audio_engine::RAUserMessage* pb )
-{
-    _proto_packet.FreeProtobuf( pb );
-}
-
 void UserService::Read( int server_type, BufferPtr buf )
 {
     socket_t fd = GetSocket( server_type );
@@ -94,42 +80,26 @@ void UserService::Read( int server_type, BufferPtr buf )
         return;
     }
     auto self = shared_from_this();
-    _socket_mgr->AsyncRead( fd, buf->data+buf->length, buf->capacity - buf->length,
+    _socket_mgr->AsyncRead( fd, buf,
                             [=] ( std::error_code ec, size_t length )
     {
-        buf->length += length;
         if ( !ec )
         {
-            if ( buf->length < self->_proto_packet.header_size() )
+            self->_task->AddTask( [=]
             {
-                self->Read( server_type,buf );
-            }
-            else
-            {
-                auto content_length = self->_proto_packet.content_length( buf->data );
-                auto packet_length = self->_proto_packet.header_size() + content_length;
-
-                if ( buf->length >= packet_length )
+                auto pb = self->_proto_packet.Parse( buf );
+                if (pb)
                 {
-                    auto newbuf = _proto_packet.PullFromBufferPool();
-                    newbuf->length = buf->length - packet_length;
-                    memcpy( newbuf->data, buf->data + packet_length, newbuf->length );
-                    self->_task->AndTask( [=]
-                    {
-                        self->_proto_packet.Parse( server_type, buf );
-                    } );
-                    self->Read( server_type,newbuf );
+                    RecvPacket( server_type, pb );
                 }
-                else
-                {
-                    self->Read(server_type, buf );
-                }
-            }
+            } );
         }
         else
         {
             HandleError( server_type,ec );
         }
+        auto buf = _buffer_pool->PullFromBufferPool();
+        Read(server_type,buf);
     } );
 }
 
@@ -141,9 +111,9 @@ void UserService::Write( int server_type, BufferPtr buf )
         return;
     }
     auto self = shared_from_this();
-    _socket_mgr->AsyncWrite( fd, buf->data, buf->length, [=] ( std::error_code ec, std::size_t length )
+    _socket_mgr->AsyncWrite( fd, buf, [=] ( std::error_code ec, std::size_t length )
     {
-        self->_proto_packet.PushToBufferPool( buf );
+        self->_buffer_pool->PushToBufferPool( buf );
         if (ec)
         {
             self->HandleError( server_type, ec );
@@ -197,12 +167,12 @@ void UserService::HandleConnect( int server_type )
 
 }
 
-void UserService::RecvPacket( int server_type, audio_engine::RAUserMessage* msg )
+void UserService::RecvPacket( int server_type, std::shared_ptr<audio_engine::RAUserMessage> pb )
 {
     _lock_handle.lock();
     for ( auto& p:_proto_handlers)
     {
-        if ( p->RecvPacket( msg ) )
+        if ( p->RecvPacket( pb ) )
         {
             break;
         }
@@ -210,7 +180,16 @@ void UserService::RecvPacket( int server_type, audio_engine::RAUserMessage* msg 
     _lock_handle.unlock();
 }
 
-void UserService::SendPacket( int server_type, BufferPtr buf )
+void UserService::SendPacket( int server_type, std::shared_ptr<audio_engine::RAUserMessage> pb )
 {
-    Write( server_type, buf );
+    auto self = shared_from_this();
+    _task->AddTask( [=]
+    {
+        auto buf = self->_proto_packet.Build( pb );
+        if ( buf )
+        {
+            Write( server_type, buf );
+        }
+    } );
+
 }

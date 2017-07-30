@@ -4,7 +4,7 @@
 #include <atomic>
 #include <functional>
 #include "asio.hpp"
-
+#include "real_audio_common.h"
 typedef int socket_t;
 typedef std::function<void( std::error_code ec, std::size_t length )> ReadHandler;
 typedef std::function<void( std::error_code ec, std::size_t length )> WriteHandler;
@@ -27,7 +27,9 @@ public:
     std::error_code Write( socket_t socket_id, const void* buffer, size_t length );
     std::error_code Read( socket_t socket_id, void* buffer, size_t& length );
     void AsyncWrite( socket_t socket_id, const void* buffer, size_t length, WriteHandler handle );
+    void AsyncWrite( socket_t socket_id, BufferPtr buf, WriteHandler handle );
     void AsyncRead( socket_t socket_id, void* buffer, size_t length, ReadHandler handle );
+    void AsyncRead( socket_t socket_id, BufferPtr buf, ReadHandler handle );
     bool QuerySocketInfo( socket_t socket_id, std::string& ip, int16_t& port );
     void Cancel( socket_t socket_id );
 private:

@@ -230,18 +230,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\base\asyntask.cpp" />
     <ClCompile Include="..\..\base\audio_util.cc" />
     <ClCompile Include="..\..\base\bitarray.cpp" />
     <ClCompile Include="..\..\base\fft.cpp" />
     <ClCompile Include="..\..\base\jvm_manager.cpp" />
     <ClCompile Include="..\..\base\rgba.cpp" />
     <ClCompile Include="..\..\base\io_context_pool.cpp" />
+    <ClCompile Include="..\..\base\timer.cpp" />
     <ClCompile Include="..\..\base\vcl\instrset_detect.cpp" />
     <ClCompile Include="..\..\base\vcl\special\ranvec1.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\base\asyntask.h" />
+    <ClInclude Include="..\..\base\async_task.h" />
     <ClInclude Include="..\..\base\audio_util.h" />
     <ClInclude Include="..\..\base\bitarray.h" />
     <ClInclude Include="..\..\base\circular_buffer.hpp" />
@@ -252,6 +252,7 @@
     <ClInclude Include="..\..\base\rgba.h" />
     <ClInclude Include="..\..\base\string_cvt.h" />
     <ClInclude Include="..\..\base\io_context_pool.h" />
+    <ClInclude Include="..\..\base\timer.h" />
     <ClInclude Include="..\..\base\time_cvt.hpp" />
     <ClInclude Include="..\..\base\vcl\instrset.h" />
     <ClInclude Include="..\..\base\vcl\special\complexvec.h" />
