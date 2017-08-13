@@ -6,7 +6,7 @@
 #include "base/timer.h"
 ClientModule* ClientModule::s_instance = nullptr;
 
-SocketManager* ClientModule::GetSocketManager()
+TcpSocketManager* ClientModule::GetSocketManager()
 {
     return _socket_mgr;
 }
@@ -24,7 +24,7 @@ AsyncTask* ClientModule::GetAsyncTask()
 ClientModule::ClientModule()
 {
     _buffer_pool = new BufferPool;
-    _socket_mgr = new SocketManager();
+    _socket_mgr = new TcpSocketManager();
     _server_cfg = new ServerConfig();
     _task = new AsyncTask( 3 );
     _timer = new Timer;

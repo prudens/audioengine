@@ -4,10 +4,12 @@
 #include <string>
 #include <mutex>
 #include <list>
+#include <vector>
+#include <cassert>
 typedef std::string UID;
 typedef uint64_t RID;
 #define DEFAULT_BUFFER_SIZE (64*1024-4)
-#define RAW_HEADER_SIZE 4
+
 inline void IntToChar(int32_t v, char*c)
 {
     c[0] = v >> 24;
@@ -20,84 +22,92 @@ inline void CharToInt( const char*c, int32_t& v )
     v = (c[0] << 24) + (c[1] << 16) + (c[2] << 8) + c[3];
 }
 
-class Buffer 
+
+class Buffer
 {
 public:
-    Buffer( char* data, size_t capacity, size_t length )
-    {
-        this->_data = data;
-        this->_capacity = capacity;
-        this->_length = length;
-    }
-
     Buffer( size_t capacity = DEFAULT_BUFFER_SIZE )
     {
-        _data = new char[capacity + RAW_HEADER_SIZE];
-        memset( _data, 0, RAW_HEADER_SIZE );
-        _capacity = capacity;
-        _length = 0;
+        _data.resize(capacity);
+        _write_pos = 0;
+        _read_pos = 0;
+    }
+    void Write( size_t length)
+    {
+        _write_pos += length;
+        if (_write_pos > _data.size())
+        {
+            _write_pos = _data.size();
+        }
     }
 
-    ~Buffer()
+    void Read(size_t length)
     {
-        if(_data)
-            delete[] _data;
+        _read_pos += length;
+        if ( _read_pos > _write_pos )
+        {
+            _read_pos = _write_pos;
+        }
     }
 
-    void Resize( size_t capacity )
+    size_t WriteAvailable(size_t min_write_size = 0)
     {
-        if (capacity <= _capacity)
+        size_t cap = _data.size() - _write_pos;
+        if ( cap >= min_write_size )
         {
-            return;
+            return cap;
         }
-        delete[] _data;
-        _data = new char[capacity+RAW_HEADER_SIZE];
-        memset( _data, 0, RAW_HEADER_SIZE );
-        _capacity = capacity;
-        _length = 0;
-    }
-    char* data()const
-    {
-        return _data + RAW_HEADER_SIZE;
-    }
-    size_t length()
-    {
-        return _length;
-    }
-    void length( size_t length )
-    {
-        if ( length != _length)
+
+        Shrink();
+        cap = _data.size() - _write_pos;
+        if ( cap >= min_write_size )
         {
-            IntToChar((int32_t)length, _data);
+            return cap;
         }
-        _length = length;
+        size_t more = min_write_size - cap;
+        _data.resize(_data.size() + more);
+        cap = _data.size() - _write_pos;
+        assert( cap >= min_write_size );
+        return cap;
     }
-    size_t capactiy()
+
+    size_t ReadAvailable() const
     {
-        return _capacity;
+        return _write_pos - _read_pos;
     }
-    void Release()
+
+    void Reset( size_t capacity = DEFAULT_BUFFER_SIZE )
     {
-        _data = nullptr;
-        _capacity = 0;
-        _length = 0;
+        if (_data.size() < capacity)
+        {
+            _data.resize( capacity );
+        }
+        _write_pos = 0;
+        _read_pos = 0;
     }
-    char*RawData()const
+
+
+    char* WriteData()
     {
-        return _data;
+        return _data.data() + _write_pos;
     }
-    size_t RawLength()const
+    const char* ReadData()
     {
-        return _length + RAW_HEADER_SIZE;
-    }
-    size_t RawCapacity()
-    {
-        return _capacity + RAW_HEADER_SIZE;
+        return _data.data() + _read_pos;
     }
 private:
-    char* _data;
-    size_t _capacity;
-    size_t _length;
+    void Shrink()
+    {
+        if ( _read_pos > 0 )
+        {
+            memmove( _data.data(), _data.data() + _read_pos, _write_pos - _read_pos );
+            _write_pos -= _read_pos;
+            _read_pos = 0;
+        }
+    }
+    std::vector<char> _data;
+    size_t _write_pos;
+    size_t _read_pos;
 };
 
 typedef std::shared_ptr<Buffer> BufferPtr;
@@ -116,7 +126,7 @@ public:
         else
         {
             bufptr = _buffer_pool.back();
-            bufptr->Resize( capacity );
+            bufptr->Reset(capacity);
             _buffer_pool.pop_back();
         }
         _lock.unlock();

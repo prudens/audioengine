@@ -1559,14 +1559,15 @@ bool LoginNotify::MergePartialFromCodedStream(
         break;
       }
 
-      // int32 devtype = 4;
+      // .audio_engine.DEVICE_TYPE devtype = 4;
       case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(32u)) {
-
+          int value;
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &devtype_)));
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          set_devtype(static_cast< ::audio_engine::DEVICE_TYPE >(value));
         } else {
           goto handle_unusual;
         }
@@ -1644,9 +1645,10 @@ void LoginNotify::SerializeWithCachedSizes(
       3, this->extend(), output);
   }
 
-  // int32 devtype = 4;
+  // .audio_engine.DEVICE_TYPE devtype = 4;
   if (this->devtype() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->devtype(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      4, this->devtype(), output);
   }
 
   // int32 status = 5;
@@ -1682,11 +1684,10 @@ size_t LoginNotify::ByteSizeLong() const {
         this->extend());
   }
 
-  // int32 devtype = 4;
+  // .audio_engine.DEVICE_TYPE devtype = 4;
   if (this->devtype() != 0) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->devtype());
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->devtype());
   }
 
   // int32 status = 5;
@@ -1925,15 +1926,15 @@ void LoginNotify::set_allocated_extend(::std::string* extend) {
   // @@protoc_insertion_point(field_set_allocated:audio_engine.LoginNotify.extend)
 }
 
-// int32 devtype = 4;
+// .audio_engine.DEVICE_TYPE devtype = 4;
 void LoginNotify::clear_devtype() {
   devtype_ = 0;
 }
-::google::protobuf::int32 LoginNotify::devtype() const {
+::audio_engine::DEVICE_TYPE LoginNotify::devtype() const {
   // @@protoc_insertion_point(field_get:audio_engine.LoginNotify.devtype)
-  return devtype_;
+  return static_cast< ::audio_engine::DEVICE_TYPE >(devtype_);
 }
-void LoginNotify::set_devtype(::google::protobuf::int32 value) {
+void LoginNotify::set_devtype(::audio_engine::DEVICE_TYPE value) {
   
   devtype_ = value;
   // @@protoc_insertion_point(field_set:audio_engine.LoginNotify.devtype)

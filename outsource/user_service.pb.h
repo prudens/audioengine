@@ -589,11 +589,11 @@ class LoginNotify : public ::google::protobuf::MessageLite /* @@protoc_insertion
   ::std::string* release_extend();
   void set_allocated_extend(::std::string* extend);
 
-  // int32 devtype = 4;
+  // .audio_engine.DEVICE_TYPE devtype = 4;
   void clear_devtype();
   static const int kDevtypeFieldNumber = 4;
-  ::google::protobuf::int32 devtype() const;
-  void set_devtype(::google::protobuf::int32 value);
+  ::audio_engine::DEVICE_TYPE devtype() const;
+  void set_devtype(::audio_engine::DEVICE_TYPE value);
 
   // int32 status = 5;
   void clear_status();
@@ -608,7 +608,7 @@ class LoginNotify : public ::google::protobuf::MessageLite /* @@protoc_insertion
   ::google::protobuf::internal::ArenaStringPtr userid_;
   ::google::protobuf::internal::ArenaStringPtr username_;
   ::google::protobuf::internal::ArenaStringPtr extend_;
-  ::google::protobuf::int32 devtype_;
+  int devtype_;
   ::google::protobuf::int32 status_;
   mutable int _cached_size_;
   friend struct protobuf_user_5fservice_2eproto::TableStruct;
@@ -1220,15 +1220,15 @@ inline void LoginNotify::set_allocated_extend(::std::string* extend) {
   // @@protoc_insertion_point(field_set_allocated:audio_engine.LoginNotify.extend)
 }
 
-// int32 devtype = 4;
+// .audio_engine.DEVICE_TYPE devtype = 4;
 inline void LoginNotify::clear_devtype() {
   devtype_ = 0;
 }
-inline ::google::protobuf::int32 LoginNotify::devtype() const {
+inline ::audio_engine::DEVICE_TYPE LoginNotify::devtype() const {
   // @@protoc_insertion_point(field_get:audio_engine.LoginNotify.devtype)
-  return devtype_;
+  return static_cast< ::audio_engine::DEVICE_TYPE >(devtype_);
 }
-inline void LoginNotify::set_devtype(::google::protobuf::int32 value) {
+inline void LoginNotify::set_devtype(::audio_engine::DEVICE_TYPE value) {
   
   devtype_ = value;
   // @@protoc_insertion_point(field_set:audio_engine.LoginNotify.devtype)

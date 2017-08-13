@@ -1,6 +1,6 @@
 #include "socket_manager.h"
 #include "asio/error_code.hpp"
-SocketManager::SocketManager()
+TcpSocketManager::TcpSocketManager()
 :_timer(_io_context)
 {
     _work = new asio::io_service::work( _io_context );
@@ -15,19 +15,19 @@ SocketManager::SocketManager()
     } );
 }
 
-SocketManager::~SocketManager()
+TcpSocketManager::~TcpSocketManager()
 {
     delete _work;
     _io_context.stop();
     _future.get();
 }
 
-asio::io_context& SocketManager::io_context()
+asio::io_context& TcpSocketManager::io_context()
 {
     return _io_context;
 }
 
-socket_t SocketManager::Connect( std::string ip, int16_t port )
+socket_t TcpSocketManager::Connect( std::string ip, int16_t port )
 {
     using namespace asio::ip;
     socket_t sid = 0;
@@ -45,7 +45,9 @@ socket_t SocketManager::Connect( std::string ip, int16_t port )
     return sid;
 }
 
-socket_t SocketManager::Accept( std::string ip, int16_t port )
+
+
+socket_t TcpSocketManager::Accept( std::string ip, int16_t port )
 {
     socket_t fd = 0;
     using namespace asio::ip;
@@ -53,7 +55,7 @@ socket_t SocketManager::Accept( std::string ip, int16_t port )
     auto s = std::make_shared<tcp::socket>( _io_context );
     asio::ip::tcp::endpoint ep( asio::ip::make_address( ip ), port );
     auto it = std::find_if( _acceptor_list.begin(), _acceptor_list.end(),
-                  [&ep] ( AcceptorPtr ptr ) { return ptr->local_endpoint() == ep; } );
+                  [&ep] ( TcpAcceptorPtr ptr ) { return ptr->local_endpoint() == ep; } );
     if ( it != _acceptor_list.end() )
     {
         (*it)->accept( *s, ec);
@@ -85,7 +87,7 @@ socket_t SocketManager::Accept( std::string ip, int16_t port )
     return fd;
 }
 
-void SocketManager::AsyncConnect( std::string ip, int16_t port, ConnectHandle handle )
+void TcpSocketManager::AsyncConnect( std::string ip, int16_t port, ConnectHandle handle )
 {
     using namespace asio::ip;
     std::error_code ec;
@@ -113,12 +115,12 @@ void SocketManager::AsyncConnect( std::string ip, int16_t port, ConnectHandle ha
     } );
 }
 
-void SocketManager::AsyncAccept( std::string ip, int16_t port, AcceptHandle handle )
+void TcpSocketManager::AsyncAccept( std::string ip, int16_t port, AcceptHandle handle )
 {
     using namespace asio::ip;
     tcp::endpoint ep( asio::ip::make_address( ip ), port );
 
-    auto it = std::find_if( _acceptor_list.begin(), _acceptor_list.end(), [&ep] ( AcceptorPtr ptr ) { return ptr->local_endpoint() == ep; } );
+    auto it = std::find_if( _acceptor_list.begin(), _acceptor_list.end(), [&ep] ( TcpAcceptorPtr ptr ) { return ptr->local_endpoint() == ep; } );
     if (it != _acceptor_list.end())
     {
         DoAccept( *it, handle );
@@ -131,13 +133,13 @@ void SocketManager::AsyncAccept( std::string ip, int16_t port, AcceptHandle hand
 
 }
 
-void SocketManager::DisConnect( socket_t socket_id )
+void TcpSocketManager::DisConnect( socket_t socket_id )
 {
     DestroyTcpSocket( socket_id );
 }
 
 
-std::error_code SocketManager::DisAccept( std::string ip, int16_t port )
+std::error_code TcpSocketManager::DisAccept( std::string ip, int16_t port )
 {
     using namespace asio::ip;
     std::error_code ec;
@@ -148,7 +150,7 @@ std::error_code SocketManager::DisAccept( std::string ip, int16_t port )
         return ec;
     }
     auto it = find_if( _acceptor_list.begin(), _acceptor_list.end(),
-                       [&] ( const AcceptorPtr& a ) { return a->local_endpoint(ec) == ep; } );
+                       [&] ( const TcpAcceptorPtr& a ) { return a->local_endpoint(ec) == ep; } );
     if ( it != _acceptor_list.end() )
     {
         (*it)->close( ec );
@@ -157,7 +159,7 @@ std::error_code SocketManager::DisAccept( std::string ip, int16_t port )
     return ec;
 }
 
-void SocketManager::DoAccept( std::shared_ptr<asio::ip::tcp::acceptor> accept, AcceptHandle handle )
+void TcpSocketManager::DoAccept( std::shared_ptr<asio::ip::tcp::acceptor> accept, AcceptHandle handle )
 {
     using namespace asio::ip;
     auto s = std::make_shared<tcp::socket>( _io_context );
@@ -182,7 +184,7 @@ void SocketManager::DoAccept( std::shared_ptr<asio::ip::tcp::acceptor> accept, A
     } );
 }
 
-void SocketManager::DestroyTcpSocket( socket_t socket_id )
+void TcpSocketManager::DestroyTcpSocket( socket_t socket_id )
 {
     std::unique_lock<std::mutex> lg(_lock);
     auto it = _tcp_list.find( socket_id );
@@ -195,7 +197,7 @@ void SocketManager::DestroyTcpSocket( socket_t socket_id )
     _tcp_list.erase( it );
 }
 
-std::error_code SocketManager::Write( socket_t socket_id, const void* data, size_t length )
+std::error_code TcpSocketManager::Write( socket_t socket_id, const void* data, size_t length )
 {
     using namespace asio::ip;
     std::error_code ec;
@@ -210,7 +212,7 @@ std::error_code SocketManager::Write( socket_t socket_id, const void* data, size
     return ec;
 }
 
-std::error_code SocketManager::Read( socket_t socket_id, void* data, size_t& length )
+std::error_code TcpSocketManager::Read( socket_t socket_id, void* data, size_t& length )
 {
     using namespace asio::ip;
     std::error_code ec;
@@ -225,89 +227,49 @@ std::error_code SocketManager::Read( socket_t socket_id, void* data, size_t& len
     return ec;
 }
 
-void SocketManager::AsyncWrite( socket_t socket_id, const void* data, size_t length, WriteHandler handle )
+void TcpSocketManager::AsyncWrite( socket_t socket_id, const void* data, size_t length, WriteHandler handle )
 {
     using namespace asio::ip;
     std::error_code ec;
     _lock.lock();
     auto s = _tcp_list[socket_id];
     _lock.unlock();
-    if (!s)
+    if (s)
     {
-        ec = asio::error::not_socket;
-        handle(ec,0);
-        return;
-    }
-    asio::async_write( *s, asio::buffer( data, length ),
-                       [=] ( asio::error_code ec, std::size_t len )
-    {
-        if ( len < length && !ec)//一次没写完就继续写。
-        {
-            AsyncWrite( socket_id, (char*)data + len, length - len, handle );
-        }
-        else
+        asio::async_write( *s, asio::buffer( data, length ),
+                           [=] ( asio::error_code ec, std::size_t len )
         {
             handle( ec, len );
-        }
-    } );
+        } );
+        return;
+    }
+    ec = asio::error::not_socket;
+    handle( ec, 0 );
+
+
 }
 
-void SocketManager::AsyncWrite( socket_t socket_id, BufferPtr buf, WriteHandler handle )
-{
-    AsyncWrite( socket_id, buf->RawData(), buf->RawLength(), handle );
-}
-
-void SocketManager::AsyncRead( socket_t socket_id, void* data, size_t length, ReadHandler handle )
+void TcpSocketManager::AsyncRead( socket_t socket_id, void* data, size_t length, ReadHandler handle )
 { 
     using namespace asio::ip;
     std::error_code ec;
     _lock.lock();
     auto s = _tcp_list[socket_id];
     _lock.unlock();
-    if (!s)
+    if (s)
     {
-        return;
-    }
-    s->async_read_some( asio::buffer( data, length ),
-                       [=] ( asio::error_code ec, std::size_t len )
-    {
-        handle( ec, len );
-    } );
-}
-
-void SocketManager::AsyncRead( socket_t socket_id, BufferPtr buf, ReadHandler handle )
-{
-    using namespace asio::ip;
-    std::error_code ec;
-    _lock.lock();
-    auto s = _tcp_list[socket_id];
-    _lock.unlock();
-    if ( !s )
-    {
-        return;
-    }
-    // read tcp packet header
-    asio::async_read( *s, asio::buffer( buf->RawData(), RAW_HEADER_SIZE ),
-                        [=] ( asio::error_code ec, size_t length)
-    {
-        if (ec)
+        s->async_read_some( asio::buffer( data, length ),
+                            [=] ( asio::error_code ec, std::size_t len )
         {
-            handle( ec, length );
-            return;
-        }
-        int32_t v = 0;
-        CharToInt( buf->RawData(), v );
-        // read tcp packet content
-        asio::async_read( *s, asio::buffer( buf->data(), v), [=]( asio::error_code ec, size_t length )
-        {
-            buf->length( length );
-            handle(ec, length);
-
+            handle( ec, len );
         } );
-    } );
+        return;
+    }
+    ec = asio::error::not_socket;
+    handle( ec, 0 );
 }
 
-bool SocketManager::QuerySocketInfo( socket_t socket_id, std::string& ip, int16_t& port )
+bool TcpSocketManager::QuerySocketInfo( socket_t socket_id, std::string& ip, int16_t& port )
 {
     std::unique_lock<std::mutex> lg( _lock );
     auto it = _tcp_list.find( socket_id );
@@ -331,7 +293,7 @@ bool SocketManager::QuerySocketInfo( socket_t socket_id, std::string& ip, int16_
 
 }
 
-void SocketManager::Cancel( socket_t socket_id )
+void TcpSocketManager::Cancel( socket_t socket_id )
 {
     std::unique_lock<std::mutex> lg( _lock );
     auto s = _tcp_list[socket_id];

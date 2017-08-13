@@ -7,7 +7,7 @@
 #include "user.h"
 
 UserManager::UserManager()
-    :_packet(ServerModule::GetInstance()->GetBufferPool())
+    :_packet(nullptr)
 {
     _socket_mgr = ServerModule::GetInstance()->GetSocketManager();
     _task = ServerModule::GetInstance()->GetAsyncTask();
@@ -44,13 +44,14 @@ void UserManager::HandleLogin( std::shared_ptr<User> user)
     _lock.lock();
     _users.push_back( user );
     _lock.unlock();
-    auto pb2 = std::make_shared<audio_engine::RAUserMessage>();
-    auto login_ntf = pb2->mutable_login_notify();
+    auto pb = std::make_shared<audio_engine::RAUserMessage>();
+    auto login_ntf = pb->mutable_login_notify();
     login_ntf->set_status( 1 );
     login_ntf->set_userid( user->userid() );
     login_ntf->set_username( user->username() );
     login_ntf->set_extend( user->extend() );
-    BufferPtr buf = _packet.Build( pb2 );
+    login_ntf->set_devtype( audio_engine::DEVICE_LINUX );
+    BufferPtr buf = _packet.Build( pb );
     if ( buf )
     {
         _lock.lock();

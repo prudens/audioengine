@@ -6,7 +6,7 @@
 #include "user_service.pb.h"
 
 typedef int socket_t;
-class SocketManager;
+class TcpSocketManager;
 class UserManager:public std::enable_shared_from_this<UserManager>
 {
 public:
@@ -19,7 +19,7 @@ public:
     void HandleLogout( std::shared_ptr<User> user );
 private:
     bool HandleAccept( std::error_code ec, socket_t socket_id );
-    SocketManager* _socket_mgr = nullptr;
+    TcpSocketManager* _socket_mgr = nullptr;
     AsyncTask* _task = nullptr;
     ProtoPacket _packet;
     std::mutex _lock;

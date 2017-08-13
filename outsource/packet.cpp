@@ -6,7 +6,11 @@
 
 bool Packet::ParseHeader( BufferPtr buf )
 {
-    return true;
+    if ( buf->ReadAvailable() >= content_length(buf->ReadData()))
+    {
+        return true;
+    }
+    return false;
 }
 
 size_t Packet::content_length( const void* data ) const
@@ -27,10 +31,9 @@ BufferPtr Packet::Build( BufferPtr buf )
 
 void Packet::AddHeader( BufferPtr buf )
 {
-    PacketHeader* header = (PacketHeader*)buf->data();
-    size_t content_length = buf->length() - header_size();
+    PacketHeader* header = (PacketHeader*)buf->WriteData();
     header->compress = compress();
-    header->content_length = content_length;
+    header->content_length = buf->WriteAvailable() - header_size();
     header->prototype = prototype();
     header->version = version();
 }

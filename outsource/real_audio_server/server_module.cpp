@@ -36,7 +36,7 @@ ServerConfig* ServerModule::GetServerCnfig()
 }
 
 
-SocketManager* ServerModule::GetSocketManager()
+TcpSocketManager* ServerModule::GetSocketManager()
 {
     return _socket_mgr;
 }
@@ -56,7 +56,7 @@ ServerModule::ServerModule()
     _buffer_pool = new BufferPool;
     _task = new AsyncTask( 4 );
     _timer = new Timer;
-    _socket_mgr = new SocketManager();
+    _socket_mgr = new TcpSocketManager();
     _srv_cfg = new ServerConfig;
     _token_gen = new TokenGenerater;
 }

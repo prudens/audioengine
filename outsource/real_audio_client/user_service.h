@@ -23,7 +23,7 @@ public:
     void RegisterHandler( ProtoPacketizer *p );
     void UnRegisterHandler( ProtoPacketizer* p );
 
-    virtual void RecvPacket( int server_type, std::shared_ptr<audio_engine::RAUserMessage> pb );
+    void RecvPacket( int server_type, std::error_code ec, std::shared_ptr<audio_engine::RAUserMessage> pb );
     void SendPacket( int server_type, std::shared_ptr<audio_engine::RAUserMessage> pb );
 private:
     socket_t GetSocket( int server_type );
@@ -33,7 +33,7 @@ private:
     void     HandleConnect( int server_type );
     void     HandleError( int server_type, std::error_code ec );
     AsyncTask*    _task = nullptr;
-    SocketManager* _socket_mgr = nullptr;
+    TcpSocketManager* _socket_mgr = nullptr;
     ProtoPacket _proto_packet;
     BufferPool* _buffer_pool;
     std::mutex _lock_sockets;

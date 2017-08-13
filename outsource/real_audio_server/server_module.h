@@ -1,5 +1,5 @@
 #pragma once
-class SocketManager;
+class TcpSocketManager;
 class AsyncTask;
 class Timer;
 class ServerConfig;
@@ -13,7 +13,7 @@ public:
     static void DestroyInstance();
 public:
     ServerConfig*    GetServerCnfig();
-    SocketManager*   GetSocketManager();
+    TcpSocketManager*   GetSocketManager();
     AsyncTask*       GetAsyncTask();
     Timer*           GetTimer();
     TokenGenerater*  GetTokenGenerater();
@@ -27,7 +27,7 @@ private:
     ServerModule&operator=( ServerModule&& ) = delete;
 private:
     static ServerModule* s_instance;
-    SocketManager*       _socket_mgr = nullptr;
+    TcpSocketManager*       _socket_mgr = nullptr;
     AsyncTask*           _task = nullptr;
     Timer*               _timer = nullptr;
     ServerConfig*        _srv_cfg = nullptr;

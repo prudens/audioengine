@@ -6,7 +6,7 @@
 #include "user_manager.h"
 User::User( UserManager* host )
     : _host(host)
-    , _proto_packet( ServerModule::GetInstance()->GetBufferPool() )
+    , _proto_packet( std::bind( &User::RecvPacket, this, std::placeholders::_1, std::placeholders::_2 ) )
 {
     _buffer_pool = ServerModule::GetInstance()->GetBufferPool();
     _sm = ServerModule::GetInstance()->GetSocketManager();
@@ -22,9 +22,7 @@ User::~User()
 void User::AttachTcp( socket_t fd )
 {
     _sock_id = fd;
-    BufferPtr buf = _buffer_pool->PullFromBufferPool();
-    buf->length(0);
-    Read(buf);
+    Read();
 }
 
 void User::DettachTcp()
@@ -58,7 +56,7 @@ int User::device_type()
     return _device_type;
 }
 
-void User::Read(BufferPtr buf)
+void User::Read()
 {
     if ( _stop )
     {
@@ -68,23 +66,25 @@ void User::Read(BufferPtr buf)
     {
         return;
     }
+    auto buf = _buffer_pool->PullFromBufferPool();
     auto self = shared_from_this();
-    _sm->AsyncRead( _sock_id, buf, [=] ( std::error_code ec, std::size_t length )
+    _sm->AsyncRead( _sock_id, buf->WriteData(),buf->WriteAvailable(),
+                    [=] ( std::error_code ec, std::size_t length )
     {
         if ( !ec )
         {
+            buf->Write( length );
             self->_task->AddTask( [=]
             {
-                auto pb = self->_proto_packet.Parse( buf );
-                self->RecvPacket( pb );
+                self->_proto_packet.Parse( buf );
             } );
         }
         else
         {
             HandleError( ec );
         }
-        auto buf = _buffer_pool->PullFromBufferPool();
-        Read(buf);
+        
+        Read();
     } );
 }
 
@@ -95,13 +95,9 @@ void User::Write(int type, BufferPtr buf)
         return;
     }
     auto self = shared_from_this();
-    _sm->AsyncWrite( _sock_id, buf, [=] ( std::error_code ec, std::size_t length )
+    _sm->AsyncWrite( _sock_id, buf->ReadData(),buf->ReadAvailable(),
+                     [=] ( std::error_code ec, std::size_t length )
     {
-        if ( type == 0 )
-        {
-            self->_buffer_pool->PushToBufferPool( buf );
-        }
-
         if ( ec )
         {
             self->HandleError( ec );
@@ -109,7 +105,7 @@ void User::Write(int type, BufferPtr buf)
     } );
 }
 
-void User::RecvPacket( std::shared_ptr< audio_engine::RAUserMessage> pb )
+void User::RecvPacket(std::error_code ec, std::shared_ptr< audio_engine::RAUserMessage> pb )
 {
     if ( !pb)
     {
@@ -189,7 +185,8 @@ void User::HandleLogout( const ::audio_engine::LogoutRequst& logout_req )
     BufferPtr buf = _proto_packet.Build( pb );
     if ( buf )
     {
-        _sm->AsyncWrite( _sock_id, buf, [=] ( std::error_code ec, std::size_t length )
+        _sm->AsyncWrite( _sock_id, buf->ReadData(),buf->ReadAvailable(),
+                         [=] ( std::error_code ec, std::size_t length )
         {
             self->_buffer_pool->PushToBufferPool( buf );
             _sm->DisConnect( _sock_id );

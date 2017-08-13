@@ -5,8 +5,7 @@
 #include "base/async_task.h"
 
 UserService::UserService()
-    :_proto_packet(ClientModule::GetInstance()->GetBufferPool())
-
+    :_proto_packet(std::bind(&UserService::RecvPacket,this,1,std::placeholders::_1,std::placeholders::_2))
 {
     _buffer_pool = ClientModule::GetInstance()->GetBufferPool();
     _task = ClientModule::GetInstance()->GetAsyncTask();
@@ -31,7 +30,6 @@ void UserService::AddServer( int server_type, std::string ip, int port )
         {
             self->SetSocket( server_type, socket_id );
             BufferPtr buf = _buffer_pool->PullFromBufferPool();
-            buf->length( 0 );
             self->Read( server_type, buf );
             _task->AddTask( [=]
             {
@@ -80,18 +78,15 @@ void UserService::Read( int server_type, BufferPtr buf )
         return;
     }
     auto self = shared_from_this();
-    _socket_mgr->AsyncRead( fd, buf,
+    _socket_mgr->AsyncRead( fd, buf->WriteData(),buf->WriteAvailable(),
                             [=] ( std::error_code ec, size_t length )
     {
         if ( !ec )
         {
+            buf->Write( length );
             self->_task->AddTask( [=]
             {
-                auto pb = self->_proto_packet.Parse( buf );
-                if (pb)
-                {
-                    RecvPacket( server_type, pb );
-                }
+                self->_proto_packet.Parse( buf );
             } );
         }
         else
@@ -111,7 +106,8 @@ void UserService::Write( int server_type, BufferPtr buf )
         return;
     }
     auto self = shared_from_this();
-    _socket_mgr->AsyncWrite( fd, buf, [=] ( std::error_code ec, std::size_t length )
+    _socket_mgr->AsyncWrite( fd, buf->ReadData(),buf->ReadAvailable(),
+                             [=] ( std::error_code ec, std::size_t length )
     {
         self->_buffer_pool->PushToBufferPool( buf );
         if (ec)
@@ -167,7 +163,7 @@ void UserService::HandleConnect( int server_type )
 
 }
 
-void UserService::RecvPacket( int server_type, std::shared_ptr<audio_engine::RAUserMessage> pb )
+void UserService::RecvPacket( int server_type, std::error_code ec, std::shared_ptr<audio_engine::RAUserMessage> pb )
 {
     _lock_handle.lock();
     for ( auto& p:_proto_handlers)
@@ -182,14 +178,9 @@ void UserService::RecvPacket( int server_type, std::shared_ptr<audio_engine::RAU
 
 void UserService::SendPacket( int server_type, std::shared_ptr<audio_engine::RAUserMessage> pb )
 {
-    auto self = shared_from_this();
-    _task->AddTask( [=]
+    auto buf = _proto_packet.Build( pb );
+    if ( buf )
     {
-        auto buf = self->_proto_packet.Build( pb );
-        if ( buf )
-        {
-            Write( server_type, buf );
-        }
-    } );
-
+        Write( server_type, buf );
+    }
 }

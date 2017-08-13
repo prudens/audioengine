@@ -4,9 +4,10 @@
 using namespace audio_engine;
 
 
-ProtoPacket::ProtoPacket( BufferPool* pool )
-    :_buffer_pool(pool)
+ProtoPacket::ProtoPacket( ReadPacket cb)
+ :_cb(cb)
 {
+    _buffer = std::make_shared<Buffer>();
 }
 
 BufferPtr ProtoPacket::Build( std::shared_ptr<audio_engine::RAUserMessage> pb )
@@ -14,35 +15,37 @@ BufferPtr ProtoPacket::Build( std::shared_ptr<audio_engine::RAUserMessage> pb )
     size_t size = pb->ByteSizeLong();
     size_t packet_len = size + header_size();
     BufferPtr buf;
-    if ( _buffer_pool )
-        buf = _buffer_pool->PullFromBufferPool( packet_len );
-    else
-        buf = std::make_shared<Buffer>(packet_len);
-
-    buf->length( packet_len );
-    if ( !pb->SerializePartialToArray( buf->data() + header_size(), size ) )
+    buf = std::make_shared<Buffer>(packet_len);
+    if ( !pb->SerializePartialToArray( buf->WriteData() + header_size(), size ) )
     {
-        _buffer_pool->PushToBufferPool( buf );
         buf.reset();
     }
     else
     {
         AddHeader( buf );
     }
+    buf->Write( packet_len );
     return buf;
 }
 
-std::shared_ptr<audio_engine::RAUserMessage> ProtoPacket::Parse( BufferPtr buf )
+void ProtoPacket::Parse( BufferPtr buf )
 {
-    if ( ParseHeader(buf) )
+    _buffer->WriteAvailable( buf->ReadAvailable() );
+    memcpy( _buffer->WriteData(), buf->ReadData(), buf->ReadAvailable() );
+    _buffer->Write( buf->ReadAvailable() );
+
+    while ( _buffer->ReadAvailable() > header_size() )
     {
-        auto pb = std::make_shared<audio_engine::RAUserMessage>();
-        if ( pb->ParsePartialFromArray( buf->data() + header_size(), buf->length() - header_size() ) )
+        if (ParseHeader(_buffer))
         {
-            return pb;
-        }
-        
+            auto length = content_length( _buffer->ReadData() );
+            auto pb = std::make_shared<audio_engine::RAUserMessage>();
+            if ( pb->ParsePartialFromArray( buf->ReadData() + header_size(), length ) )
+            {
+                _buffer->Read( length + header_size() );
+                if(_cb)_cb(std::error_code(),pb);
+            }
+        } 
     }
-    return nullptr;
 }
 

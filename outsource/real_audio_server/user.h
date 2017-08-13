@@ -9,7 +9,7 @@
 
 #define DEFAULT_SEND
 typedef int socket_t;
-class SocketManager;
+class TcpSocketManager;
 class UserManager;
 class User : public std::enable_shared_from_this<User>
 {
@@ -23,10 +23,10 @@ public:
     std::string extend();
     int device_type();
 public:
-    void RecvPacket(std::shared_ptr< audio_engine::RAUserMessage> pb );
-    void Send(int type, BufferPtr buf);
+    void RecvPacket( std::error_code ec, std::shared_ptr< audio_engine::RAUserMessage> pb );
+    void Send( int type, BufferPtr buf );
 private:
-    void Read(BufferPtr buf);
+    void Read();
     void Write(int type, BufferPtr buf );
     void HandleError( std::error_code ec );
     void HandleLogin(const audio_engine::LoginRequest& login_req);
@@ -40,7 +40,7 @@ private:
 
     BufferPool* _buffer_pool = nullptr;
     AsyncTask* _task = nullptr;
-    SocketManager* _sm = nullptr;
+    TcpSocketManager* _sm = nullptr;
     ProtoPacket _proto_packet;
     UserManager* _host;
 

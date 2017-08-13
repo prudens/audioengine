@@ -52,7 +52,7 @@ message LoginNotify
     string userid   = 1;
     string username = 2;
 	string extend   = 3;
-	int32 devtype   = 4;
+	DEVICE_TYPE devtype = 4;
 	int32 status    = 5;
 }
 
