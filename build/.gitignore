@@ -1,0 +1,4 @@
+android/obj/
+winx/
+!*.vcxproj
+!*.vcxproj.filters
