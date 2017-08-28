@@ -455,8 +455,8 @@
 
 .data
 	.balign 32
-.globl INT123_costab_mmxsse
-INT123_costab_mmxsse:
+.globl _INT123_costab_mmxsse
+_INT123_costab_mmxsse:
 	.long 1056974725
 	.long 1057056395
 	.long 1057223771
@@ -529,8 +529,8 @@ intwindiv:
 .text
 	.balign 32
 
-.globl INT123_make_decode_tables_mmx_asm
-INT123_make_decode_tables_mmx_asm:
+.globl _INT123_make_decode_tables_mmx_asm
+_INT123_make_decode_tables_mmx_asm:
 	pushl %edi
 	pushl %esi
 	pushl %ebx

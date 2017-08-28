@@ -455,10 +455,10 @@
 
 .text
 	.balign 4
-.globl INT123_do_equalizer_3dnow
+.globl _INT123_do_equalizer_3dnow
 
 
-INT123_do_equalizer_3dnow:
+_INT123_do_equalizer_3dnow:
 	pushl %esi
 	pushl %ebx
 	

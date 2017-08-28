@@ -497,9 +497,9 @@
 
 	.text
 	.balign 16
-.globl INT123_synth_1to1_3dnow_asm
+.globl _INT123_synth_1to1_3dnow_asm
 
-INT123_synth_1to1_3dnow_asm:
+_INT123_synth_1to1_3dnow_asm:
 	subl $24,%esp
 	pushl %ebp
 	pushl %edi
@@ -556,7 +556,7 @@ INT123_synth_1to1_3dnow_asm:
 	leal 1088(,%eax,4),%eax
 	addl %ebx,%eax
 	pushl %eax
-	call INT123_dct64_3dnow
+	call _INT123_dct64_3dnow
 	addl $12,%esp
 	jmp .L29
 .L28:
@@ -570,7 +570,7 @@ INT123_synth_1to1_3dnow_asm:
 	sall $2,%esi
 	leal (%ecx,%edx,4),%eax
 	pushl %eax
-	call INT123_dct64_3dnow
+	call _INT123_dct64_3dnow
 	addl $12,%esp
 	movl %esi,20(%esp)
 .L29:

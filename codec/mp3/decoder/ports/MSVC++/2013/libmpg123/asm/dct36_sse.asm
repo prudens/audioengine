@@ -508,8 +508,8 @@ dct36_sse_sign:
 	.long 0x80000000,0x80000000,0x80000000,0x80000000
 	.text
 	.balign 16
-	.globl INT123_dct36_sse
-INT123_dct36_sse:
+	.globl _INT123_dct36_sse
+_INT123_dct36_sse:
 	push		%ebp
 	mov			%esp, %ebp
 	and			$-16, %esp

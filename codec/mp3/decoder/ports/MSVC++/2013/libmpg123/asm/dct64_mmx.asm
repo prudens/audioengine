@@ -456,12 +456,12 @@
 .text
 
 	.balign 32
-.globl INT123_dct64_mmx
-INT123_dct64_mmx:
+.globl _INT123_dct64_mmx
+_INT123_dct64_mmx:
 
 	xorl %ecx,%ecx
-.globl INT123_dct64_MMX
-INT123_dct64_MMX:
+.globl _INT123_dct64_MMX
+_INT123_dct64_MMX:
 	pushl %ebx
 	pushl %esi
 	pushl %edi
@@ -474,7 +474,7 @@ INT123_dct64_MMX:
 	fstps    (%edx)
 	movl 276(%esp),%edi
 	flds    4(%eax)
-	movl $INT123_costab_mmxsse,%ebx
+	movl $_INT123_costab_mmxsse,%ebx
 	fadds 120(%eax)
 	orl %ecx,%ecx
 	fstps   4(%edx)

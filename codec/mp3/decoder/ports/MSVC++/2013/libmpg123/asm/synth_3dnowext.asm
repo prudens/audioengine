@@ -492,8 +492,8 @@ null_one:
 	.text
 	.balign 16
 	
-.globl synth_1to1_3dnowext_asm
-synth_1to1_3dnowext_asm:
+.globl _synth_1to1_3dnowext_asm
+_synth_1to1_3dnowext_asm:
 	pushl	%ebp
 
 	movl	%esp, %ebp
@@ -533,7 +533,7 @@ synth_1to1_3dnowext_asm:
 	pushl 8(%ebp)
 	pushl %edx
 	pushl %ecx
-	call INT123_dct64_3dnowext
+	call _INT123_dct64_3dnowext
 	addl $12, %esp
 	leal 1(%ebx), %ecx
 	subl 12(%esp),%ebx

@@ -465,9 +465,9 @@
 .text
 	.balign 4
 
-.globl INT123_getcpuflags
+.globl _INT123_getcpuflags
 
-INT123_getcpuflags:
+_INT123_getcpuflags:
 	pushl %ebp
 	movl %esp,%ebp
 	pushl %edx

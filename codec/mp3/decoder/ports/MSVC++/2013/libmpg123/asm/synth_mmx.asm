@@ -460,9 +460,9 @@
 
 .text
 
-.globl INT123_synth_1to1_MMX
+.globl _INT123_synth_1to1_MMX
 
-INT123_synth_1to1_MMX:
+_INT123_synth_1to1_MMX:
         pushl %ebp
         pushl %edi
         pushl %esi
@@ -497,7 +497,7 @@ INT123_synth_1to1_MMX:
 2:
         pushl %edx
         pushl %ecx
-        call INT123_dct64_MMX
+        call _INT123_dct64_MMX
         addl $12,%esp
 
 	leal 1(%ebx), %ecx

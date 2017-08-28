@@ -481,8 +481,8 @@ mask:
 	
 	.text
 	.balign 16
-.globl INT123_dct64_real_sse
-INT123_dct64_real_sse:
+.globl _INT123_dct64_real_sse
+_INT123_dct64_real_sse:
 	pushl		%ebp
 	movl		%esp, %ebp
 	
@@ -522,10 +522,10 @@ INT123_dct64_real_sse:
 	subps 		%xmm0, %xmm5
 	subps 		%xmm1, %xmm4
 	
-	mulps		INT123_costab_mmxsse, %xmm7
-	mulps		INT123_costab_mmxsse+16, %xmm6
-	mulps		INT123_costab_mmxsse+32, %xmm5
-	mulps		INT123_costab_mmxsse+48, %xmm4
+	mulps		_INT123_costab_mmxsse, %xmm7
+	mulps		_INT123_costab_mmxsse+16, %xmm6
+	mulps		_INT123_costab_mmxsse+32, %xmm5
+	mulps		_INT123_costab_mmxsse+48, %xmm4
 	
 	shufps		$0x1b, %xmm2, %xmm2
 	shufps		$0x1b, %xmm3, %xmm3
@@ -545,10 +545,10 @@ INT123_dct64_real_sse:
 	subps		%xmm4, %xmm7
 	addps		%xmm3, %xmm4
 	addps		%xmm2, %xmm5
-	mulps		INT123_costab_mmxsse+64, %xmm0
-	mulps		INT123_costab_mmxsse+80, %xmm1
-	mulps		INT123_costab_mmxsse+80, %xmm6
-	mulps		INT123_costab_mmxsse+64, %xmm7
+	mulps		_INT123_costab_mmxsse+64, %xmm0
+	mulps		_INT123_costab_mmxsse+80, %xmm1
+	mulps		_INT123_costab_mmxsse+80, %xmm6
+	mulps		_INT123_costab_mmxsse+64, %xmm7
 	
 	movaps		(4+0*16)(%esp), %xmm2
 	movaps		(4+1*16)(%esp), %xmm3
@@ -570,10 +570,10 @@ INT123_dct64_real_sse:
 	subps		%xmm6, %xmm7
 	addps		%xmm1, %xmm4
 	addps		%xmm3, %xmm6
-	mulps		INT123_costab_mmxsse+96, %xmm2
-	mulps		INT123_costab_mmxsse+96, %xmm0
-	mulps		INT123_costab_mmxsse+96, %xmm5
-	mulps		INT123_costab_mmxsse+96, %xmm7
+	mulps		_INT123_costab_mmxsse+96, %xmm2
+	mulps		_INT123_costab_mmxsse+96, %xmm0
+	mulps		_INT123_costab_mmxsse+96, %xmm5
+	mulps		_INT123_costab_mmxsse+96, %xmm7
 	movaps		%xmm2, (4+1*16)(%esp)
 	movaps		%xmm0, (4+3*16)(%esp)
 	
@@ -589,7 +589,7 @@ INT123_dct64_real_sse:
 	subps		%xmm5, %xmm3
 	addps		%xmm6, %xmm4
 	addps		%xmm7, %xmm5
-	movaps		INT123_costab_mmxsse+112, %xmm0
+	movaps		_INT123_costab_mmxsse+112, %xmm0
 	movlhps		%xmm0, %xmm0
 	mulps		%xmm0, %xmm2
 	mulps		%xmm0, %xmm3
@@ -631,7 +631,7 @@ INT123_dct64_real_sse:
 	movaps		%xmm5, (4+2*16)(%esp)
 	movaps		%xmm7, (4+3*16)(%esp)
 	
-	movss		INT123_costab_mmxsse+120, %xmm5
+	movss		_INT123_costab_mmxsse+120, %xmm5
 	shufps		$0x00, %xmm5, %xmm5
 	xorps		pnpn, %xmm5
 	

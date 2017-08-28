@@ -492,8 +492,8 @@ null_one:
 	.text
 	.balign 16
 	
-.globl synth_1to1_sse_asm
-synth_1to1_sse_asm:
+.globl _synth_1to1_sse_asm
+_synth_1to1_sse_asm:
 	pushl	%ebp
 
 	movl	%esp, %ebp
@@ -533,7 +533,7 @@ synth_1to1_sse_asm:
 	pushl 8(%ebp)
 	pushl %edx
 	pushl %ecx
-	call INT123_dct64_sse
+	call _INT123_dct64_sse
 	addl $12, %esp
 	leal 1(%ebx), %ecx
 	subl 12(%esp),%ebx

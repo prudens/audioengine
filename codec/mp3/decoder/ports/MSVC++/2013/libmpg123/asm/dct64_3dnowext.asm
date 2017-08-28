@@ -482,9 +482,9 @@ x_plus_minus_3dnow:
 
 	.text
 	.balign 32
-.globl INT123_dct64_3dnowext
+.globl _INT123_dct64_3dnowext
 	
-INT123_dct64_3dnowext:
+_INT123_dct64_3dnowext:
 	pushl	%ebp
 	movl	%esp, %ebp
 	pushl	%edi
@@ -496,7 +496,7 @@ INT123_dct64_3dnowext:
 	leal 128+-268(%ebp),%edx
 	movl 8(%ebp),%esi
 	movl 12(%ebp),%edi
-	movl $INT123_costab_mmxsse,%ebx
+	movl $_INT123_costab_mmxsse,%ebx
 	leal -268(%ebp),%ecx
 	movq	(%eax), %mm0
 	movq	8(%eax), %mm4

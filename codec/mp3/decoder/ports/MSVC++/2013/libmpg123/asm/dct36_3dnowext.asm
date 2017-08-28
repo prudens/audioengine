@@ -488,9 +488,9 @@
 
 	.text
 	.balign 32
-.globl INT123_dct36_3dnowext
+.globl _INT123_dct36_3dnowext
 	
-INT123_dct36_3dnowext:
+_INT123_dct36_3dnowext:
 	pushl	%ebp
 	movl	%esp, %ebp
 	pushl	%esi
@@ -578,9 +578,9 @@ INT123_dct36_3dnowext:
 	movd %mm3,68(%eax)
 	movq 24(%eax),%mm0
 	movq 48(%eax),%mm1
-	movd INT123_COS9+12,%mm2
+	movd _INT123_COS9+12,%mm2
 	punpckldq %mm2,%mm2
-	movd INT123_COS9+24,%mm3
+	movd _INT123_COS9+24,%mm3
 	punpckldq %mm3,%mm3
 	pfmul %mm2,%mm0
 	pfmul %mm3,%mm1
@@ -590,41 +590,41 @@ INT123_dct36_3dnowext:
 	pi2fd %mm7,%mm7
 	popl %eax
 	movq 8(%eax),%mm2
-	movd INT123_COS9+4,%mm3
+	movd _INT123_COS9+4,%mm3
 	punpckldq %mm3,%mm3
 	pfmul %mm3,%mm2
 	pfadd %mm0,%mm2
 	movq 40(%eax),%mm3
-	movd INT123_COS9+20,%mm4
+	movd _INT123_COS9+20,%mm4
 	punpckldq %mm4,%mm4
 	pfmul %mm4,%mm3
 	pfadd %mm3,%mm2
 	movq 56(%eax),%mm3
-	movd INT123_COS9+28,%mm4
+	movd _INT123_COS9+28,%mm4
 	punpckldq %mm4,%mm4
 	pfmul %mm4,%mm3
 	pfadd %mm3,%mm2
 	movq (%eax),%mm3
 	movq 16(%eax),%mm4
-	movd INT123_COS9+8,%mm5
+	movd _INT123_COS9+8,%mm5
 	punpckldq %mm5,%mm5
 	pfmul %mm5,%mm4
 	pfadd %mm4,%mm3
 	movq 32(%eax),%mm4
-	movd INT123_COS9+16,%mm5
+	movd _INT123_COS9+16,%mm5
 	punpckldq %mm5,%mm5
 	pfmul %mm5,%mm4
 	pfadd %mm4,%mm3
 	pfadd %mm1,%mm3
 	movq 64(%eax),%mm4
-	movd INT123_COS9+32,%mm5
+	movd _INT123_COS9+32,%mm5
 	punpckldq %mm5,%mm5
 	pfmul %mm5,%mm4
 	pfadd %mm4,%mm3
 	movq %mm2,%mm4
 	pfadd %mm3,%mm4
 	movq %mm7,%mm5
-	punpckldq INT123_tfcos36+0,%mm5
+	punpckldq _INT123_tfcos36+0,%mm5
 	pfmul %mm5,%mm4
 	movq %mm4,%mm5
 	pfacc %mm5,%mm5
@@ -649,7 +649,7 @@ INT123_dct36_3dnowext:
 	movq %mm3,%mm4
 	pfsub %mm2,%mm4
 	movq %mm7,%mm5
-	punpckldq INT123_tfcos36+32,%mm5
+	punpckldq _INT123_tfcos36+32,%mm5
 	pfmul %mm5,%mm4
 	movq %mm4,%mm5
 	pfacc %mm5,%mm5
@@ -677,7 +677,7 @@ INT123_dct36_3dnowext:
 	pfsub %mm3,%mm2
 	movq 56(%eax),%mm3
 	pfsub %mm3,%mm2
-	movd INT123_COS9+12,%mm3
+	movd _INT123_COS9+12,%mm3
 	punpckldq %mm3,%mm3
 	pfmul %mm3,%mm2
 	movq 16(%eax),%mm3
@@ -685,7 +685,7 @@ INT123_dct36_3dnowext:
 	pfsub %mm4,%mm3
 	movq 64(%eax),%mm4
 	pfsub %mm4,%mm3
-	movd INT123_COS9+24,%mm4
+	movd _INT123_COS9+24,%mm4
 	punpckldq %mm4,%mm4
 	pfmul %mm4,%mm3
 	movq 48(%eax),%mm4
@@ -695,7 +695,7 @@ INT123_dct36_3dnowext:
 	movq %mm2,%mm4
 	pfadd %mm3,%mm4
 	movq %mm7,%mm5
-	punpckldq INT123_tfcos36+4,%mm5
+	punpckldq _INT123_tfcos36+4,%mm5
 	pfmul %mm5,%mm4
 	movq %mm4,%mm5
 	pfacc %mm5,%mm5
@@ -721,7 +721,7 @@ INT123_dct36_3dnowext:
 	movq %mm3,%mm4
 	pfsub %mm2,%mm4
 	movq %mm7,%mm5
-	punpckldq INT123_tfcos36+28,%mm5
+	punpckldq _INT123_tfcos36+28,%mm5
 	pfmul %mm5,%mm4
 	movq %mm4,%mm5
 	pfacc %mm5,%mm5
@@ -745,41 +745,41 @@ INT123_dct36_3dnowext:
 	psrlq $32,%mm5
 	movd %mm5,2048(%ebx)
 	movq 8(%eax),%mm2
-	movd INT123_COS9+20,%mm3
+	movd _INT123_COS9+20,%mm3
 	punpckldq %mm3,%mm3
 	pfmul %mm3,%mm2
 	pfsub %mm0,%mm2
 	movq 40(%eax),%mm3
-	movd INT123_COS9+28,%mm4
+	movd _INT123_COS9+28,%mm4
 	punpckldq %mm4,%mm4
 	pfmul %mm4,%mm3
 	pfsub %mm3,%mm2
 	movq 56(%eax),%mm3
-	movd INT123_COS9+4,%mm4
+	movd _INT123_COS9+4,%mm4
 	punpckldq %mm4,%mm4
 	pfmul %mm4,%mm3
 	pfadd %mm3,%mm2
 	movq (%eax),%mm3
 	movq 16(%eax),%mm4
-	movd INT123_COS9+32,%mm5
+	movd _INT123_COS9+32,%mm5
 	punpckldq %mm5,%mm5
 	pfmul %mm5,%mm4
 	pfsub %mm4,%mm3
 	movq 32(%eax),%mm4
-	movd INT123_COS9+8,%mm5
+	movd _INT123_COS9+8,%mm5
 	punpckldq %mm5,%mm5
 	pfmul %mm5,%mm4
 	pfsub %mm4,%mm3
 	pfadd %mm1,%mm3
 	movq 64(%eax),%mm4
-	movd INT123_COS9+16,%mm5
+	movd _INT123_COS9+16,%mm5
 	punpckldq %mm5,%mm5
 	pfmul %mm5,%mm4
 	pfadd %mm4,%mm3
 	movq %mm2,%mm4
 	pfadd %mm3,%mm4
 	movq %mm7,%mm5
-	punpckldq INT123_tfcos36+8,%mm5
+	punpckldq _INT123_tfcos36+8,%mm5
 	pfmul %mm5,%mm4
 	movq %mm4,%mm5
 	pfacc %mm5,%mm5
@@ -805,7 +805,7 @@ INT123_dct36_3dnowext:
 	movq %mm3,%mm4
 	pfsub %mm2,%mm4
 	movq %mm7,%mm5
-	punpckldq INT123_tfcos36+24,%mm5
+	punpckldq _INT123_tfcos36+24,%mm5
 	pfmul %mm5,%mm4
 	movq %mm4,%mm5
 	pfacc %mm5,%mm5
@@ -829,41 +829,41 @@ INT123_dct36_3dnowext:
 	psrlq $32,%mm5
 	movd %mm5,1920(%ebx)
 	movq 8(%eax),%mm2
-	movd INT123_COS9+28,%mm3
+	movd _INT123_COS9+28,%mm3
 	punpckldq %mm3,%mm3
 	pfmul %mm3,%mm2
 	pfsub %mm0,%mm2
 	movq 40(%eax),%mm3
-	movd INT123_COS9+4,%mm4
+	movd _INT123_COS9+4,%mm4
 	punpckldq %mm4,%mm4
 	pfmul %mm4,%mm3
 	pfadd %mm3,%mm2
 	movq 56(%eax),%mm3
-	movd INT123_COS9+20,%mm4
+	movd _INT123_COS9+20,%mm4
 	punpckldq %mm4,%mm4
 	pfmul %mm4,%mm3
 	pfsub %mm3,%mm2
 	movq (%eax),%mm3
 	movq 16(%eax),%mm4
-	movd INT123_COS9+16,%mm5
+	movd _INT123_COS9+16,%mm5
 	punpckldq %mm5,%mm5
 	pfmul %mm5,%mm4
 	pfsub %mm4,%mm3
 	movq 32(%eax),%mm4
-	movd INT123_COS9+32,%mm5
+	movd _INT123_COS9+32,%mm5
 	punpckldq %mm5,%mm5
 	pfmul %mm5,%mm4
 	pfadd %mm4,%mm3
 	pfadd %mm1,%mm3
 	movq 64(%eax),%mm4
-	movd INT123_COS9+8,%mm5
+	movd _INT123_COS9+8,%mm5
 	punpckldq %mm5,%mm5
 	pfmul %mm5,%mm4
 	pfsub %mm4,%mm3
 	movq %mm2,%mm4
 	pfadd %mm3,%mm4
 	movq %mm7,%mm5
-	punpckldq INT123_tfcos36+12,%mm5
+	punpckldq _INT123_tfcos36+12,%mm5
 	pfmul %mm5,%mm4
 	movq %mm4,%mm5
 	pfacc %mm5,%mm5
@@ -889,7 +889,7 @@ INT123_dct36_3dnowext:
 	movq %mm3,%mm4
 	pfsub %mm2,%mm4
 	movq %mm7,%mm5
-	punpckldq INT123_tfcos36+20,%mm5
+	punpckldq _INT123_tfcos36+20,%mm5
 	pfmul %mm5,%mm4
 	movq %mm4,%mm5
 	pfacc %mm5,%mm5
@@ -922,7 +922,7 @@ INT123_dct36_3dnowext:
 	movq 64(%eax),%mm3
 	pfadd %mm3,%mm4
 	movq %mm7,%mm5
-	punpckldq INT123_tfcos36+16,%mm5
+	punpckldq _INT123_tfcos36+16,%mm5
 	pfmul %mm5,%mm4
 	movq %mm4,%mm5
 	pfacc %mm5,%mm5

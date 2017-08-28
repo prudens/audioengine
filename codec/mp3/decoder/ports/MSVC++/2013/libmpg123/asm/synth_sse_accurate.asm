@@ -473,7 +473,7 @@
 
 
 	.balign 32
-maxmin_s16:
+_maxmin_s16:
 	.long   1191181824 
 	.long   1191181824
 	.long   1191181824
@@ -484,8 +484,8 @@ maxmin_s16:
 	.long   -956301312
 	.text
 	.balign 16
-.globl INT123_synth_1to1_sse_accurate_asm
-INT123_synth_1to1_sse_accurate_asm:
+.globl _INT123_synth_1to1_sse_accurate_asm
+_INT123_synth_1to1_sse_accurate_asm:
 	pushl		%ebp
 	movl		%esp, %ebp
 	pushl		%ebx
@@ -582,8 +582,8 @@ INT123_synth_1to1_sse_accurate_asm:
 	movaps		%xmm0, %xmm2
 	pshufw		$0xdd, (%esi), %mm2
 	pshufw		$0xdd, 8(%esi), %mm3
-	cmpnleps	maxmin_s16, %xmm1
-	cmpltps		maxmin_s16+16, %xmm2
+	cmpnleps	_maxmin_s16, %xmm1
+	cmpltps		_maxmin_s16+16, %xmm2
 	cvtps2pi	%xmm0, %mm0
 	movhlps		%xmm0, %xmm0
 	cvtps2pi	%xmm0, %mm1
@@ -691,8 +691,8 @@ INT123_synth_1to1_sse_accurate_asm:
 	movaps		%xmm0, %xmm2
 	pshufw		$0xdd, (%esi), %mm2
 	pshufw		$0xdd, 8(%esi), %mm3
-	cmpnleps	maxmin_s16, %xmm1
-	cmpltps		maxmin_s16+16, %xmm2
+	cmpnleps	_maxmin_s16, %xmm1
+	cmpltps		_maxmin_s16+16, %xmm2
 	cvtps2pi	%xmm0, %mm0
 	movhlps		%xmm0, %xmm0
 	cvtps2pi	%xmm0, %mm1
