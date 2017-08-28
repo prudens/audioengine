@@ -9,10 +9,10 @@
 #define PLATFORM ""
 #endif 
 
-#define PATH_LIB   "../../build/winx/"""PLATFORM""CONFIGURE
+#define PATH_LIB   "../../build/winx/""" PLATFORM "" CONFIGURE
 
 
-#pragma comment(lib,PATH_LIB"audio_base.lib")
+#pragma comment(lib,PATH_LIB "audio_base.lib")
 
 #pragma comment(lib,"libprotobuf-lited.lib")
 #pragma comment(lib, "ws2_32")

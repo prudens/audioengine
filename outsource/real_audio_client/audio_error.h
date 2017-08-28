@@ -10,13 +10,13 @@ class audio_category_impl
     : public std::error_category
 {
 public:
-    virtual const char* name() const
+    virtual const char* name() const _NOEXCEPT
     {
         return "audio";
     }
-    virtual std::string message( int ev ) const;
+    virtual std::string message( int ev ) const _NOEXCEPT;
     virtual std::error_condition
-        default_error_condition( int ev ) const;
+        default_error_condition( int ev ) const _NOEXCEPT;
 };
 
 namespace std
@@ -43,11 +43,11 @@ class api_category_impl
     : public std::error_category
 {
 public:
-    virtual const char* name() const;
+    virtual const char* name() const _NOEXCEPT;
     virtual std::string message( int ev ) const;
     virtual bool equivalent(
         const std::error_code& code,
-        int condition ) const;
+        int condition ) const _NOEXCEPT;
 };
 
 const std::error_category& api_category();

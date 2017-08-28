@@ -9,10 +9,10 @@
 #define PLATFORM ""
 #endif 
 #define PATH_LIB   "../../build/winx/"
-#pragma comment(lib,PATH_LIB""PLATFORM""CONFIGURE"audio_device.lib")
-#pragma comment(lib,PATH_LIB""PLATFORM""CONFIGURE"audio_effect.lib")
-#pragma comment(lib,PATH_LIB""PLATFORM""CONFIGURE"audio_base.lib")
-#pragma comment(lib,PATH_LIB""PLATFORM""CONFIGURE"audio_processing.lib")
+#pragma comment(lib,PATH_LIB"" PLATFORM "" CONFIGURE "audio_device.lib")
+#pragma comment(lib,PATH_LIB"" PLATFORM "" CONFIGURE"audio_effect.lib")
+#pragma comment(lib,PATH_LIB"" PLATFORM "" CONFIGURE "audio_base.lib")
+#pragma comment(lib,PATH_LIB"" PLATFORM "" CONFIGURE "audio_processing.lib")
 #pragma comment(lib, "ws2_32")
 #pragma comment(lib, "strmiids")
 #pragma comment(lib, "msdmo")

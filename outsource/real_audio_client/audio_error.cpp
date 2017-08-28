@@ -10,7 +10,7 @@ static const audio_error_table audio_err_tab[] =
     audio_error::close_device_failed, "Close audio device failed",
 };
 
-std::string audio_category_impl::message( int ev ) const
+std::string audio_category_impl::message( int ev ) const _NOEXCEPT
 {
     const audio_error_table *ptr = &audio_err_tab[0];
     for ( ; ptr->name != 0; ++ptr )
@@ -19,7 +19,7 @@ std::string audio_category_impl::message( int ev ) const
     return "Unknown audio error";
 }
 
-std::error_condition audio_category_impl::default_error_condition( int ev ) const
+std::error_condition audio_category_impl::default_error_condition( int ev ) const _NOEXCEPT
 {
     return std::error_condition( ev, *this );
 }
@@ -49,7 +49,7 @@ std::error_code make_error_code( audio_error e )
 
 
 ///////////////////////////////////////////////////////////
-const char* api_category_impl::name() const
+const char* api_category_impl::name() const _NOEXCEPT
 {
     return "api";
 }
@@ -67,7 +67,7 @@ std::string api_category_impl::message( int ev ) const
 
 bool api_category_impl::equivalent(
     const std::error_code& code,
-    int condition ) const
+    int condition ) const _NOEXCEPT
 {
     switch ( condition )
     {
