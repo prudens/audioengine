@@ -3,17 +3,18 @@
 #include <string>
 #include <iostream>
 #include <cctype>
+#include "base/async_task.h"
 //#include "dispatch_example.cpp"
 
 // Example: main calls myfunc
 extern int test_vcl( int argc, char* argv[] );
 
-#include "base/asyntask.h"
+
 void test_async_task()
 {
-    AsynTask asyn_task;
+    AsyncTask asyn_task(1);
     for ( auto i : {5,2,3,3,1} )
-    asyn_task.PostTask( i, false, [] ( uint32_t id ) { printf( "%d  ", id ); } );
+    asyn_task.AddTask( [] ( uint32_t id ) { printf( "%d  ", id ); },i );
 
     system( "pause" );
 }
@@ -129,14 +130,14 @@ void Print( char const * const format,
 
 }
 void test_rtp_rtcp_test( int argc, char** argv );
-
+void test_numeric();
 
 int main( int argc, char** argv )
 {
   //  Print( "%s%s" );
    // test_asio(argc,argv);
   // test_chrono();
-    //test_array();
+    test_numeric();
   //  test_codec();
    // test_audio_processing(argc,argv);
    // test_async_task();
@@ -166,7 +167,7 @@ int main( int argc, char** argv )
    // test_simulate_internet(argc,argv);
    // test_sound_to_text();
 
-    test_rtp_rtcp_test( argc, argv );
+ //   test_rtp_rtcp_test( argc, argv );
     system( "pause" );
     return 0;
 

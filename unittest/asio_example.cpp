@@ -525,7 +525,7 @@ namespace std
     {
         struct steady_clock1
         {
-            typedef _LONGLONG rep;
+            typedef int64_t rep;
             typedef ratio_multiply<ratio<_XTIME_NSECS_PER_TICK, 1>, nano> period;
             typedef chrono::duration<rep, period> duration;
             typedef chrono::time_point<steady_clock1> time_point;

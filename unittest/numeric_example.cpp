@@ -11,7 +11,7 @@ void test_valarray()
     float audio[100];
     for ( int i = 0; i < 100; i++ )
     {
-        audio[i] = i;
+        audio[i] = (float)i;
     }
     arr = valarray<float>( audio, 100 );
     arr += 1;
@@ -88,4 +88,36 @@ void test_array()
     len = str.size();
     std::cout<< str<<len << std::endl;
 
+}
+
+struct RTPHeader
+{
+	int ver;
+	int channel;
+	int samplerate;
+	int seq;
+	int crc;
+};
+
+void test_bitblock()
+{
+	RTPHeader header;
+	header.ver = 1;
+	header.channel = 1;
+	header.samplerate = 4;
+	header.seq = 1;
+	header.crc = 2;
+	uint8_t block[4];
+	BitBlock bits(block,4);
+	bits.PushBits(header.ver,4);
+	bits.PushBits(header.channel,2);
+	bits.PushBits(header.samplerate,4);
+	bits.PushBits(header.seq,6);
+	bits.PushBits(header.crc,16);
+	printf("%x,%x,%x,%x",block[0],block[1],block[2],block[3]);
+}
+
+void test_numeric()
+{
+	test_bitblock();
 }

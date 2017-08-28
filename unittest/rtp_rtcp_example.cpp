@@ -176,7 +176,7 @@ void test_rtp()
     configure.audio = true;
     RtpRtcp* rtp_rtcp = RtpRtcp::CreateRtpRtcp( configure );
     printf("ssrc=%u\n",rtp_rtcp->SSRC());
-    rtp_rtcp->SetStartTimestamp(timestamp());
+    rtp_rtcp->SetStartTimestamp(static_cast<int32_t>(timestamp()));
     printf("ts=%u\n",rtp_rtcp->StartTimestamp());
     for ( size_t i = 0; i < sizeof( database ) / sizeof( database[0] )-1; i++ )
     {

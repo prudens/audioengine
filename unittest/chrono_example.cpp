@@ -12,7 +12,7 @@ namespace std
     {
         struct steady_clock1
         {
-            typedef _LONGLONG rep;
+            typedef uint64_t rep;
             typedef ratio_multiply<ratio<_XTIME_NSECS_PER_TICK, 1>, nano> period;
             typedef chrono::duration<rep, period> duration;
             typedef chrono::time_point<steady_clock1> time_point;
@@ -28,7 +28,7 @@ namespace std
 void test_system_clock()
 {
     volatile int sink;
-    for ( auto size = 1ull; size < 1000000000ull; size *= 100 )
+    for ( auto size = 1u; size < 1000000000u; size *= 100 )
     {
         // record start time
         auto start = std::chrono::steady_clock1::now();

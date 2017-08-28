@@ -47,13 +47,13 @@ RoomMember::RoomMember( tcp::socket socket, RoomServer& server ) :socket_( std::
 host_(server), timer_(socket.get_io_context())
 {
     room_member_count++;
-    printf( "[RoomMember]room_member_count=%d\n", room_member_count );
+    printf( "[RoomMember]room_member_count=%d\n", (int)room_member_count );
 }
 
 RoomMember::~RoomMember()
 {
     room_member_count--;
-    printf( "[RoomMember]remove room member, room_member_count=%d\n", room_member_count );
+    printf( "[RoomMember]remove room member, room_member_count=%d\n", (int)room_member_count );
 
 }
 
@@ -222,14 +222,14 @@ void RoomServer::Accept()
 Session::Session(asio::io_context& context, tcp::socket socket ) : socket_( std::move( socket ) ), context_(context)
 {
     session_count++;
-    printf( "new connection,session_count=%d\n",session_count );
+    printf( "new connection,session_count=%d\n",(int)session_count );
 }
 
 
 Session::~Session()
 {
     session_count--;
-    printf( "close connection session_count=%d\n", session_count );
+    printf( "close connection session_count=%d\n", (int)session_count );
     if (session_count==0)
     {
         room_server.reset();
@@ -264,7 +264,7 @@ void Session::Write( char*data, std::size_t length )
     {
         if ( ec )
         {
-            printf( "[%u]server:–¥»Î ß∞‹£¨¥ÌŒÛ¬Î£∫%s", ec.message().c_str() );
+            printf( "[%u]server:–¥»Î ß∞‹£¨¥ÌŒÛ¬Î£∫%s",0, ec.message().c_str() );
         }
     } );
 
