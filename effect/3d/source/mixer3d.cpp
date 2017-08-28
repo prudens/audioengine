@@ -127,9 +127,9 @@ void Mixer3D::ProcessBlock( AudioSampleBuffer& buffer )
     }
 }
 
-void Mixer3D::convolution( const float*input, Complex*irc, float *output, int nFFT, int nSig )
+void Mixer3D::convolution( const float*input, Complex*irc, float *output, int len, int nSig )
 {
-    for ( int i = 0; i < nFFT; i++ )
+    for ( int i = 0; i < len; i++ )
     {
         if ( i < nSig )
         {
@@ -141,15 +141,15 @@ void Mixer3D::convolution( const float*input, Complex*irc, float *output, int nF
         }
     }
 
-    CFFT::Forward( m_cInput, nFFT );
-    for ( int i = 0; i < nFFT; i++ )
+    CFFT::Forward( m_cInput, len);
+    for ( int i = 0; i < len; i++ )
     {
         m_cOutput[i] = m_cInput[i] * irc[i];
     }
 
-    CFFT::Inverse( m_cOutput, nFFT );
+    CFFT::Inverse( m_cOutput, len);
 
-    for ( int i = 0; i < nFFT; i++ )
+    for ( int i = 0; i < len; i++ )
     {
         output[i] = (float)( m_cOutput[i].real() );
     }
