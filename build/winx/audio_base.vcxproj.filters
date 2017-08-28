@@ -131,9 +131,6 @@
     <ClInclude Include="..\..\base\vcl\special\vector3d.h">
       <Filter>vcl\special</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\base\time_cvt.hpp">
-      <Filter>source</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\base\bitarray.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -147,6 +144,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\base\timer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\time_cvt.hpp">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
