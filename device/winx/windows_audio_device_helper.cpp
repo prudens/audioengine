@@ -201,7 +201,6 @@ HRESULT EnumDevice( EDataFlow eDataFlow, AUDIO_DEVICE_INFO_LIST& devices )
 
     for ( index = 0; index < dwCount; index++ )
     {
-        CComPtr<IMMDevice> spDevice;
         CComPtr<IPropertyStore> spProperties;
 
         PropVariantInit( &value );
