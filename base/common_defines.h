@@ -3,6 +3,7 @@
 #define COMMON_DEFINES_H
 #include <type_traits>
 #include <cstddef>
+#include <cassert>
 namespace 
 {
     #if defined(WIN32) || defined(_WIN32)

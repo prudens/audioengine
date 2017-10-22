@@ -17,9 +17,10 @@
 #endif
 #endif//
 
-    using namespace std::chrono;
+
   inline  uint64_t timestamp()
     {
+	  using namespace std::chrono;
         /*system_clock::now() is current time by second,
           and default construct is start GMT time */
         return duration_cast<milliseconds>(
@@ -44,50 +45,50 @@
     }
 
     // º∆ ±∆˜
-    class Timer
+    class ChronoMeter
     {
     public:
-        Timer() : m_begin( high_resolution_clock::now() ) {}
-        void reset() { m_begin = high_resolution_clock::now(); }
+        ChronoMeter() : m_begin( std::chrono::high_resolution_clock::now() ) {}
+        void reset() { m_begin = std::chrono::high_resolution_clock::now(); }
 
         //ƒ¨»œ ‰≥ˆ∫¡√Î
         int64_t elapsed() const
         {
-            return duration_cast<milliseconds>( high_resolution_clock::now() - m_begin ).count();
+            return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - m_begin ).count();
         }
 
         //Œ¢√Î
         int64_t elapsed_micro() const
         {
-            return duration_cast<microseconds>( high_resolution_clock::now() - m_begin ).count();
+            return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - m_begin ).count();
         }
 
         //ƒ…√Î
         int64_t elapsed_nano() const
         {
-            return duration_cast<nanoseconds>( high_resolution_clock::now() - m_begin ).count();
+            return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - m_begin ).count();
         }
 
         //√Î
         int64_t elapsed_seconds() const
         {
-            return duration_cast<seconds>( high_resolution_clock::now() - m_begin ).count();
+            return std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - m_begin ).count();
         }
 
         //∑÷
         int64_t elapsed_minutes() const
         {
-            return duration_cast<minutes>( high_resolution_clock::now() - m_begin ).count();
+            return std::chrono::duration_cast<std::chrono::minutes>(std::chrono::high_resolution_clock::now() - m_begin ).count();
         }
 
         // ±
         int64_t elapsed_hours() const
         {
-            return duration_cast<hours>( high_resolution_clock::now() - m_begin ).count();
+            return std::chrono::duration_cast<std::chrono::hours>(std::chrono::high_resolution_clock::now() - m_begin ).count();
         }
 
     private:
-        time_point<high_resolution_clock> m_begin;
+		std::chrono::time_point<std::chrono::high_resolution_clock> m_begin;
     };
 
 

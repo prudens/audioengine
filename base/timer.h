@@ -11,7 +11,7 @@ struct TimerTask;
 class Timer
 {
 public:
-    Timer( int sleepMs = 100);
+	Timer( int sleepMs = 100);
     ~Timer();
     void AddTask( int elapsed_ms, TaskExecute executer );
     void ClearTask();
