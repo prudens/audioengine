@@ -336,7 +336,7 @@ void run_wav2mp3( const char* infile, const char*outfile )
 
 
 #include "G7221Interface.h"
-Timer timer;
+
 std::list < char*> pList;
 std::mutex _lock;
 

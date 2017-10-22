@@ -29,49 +29,6 @@ void test_valarray()
 
 void test_bitarray()
 {
-    bitarray arr( 128 );
-//     uint32_t v=3;
-//     arr.set(0, v, 2 );
-//     arr.set( 2 );
-//     arr[3] = true;
-//     arr[1] = false;
-//     assert( arr.test( 0 ) == true );
-//     assert( arr.test( 1 ) == false );
-//     assert( arr[2] == true );
-//     std::string str = arr.to_string();
-//     v = 137;
-//     arr.set( 0, v,8 );
-//     v = arr.touint32();
-//     std::cout << v<<"\n";
-//     std::cout << arr.to_string();
-    int *test = new int(0x12345678);
-    std::pair<int, int> p = { 1, 2 };
-    std::vector<std::pair<int, int>>v1 = {
-        { 0, 2 }, { 3, 3 }, { 4, 3 }, {*test,32}
-    };
-    arr.set(0, v1 );
-    *test = arr.to_uint32();
-    std::cout << arr.to_string() << "to uint32=0x" <<std::hex<< *test << std::endl;
-
-    std::vector<std::pair<int, int>>v2 = {
-        { 0, 2 }, { 0, 3 }, { 0, 3 }, { *test, 32 }
-    };
-    arr.get( 0, v2 );
-    std::cout << "get " << v2[0].first << " " << v2[1].first << " " << v2[2].first <<" "<<std::hex<<"0x"<<v2[3].first<< std::endl;
-    
-    for ( int i = 0; i < 32; i++ )
-    {
-        std::bitset<32> bs;
-        bs.flip();
-        bs.set( i, 0 );
-        std::cout <<"0x"<< bs.to_ulong() <<",";
-    }
-
-    bitarray arr2(32);
-    arr2.flip();
-    arr2.set( 0, 0 );
-    uint32_t u = arr2.to_uint32l();
-    std::cout << std::hex << u<<std::endl;
 }
 
 
@@ -108,6 +65,7 @@ void test_bitblock()
 	header.seq = 1;
 	header.crc = 2;
 	uint8_t block[4];
+	memset(block, 0, 4);
 	BitBlock bits(block,4);
 	bits.PushBits(header.ver,4);
 	bits.PushBits(header.channel,2);
@@ -115,7 +73,25 @@ void test_bitblock()
 	bits.PushBits(header.seq,6);
 	bits.PushBits(header.crc,16);
 	printf("%x,%x,%x,%x",block[0],block[1],block[2],block[3]);
+	BitBlock read_bits(block,4);
+	RTPHeader readheader;
+	readheader.channel = 0;
+	readheader.crc = 0;
+	readheader.samplerate = 0;
+	readheader.seq = 0;
+	readheader.ver = 0;
+	read_bits.PullBits(readheader.ver,4);
+	read_bits.PullBits(readheader.channel, 2);
+	read_bits.PullBits(readheader.samplerate, 4);
+	read_bits.PullBits(readheader.seq, 6);
+	read_bits.PullBits(readheader.crc, 16);
+	assert(header.channel == readheader.channel);
+	assert(header.samplerate == readheader.samplerate);
+	assert(header.ver == readheader.ver);
+	assert(header.seq == readheader.seq);
+	assert(header.crc == readheader.crc);
 }
+
 
 void test_numeric()
 {

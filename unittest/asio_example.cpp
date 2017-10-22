@@ -25,6 +25,7 @@
 #include <functional>
 #include <atomic>
 #include "base/io_context_pool.h"
+#include "base/tcp_connection.h"
 using asio::ip::tcp;
 static std::atomic<int> count = 0;
 class session
@@ -113,7 +114,7 @@ private:
 
     tcp::acceptor acceptor_;
     tcp::socket socket_;
-    Timer timer_;
+    ChronoMeter timer_;
 };
 
 using asio::ip::tcp;
@@ -126,7 +127,7 @@ int test_asio_tcp_client( int argc, char* argv[] )
     {
         return 0;
     }
-    Timer timer;
+    ChronoMeter timer;
     int count = 0;
 
 
@@ -554,14 +555,14 @@ void test_asio_timer()
     context.run();
 }
 
-void test_io_context_pool()
+void test_tcp()
 {
-    io_context_pool pool(5);
-    pool.run();
-    auto context = pool.get_io_context( io_context_pool::TASK_UI );
-    context->post( [] () {
-        printf( "redraw ui" );
-    } );
+	asio::io_context context;
+	TcpFactoryPtr f = CreateTcpFactory(context);
+	auto acceptor = f->CreateTcpAcceptr("127.0.0.1", 12345);
+	TcpConnectionPtr tcp;
+	acceptor->Accept(tcp);
+	tcp->Connect("127.0.0.1", 1234);
 }
 
 void test_asio( int argc, char** argv )
@@ -583,6 +584,6 @@ void test_asio( int argc, char** argv )
     }
     else
     test_asio_tcp_server( argc, argv );
-
+	test_tcp();
     return;
 }

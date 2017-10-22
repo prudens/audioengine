@@ -34,7 +34,7 @@ void test_fft()
     }
     std::complex<float> caar[order];
 
-    Timer t;
+    ChronoMeter t;
     for ( int i = 0; i < 2000; i++ )
     {
         pfft->Forward( arr, caar );
