@@ -232,12 +232,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\base\audio_util.cc" />
-    <ClCompile Include="..\..\base\bitarray.cpp" />
     <ClCompile Include="..\..\base\fft.cpp" />
     <ClCompile Include="..\..\base\jvm_manager.cpp" />
     <ClCompile Include="..\..\base\rgba.cpp" />
-    <ClCompile Include="..\..\base\io_context_pool.cpp" />
+    <ClCompile Include="..\..\base\tcp_scoket.cpp" />
     <ClCompile Include="..\..\base\timer.cpp" />
+    <ClCompile Include="..\..\base\udp_socket.cpp" />
     <ClCompile Include="..\..\base\vcl\instrset_detect.cpp" />
     <ClCompile Include="..\..\base\vcl\special\ranvec1.cpp" />
   </ItemGroup>
@@ -252,9 +252,10 @@
     <ClInclude Include="..\..\base\min_max_heap.hpp" />
     <ClInclude Include="..\..\base\rgba.h" />
     <ClInclude Include="..\..\base\string_cvt.h" />
-    <ClInclude Include="..\..\base\io_context_pool.h" />
+    <ClInclude Include="..\..\base\tcp_socket.h" />
     <ClInclude Include="..\..\base\timer.h" />
     <ClInclude Include="..\..\base\time_cvt.hpp" />
+    <ClInclude Include="..\..\base\udp_socket.h" />
     <ClInclude Include="..\..\base\vcl\instrset.h" />
     <ClInclude Include="..\..\base\vcl\special\complexvec.h" />
     <ClInclude Include="..\..\base\vcl\special\decimal.h" />

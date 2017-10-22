@@ -30,16 +30,16 @@
     <ClCompile Include="..\..\base\vcl\special\ranvec1.cpp">
       <Filter>vcl\special</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\base\bitarray.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\base\io_context_pool.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\base\jvm_manager.cpp">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\base\timer.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\tcp_scoket.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\udp_socket.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -134,9 +134,6 @@
     <ClInclude Include="..\..\base\bitarray.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\base\io_context_pool.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\base\jvm_manager.h">
       <Filter>source</Filter>
     </ClInclude>
@@ -147,6 +144,12 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\base\time_cvt.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\tcp_socket.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\udp_socket.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
