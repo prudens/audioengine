@@ -788,7 +788,7 @@ DWORD WindowsAudioDSound::DoCaptureThread()
                 if ( nNextOffset == (long)dwBufferSize )
                     nNextOffset = 0;
             }
-            std::this_thread::sleep_for( milliseconds( framedelay / 2 ) );
+            std::this_thread::sleep_for( std::chrono::milliseconds( framedelay / 2 ) );
             //Sleep( framedelay / 2 );
         }
     }
