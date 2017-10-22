@@ -4,9 +4,8 @@
 #include <memory>
 #include "user.h"
 #include "user_service.pb.h"
+#include "base/tcp_socket.h"
 
-typedef int socket_t;
-class TcpSocketManager;
 class UserManager:public std::enable_shared_from_this<UserManager>
 {
 public:
@@ -18,8 +17,8 @@ public:
     void HandleLogin( std::shared_ptr<User> user);
     void HandleLogout( std::shared_ptr<User> user );
 private:
-    bool HandleAccept( std::error_code ec, socket_t socket_id );
-    TcpSocketManager* _socket_mgr = nullptr;
+    bool HandleAccept( std::error_code ec, TcpSocketPtr tcp );
+	TcpAcceptorPtr _acceptor;
     AsyncTask* _task = nullptr;
     ProtoPacket _packet;
     std::mutex _lock;

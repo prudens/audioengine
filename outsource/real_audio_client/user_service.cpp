@@ -1,15 +1,14 @@
 #include "user_service.h"
 
 #include "client_module.h"
-#include "socket_manager.h"
 #include "base/async_task.h"
+#include "base/common_defines.h"
 
 UserService::UserService()
     :_proto_packet(std::bind(&UserService::RecvPacket,this,1,std::placeholders::_1,std::placeholders::_2))
 {
     _buffer_pool = ClientModule::GetInstance()->GetBufferPool();
     _task = ClientModule::GetInstance()->GetAsyncTask();
-    _socket_mgr = ClientModule::GetInstance()->GetSocketManager();
 }
 
 UserService::~UserService()
@@ -19,16 +18,14 @@ UserService::~UserService()
 
 void UserService::AddServer( int server_type, std::string ip, int port )
 {
-    if ( 0 != GetSocket( server_type ) )
-    {
-        return;
-    }
     auto self = shared_from_this();
-    _socket_mgr->AsyncConnect( ip, port, [=] ( std::error_code ec, socket_t socket_id )
+	TcpFactory* fac = ClientModule::GetInstance()->GetTcpFactory();
+	_tcp_socket = fac->CreateTcpConnection("", 0);
+	ASSERT(_tcp_socket);
+	_tcp_socket->AsyncConnect( ip, port, [=] ( std::error_code ec )
     {
         if ( !ec )
         {
-            self->SetSocket( server_type, socket_id );
             BufferPtr buf = _buffer_pool->PullFromBufferPool();
             self->Read( server_type, buf );
             _task->AddTask( [=]
@@ -46,14 +43,8 @@ void UserService::AddServer( int server_type, std::string ip, int port )
 
 void UserService::RemoveServer( int server_type )
 {
-    _lock_sockets.lock();
-    auto it = _sockets.find( server_type );
-    if ( it != _sockets.end() )
-    {
-        _socket_mgr->DisConnect( it->second );
-        _sockets.erase( it );
-    }
-    _lock_sockets.unlock();
+	_tcp_socket->DisConnect();
+	_tcp_socket.reset();
 }
 
 void UserService::RegisterHandler( ProtoPacketizer *p )
@@ -72,13 +63,12 @@ void UserService::UnRegisterHandler( ProtoPacketizer* p )
 
 void UserService::Read( int server_type, BufferPtr buf )
 {
-    socket_t fd = GetSocket( server_type );
-    if (fd == 0)
-    {
-        return;
-    }
+	if (!_tcp_socket)
+	{
+		return;
+	}
     auto self = shared_from_this();
-    _socket_mgr->AsyncRead( fd, buf->WriteData(),buf->WriteAvailable(),
+    _tcp_socket->AsyncRead( buf->WriteData(),buf->WriteAvailable(),
                             [=] ( std::error_code ec, size_t length )
     {
         if ( !ec )
@@ -100,13 +90,12 @@ void UserService::Read( int server_type, BufferPtr buf )
 
 void UserService::Write( int server_type, BufferPtr buf )
 {
-    socket_t fd = GetSocket( server_type );
-    if (0 == fd)
-    {
-        return;
-    }
+	if (!_tcp_socket)
+	{
+		return;
+	}
     auto self = shared_from_this();
-    _socket_mgr->AsyncWrite( fd, buf->ReadData(),buf->ReadAvailable(),
+    _tcp_socket->AsyncWrite( buf->ReadData(),buf->ReadAvailable(),
                              [=] ( std::error_code ec, std::size_t length )
     {
         self->_buffer_pool->PushToBufferPool( buf );
@@ -117,24 +106,6 @@ void UserService::Write( int server_type, BufferPtr buf )
     } );
 }
 
-
-socket_t UserService::GetSocket( int server_type )
-{
-    std::unique_lock<std::mutex> lock( _lock_sockets );
-    auto it = _sockets.find( server_type );
-    if ( it != _sockets.end() )
-    {
-        return it->second;
-    }
-    return 0;
-}
-
-void UserService::SetSocket( int server_type, socket_t fd )
-{
-    _lock_sockets.lock();
-    _sockets[server_type] = fd;
-    _lock_sockets.unlock();
-}
 
 void UserService::HandleError( int server_type, std::error_code ec )
 {

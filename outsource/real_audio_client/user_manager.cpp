@@ -2,7 +2,6 @@
 #include <iostream>
 #include <string>
 #include "server_config.h"
-#include "socket_manager.h"
 #include "client_module.h"
 using namespace audio_engine;
 

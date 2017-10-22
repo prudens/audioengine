@@ -5,18 +5,18 @@
 #include "real_audio_common.h"
 #include "protobuf_packet.h"
 #include "user_service.pb.h"
-
+#include "base/tcp_socket.h"
 
 #define DEFAULT_SEND
 typedef int socket_t;
-class TcpSocketManager;
+
 class UserManager;
 class User : public std::enable_shared_from_this<User>
 {
 public:
     User( UserManager* host);
     ~User();
-    void AttachTcp( socket_t fd );
+    void AttachTcp( TcpSocketPtr tcp );
     void DettachTcp();
     UID userid();
     std::string username();
@@ -36,11 +36,10 @@ private:
     std::string _extend;
     int64_t _token = 0;
     int _device_type = 0;
-    socket_t _sock_id = 0;
 
     BufferPool* _buffer_pool = nullptr;
     AsyncTask* _task = nullptr;
-    TcpSocketManager* _sm = nullptr;
+	TcpSocketPtr _tcp_socket;
     ProtoPacket _proto_packet;
     UserManager* _host;
 

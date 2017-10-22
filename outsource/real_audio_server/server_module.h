@@ -1,5 +1,8 @@
 #pragma once
-class TcpSocketManager;
+#include <functional>
+#include "asio.hpp"
+
+class TcpFactory;
 class AsyncTask;
 class Timer;
 class ServerConfig;
@@ -13,7 +16,7 @@ public:
     static void DestroyInstance();
 public:
     ServerConfig*    GetServerCnfig();
-    TcpSocketManager*   GetSocketManager();
+	TcpFactory*      GetSocketManager();
     AsyncTask*       GetAsyncTask();
     Timer*           GetTimer();
     TokenGenerater*  GetTokenGenerater();
@@ -27,10 +30,13 @@ private:
     ServerModule&operator=( ServerModule&& ) = delete;
 private:
     static ServerModule* s_instance;
-    TcpSocketManager*       _socket_mgr = nullptr;
+    std::shared_ptr<TcpFactory>  _socket_mgr;
     AsyncTask*           _task = nullptr;
     Timer*               _timer = nullptr;
     ServerConfig*        _srv_cfg = nullptr;
     TokenGenerater*      _token_gen = nullptr;
     BufferPool*          _buffer_pool = nullptr;
+	asio::io_context     _io_context;
+	asio::io_service::work* _work;
+	std::future<void> _future;
 };

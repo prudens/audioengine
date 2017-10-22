@@ -1,8 +1,6 @@
 #pragma once
 #include <list>
 #include "real_audio_common.h"
-#include "asio.hpp"
-#include "socket_manager.h"
 #include "protobuf_packet.h"
 #include "user_service.h"
 typedef std::function<void( UID userid,int login_result )> LoginHandle;

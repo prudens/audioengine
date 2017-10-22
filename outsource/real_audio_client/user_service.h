@@ -1,8 +1,8 @@
 #include <memory>
 #include "base/async_task.h"
-#include "socket_manager.h"
 #include "protobuf_packet.h"
 #include "user_service.pb.h"
+#include "base/tcp_socket.h"
 class ProtoPacketizer
 {
 public:
@@ -26,19 +26,14 @@ public:
     void RecvPacket( int server_type, std::error_code ec, std::shared_ptr<audio_engine::RAUserMessage> pb );
     void SendPacket( int server_type, std::shared_ptr<audio_engine::RAUserMessage> pb );
 private:
-    socket_t GetSocket( int server_type );
-    void     SetSocket( int server_type, socket_t fd );
     void     Read( int server_type,BufferPtr buf );
     void     Write( int server_type, BufferPtr buf );
     void     HandleConnect( int server_type );
     void     HandleError( int server_type, std::error_code ec );
     AsyncTask*    _task = nullptr;
-    TcpSocketManager* _socket_mgr = nullptr;
+	TcpSocketPtr _tcp_socket;
     ProtoPacket _proto_packet;
     BufferPool* _buffer_pool;
-    std::mutex _lock_sockets;
-    std::map<int, socket_t> _sockets;
-
     std::mutex _lock_handle;
     std::list<ProtoPacketizer*> _proto_handlers;
 };

@@ -1,15 +1,13 @@
 #include "user_manager.h"
 
 #include "server_module.h"
-#include "socket_manager.h"
 #include "server_config.h"
-
+#include "base/common_defines.h"
 #include "user.h"
 
 UserManager::UserManager()
     :_packet(nullptr)
 {
-    _socket_mgr = ServerModule::GetInstance()->GetSocketManager();
     _task = ServerModule::GetInstance()->GetAsyncTask();
 }
 
@@ -24,8 +22,11 @@ void UserManager::Start()
     int16_t port;
     if ( ServerModule::GetInstance()->GetServerCnfig()->GetServer(1, ip, port) )
     {
-        _socket_mgr->AsyncAccept( ip, port, std::bind( &UserManager::HandleAccept, this, std::placeholders::_1, std::placeholders::_2 ) );
-    }
+		TcpFactory *f = ServerModule::GetInstance()->GetSocketManager();
+		_acceptor = f->CreateTcpAcceptr(ip, port);
+		ASSERT(_acceptor);
+		_acceptor->AsyncAccept( std::bind( &UserManager::HandleAccept, this, std::placeholders::_1, std::placeholders::_2 ) );
+	}
 }
 
 void UserManager::Stop()
@@ -97,9 +98,9 @@ void UserManager::HandleLogout( std::shared_ptr<User> user )
     }
 }
 
-bool UserManager::HandleAccept( std::error_code ec, socket_t fd )
+bool UserManager::HandleAccept( std::error_code ec, TcpSocketPtr tcp )
 {
-    if (ec == asio::error::basic_errors::bad_descriptor )
+    if (ec )
     {
         printf("accept error:%s\n",ec.message().c_str());
     }
@@ -107,17 +108,17 @@ bool UserManager::HandleAccept( std::error_code ec, socket_t fd )
     {
         std::string ip;
         int16_t port;
-        auto sm = ServerModule::GetInstance()->GetSocketManager();
-        if ( sm->QuerySocketInfo( fd, ip, port ) )
+        if (!tcp->QuerySocketInfo(ip, port))
         {
             printf( "收到客户端新连接：%s:%u\n",ip.c_str(), (uint16_t)port );
         }
         auto user = std::make_shared<User>(this);
-        user->AttachTcp( fd );
+        user->AttachTcp( tcp );
     }
     if ( _stop )
     {
         return false;
     }
+	_acceptor->AsyncAccept(std::bind(&UserManager::HandleAccept, this, std::placeholders::_1, std::placeholders::_2));
     return true;
 }

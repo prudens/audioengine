@@ -4,7 +4,7 @@
 #include "base/timer.h"
 #include "real_audio_common.h"
 
-#include "socket_manager.h"
+#include "base/tcp_socket.h"
 #include "server_config.h"
 #include "token_generater.h"
 
@@ -36,9 +36,9 @@ ServerConfig* ServerModule::GetServerCnfig()
 }
 
 
-TcpSocketManager* ServerModule::GetSocketManager()
+TcpFactory* ServerModule::GetSocketManager()
 {
-    return _socket_mgr;
+    return _socket_mgr.get();
 }
 
 AsyncTask* ServerModule::GetAsyncTask()
@@ -53,22 +53,34 @@ Timer* ServerModule::GetTimer()
 
 ServerModule::ServerModule()
 {
+	_work = new asio::io_service::work(_io_context);
+	_future = std::async([&]() {
+		std::error_code ec;
+		_io_context.reset();
+		_io_context.run(ec);
+		if (ec)
+		{
+			printf(ec.message().c_str());
+		}
+	});
     _buffer_pool = new BufferPool;
     _task = new AsyncTask( 4 );
     _timer = new Timer;
-    _socket_mgr = new TcpSocketManager();
+    _socket_mgr = CreateTcpFactory(_io_context);
     _srv_cfg = new ServerConfig;
     _token_gen = new TokenGenerater;
 }
 
 ServerModule::~ServerModule()
 {
-    delete _socket_mgr;
     delete _timer;
     delete _task;
     delete _srv_cfg;
     delete _token_gen;
     delete _buffer_pool;
+	delete _work;
+	_io_context.stop();
+	_future.get();
 }
 
 TokenGenerater* ServerModule::GetTokenGenerater()

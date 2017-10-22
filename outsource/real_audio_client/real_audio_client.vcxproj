@@ -76,7 +76,6 @@
   <ItemGroup>
     <ClCompile Include="..\packet.cpp" />
     <ClCompile Include="..\protobuf_packet.cpp" />
-    <ClCompile Include="..\socket_manager.cpp" />
     <ClCompile Include="..\user_service.pb.cc" />
     <ClCompile Include="audio_error.cpp" />
     <ClCompile Include="client_module.cpp" />
@@ -91,7 +90,6 @@
     <ClInclude Include="..\packet.h" />
     <ClInclude Include="..\protobuf_packet.h" />
     <ClInclude Include="..\real_audio_common.h" />
-    <ClInclude Include="..\socket_manager.h" />
     <ClInclude Include="..\user_service.pb.h" />
     <ClInclude Include="audio_error.h" />
     <ClInclude Include="client_module.h" />
