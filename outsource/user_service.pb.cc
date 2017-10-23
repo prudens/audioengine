@@ -15,69 +15,83 @@
 // @@protoc_insertion_point(includes)
 
 namespace audio_engine {
-class LoginRequestDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<LoginRequest> {
+class LoginRequestDefaultTypeInternal {
+public:
+ ::google::protobuf::internal::ExplicitlyConstructed<LoginRequest>
+     _instance;
 } _LoginRequest_default_instance_;
-class LoginResponseDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<LoginResponse> {
+class LoginResponseDefaultTypeInternal {
+public:
+ ::google::protobuf::internal::ExplicitlyConstructed<LoginResponse>
+     _instance;
 } _LoginResponse_default_instance_;
-class LogoutRequstDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<LogoutRequst> {
+class LogoutRequstDefaultTypeInternal {
+public:
+ ::google::protobuf::internal::ExplicitlyConstructed<LogoutRequst>
+     _instance;
 } _LogoutRequst_default_instance_;
-class LogoutResponseDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<LogoutResponse> {
+class LogoutResponseDefaultTypeInternal {
+public:
+ ::google::protobuf::internal::ExplicitlyConstructed<LogoutResponse>
+     _instance;
 } _LogoutResponse_default_instance_;
-class LoginNotifyDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<LoginNotify> {
+class LoginNotifyDefaultTypeInternal {
+public:
+ ::google::protobuf::internal::ExplicitlyConstructed<LoginNotify>
+     _instance;
 } _LoginNotify_default_instance_;
-class RAUserMessageDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<RAUserMessage> {
+class RAUserMessageDefaultTypeInternal {
+public:
+ ::google::protobuf::internal::ExplicitlyConstructed<RAUserMessage>
+     _instance;
 } _RAUserMessage_default_instance_;
 
 namespace protobuf_user_5fservice_2eproto {
 
 PROTOBUF_CONSTEXPR_VAR ::google::protobuf::internal::ParseTableField
-    const TableStruct::entries[] = {
+    const TableStruct::entries[] GOOGLE_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   {0, 0, 0, ::google::protobuf::internal::kInvalidMask, 0, 0},
 };
 
 PROTOBUF_CONSTEXPR_VAR ::google::protobuf::internal::AuxillaryParseTableField
-    const TableStruct::aux[] = {
+    const TableStruct::aux[] GOOGLE_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   ::google::protobuf::internal::AuxillaryParseTableField(),
 };
 PROTOBUF_CONSTEXPR_VAR ::google::protobuf::internal::ParseTable const
-    TableStruct::schema[] = {
-  { NULL, NULL, 0, -1, -1, false },
-  { NULL, NULL, 0, -1, -1, false },
-  { NULL, NULL, 0, -1, -1, false },
-  { NULL, NULL, 0, -1, -1, false },
-  { NULL, NULL, 0, -1, -1, false },
-  { NULL, NULL, 0, -1, -1, false },
+    TableStruct::schema[] GOOGLE_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
+  { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
+  { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
+  { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
+  { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
+  { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
+  { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
 };
-
-
-void TableStruct::Shutdown() {
-  _LoginRequest_default_instance_.Shutdown();
-  _LoginResponse_default_instance_.Shutdown();
-  _LogoutRequst_default_instance_.Shutdown();
-  _LogoutResponse_default_instance_.Shutdown();
-  _LoginNotify_default_instance_.Shutdown();
-  _RAUserMessage_default_instance_.Shutdown();
-}
 
 void TableStruct::InitDefaultsImpl() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::internal::InitProtobufDefaults();
-  _LoginRequest_default_instance_.DefaultConstruct();
-  _LoginResponse_default_instance_.DefaultConstruct();
-  _LogoutRequst_default_instance_.DefaultConstruct();
-  _LogoutResponse_default_instance_.DefaultConstruct();
-  _LoginNotify_default_instance_.DefaultConstruct();
-  _RAUserMessage_default_instance_.DefaultConstruct();
-  _RAUserMessage_default_instance_.get_mutable()->login_requst_ = const_cast< ::audio_engine::LoginRequest*>(
+  _LoginRequest_default_instance_._instance.DefaultConstruct();
+  ::google::protobuf::internal::OnShutdownDestroyMessage(
+      &_LoginRequest_default_instance_);_LoginResponse_default_instance_._instance.DefaultConstruct();
+  ::google::protobuf::internal::OnShutdownDestroyMessage(
+      &_LoginResponse_default_instance_);_LogoutRequst_default_instance_._instance.DefaultConstruct();
+  ::google::protobuf::internal::OnShutdownDestroyMessage(
+      &_LogoutRequst_default_instance_);_LogoutResponse_default_instance_._instance.DefaultConstruct();
+  ::google::protobuf::internal::OnShutdownDestroyMessage(
+      &_LogoutResponse_default_instance_);_LoginNotify_default_instance_._instance.DefaultConstruct();
+  ::google::protobuf::internal::OnShutdownDestroyMessage(
+      &_LoginNotify_default_instance_);_RAUserMessage_default_instance_._instance.DefaultConstruct();
+  ::google::protobuf::internal::OnShutdownDestroyMessage(
+      &_RAUserMessage_default_instance_);_RAUserMessage_default_instance_._instance.get_mutable()->login_requst_ = const_cast< ::audio_engine::LoginRequest*>(
       ::audio_engine::LoginRequest::internal_default_instance());
-  _RAUserMessage_default_instance_.get_mutable()->login_response_ = const_cast< ::audio_engine::LoginResponse*>(
+  _RAUserMessage_default_instance_._instance.get_mutable()->login_response_ = const_cast< ::audio_engine::LoginResponse*>(
       ::audio_engine::LoginResponse::internal_default_instance());
-  _RAUserMessage_default_instance_.get_mutable()->logout_requst_ = const_cast< ::audio_engine::LogoutRequst*>(
+  _RAUserMessage_default_instance_._instance.get_mutable()->logout_requst_ = const_cast< ::audio_engine::LogoutRequst*>(
       ::audio_engine::LogoutRequst::internal_default_instance());
-  _RAUserMessage_default_instance_.get_mutable()->logout_response_ = const_cast< ::audio_engine::LogoutResponse*>(
+  _RAUserMessage_default_instance_._instance.get_mutable()->logout_response_ = const_cast< ::audio_engine::LogoutResponse*>(
       ::audio_engine::LogoutResponse::internal_default_instance());
-  _RAUserMessage_default_instance_.get_mutable()->login_notify_ = const_cast< ::audio_engine::LoginNotify*>(
+  _RAUserMessage_default_instance_._instance.get_mutable()->login_notify_ = const_cast< ::audio_engine::LoginNotify*>(
       ::audio_engine::LoginNotify::internal_default_instance());
 }
 
@@ -85,23 +99,16 @@ void InitDefaults() {
   static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
   ::google::protobuf::GoogleOnceInit(&once, &TableStruct::InitDefaultsImpl);
 }
+namespace {
 void AddDescriptorsImpl() {
   InitDefaults();
-  ::google::protobuf::internal::OnShutdown(&TableStruct::Shutdown);
 }
+} // anonymous namespace
 
 void AddDescriptors() {
   static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
   ::google::protobuf::GoogleOnceInit(&once, &AddDescriptorsImpl);
 }
-#ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-// Force AddDescriptors() to be called at static initialization time.
-struct StaticDescriptorInitializer {
-  StaticDescriptorInitializer() {
-    AddDescriptors();
-  }
-} static_descriptor_initializer;
-#endif  // GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
 
 }  // namespace protobuf_user_5fservice_2eproto
 
@@ -211,16 +218,27 @@ LoginRequest* LoginRequest::New(::google::protobuf::Arena* arena) const {
 
 void LoginRequest::Clear() {
 // @@protoc_insertion_point(message_clear_start:audio_engine.LoginRequest)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
   userid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   username_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   extends_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   devtype_ = 0;
+  _internal_metadata_.Clear();
 }
 
 bool LoginRequest::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(&_internal_metadata_,
+          &::google::protobuf::internal::InternalMetadataWithArenaLite::
+              mutable_unknown_fields));
+  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
+      &unknown_fields_string, false);
   // @@protoc_insertion_point(parse_start:audio_engine.LoginRequest)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
@@ -230,11 +248,11 @@ bool LoginRequest::MergePartialFromCodedStream(
       // string userid = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(10u)) {
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_userid()));
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->userid().data(), this->userid().length(),
+            this->userid().data(), static_cast<int>(this->userid().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
             "audio_engine.LoginRequest.userid"));
         } else {
@@ -246,11 +264,11 @@ bool LoginRequest::MergePartialFromCodedStream(
       // string username = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(18u)) {
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_username()));
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->username().data(), this->username().length(),
+            this->username().data(), static_cast<int>(this->username().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
             "audio_engine.LoginRequest.username"));
         } else {
@@ -262,7 +280,7 @@ bool LoginRequest::MergePartialFromCodedStream(
       // .audio_engine.DEVICE_TYPE devtype = 3;
       case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(24u)) {
+            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
           int value;
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
@@ -277,11 +295,11 @@ bool LoginRequest::MergePartialFromCodedStream(
       // string extends = 4;
       case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(34u)) {
+            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_extends()));
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->extends().data(), this->extends().length(),
+            this->extends().data(), static_cast<int>(this->extends().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
             "audio_engine.LoginRequest.extends"));
         } else {
@@ -292,12 +310,11 @@ bool LoginRequest::MergePartialFromCodedStream(
 
       default: {
       handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+        if (tag == 0) {
           goto success;
         }
-        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
+            input, tag, &unknown_fields_stream));
         break;
       }
     }
@@ -320,7 +337,7 @@ void LoginRequest::SerializeWithCachedSizes(
   // string userid = 1;
   if (this->userid().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->userid().data(), this->userid().length(),
+      this->userid().data(), static_cast<int>(this->userid().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "audio_engine.LoginRequest.userid");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
@@ -330,7 +347,7 @@ void LoginRequest::SerializeWithCachedSizes(
   // string username = 2;
   if (this->username().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->username().data(), this->username().length(),
+      this->username().data(), static_cast<int>(this->username().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "audio_engine.LoginRequest.username");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
@@ -346,19 +363,23 @@ void LoginRequest::SerializeWithCachedSizes(
   // string extends = 4;
   if (this->extends().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->extends().data(), this->extends().length(),
+      this->extends().data(), static_cast<int>(this->extends().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "audio_engine.LoginRequest.extends");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       4, this->extends(), output);
   }
 
+  output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
+                   static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
   // @@protoc_insertion_point(serialize_end:audio_engine.LoginRequest)
 }
 
 size_t LoginRequest::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:audio_engine.LoginRequest)
   size_t total_size = 0;
+
+  total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
 
   // string userid = 1;
   if (this->userid().size() > 0) {
@@ -439,11 +460,13 @@ void LoginRequest::Swap(LoginRequest* other) {
   InternalSwap(other);
 }
 void LoginRequest::InternalSwap(LoginRequest* other) {
+  using std::swap;
   userid_.Swap(&other->userid_);
   username_.Swap(&other->username_);
   extends_.Swap(&other->extends_);
-  std::swap(devtype_, other->devtype_);
-  std::swap(_cached_size_, other->_cached_size_);
+  swap(devtype_, other->devtype_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(_cached_size_, other->_cached_size_);
 }
 
 ::std::string LoginRequest::GetTypeName() const {
@@ -654,15 +677,16 @@ LoginResponse::LoginResponse(const LoginResponse& from)
     userid_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.userid_);
   }
   ::memcpy(&token_, &from.token_,
-    reinterpret_cast<char*>(&result_) -
-    reinterpret_cast<char*>(&token_) + sizeof(result_));
+    static_cast<size_t>(reinterpret_cast<char*>(&result_) -
+    reinterpret_cast<char*>(&token_)) + sizeof(result_));
   // @@protoc_insertion_point(copy_constructor:audio_engine.LoginResponse)
 }
 
 void LoginResponse::SharedCtor() {
   userid_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&token_, 0, reinterpret_cast<char*>(&result_) -
-    reinterpret_cast<char*>(&token_) + sizeof(result_));
+  ::memset(&token_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&result_) -
+      reinterpret_cast<char*>(&token_)) + sizeof(result_));
   _cached_size_ = 0;
 }
 
@@ -695,15 +719,27 @@ LoginResponse* LoginResponse::New(::google::protobuf::Arena* arena) const {
 
 void LoginResponse::Clear() {
 // @@protoc_insertion_point(message_clear_start:audio_engine.LoginResponse)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
   userid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&token_, 0, reinterpret_cast<char*>(&result_) -
-    reinterpret_cast<char*>(&token_) + sizeof(result_));
+  ::memset(&token_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&result_) -
+      reinterpret_cast<char*>(&token_)) + sizeof(result_));
+  _internal_metadata_.Clear();
 }
 
 bool LoginResponse::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(&_internal_metadata_,
+          &::google::protobuf::internal::InternalMetadataWithArenaLite::
+              mutable_unknown_fields));
+  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
+      &unknown_fields_string, false);
   // @@protoc_insertion_point(parse_start:audio_engine.LoginResponse)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
@@ -713,11 +749,11 @@ bool LoginResponse::MergePartialFromCodedStream(
       // string userid = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(10u)) {
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_userid()));
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->userid().data(), this->userid().length(),
+            this->userid().data(), static_cast<int>(this->userid().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
             "audio_engine.LoginResponse.userid"));
         } else {
@@ -729,7 +765,7 @@ bool LoginResponse::MergePartialFromCodedStream(
       // int32 result = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(16u)) {
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
@@ -743,7 +779,7 @@ bool LoginResponse::MergePartialFromCodedStream(
       // int64 token = 3;
       case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(24u)) {
+            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
@@ -756,12 +792,11 @@ bool LoginResponse::MergePartialFromCodedStream(
 
       default: {
       handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+        if (tag == 0) {
           goto success;
         }
-        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
+            input, tag, &unknown_fields_stream));
         break;
       }
     }
@@ -784,7 +819,7 @@ void LoginResponse::SerializeWithCachedSizes(
   // string userid = 1;
   if (this->userid().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->userid().data(), this->userid().length(),
+      this->userid().data(), static_cast<int>(this->userid().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "audio_engine.LoginResponse.userid");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
@@ -801,12 +836,16 @@ void LoginResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt64(3, this->token(), output);
   }
 
+  output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
+                   static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
   // @@protoc_insertion_point(serialize_end:audio_engine.LoginResponse)
 }
 
 size_t LoginResponse::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:audio_engine.LoginResponse)
   size_t total_size = 0;
+
+  total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
 
   // string userid = 1;
   if (this->userid().size() > 0) {
@@ -876,10 +915,12 @@ void LoginResponse::Swap(LoginResponse* other) {
   InternalSwap(other);
 }
 void LoginResponse::InternalSwap(LoginResponse* other) {
+  using std::swap;
   userid_.Swap(&other->userid_);
-  std::swap(token_, other->token_);
-  std::swap(result_, other->result_);
-  std::swap(_cached_size_, other->_cached_size_);
+  swap(token_, other->token_);
+  swap(result_, other->result_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(_cached_size_, other->_cached_size_);
 }
 
 ::std::string LoginResponse::GetTypeName() const {
@@ -1028,13 +1069,24 @@ LogoutRequst* LogoutRequst::New(::google::protobuf::Arena* arena) const {
 
 void LogoutRequst::Clear() {
 // @@protoc_insertion_point(message_clear_start:audio_engine.LogoutRequst)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
   token_ = GOOGLE_LONGLONG(0);
+  _internal_metadata_.Clear();
 }
 
 bool LogoutRequst::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(&_internal_metadata_,
+          &::google::protobuf::internal::InternalMetadataWithArenaLite::
+              mutable_unknown_fields));
+  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
+      &unknown_fields_string, false);
   // @@protoc_insertion_point(parse_start:audio_engine.LogoutRequst)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
@@ -1044,7 +1096,7 @@ bool LogoutRequst::MergePartialFromCodedStream(
       // int64 token = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(8u)) {
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
@@ -1057,12 +1109,11 @@ bool LogoutRequst::MergePartialFromCodedStream(
 
       default: {
       handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+        if (tag == 0) {
           goto success;
         }
-        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
+            input, tag, &unknown_fields_stream));
         break;
       }
     }
@@ -1087,12 +1138,16 @@ void LogoutRequst::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->token(), output);
   }
 
+  output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
+                   static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
   // @@protoc_insertion_point(serialize_end:audio_engine.LogoutRequst)
 }
 
 size_t LogoutRequst::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:audio_engine.LogoutRequst)
   size_t total_size = 0;
+
+  total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
 
   // int64 token = 1;
   if (this->token() != 0) {
@@ -1141,8 +1196,10 @@ void LogoutRequst::Swap(LogoutRequst* other) {
   InternalSwap(other);
 }
 void LogoutRequst::InternalSwap(LogoutRequst* other) {
-  std::swap(token_, other->token_);
-  std::swap(_cached_size_, other->_cached_size_);
+  using std::swap;
+  swap(token_, other->token_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(_cached_size_, other->_cached_size_);
 }
 
 ::std::string LogoutRequst::GetTypeName() const {
@@ -1189,14 +1246,15 @@ LogoutResponse::LogoutResponse(const LogoutResponse& from)
       _cached_size_(0) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::memcpy(&token_, &from.token_,
-    reinterpret_cast<char*>(&status_) -
-    reinterpret_cast<char*>(&token_) + sizeof(status_));
+    static_cast<size_t>(reinterpret_cast<char*>(&status_) -
+    reinterpret_cast<char*>(&token_)) + sizeof(status_));
   // @@protoc_insertion_point(copy_constructor:audio_engine.LogoutResponse)
 }
 
 void LogoutResponse::SharedCtor() {
-  ::memset(&token_, 0, reinterpret_cast<char*>(&status_) -
-    reinterpret_cast<char*>(&token_) + sizeof(status_));
+  ::memset(&token_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&status_) -
+      reinterpret_cast<char*>(&token_)) + sizeof(status_));
   _cached_size_ = 0;
 }
 
@@ -1228,14 +1286,26 @@ LogoutResponse* LogoutResponse::New(::google::protobuf::Arena* arena) const {
 
 void LogoutResponse::Clear() {
 // @@protoc_insertion_point(message_clear_start:audio_engine.LogoutResponse)
-  ::memset(&token_, 0, reinterpret_cast<char*>(&status_) -
-    reinterpret_cast<char*>(&token_) + sizeof(status_));
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  ::memset(&token_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&status_) -
+      reinterpret_cast<char*>(&token_)) + sizeof(status_));
+  _internal_metadata_.Clear();
 }
 
 bool LogoutResponse::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(&_internal_metadata_,
+          &::google::protobuf::internal::InternalMetadataWithArenaLite::
+              mutable_unknown_fields));
+  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
+      &unknown_fields_string, false);
   // @@protoc_insertion_point(parse_start:audio_engine.LogoutResponse)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
@@ -1245,7 +1315,7 @@ bool LogoutResponse::MergePartialFromCodedStream(
       // int64 token = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(8u)) {
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
@@ -1259,7 +1329,7 @@ bool LogoutResponse::MergePartialFromCodedStream(
       // int64 status = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(16u)) {
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
@@ -1272,12 +1342,11 @@ bool LogoutResponse::MergePartialFromCodedStream(
 
       default: {
       handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+        if (tag == 0) {
           goto success;
         }
-        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
+            input, tag, &unknown_fields_stream));
         break;
       }
     }
@@ -1307,12 +1376,16 @@ void LogoutResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt64(2, this->status(), output);
   }
 
+  output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
+                   static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
   // @@protoc_insertion_point(serialize_end:audio_engine.LogoutResponse)
 }
 
 size_t LogoutResponse::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:audio_engine.LogoutResponse)
   size_t total_size = 0;
+
+  total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
 
   // int64 token = 1;
   if (this->token() != 0) {
@@ -1371,9 +1444,11 @@ void LogoutResponse::Swap(LogoutResponse* other) {
   InternalSwap(other);
 }
 void LogoutResponse::InternalSwap(LogoutResponse* other) {
-  std::swap(token_, other->token_);
-  std::swap(status_, other->status_);
-  std::swap(_cached_size_, other->_cached_size_);
+  using std::swap;
+  swap(token_, other->token_);
+  swap(status_, other->status_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(_cached_size_, other->_cached_size_);
 }
 
 ::std::string LogoutResponse::GetTypeName() const {
@@ -1449,8 +1524,8 @@ LoginNotify::LoginNotify(const LoginNotify& from)
     extend_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.extend_);
   }
   ::memcpy(&devtype_, &from.devtype_,
-    reinterpret_cast<char*>(&status_) -
-    reinterpret_cast<char*>(&devtype_) + sizeof(status_));
+    static_cast<size_t>(reinterpret_cast<char*>(&status_) -
+    reinterpret_cast<char*>(&devtype_)) + sizeof(status_));
   // @@protoc_insertion_point(copy_constructor:audio_engine.LoginNotify)
 }
 
@@ -1458,8 +1533,9 @@ void LoginNotify::SharedCtor() {
   userid_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   username_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   extend_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&devtype_, 0, reinterpret_cast<char*>(&status_) -
-    reinterpret_cast<char*>(&devtype_) + sizeof(status_));
+  ::memset(&devtype_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&status_) -
+      reinterpret_cast<char*>(&devtype_)) + sizeof(status_));
   _cached_size_ = 0;
 }
 
@@ -1494,17 +1570,29 @@ LoginNotify* LoginNotify::New(::google::protobuf::Arena* arena) const {
 
 void LoginNotify::Clear() {
 // @@protoc_insertion_point(message_clear_start:audio_engine.LoginNotify)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
   userid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   username_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   extend_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&devtype_, 0, reinterpret_cast<char*>(&status_) -
-    reinterpret_cast<char*>(&devtype_) + sizeof(status_));
+  ::memset(&devtype_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&status_) -
+      reinterpret_cast<char*>(&devtype_)) + sizeof(status_));
+  _internal_metadata_.Clear();
 }
 
 bool LoginNotify::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(&_internal_metadata_,
+          &::google::protobuf::internal::InternalMetadataWithArenaLite::
+              mutable_unknown_fields));
+  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
+      &unknown_fields_string, false);
   // @@protoc_insertion_point(parse_start:audio_engine.LoginNotify)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
@@ -1514,11 +1602,11 @@ bool LoginNotify::MergePartialFromCodedStream(
       // string userid = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(10u)) {
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_userid()));
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->userid().data(), this->userid().length(),
+            this->userid().data(), static_cast<int>(this->userid().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
             "audio_engine.LoginNotify.userid"));
         } else {
@@ -1530,11 +1618,11 @@ bool LoginNotify::MergePartialFromCodedStream(
       // string username = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(18u)) {
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_username()));
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->username().data(), this->username().length(),
+            this->username().data(), static_cast<int>(this->username().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
             "audio_engine.LoginNotify.username"));
         } else {
@@ -1546,11 +1634,11 @@ bool LoginNotify::MergePartialFromCodedStream(
       // string extend = 3;
       case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(26u)) {
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_extend()));
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->extend().data(), this->extend().length(),
+            this->extend().data(), static_cast<int>(this->extend().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
             "audio_engine.LoginNotify.extend"));
         } else {
@@ -1562,7 +1650,7 @@ bool LoginNotify::MergePartialFromCodedStream(
       // .audio_engine.DEVICE_TYPE devtype = 4;
       case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(32u)) {
+            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
           int value;
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
@@ -1577,7 +1665,7 @@ bool LoginNotify::MergePartialFromCodedStream(
       // int32 status = 5;
       case 5: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(40u)) {
+            static_cast< ::google::protobuf::uint8>(40u /* 40 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
@@ -1590,12 +1678,11 @@ bool LoginNotify::MergePartialFromCodedStream(
 
       default: {
       handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+        if (tag == 0) {
           goto success;
         }
-        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
+            input, tag, &unknown_fields_stream));
         break;
       }
     }
@@ -1618,7 +1705,7 @@ void LoginNotify::SerializeWithCachedSizes(
   // string userid = 1;
   if (this->userid().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->userid().data(), this->userid().length(),
+      this->userid().data(), static_cast<int>(this->userid().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "audio_engine.LoginNotify.userid");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
@@ -1628,7 +1715,7 @@ void LoginNotify::SerializeWithCachedSizes(
   // string username = 2;
   if (this->username().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->username().data(), this->username().length(),
+      this->username().data(), static_cast<int>(this->username().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "audio_engine.LoginNotify.username");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
@@ -1638,7 +1725,7 @@ void LoginNotify::SerializeWithCachedSizes(
   // string extend = 3;
   if (this->extend().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->extend().data(), this->extend().length(),
+      this->extend().data(), static_cast<int>(this->extend().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "audio_engine.LoginNotify.extend");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
@@ -1656,12 +1743,16 @@ void LoginNotify::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->status(), output);
   }
 
+  output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
+                   static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
   // @@protoc_insertion_point(serialize_end:audio_engine.LoginNotify)
 }
 
 size_t LoginNotify::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:audio_engine.LoginNotify)
   size_t total_size = 0;
+
+  total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
 
   // string userid = 1;
   if (this->userid().size() > 0) {
@@ -1752,12 +1843,14 @@ void LoginNotify::Swap(LoginNotify* other) {
   InternalSwap(other);
 }
 void LoginNotify::InternalSwap(LoginNotify* other) {
+  using std::swap;
   userid_.Swap(&other->userid_);
   username_.Swap(&other->username_);
   extend_.Swap(&other->extend_);
-  std::swap(devtype_, other->devtype_);
-  std::swap(status_, other->status_);
-  std::swap(_cached_size_, other->_cached_size_);
+  swap(devtype_, other->devtype_);
+  swap(status_, other->status_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(_cached_size_, other->_cached_size_);
 }
 
 ::std::string LoginNotify::GetTypeName() const {
@@ -2010,8 +2103,9 @@ RAUserMessage::RAUserMessage(const RAUserMessage& from)
 }
 
 void RAUserMessage::SharedCtor() {
-  ::memset(&login_requst_, 0, reinterpret_cast<char*>(&cmd_) -
-    reinterpret_cast<char*>(&login_requst_) + sizeof(cmd_));
+  ::memset(&login_requst_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&cmd_) -
+      reinterpret_cast<char*>(&login_requst_)) + sizeof(cmd_));
   _cached_size_ = 0;
 }
 
@@ -2021,21 +2115,11 @@ RAUserMessage::~RAUserMessage() {
 }
 
 void RAUserMessage::SharedDtor() {
-  if (this != internal_default_instance()) {
-    delete login_requst_;
-  }
-  if (this != internal_default_instance()) {
-    delete login_response_;
-  }
-  if (this != internal_default_instance()) {
-    delete logout_requst_;
-  }
-  if (this != internal_default_instance()) {
-    delete logout_response_;
-  }
-  if (this != internal_default_instance()) {
-    delete login_notify_;
-  }
+  if (this != internal_default_instance()) delete login_requst_;
+  if (this != internal_default_instance()) delete login_response_;
+  if (this != internal_default_instance()) delete logout_requst_;
+  if (this != internal_default_instance()) delete logout_response_;
+  if (this != internal_default_instance()) delete login_notify_;
 }
 
 void RAUserMessage::SetCachedSize(int size) const {
@@ -2058,6 +2142,10 @@ RAUserMessage* RAUserMessage::New(::google::protobuf::Arena* arena) const {
 
 void RAUserMessage::Clear() {
 // @@protoc_insertion_point(message_clear_start:audio_engine.RAUserMessage)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
   if (GetArenaNoVirtual() == NULL && login_requst_ != NULL) {
     delete login_requst_;
   }
@@ -2079,12 +2167,19 @@ void RAUserMessage::Clear() {
   }
   login_notify_ = NULL;
   cmd_ = 0;
+  _internal_metadata_.Clear();
 }
 
 bool RAUserMessage::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(&_internal_metadata_,
+          &::google::protobuf::internal::InternalMetadataWithArenaLite::
+              mutable_unknown_fields));
+  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
+      &unknown_fields_string, false);
   // @@protoc_insertion_point(parse_start:audio_engine.RAUserMessage)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
@@ -2094,7 +2189,7 @@ bool RAUserMessage::MergePartialFromCodedStream(
       // .audio_engine.RAMSG cmd = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(8u)) {
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
           int value;
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
@@ -2109,7 +2204,7 @@ bool RAUserMessage::MergePartialFromCodedStream(
       // .audio_engine.LoginRequest login_requst = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(18u)) {
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_login_requst()));
         } else {
@@ -2121,7 +2216,7 @@ bool RAUserMessage::MergePartialFromCodedStream(
       // .audio_engine.LoginResponse login_response = 3;
       case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(26u)) {
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_login_response()));
         } else {
@@ -2133,7 +2228,7 @@ bool RAUserMessage::MergePartialFromCodedStream(
       // .audio_engine.LogoutRequst logout_requst = 4;
       case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(34u)) {
+            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_logout_requst()));
         } else {
@@ -2145,7 +2240,7 @@ bool RAUserMessage::MergePartialFromCodedStream(
       // .audio_engine.LogoutResponse logout_response = 5;
       case 5: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(42u)) {
+            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_logout_response()));
         } else {
@@ -2157,7 +2252,7 @@ bool RAUserMessage::MergePartialFromCodedStream(
       // .audio_engine.LoginNotify login_notify = 6;
       case 6: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(50u)) {
+            static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_login_notify()));
         } else {
@@ -2168,12 +2263,11 @@ bool RAUserMessage::MergePartialFromCodedStream(
 
       default: {
       handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+        if (tag == 0) {
           goto success;
         }
-        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
+            input, tag, &unknown_fields_stream));
         break;
       }
     }
@@ -2229,12 +2323,16 @@ void RAUserMessage::SerializeWithCachedSizes(
       6, *this->login_notify_, output);
   }
 
+  output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
+                   static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
   // @@protoc_insertion_point(serialize_end:audio_engine.RAUserMessage)
 }
 
 size_t RAUserMessage::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:audio_engine.RAUserMessage)
   size_t total_size = 0;
+
+  total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
 
   // .audio_engine.LoginRequest login_requst = 2;
   if (this->has_login_requst()) {
@@ -2332,13 +2430,15 @@ void RAUserMessage::Swap(RAUserMessage* other) {
   InternalSwap(other);
 }
 void RAUserMessage::InternalSwap(RAUserMessage* other) {
-  std::swap(login_requst_, other->login_requst_);
-  std::swap(login_response_, other->login_response_);
-  std::swap(logout_requst_, other->logout_requst_);
-  std::swap(logout_response_, other->logout_response_);
-  std::swap(login_notify_, other->login_notify_);
-  std::swap(cmd_, other->cmd_);
-  std::swap(_cached_size_, other->_cached_size_);
+  using std::swap;
+  swap(login_requst_, other->login_requst_);
+  swap(login_response_, other->login_response_);
+  swap(logout_requst_, other->logout_requst_);
+  swap(logout_response_, other->logout_response_);
+  swap(login_notify_, other->login_notify_);
+  swap(cmd_, other->cmd_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(_cached_size_, other->_cached_size_);
 }
 
 ::std::string RAUserMessage::GetTypeName() const {
@@ -2371,9 +2471,10 @@ void RAUserMessage::clear_login_requst() {
   login_requst_ = NULL;
 }
 const ::audio_engine::LoginRequest& RAUserMessage::login_requst() const {
+  const ::audio_engine::LoginRequest* p = login_requst_;
   // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.login_requst)
-  return login_requst_ != NULL ? *login_requst_
-                         : *::audio_engine::LoginRequest::internal_default_instance();
+  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::LoginRequest*>(
+      &::audio_engine::_LoginRequest_default_instance_);
 }
 ::audio_engine::LoginRequest* RAUserMessage::mutable_login_requst() {
   
@@ -2410,9 +2511,10 @@ void RAUserMessage::clear_login_response() {
   login_response_ = NULL;
 }
 const ::audio_engine::LoginResponse& RAUserMessage::login_response() const {
+  const ::audio_engine::LoginResponse* p = login_response_;
   // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.login_response)
-  return login_response_ != NULL ? *login_response_
-                         : *::audio_engine::LoginResponse::internal_default_instance();
+  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::LoginResponse*>(
+      &::audio_engine::_LoginResponse_default_instance_);
 }
 ::audio_engine::LoginResponse* RAUserMessage::mutable_login_response() {
   
@@ -2449,9 +2551,10 @@ void RAUserMessage::clear_logout_requst() {
   logout_requst_ = NULL;
 }
 const ::audio_engine::LogoutRequst& RAUserMessage::logout_requst() const {
+  const ::audio_engine::LogoutRequst* p = logout_requst_;
   // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.logout_requst)
-  return logout_requst_ != NULL ? *logout_requst_
-                         : *::audio_engine::LogoutRequst::internal_default_instance();
+  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::LogoutRequst*>(
+      &::audio_engine::_LogoutRequst_default_instance_);
 }
 ::audio_engine::LogoutRequst* RAUserMessage::mutable_logout_requst() {
   
@@ -2488,9 +2591,10 @@ void RAUserMessage::clear_logout_response() {
   logout_response_ = NULL;
 }
 const ::audio_engine::LogoutResponse& RAUserMessage::logout_response() const {
+  const ::audio_engine::LogoutResponse* p = logout_response_;
   // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.logout_response)
-  return logout_response_ != NULL ? *logout_response_
-                         : *::audio_engine::LogoutResponse::internal_default_instance();
+  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::LogoutResponse*>(
+      &::audio_engine::_LogoutResponse_default_instance_);
 }
 ::audio_engine::LogoutResponse* RAUserMessage::mutable_logout_response() {
   
@@ -2527,9 +2631,10 @@ void RAUserMessage::clear_login_notify() {
   login_notify_ = NULL;
 }
 const ::audio_engine::LoginNotify& RAUserMessage::login_notify() const {
+  const ::audio_engine::LoginNotify* p = login_notify_;
   // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.login_notify)
-  return login_notify_ != NULL ? *login_notify_
-                         : *::audio_engine::LoginNotify::internal_default_instance();
+  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::LoginNotify*>(
+      &::audio_engine::_LoginNotify_default_instance_);
 }
 ::audio_engine::LoginNotify* RAUserMessage::mutable_login_notify() {
   

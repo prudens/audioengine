@@ -7,6 +7,23 @@
 #include <functional>
 
 typedef  std::function<void() > TaskExecute;
+class Timer;
+
+//±ÿ–Î”√make_shared
+class STimer :public std::enable_shared_from_this<STimer>
+{
+public:
+	STimer(Timer* timer);
+	void AddTask(int elapsed_ms, TaskExecute executer);
+	void Stop();
+private:
+
+	Timer* _timer = nullptr;
+	bool _stop = false;
+	std::mutex _mutex;
+};
+typedef std::shared_ptr<STimer> STimerPtr;
+
 struct TimerTask;
 class Timer
 {
@@ -22,3 +39,4 @@ private:
     std::condition_variable condition;
     bool _stop;
 };
+

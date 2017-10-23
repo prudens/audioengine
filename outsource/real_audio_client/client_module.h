@@ -1,12 +1,15 @@
 #pragma once
 #include <functional>
+#include <memory>
 #include "asio.hpp"
 class TcpFactory;
 //class TcpFactoryPtr;
 class ServerConfig;
-class AsyncTask;
+class AsyncTask;//#include"base/async_task.h"
 class Timer;
 class BufferPool;
+class STimer; // #include"base/timer.h"
+typedef std::shared_ptr<STimer> STimerPtr;
 class ClientModule
 {
 public:
@@ -18,7 +21,8 @@ public:
 	TcpFactory*      GetTcpFactory();
     ServerConfig*    GetServerCnfig();
     AsyncTask*       GetAsyncTask();
-    Timer*           GetTimer();
+	Timer*           GetTimer();
+	STimerPtr CreateSTimer();
     BufferPool*      GetBufferPool();
 private:
     ClientModule();

@@ -17,8 +17,8 @@ class UserService :
 public:
     UserService();
     ~UserService();
-    void AddServer( int server_type, std::string ip, int port );
-    void RemoveServer( int server_type );
+    void ConnectServer( int server_type, std::string ip, int port );
+    void DisconnectServer( int server_type );
 
     void RegisterHandler( ProtoPacketizer *p );
     void UnRegisterHandler( ProtoPacketizer* p );

@@ -101,7 +101,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{67CAA87B-7CF1-4F93-BB67-21C513F40803}</ProjectGuid>
     <RootNamespace>libmpg123</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_x86_Dll_Minimal|Win32'" Label="Configuration">

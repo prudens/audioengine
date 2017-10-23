@@ -1,5 +1,7 @@
 #include "client_module.h"
 
+#include <stdio.h>
+
 #include "base/tcp_socket.h"
 
 #include "base/async_task.h"
@@ -79,6 +81,11 @@ void ClientModule::DestroyInstance()
 Timer* ClientModule::GetTimer()
 {
     return _timer;
+}
+
+STimerPtr ClientModule::CreateSTimer()
+{
+	return std::make_shared<STimer>(_timer);
 }
 
 BufferPool* ClientModule::GetBufferPool()

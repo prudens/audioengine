@@ -25,7 +25,7 @@
 #include <functional>
 #include <atomic>
 #include "base/io_context_pool.h"
-#include "base/tcp_connection.h"
+#include "base/tcp_socket.h"
 using asio::ip::tcp;
 static std::atomic<int> count = 0;
 class session
@@ -560,7 +560,7 @@ void test_tcp()
 	asio::io_context context;
 	TcpFactoryPtr f = CreateTcpFactory(context);
 	auto acceptor = f->CreateTcpAcceptr("127.0.0.1", 12345);
-	TcpConnectionPtr tcp;
+	TcpSocketPtr tcp;
 	acceptor->Accept(tcp);
 	tcp->Connect("127.0.0.1", 1234);
 }

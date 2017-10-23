@@ -1,4 +1,5 @@
 #include "timer.h"
+#include "common_defines.h"
 typedef std::chrono::milliseconds ms;
 typedef std::chrono::seconds      sec;
 typedef ms::rep tick_t;
@@ -108,5 +109,37 @@ void Timer::ClearTask()
     {
         _tasks.pop();
     }
+}
+
+void STimer::AddTask(int elapsed_ms, TaskExecute executer)
+{
+	if ( _stop || !executer )
+	{
+		return;
+	}
+
+	auto self = shared_from_this();
+	_timer->AddTask(elapsed_ms, [=]
+	{
+		_mutex.lock();
+		if (!self->_stop)
+		{
+			executer();
+		}
+		_mutex.unlock();
+	});
+}
+
+void STimer::Stop()
+{
+	_mutex.lock();
+	_stop = true;
+	_mutex.unlock();
+}
+
+STimer::STimer(Timer* timer)
+{
+	ASSERT(timer);
+	_timer = timer;
 }
 

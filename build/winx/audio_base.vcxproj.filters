@@ -36,10 +36,10 @@
     <ClCompile Include="..\..\base\timer.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\base\tcp_scoket.cpp">
+    <ClCompile Include="..\..\base\udp_socket.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\base\udp_socket.cpp">
+    <ClCompile Include="..\..\base\tcp_socket.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -134,9 +134,6 @@
     <ClInclude Include="..\..\base\bitarray.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\base\jvm_manager.h">
-      <Filter>source</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\base\async_task.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -150,6 +147,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\base\udp_socket.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\jvm_manager.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

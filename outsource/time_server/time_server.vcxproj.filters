@@ -21,15 +21,9 @@
     <ClCompile Include="..\server_config.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\socket_manager.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\server_config.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\socket_manager.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

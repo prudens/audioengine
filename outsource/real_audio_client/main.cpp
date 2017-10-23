@@ -59,7 +59,6 @@ int main( int argc, char** argv )
             printf( "[%s]µÇÂ¼Ê§°Ü",userid.c_str() );
         }
     });
-    user_mgr->ConnectServer();
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 gen( rd() ); //Standard mersenne_twister_engine seeded with rd()
     std::uniform_int_distribution<> dis( 1000, 60000 );

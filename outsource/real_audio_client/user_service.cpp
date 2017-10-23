@@ -16,7 +16,7 @@ UserService::~UserService()
 
 }
 
-void UserService::AddServer( int server_type, std::string ip, int port )
+void UserService::ConnectServer( int server_type, std::string ip, int port )
 {
     auto self = shared_from_this();
 	TcpFactory* fac = ClientModule::GetInstance()->GetTcpFactory();
@@ -41,7 +41,7 @@ void UserService::AddServer( int server_type, std::string ip, int port )
     } );
 }
 
-void UserService::RemoveServer( int server_type )
+void UserService::DisconnectServer( int server_type )
 {
 	_tcp_socket->DisConnect();
 	_tcp_socket.reset();
