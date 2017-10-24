@@ -4,6 +4,7 @@
 #include "protobuf_packet.h"
 #include "user_service.h"
 #include "base/timer.h"
+#include "user_list.h"
 typedef std::function<void( UID userid,int login_result )> LoginHandle;
 
 
@@ -33,7 +34,7 @@ struct UserInfo
     UID  user_id;
     std::string user_name;
     std::string extend;
-    int  login_status;
+	int device_type;
     int64_t  token;
 };
 
@@ -58,6 +59,7 @@ public:
     virtual bool RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb );
     virtual bool HandleError( int server_type, std::error_code ec );
     virtual bool HandleConnect( int server_type );
+	void Update();
     LoginHandle _login_handle;
     std::shared_ptr<UserService> _user_service;
     UserInfo _user_info;
@@ -66,4 +68,5 @@ public:
 	int        _server_status = 0;
 	LoginState _cur_state = LS_NONE;
 	LoginState _target_state = LS_NONE;
+	UserList _user_list;
 };

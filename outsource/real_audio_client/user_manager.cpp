@@ -19,6 +19,7 @@ UserManager::UserManager( std::shared_ptr<UserService> proto_packet )
         _user_service->RegisterHandler( this );
     }
 	_timer = ClientModule::GetInstance()->CreateSTimer();
+
 }
 
 UserManager::~UserManager()
@@ -110,6 +111,11 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
             _user_info.user_id = userid;
             _user_info.token = token;
 			_cur_state = LS_LOGINED;
+			tUserPtr ptr = std::make_shared<tUser>();
+			ptr->device_type = _user_info.device_type;
+			ptr->user_id = _user_info.user_id;
+			ptr->user_name = _user_info.user_name;
+			_user_list.Add(ptr);
         }
 		else
 		{
@@ -128,19 +134,13 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
         auto logout_res = pb->logout_response();
         if (logout_res.token() == _user_info.token)
         {
-            if ( logout_res.status() == LS_LOGINED)
-            {
-                _user_info.login_status = LS_VERIFY_ACCOUNT;
-            }
-            else
-            {
-                _user_info.login_status = LS_VERIFY_ACCOUNT;
-            }
+			printf("退出操作结果:%d",(int)logout_res.status());
         }
         else
         {
             printf("Unknown user token");
         }
+		_user_list.Clear();
 		_cur_state = LS_CONNECTED;
 		Transform();
     } 
@@ -156,11 +156,17 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
         {
             printf( "new user online :\nuserid:%s\nusername:%s\nextend:%s\ndev_type:%d\n",
                     userid.c_str(), username.c_str(), extend.c_str(), dev_type );
+			tUserPtr ptr = std::make_shared<tUser>();
+			ptr->device_type = dev_type;
+			ptr->user_id = userid;
+			ptr->user_name = username;
+			_user_list.Add(ptr);
         }
         else
         {
             printf( "new user offline :\nuserid:%s\nusername:%s\n",
                     userid.c_str(), username.c_str() );
+			_user_list.Remove(userid);
         }
     }
     else
@@ -176,13 +182,10 @@ bool UserManager::HandleError( int server_type, std::error_code ec )
     std::cout << "server_type:"<<server_type<<" "<< ec.message() << "\n";
     if ( ec.value() != 0 )
     {
-        if ( _user_info.login_status == 0 )
-        {
-            if ( _login_handle )
-            {
-                _login_handle( _user_info.user_id, 0 );
-            }
-        }
+		if (_login_handle)
+		{
+			_login_handle(_user_info.user_id, 0);
+		}
     }
 	_cur_state = LS_NONE;
 	Transform();
@@ -280,5 +283,15 @@ void UserManager::Transform()
 	default:
 		break;
 	}
+
+	Update();
 }
 
+
+void UserManager::Update()
+{
+	if ( _cur_state < LS_LOGINED )
+	{
+		_user_list.Clear();
+	}
+}

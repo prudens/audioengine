@@ -56,8 +56,12 @@ int main( int argc, char** argv )
     {
         if ( status == 4)
         {
-            printf( "[%s]µÇÂ¼Ê§°Ü",userid.c_str() );
+            printf( "[%s]µÇÂ¼Ê§°Ü\n",userid.c_str() );
         }
+		else
+		{
+			printf("[%s]µÇÂ½Ê§°Ü", userid.c_str());
+		}
     });
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 gen( rd() ); //Standard mersenne_twister_engine seeded with rd()

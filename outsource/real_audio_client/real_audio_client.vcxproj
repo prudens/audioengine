@@ -83,6 +83,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="real_audio_client.cpp" />
     <ClCompile Include="server_config.cpp" />
+    <ClCompile Include="user_list.cpp" />
     <ClCompile Include="user_manager.cpp" />
     <ClCompile Include="user_service.cpp" />
   </ItemGroup>
@@ -95,6 +96,7 @@
     <ClInclude Include="client_module.h" />
     <ClInclude Include="real_audio_client.h" />
     <ClInclude Include="server_config.h" />
+    <ClInclude Include="user_list.h" />
     <ClInclude Include="user_manager.h" />
     <ClInclude Include="user_service.h" />
   </ItemGroup>

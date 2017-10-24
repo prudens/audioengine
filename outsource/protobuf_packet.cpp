@@ -46,6 +46,10 @@ void ProtoPacket::Parse( BufferPtr buf )
                 if(_cb)_cb(std::error_code(),pb);
             }
         } 
+		else
+		{
+			_buffer->Reset();
+		}
     }
 }
 
