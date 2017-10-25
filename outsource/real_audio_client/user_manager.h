@@ -5,8 +5,6 @@
 #include "user_service.h"
 #include "base/timer.h"
 #include "user_list.h"
-typedef std::function<void( std::string userid,int login_result )> LoginHandle;
-
 
 //״̬ͼ
 /*  LS_NONE----LS_CONNECTING-----LS_CONNECTED----LS_VERIFY_ACCOUNT
@@ -28,15 +26,17 @@ enum LoginState{
 };
 
 
-struct UserInfo
+class UserEventHandler
 {
-
-    std::string  user_id;
-    std::string user_name;
-    std::string extend;
-	int device_type;
-    int64_t  token;
+public:
+	virtual ~UserEventHandler(){}
+	virtual void UpdateLoginState(LoginState state) = 0;
+	virtual void UserEnterRoom(UserPtr user) = 0;
+	virtual void UserLeaveRoom(std::string user_id) = 0;
+	virtual void UpdateUserState(std::string user_id, int state) = 0;
+	virtual void UpdateUserExtend(std::string user_id, std::string extend) = 0;
 };
+
 
 class UserManager: ProtoPacketizer
 {
@@ -44,7 +44,7 @@ public:
     UserManager( std::shared_ptr<UserService>  proto_packet = nullptr );
     ~UserManager();
 public:
-    void SetEventCallback( LoginHandle handle );
+    void SetEventCallback(UserEventHandler* handler );
     int  Login(std::string userid);
 	void Logout();
     int  GetLoginState();
@@ -54,19 +54,20 @@ private:
 	void DisConnectServer();
     void VerifyAccount();
 	void OnTimer();
-	void Transform();
+	void Transform(LoginState state);
 public:
     virtual bool RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb );
     virtual bool HandleError( int server_type, std::error_code ec );
     virtual bool HandleConnect( int server_type );
-	void Update();
-    LoginHandle _login_handle;
-    std::shared_ptr<UserService> _user_service;
-    UserInfo _user_info;
-    bool _connect_server = false;
+	void Update(LoginState state);
+	UserEventHandler* _event_handle;
+	UserServicePtr _user_service;
 	STimerPtr   _timer;
-	int        _server_status = 0;
+	std::string  _user_id;
+	std::string _user_name;
+	std::string _extend;
+	int      _device_type;
+	int64_t  _token;
 	LoginState _cur_state = LS_NONE;
 	LoginState _target_state = LS_NONE;
-	UserList _user_list;
 };

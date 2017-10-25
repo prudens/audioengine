@@ -29,23 +29,23 @@ UserManager::~UserManager()
 	_timer.reset();
 }
 
-void UserManager::SetEventCallback( LoginHandle handle )
+void UserManager::SetEventCallback(UserEventHandler* handle )
 {
-    _login_handle = handle;
+    _event_handle = handle;
 }
 
 int UserManager::Login( std::string userid )
 {
-    _user_info.user_id = userid;
+    _user_id = userid;
 	_target_state = LS_LOGINED;
-	Transform();
+	Transform(_cur_state);
     return 0;
 }
 
 void UserManager::Logout()
 {
 	_target_state = LS_NONE;
-	Transform();
+	Transform(_cur_state);
 }
 
 int UserManager::GetLoginState()
@@ -57,10 +57,10 @@ void UserManager::DoLogout()
 {
     auto pb = std::make_shared<audio_engine::RAUserMessage>();
     auto logout_req = pb->mutable_logout_requst();
-    logout_req->set_token(_user_info.token);
+    logout_req->set_token(_token);
     _user_service->SendPacket( 1, pb );
-	_cur_state = LS_LOGOUT;
-	Transform();
+	Transform(LS_LOGOUT);
+
 }
 
 void UserManager::ConnectServer()
@@ -71,28 +71,24 @@ void UserManager::ConnectServer()
 	{
 		_user_service->ConnectServer(1, ip, port );
 	}
-	_cur_state = LS_CONNECTING;
-	Transform();
+	Transform(LS_CONNECTING);
 }
 
 void UserManager::DisConnectServer()
 {
 	_user_service->DisconnectServer(1);
-	_cur_state = LS_NONE;
-	Transform();
+	Transform(LS_NONE);
 }
 
 void UserManager::VerifyAccount()
 {
 	auto pb = std::make_shared<audio_engine::RAUserMessage>();
 	auto login_req = pb->mutable_login_requst();
-	login_req->set_userid(_user_info.user_id);
-	login_req->set_username(_user_info.user_id);
-	login_req->set_devtype(DEVICE_TYPE::DEVICE_UNKNOWN);
+	login_req->set_userid(_user_id);
+	login_req->set_username(_user_name);
+	login_req->set_devtype(DEVICE_TYPE::DEVICE_WINDOWS);
 	_user_service->SendPacket(1, pb);
-
-	_cur_state = LS_VERIFY_ACCOUNT;
-	Transform();
+	Transform(LS_VERIFY_ACCOUNT);
 }
 
 bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
@@ -108,32 +104,29 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
             << "token: " << token << "\n";
         if (login_result)
         {
-            _user_info.user_id = userid;
-            _user_info.token = token;
-			_cur_state = LS_LOGINED;
+            _user_id = userid;
+            _token = token;
 			auto user = CreateUser();
-			user->SetDeviceType(_user_info.device_type);
-			user->SetUserID( _user_info.user_id);
-			user->SetUserName( _user_info.user_name);
+			user->SetDeviceType(_device_type);
+			user->SetUserID( _user_id);
+			user->SetUserName( _user_name);
 			user->SetStatus(0);
-			_user_list.Add(user);
+            if (_event_handle )
+            {
+				_event_handle->UserEnterRoom(user);
+            }
+			Transform(LS_LOGINED);
         }
 		else
 		{
-			_cur_state = LS_CONNECTED;
+			Transform(LS_CONNECTED);
 		}
-		Transform();
-		if (_login_handle)
-		{
-			_login_handle(userid, login_result);
-		}
-
     }
     else if ( pb->has_logout_response() )
     {
         printf( "收到登出消息回复\n" );
         auto logout_res = pb->logout_response();
-        if (logout_res.token() == _user_info.token)
+        if (logout_res.token() == _token)
         {
 			printf("退出操作结果:%d",(int)logout_res.status());
         }
@@ -141,9 +134,7 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
         {
             printf("Unknown user token");
         }
-		_user_list.Clear();
-		_cur_state = LS_CONNECTED;
-		Transform();
+		Transform(LS_CONNECTED);
     } 
     else if ( pb->has_login_notify() )
     {
@@ -161,13 +152,19 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
 			user->SetDeviceType( dev_type);
 			user->SetUserID(userid);
 			user->SetUserName( username );
-			_user_list.Add(user);
+			if (_event_handle)
+			{
+				_event_handle->UserEnterRoom(user);
+			}
         }
         else
         {
             printf( "new user offline :\nuserid:%s\nusername:%s\n",
                     userid.c_str(), username.c_str() );
-			_user_list.Remove(userid);
+           if ( _event_handle )
+           {
+			   _event_handle->UserLeaveRoom(userid);
+           }
         }
     }
     else
@@ -181,34 +178,25 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
 bool UserManager::HandleError( int server_type, std::error_code ec )
 {
     std::cout << "server_type:"<<server_type<<" "<< ec.message() << "\n";
-    if ( ec.value() != 0 )
-    {
-		if (_login_handle)
-		{
-			_login_handle(_user_info.user_id, 0);
-		}
-    }
-	_cur_state = LS_NONE;
-	Transform();
+	Transform(LS_NONE);
     return true;
 }
 
 bool UserManager::HandleConnect( int server_type )
 {
     printf( "连接服务器(%d)成功！！！\n", server_type );
-	_cur_state = LS_CONNECTED;
-	Transform();
+	Transform(LS_CONNECTED);
     return true;
 }
 
 
 void UserManager::OnTimer()
 {
+
 }
 
-void UserManager::Transform()
+void UserManager::Transform(LoginState state)
 {
-	LoginState state = _cur_state;
 	switch (_target_state)
 	{
 	case LS_NONE:
@@ -285,14 +273,18 @@ void UserManager::Transform()
 		break;
 	}
 
-	Update();
+	Update(state);
 }
 
 
-void UserManager::Update()
+void UserManager::Update(LoginState state)
 {
-	if ( _cur_state < LS_LOGINED )
+	if ( _cur_state != state )
 	{
-		_user_list.Clear();
+		_cur_state = state;
+		if (_event_handle)
+		{
+			_event_handle->UpdateLoginState(state);
+		}
 	}
 }

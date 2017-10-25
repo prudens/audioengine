@@ -1,6 +1,5 @@
 #include "user_list.h"
 
-
 struct UserImpl : public IUser
 {
 	virtual void SetUserID(std::string user_id)
@@ -62,6 +61,8 @@ private:
 
 };
 
+
+typedef std::lock_guard<std::mutex> lockGuard;
 UserPtr CreateUser()
 {
 	return std::make_shared<UserImpl>();
@@ -73,12 +74,14 @@ bool UserList::Add(UserPtr ptr)
 	{
 		return false;
 	}
+	lockGuard lock(_mutex);
 	_users[ptr->GetUserID()] = ptr;
 	return true;
 }
 
 bool UserList::Remove(std::string user_id)
 {
+	lockGuard lock(_mutex);
 	auto it = _users.find(user_id);
 	if ( it == _users.end())
 	{
@@ -90,6 +93,7 @@ bool UserList::Remove(std::string user_id)
 
 bool UserList::Update(std::string user_id, UserPtr ptr)
 {
+	lockGuard lock(_mutex);
 	auto it = _users.find(user_id);
 	if (it == _users.end())
 	{
@@ -102,6 +106,7 @@ bool UserList::Update(std::string user_id, UserPtr ptr)
 
 bool UserList::Update(std::string user_id, std::string user_name)
 {
+	lockGuard lock(_mutex);
 	auto it = _users.find(user_id);
 	if (it == _users.end())
 	{
@@ -118,6 +123,7 @@ bool UserList::Update(std::string user_id, std::string user_name)
 
 ConstUserPtr UserList::GetUser(std::string user_id)const
 {
+	lockGuard lock(_mutex);
 	auto it = _users.find(user_id);
 	if (it == _users.end())
 	{
@@ -126,7 +132,17 @@ ConstUserPtr UserList::GetUser(std::string user_id)const
 	return it->second;
 }
 
+void UserList::Traversal(std::function<void(ConstUserPtr)> cb)
+{
+	lockGuard lock(_mutex);
+	for (auto& item: _users)
+	{
+		cb(item.second);
+	}
+}
+
 void UserList::Clear()
 {
+	lockGuard lock(_mutex);
 	_users.clear();
 }

@@ -37,3 +37,5 @@ private:
     std::mutex _lock_handle;
     std::list<ProtoPacketizer*> _proto_handlers;
 };
+
+typedef std::shared_ptr<UserService> UserServicePtr;
