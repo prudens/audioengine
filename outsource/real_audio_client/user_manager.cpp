@@ -34,7 +34,7 @@ void UserManager::SetEventCallback( LoginHandle handle )
     _login_handle = handle;
 }
 
-int UserManager::Login( UID userid )
+int UserManager::Login( std::string userid )
 {
     _user_info.user_id = userid;
 	_target_state = LS_LOGINED;
@@ -111,11 +111,12 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
             _user_info.user_id = userid;
             _user_info.token = token;
 			_cur_state = LS_LOGINED;
-			tUserPtr ptr = std::make_shared<tUser>();
-			ptr->device_type = _user_info.device_type;
-			ptr->user_id = _user_info.user_id;
-			ptr->user_name = _user_info.user_name;
-			_user_list.Add(ptr);
+			auto user = CreateUser();
+			user->SetDeviceType(_user_info.device_type);
+			user->SetUserID( _user_info.user_id);
+			user->SetUserName( _user_info.user_name);
+			user->SetStatus(0);
+			_user_list.Add(user);
         }
 		else
 		{
@@ -147,7 +148,7 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
     else if ( pb->has_login_notify() )
     {
         auto login_ntf = pb->login_notify();
-        UID userid = login_ntf.userid();
+        auto userid = login_ntf.userid();
         std::string username = login_ntf.username();
         std::string extend = login_ntf.extend();
         int dev_type = login_ntf.devtype();
@@ -156,11 +157,11 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
         {
             printf( "new user online :\nuserid:%s\nusername:%s\nextend:%s\ndev_type:%d\n",
                     userid.c_str(), username.c_str(), extend.c_str(), dev_type );
-			tUserPtr ptr = std::make_shared<tUser>();
-			ptr->device_type = dev_type;
-			ptr->user_id = userid;
-			ptr->user_name = username;
-			_user_list.Add(ptr);
+			auto user = CreateUser();
+			user->SetDeviceType( dev_type);
+			user->SetUserID(userid);
+			user->SetUserName( username );
+			_user_list.Add(user);
         }
         else
         {

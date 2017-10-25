@@ -10,7 +10,7 @@ public:
     RealAudioClient();
     ~RealAudioClient();
 public:
-    int Start(UID userid, RID roomid);
+    int Start(std::string userid, RID roomid);
     int Stop();
     int Login();
     int Logout();
@@ -21,7 +21,7 @@ public:
     int GetMessage(RAMsg *msg);
 public:
 private:
-    UID userid = 0;
+    std::string userid;
     RID roomid = 0;
     
 };

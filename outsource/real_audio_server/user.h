@@ -18,7 +18,7 @@ public:
     ~User();
     void AttachTcp( TcpSocketPtr tcp );
     void DettachTcp();
-    UID userid();
+    std::string userid();
     std::string username();
     std::string extend();
     int device_type();
@@ -31,7 +31,7 @@ private:
     void HandleError( std::error_code ec );
     void HandleLogin(const audio_engine::LoginRequest& login_req);
     void HandleLogout( const ::audio_engine::LogoutRequst& logout_req);
-    UID _userid;
+    std::string _userid;
     std::string _user_name;
     std::string _extend;
     int64_t _token = 0;

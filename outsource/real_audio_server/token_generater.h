@@ -4,6 +4,6 @@
 class TokenGenerater
 {
 public:
-    static int64_t NewToken(UID userid);
+    static int64_t NewToken(std::string userid);
     static bool CheckToken( int64_t token);
 };

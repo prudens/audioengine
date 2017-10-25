@@ -1,12 +1,79 @@
 #include "user_list.h"
 
-bool UserList::Add(tUserPtr ptr)
+
+struct UserImpl : public IUser
+{
+	virtual void SetUserID(std::string user_id)
+	{
+		_user_id = user_id;
+	}
+	virtual void SetUserName(std::string user_name)
+	{
+		_user_name = user_name;
+	}
+	virtual void SetUserExtend(std::string user_extend)
+	{
+		_user_extend = user_extend;
+	}
+	virtual void SetDeviceType(int dev_type)
+	{
+		_device_type = dev_type;
+	}
+	virtual void SetStatus(int status)
+	{
+		_status = status;
+	}
+
+	virtual const std::string& GetUserID()const
+	{
+		return _user_id;
+	}
+	virtual const std::string& GetUserName()const
+	{
+		return _user_name;
+	}
+	virtual const std::string& GetUserExtend()const
+	{
+		return _user_extend;
+	}
+	virtual int GetDeviceType()const
+	{
+		return _device_type;
+	}
+	virtual int GetStatus()const
+	{
+		return _status;
+	}
+
+	virtual void CopyFrom(const IUser* user)
+	{
+		_user_id = user->GetUserID();
+		_user_name = user->GetUserName();
+		_user_extend = user->GetUserExtend();
+		_device_type = user->GetDeviceType();
+		_status = user->GetStatus();
+	}
+private:
+	std::string _user_id;
+	std::string _user_name;
+	std::string _user_extend;
+	int _device_type = 0;
+	int _status = 0;
+
+};
+
+UserPtr CreateUser()
+{
+	return std::make_shared<UserImpl>();
+}
+
+bool UserList::Add(UserPtr ptr)
 {
 	if (!ptr)
 	{
 		return false;
 	}
-	_users[ptr->user_id] = ptr;
+	_users[ptr->GetUserID()] = ptr;
 	return true;
 }
 
@@ -21,7 +88,7 @@ bool UserList::Remove(std::string user_id)
 	return true;
 }
 
-bool UserList::Update(std::string user_id, tUserPtr ptr)
+bool UserList::Update(std::string user_id, UserPtr ptr)
 {
 	auto it = _users.find(user_id);
 	if (it == _users.end())
@@ -40,15 +107,16 @@ bool UserList::Update(std::string user_id, std::string user_name)
 	{
 		return false;
 	}
-	tUserPtr new_ptr = std::make_shared<tUser>();
-	new_ptr->device_type = it->second->device_type;
-	new_ptr->user_name = user_name;
-	new_ptr->user_id = it->second->user_id;
-	it->second = new_ptr;
+	UserPtr new_user = CreateUser();
+	new_user->SetDeviceType( it->second->GetDeviceType());
+	new_user->SetUserID(it->second->GetUserID());
+	new_user->SetUserName(user_name);
+	new_user->SetUserExtend(it->second->GetUserExtend());
+	it->second = new_user;
 	return true;
 }
 
-const tUserPtr UserList::GetUser(std::string user_id)const
+ConstUserPtr UserList::GetUser(std::string user_id)const
 {
 	auto it = _users.find(user_id);
 	if (it == _users.end())

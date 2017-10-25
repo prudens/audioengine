@@ -55,7 +55,6 @@ void AudioEffect::Init( size_t recSampleRate, size_t recChannel, size_t plySampl
     m_plyResample.ResetIfNeeded( m_plySampleRate, kTargetPlySampleRate, m_plyChannel );
     m_recReverseResample.ResetIfNeeded( kTargetRecSampleRate, m_recSampleRate, m_recChannel );
     m_plyReverseResample.ResetIfNeeded( kTargetPlySampleRate,m_plySampleRate, m_plyChannel );
-    m_check.reset( m_recSampleRate, m_recChannel );
     m_bInit = true;
 }
 
@@ -122,21 +121,6 @@ void AudioEffect::ProcessCaptureStream( int16_t* audio_samples, size_t frame_byt
     }
     int level = m_apm->level_estimator()->RMS();
     m_level = level;
-   
-//     int16_t* p;
-//     if (m_audiolist.size()>10)
-//     {
-//         p = m_audiolist.front();
-//         m_audiolist.pop_front();
-//     }
-//     else
-//     {
-//         p = new int16_t[frame_byte_size];
-//     }
-//     memcpy( (void*)p, audio_samples, frame_byte_size );
-//     m_audiolist.push_back( p );
-
-    m_check.process( (const void*)audio_samples, frame_byte_size, m_level, m_apm->voice_detection()->stream_has_voice() );
 
     UpdateLevelList(!m_apm->voice_detection()->stream_has_voice(),level);
 
@@ -235,17 +219,7 @@ bool AudioEffect::HadProcessingVoice()
 
 bool AudioEffect::GetRecordingData( void* data, size_t size_in_byte, bool bNoCache )
 {
-    auto pframe =  m_check.getframe( bNoCache );
-    if (!pframe)
-    {
-        return false;
-    }
-
-    memcpy( data, pframe->data(), pframe->len );
-   // m_lpf.Processing( (const int16_t*)data, (int16_t*)data, size_in_byte / 2 );
-    return true;
-
-
+ 
     size_t outLen = 0;
     int16_t *pInput = nullptr;
     int index = m_audiolist.size();

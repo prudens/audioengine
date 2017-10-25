@@ -10,6 +10,56 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\packet.cpp" />
+    <ClCompile Include="..\protobuf_packet.cpp" />
+    <ClCompile Include="..\user_service.pb.cc" />
+    <ClCompile Include="api\audio_typedef.cpp" />
+    <ClCompile Include="api\module_debug_impl.cpp" />
+    <ClCompile Include="api\snail_audio_engine_impl.cpp" />
+    <ClCompile Include="audio_client.cpp" />
+    <ClCompile Include="audio_error.cpp" />
+    <ClCompile Include="client_manager.cpp" />
+    <ClCompile Include="client_module.cpp" />
+    <ClCompile Include="engine.cpp" />
+    <ClCompile Include="file_process.cpp" />
+    <ClCompile Include="import_lib.cpp" />
+    <ClCompile Include="io_thread.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="message_queue.cpp" />
+    <ClCompile Include="real_audio_client.cpp" />
+    <ClCompile Include="server_config.cpp" />
+    <ClCompile Include="user_list.cpp" />
+    <ClCompile Include="user_manager.cpp" />
+    <ClCompile Include="user_service.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\packet.h" />
+    <ClInclude Include="..\protobuf_packet.h" />
+    <ClInclude Include="..\user_service.pb.h" />
+    <ClInclude Include="api\audio_typedef.h" />
+    <ClInclude Include="api\IModuleDebuger.h" />
+    <ClInclude Include="api\IModuleDebuger_OC.h" />
+    <ClInclude Include="api\ISnailAudioEngine.h" />
+    <ClInclude Include="api\ISnailAudioModule.h" />
+    <ClInclude Include="api\module_debug_impl.h" />
+    <ClInclude Include="api\SnailAudioEngineHelper.h" />
+    <ClInclude Include="api\SnailAudioEngine_OC.h" />
+    <ClInclude Include="api\snail_audio_engine_impl.h" />
+    <ClInclude Include="audio_client.h" />
+    <ClInclude Include="audio_error.h" />
+    <ClInclude Include="client_manager.h" />
+    <ClInclude Include="client_module.h" />
+    <ClInclude Include="cmd.h" />
+    <ClInclude Include="config.h" />
+    <ClInclude Include="engine.h" />
+    <ClInclude Include="message_queue.h" />
+    <ClInclude Include="real_audio_client.h" />
+    <ClInclude Include="server_config.h" />
+    <ClInclude Include="user_list.h" />
+    <ClInclude Include="user_manager.h" />
+    <ClInclude Include="user_service.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B3780BDA-F699-447E-A998-12ED78C8681A}</ProjectGuid>
     <RootNamespace>real_audio_client</RootNamespace>
@@ -48,7 +98,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\;..\..\processing\src;../../network/asio/asio/include;../;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\;..\..\processing\src;../../network/asio/asio/include;../;./api;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;_WIN32_WINNT=0x0501;ASIO_STANDALONE; _CRT_SECURE_NO_WARNINGS;PROTOBUF_INLINE_NOT_IN_HEADERS;ASIO_ENABLE_CANCELIO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -73,33 +123,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\packet.cpp" />
-    <ClCompile Include="..\protobuf_packet.cpp" />
-    <ClCompile Include="..\user_service.pb.cc" />
-    <ClCompile Include="audio_error.cpp" />
-    <ClCompile Include="client_module.cpp" />
-    <ClCompile Include="import_lib.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="real_audio_client.cpp" />
-    <ClCompile Include="server_config.cpp" />
-    <ClCompile Include="user_list.cpp" />
-    <ClCompile Include="user_manager.cpp" />
-    <ClCompile Include="user_service.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\packet.h" />
-    <ClInclude Include="..\protobuf_packet.h" />
-    <ClInclude Include="..\real_audio_common.h" />
-    <ClInclude Include="..\user_service.pb.h" />
-    <ClInclude Include="audio_error.h" />
-    <ClInclude Include="client_module.h" />
-    <ClInclude Include="real_audio_client.h" />
-    <ClInclude Include="server_config.h" />
-    <ClInclude Include="user_list.h" />
-    <ClInclude Include="user_manager.h" />
-    <ClInclude Include="user_service.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

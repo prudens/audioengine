@@ -5,7 +5,7 @@
 #include "user_service.h"
 #include "base/timer.h"
 #include "user_list.h"
-typedef std::function<void( UID userid,int login_result )> LoginHandle;
+typedef std::function<void( std::string userid,int login_result )> LoginHandle;
 
 
 //״̬ͼ
@@ -31,7 +31,7 @@ enum LoginState{
 struct UserInfo
 {
 
-    UID  user_id;
+    std::string  user_id;
     std::string user_name;
     std::string extend;
 	int device_type;
@@ -45,7 +45,7 @@ public:
     ~UserManager();
 public:
     void SetEventCallback( LoginHandle handle );
-    int  Login(UID userid);
+    int  Login(std::string userid);
 	void Logout();
     int  GetLoginState();
 private:

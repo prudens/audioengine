@@ -1,5 +1,5 @@
 #include "mmse.h"
-#include <boost/math/tr1.hpp>
+#include <boost/math/special_functions/bessel.hpp>
 void MMSE::Init( int samplerate, int channel )
 {
     m_fft.Init( samplerate / 100, std::bind( &MMSE::ProcessSpec, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3 ) );
@@ -49,8 +49,8 @@ bool MMSE::ProcessSpec( std::valarray< std::complex<float> >&, std::valarray<flo
     }
 
     auto vk = ksi*gammak / ( ksi + 1.0f );
-    auto j0 = vk.apply( [] ( float v ){return (float)boost::math::tr1::boost_cyl_bessel_i( 0.0f, v / 2 );} );
-    auto j1 = vk.apply( [] ( float v ) { return  (float)boost::math::tr1::boost_cyl_bessel_if( 1.0f, v / 2 ); } );
+    auto j0 = vk.apply( [] ( float v ) { return (float)boost::math::cyl_bessel_i( 0.0f, v / 2 ); } );
+    auto j1 = vk.apply( [] ( float v ) { return  (float)boost::math::cyl_bessel_i( 1.0f, v / 2 ); } );
     auto C = exp( vk * -0.5f );
     
     auto A = sqrt(vk)  * c * C / gammak;

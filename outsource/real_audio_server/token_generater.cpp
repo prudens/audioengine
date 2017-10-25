@@ -3,7 +3,7 @@
 int64_t token_number = 0;
 struct Token
 {
-    int64_t Generate( UID udserid )
+    int64_t Generate( std::string udserid )
     {
         token_number++;
         return token_number;
@@ -14,7 +14,7 @@ struct Token
     }
 };
 Token s_token;
-int64_t TokenGenerater::NewToken( UID userid )
+int64_t TokenGenerater::NewToken( std::string userid )
 {
     return s_token.Generate( userid );
 }

@@ -21,7 +21,7 @@
 #include "webrtc/common_audio/resampler/include/resampler.h"
 #include "webrtc/common_audio/real_fourier.h"
 //project file
-#include "audio_voice_check.h"
+
 #include "audio_low_pass_filter.h"
 
 using namespace webrtc;
@@ -70,7 +70,6 @@ private:
     int32_t m_nCheckVad;
     int32_t m_stream_delay;
     int32_t m_nNormalVoice; 
-	snail::audio::audio_voice_check m_check;
     int m_level;
     bool m_bSilent;
     struct LevelInfo

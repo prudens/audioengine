@@ -6,7 +6,7 @@
 #include <list>
 #include <vector>
 #include <cassert>
-typedef std::string UID;
+
 typedef uint64_t RID;
 #define DEFAULT_BUFFER_SIZE (64*1024-4)
 

@@ -33,7 +33,7 @@ void User::DettachTcp()
 	_tcp_socket->DisConnect();
 }
 
-UID User::userid()
+std::string User::userid()
 {
     return _userid;
 }
