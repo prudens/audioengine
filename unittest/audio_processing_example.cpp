@@ -5,9 +5,6 @@
 #include "webrtc/common_audio/vad/include/webrtc_vad.h"
 #include "audio_resample.h"
 
-
-using namespace snail::audio;
-
 void WavFileProcess( std::string inFile, std::string outFile, size_t frametime = 10 /*ms*/, std::function<bool( int16_t*, size_t& )> fn = nullptr )
 {
     assert( fn );
@@ -382,35 +379,35 @@ private:
 
 void test_audio_mixer()
 {
-    WavWriter output( "D:/es-output.wav",48000,2 );
-    AudioStream es01("C:/Users/zhangnaigan/Desktop/3D_test_Audio/es01.wav");
-    AudioStream es02( "C:/Users/zhangnaigan/Desktop/3D_test_Audio/es02.wav" );
-    AudioStream es03( "C:/Users/zhangnaigan/Desktop/3D_test_Audio/es03.wav" );
-    AudioStream es04( "C:/Users/zhangnaigan/Desktop/3D_test_Audio/sc01.wav" );
-    AudioStream es05( "C:/Users/zhangnaigan/Desktop/3D_test_Audio/sc02.wav" );
-    AudioStream es06( "C:/Users/zhangnaigan/Desktop/3D_test_Audio/sc03.wav" );
-    AudioMixer* mixer = AudioMixer::Create( 48000, 2, 960 );
-    mixer->LimitParticipantCount( 1 );
-    mixer->AddParticipant( &es01 );
-    mixer->AddParticipant( &es02 );
-//  mixer->AddParticipant( &es03 );
-//  mixer->AddParticipant( &es04 );
-    mixer->AddParticipant( &es05 );
-//  mixer->AddParticipant( &es06 );
-
-    int16_t data[960];
-    for ( ;; )
-    {
-        size_t nsample = mixer->GetMixerAudio( data, 960 );
-        if (nsample > 0)
-        {
-            output.WriteSamples( data, nsample );
-        }
-        else
-        {
-            break;
-        }
-    }
+//    WavWriter output( "D:/es-output.wav",48000,2 );
+//    AudioStream es01("C:/Users/zhangnaigan/Desktop/3D_test_Audio/es01.wav");
+//    AudioStream es02( "C:/Users/zhangnaigan/Desktop/3D_test_Audio/es02.wav" );
+//    AudioStream es03( "C:/Users/zhangnaigan/Desktop/3D_test_Audio/es03.wav" );
+//    AudioStream es04( "C:/Users/zhangnaigan/Desktop/3D_test_Audio/sc01.wav" );
+//    AudioStream es05( "C:/Users/zhangnaigan/Desktop/3D_test_Audio/sc02.wav" );
+//    AudioStream es06( "C:/Users/zhangnaigan/Desktop/3D_test_Audio/sc03.wav" );
+//    AudioMixer* mixer = AudioMixer::Create( 48000, 2, 960 );
+//    mixer->LimitParticipantCount( 1 );
+//    mixer->AddParticipant( &es01 );
+//    mixer->AddParticipant( &es02 );
+////  mixer->AddParticipant( &es03 );
+////  mixer->AddParticipant( &es04 );
+//    mixer->AddParticipant( &es05 );
+////  mixer->AddParticipant( &es06 );
+//
+//    int16_t data[960];
+//    for ( ;; )
+//    {
+//        size_t nsample = mixer->GetMixerAudio( data, 960 );
+//        if (nsample > 0)
+//        {
+//            output.WriteSamples( data, nsample );
+//        }
+//        else
+//        {
+//            break;
+//        }
+//    }
 
 }
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "user_list.h"
+#include "user_manager.h"
  class MasterControl final
 {
 public:
