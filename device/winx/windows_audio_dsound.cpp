@@ -773,7 +773,7 @@ DWORD WindowsAudioDSound::DoCaptureThread()
                if (audio_buffer_proc_)
                {
                    audio_buffer_proc_->RecordingDataIsAvailable( pbCaptureData, dwLockedSize );
-                   printf( "[%I64u]RecordingDataIsAvailable:%d\n", timestamp(), dwLockedSize );
+                   printf( "[%I64u]RecordingDataIsAvailable:%d\n", TimeStampMs(), dwLockedSize );
                }
 
                capture_direct_sound_buf_->Unlock( pbCaptureData, dwLockedSize, NULL, NULL );

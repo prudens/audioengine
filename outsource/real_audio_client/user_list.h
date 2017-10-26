@@ -4,9 +4,9 @@
 #include <unordered_map>
 #include <mutex>
 #include <functional>
-struct IUser
+struct IMember
 {
-	virtual void  CopyFrom(const IUser* user) = 0;
+	virtual void  CopyFrom(const IMember* user) = 0;
 	virtual void SetUserID(std::string user_id ) = 0;
 	virtual void SetUserName(std::string user_name) = 0;
 	virtual void SetUserExtend(std::string extend) = 0;
@@ -19,21 +19,22 @@ struct IUser
 	virtual int   GetStatus()const = 0;
 };
 
-typedef std::shared_ptr<IUser> UserPtr;
-typedef std::shared_ptr<const IUser> ConstUserPtr;
-UserPtr CreateUser();
-class UserList
+typedef std::shared_ptr<IMember> MemberPtr;
+typedef std::shared_ptr<const IMember> ConstUserPtr;
+MemberPtr CreateMember();
+class MemberList
 {
 public:
-	bool Add(UserPtr ptr);
+	bool Add(MemberPtr ptr);
 	bool Remove(std::string user_id);
-	bool Update(std::string user_id, UserPtr ptr);
-	bool Update(std::string user_id, std::string user_name);
+	bool Update(std::string user_id, MemberPtr ptr);
+	bool Update(std::string user_id, std::string user_extend);
+	bool Update(std::string user_id, int state);
 	ConstUserPtr GetUser(std::string user_id)const;
 	void Traversal(std::function<void(ConstUserPtr)> cb);
 	void Clear();
 private:
-	typedef std::unordered_map<std::string, UserPtr> UserMap;
+	typedef std::unordered_map<std::string, MemberPtr> UserMap;
 	UserMap _users;
 	mutable std::mutex _mutex;
 };

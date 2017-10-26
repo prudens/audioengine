@@ -40,7 +40,7 @@ void test_fft()
         pfft->Forward( arr, caar );
         pfft->Inverse( caar, arr );
     }
-    cout << "Ooura Implemented fft processed time: "<<t.elapsed() <<"ms"<< endl;
+    cout << "Ooura Implemented fft processed time: "<<t.Elapsed() <<"ms"<< endl;
 
     for ( int i = 0; i < order; i++ )
     {
@@ -53,7 +53,7 @@ void test_fft()
         CFFT::Inverse( caar, order );
     }
 
-    cout <<"LIBROW implemented fft processed time :"<< t.elapsed() << "ms"<<endl;
+    cout <<"LIBROW implemented fft processed time :"<< t.Elapsed() << "ms"<<endl;
     t.reset();
 }
 

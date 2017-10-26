@@ -1,6 +1,6 @@
 #include "user_list.h"
 
-struct UserImpl : public IUser
+struct UserImpl : public IMember
 {
 	virtual void SetUserID(std::string user_id)
 	{
@@ -44,7 +44,7 @@ struct UserImpl : public IUser
 		return _status;
 	}
 
-	virtual void CopyFrom(const IUser* user)
+	virtual void CopyFrom(const IMember* user)
 	{
 		_user_id = user->GetUserID();
 		_user_name = user->GetUserName();
@@ -63,12 +63,12 @@ private:
 
 
 typedef std::lock_guard<std::mutex> lockGuard;
-UserPtr CreateUser()
+MemberPtr CreateMember()
 {
 	return std::make_shared<UserImpl>();
 }
 
-bool UserList::Add(UserPtr ptr)
+bool MemberList::Add(MemberPtr ptr)
 {
 	if (!ptr)
 	{
@@ -79,7 +79,7 @@ bool UserList::Add(UserPtr ptr)
 	return true;
 }
 
-bool UserList::Remove(std::string user_id)
+bool MemberList::Remove(std::string user_id)
 {
 	lockGuard lock(_mutex);
 	auto it = _users.find(user_id);
@@ -91,7 +91,7 @@ bool UserList::Remove(std::string user_id)
 	return true;
 }
 
-bool UserList::Update(std::string user_id, UserPtr ptr)
+bool MemberList::Update(std::string user_id, MemberPtr ptr)
 {
 	lockGuard lock(_mutex);
 	auto it = _users.find(user_id);
@@ -104,7 +104,7 @@ bool UserList::Update(std::string user_id, UserPtr ptr)
 	return true;
 }
 
-bool UserList::Update(std::string user_id, std::string user_name)
+bool MemberList::Update(std::string user_id, std::string user_extend)
 {
 	lockGuard lock(_mutex);
 	auto it = _users.find(user_id);
@@ -112,16 +112,34 @@ bool UserList::Update(std::string user_id, std::string user_name)
 	{
 		return false;
 	}
-	UserPtr new_user = CreateUser();
+	MemberPtr new_user = CreateMember();
 	new_user->SetDeviceType( it->second->GetDeviceType());
 	new_user->SetUserID(it->second->GetUserID());
-	new_user->SetUserName(user_name);
-	new_user->SetUserExtend(it->second->GetUserExtend());
+	new_user->SetUserExtend(user_extend);
+	new_user->SetUserName(it->second->GetUserName());
 	it->second = new_user;
 	return true;
 }
 
-ConstUserPtr UserList::GetUser(std::string user_id)const
+bool MemberList::Update(std::string user_id, int state)
+{
+	lockGuard lock(_mutex);
+	auto it = _users.find(user_id);
+	if (it == _users.end())
+	{
+		return false;
+	}
+	MemberPtr new_user = CreateMember();
+	new_user->SetDeviceType(it->second->GetDeviceType());
+	new_user->SetUserID(it->second->GetUserID());
+	new_user->SetUserName(it->second->GetUserName());
+	new_user->SetUserExtend(it->second->GetUserExtend());
+	new_user->SetStatus(state);
+	it->second = new_user;
+	return false;
+}
+
+ConstUserPtr MemberList::GetUser(std::string user_id)const
 {
 	lockGuard lock(_mutex);
 	auto it = _users.find(user_id);
@@ -132,7 +150,7 @@ ConstUserPtr UserList::GetUser(std::string user_id)const
 	return it->second;
 }
 
-void UserList::Traversal(std::function<void(ConstUserPtr)> cb)
+void MemberList::Traversal(std::function<void(ConstUserPtr)> cb)
 {
 	lockGuard lock(_mutex);
 	for (auto& item: _users)
@@ -141,7 +159,7 @@ void UserList::Traversal(std::function<void(ConstUserPtr)> cb)
 	}
 }
 
-void UserList::Clear()
+void MemberList::Clear()
 {
 	lockGuard lock(_mutex);
 	_users.clear();

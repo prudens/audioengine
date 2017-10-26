@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 #include <functional>
+
+#include "base/time_cvt.hpp"
 #include "server_config.h"
 #include "client_module.h"
 #include "base/timer.h"
@@ -34,9 +36,10 @@ void UserManager::SetEventCallback(UserEventHandler* handle )
     _event_handle = handle;
 }
 
-int UserManager::Login( std::string userid )
+int UserManager::Login( std::string userid, std::string roomkey)
 {
     _user_id = userid;
+	_roomkey = roomkey;
 	_target_state = LS_LOGINED;
 	Transform(_cur_state);
     return 0;
@@ -48,9 +51,24 @@ void UserManager::Logout()
 	Transform(_cur_state);
 }
 
-int UserManager::GetLoginState()
+int UserManager::GetCurState()
 {
 	return _cur_state;
+}
+
+int UserManager::GetTargetState()
+{
+	return _target_state;
+}
+
+std::string UserManager::GetUserID()
+{
+	return _user_id;
+}
+
+std::string UserManager::GetRoomKey()
+{
+	return _roomkey;
 }
 
 void UserManager::DoLogout()
@@ -60,7 +78,14 @@ void UserManager::DoLogout()
     logout_req->set_token(_token);
     _user_service->SendPacket( 1, pb );
 	Transform(LS_LOGOUT);
-
+	_cur_state_time = TimeStampMs();
+	_timer->AddTask(1000, [=] 
+	{
+		if (_cur_state_time + 1000 < TimeStampMs())
+		{
+			Transform(LS_CONNECTED);
+		}
+	});
 }
 
 void UserManager::ConnectServer()
@@ -106,7 +131,7 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
         {
             _user_id = userid;
             _token = token;
-			auto user = CreateUser();
+			auto user = CreateMember();
 			user->SetDeviceType(_device_type);
 			user->SetUserID( _user_id);
 			user->SetUserName( _user_name);
@@ -148,7 +173,7 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
         {
             printf( "new user online :\nuserid:%s\nusername:%s\nextend:%s\ndev_type:%d\n",
                     userid.c_str(), username.c_str(), extend.c_str(), dev_type );
-			auto user = CreateUser();
+			auto user = CreateMember();
 			user->SetDeviceType( dev_type);
 			user->SetUserID(userid);
 			user->SetUserName( username );
@@ -281,10 +306,10 @@ void UserManager::Update(LoginState state)
 {
 	if ( _cur_state != state )
 	{
-		_cur_state = state;
-		if (_event_handle)
+		if (_event_handle && (state % 2 == 0))
 		{
 			_event_handle->UpdateLoginState(state);
 		}
 	}
+	_cur_state = state;
 }

@@ -37,7 +37,7 @@ public:
             return;
         }
         int64_t* t = (int64_t*)data_;
-        t[1] = timestamp();
+        t[1] = TimeStampMs();
         std::cout << t[1]<<std::endl;
         socket_.async_send_to(
             asio::buffer( data_, length ), sender_endpoint_,

@@ -5,7 +5,7 @@
 #include <memory>
 #include <mutex>
 #include <map>
-//#include "media_base_client/imedia_base_client.h"
+#include "../master_control.h"
 #include "ISnailAudioModule.h"
 #include "ISnailAudioEngine.h"
 
@@ -29,7 +29,7 @@ public:
 };
 
 
-class AudioRoomImpl : public IAudioRoom
+class AudioRoomImpl : public IAudioRoom,public IAsyncEventHandler
 { 
 	typedef std::shared_ptr<IModule> moduleptr;
 public:
@@ -50,6 +50,9 @@ public:
     void EnableAudioMessage( bool enable );
     void EnablePullUserList( bool enable = false );
 	void RecvAsyncEvent(EventHandle handle);
+public:
+	virtual void RespondLogin(std::string roomkey, std::string uid, int ec);
+	virtual void RespondLogout(std::string roomkey, std::string uid, int ec);
 private: 
 	IModule*  CreateModule(int id);
 	void	  ConsumeAllEvent();
@@ -59,8 +62,8 @@ private:
     int       DoLogin();
 
 public:
+	MasterControl _master_control;
 	std::map<int, moduleptr> _modules; 
-	//snail::client::media::mediaclientptr _media_base_client;
 	IAudioRoomEventHandler* _handler = nullptr;
 	bool _run_flag = false;
 	bool _use_poll = false;

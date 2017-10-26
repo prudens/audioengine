@@ -94,7 +94,7 @@ public:
 private:
     void do_accept()
     {
-        if ( timer_.elapsed() >= 1000 )
+        if ( timer_.Elapsed() >= 1000 )
         {
             timer_.reset();
             std::cout << count << std::endl;
@@ -137,7 +137,7 @@ int test_asio_tcp_client( int argc, char* argv[] )
             tcp::resolver::results_type result = resolver.resolve( argv[1], "8888" );
 
             tcp::resolver::results_type::const_iterator it = result.begin();
-            while ( timer.elapsed() < 1000 )
+            while ( timer.Elapsed() < 1000 )
             {
                 try
                 {
@@ -506,7 +506,7 @@ void test_ntp()
     NTPData data;
     int8_t arr[48] = { 0 };
      arr[0] = 0x1b;
-    int ts = (int)timestamp();
+    int ts = (int)TimeStampMs();
 
     for ( int i = 3; i >= 0; i-- )
     {
@@ -547,10 +547,10 @@ void test_asio_timer()
     asio::io_context context;
     typedef asio::basic_waitable_timer<std::chrono::steady_clock1>  steady_timer;
    steady_timer timer( context );
-    printf( "now %s", timestamptostring().c_str() );
+    printf( "now %s", FormatTime().c_str() );
     timer.expires_from_now( std::chrono::seconds( 6 ) );
     timer.async_wait( [] (asio::error_code ec) {
-        printf( "now %s", timestamptostring().c_str() );
+        printf( "now %s", FormatTime().c_str() );
     } );
     context.run();
 }

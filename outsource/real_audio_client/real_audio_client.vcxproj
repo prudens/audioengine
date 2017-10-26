@@ -40,12 +40,10 @@
     <ClInclude Include="..\user_service.pb.h" />
     <ClInclude Include="api\audio_typedef.h" />
     <ClInclude Include="api\IModuleDebuger.h" />
-    <ClInclude Include="api\IModuleDebuger_OC.h" />
     <ClInclude Include="api\ISnailAudioEngine.h" />
     <ClInclude Include="api\ISnailAudioModule.h" />
     <ClInclude Include="api\module_debug_impl.h" />
     <ClInclude Include="api\SnailAudioEngineHelper.h" />
-    <ClInclude Include="api\SnailAudioEngine_OC.h" />
     <ClInclude Include="api\snail_audio_engine_impl.h" />
     <ClInclude Include="audio_client.h" />
     <ClInclude Include="audio_error.h" />

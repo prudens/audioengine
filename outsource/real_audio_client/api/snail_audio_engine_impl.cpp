@@ -155,8 +155,7 @@ namespace snail{namespace audio{
     AudioRoomImpl::AudioRoomImpl()
     {
         _run_flag = true;
-//        _media_base_client = snail::client::media::CreateMediaBaseClient();
-//        _media_base_client->IO_RegisterNotify( std::bind( &AudioRoomImpl::EventNotifyHandler,this,std::placeholders::_1,std::placeholders::_2) ); 
+		_master_control.RegisterEventHandler(this);
 		EnableAudioMessage(false);
 		EnablePullUserList(false);
 		EnableRealAudio(false);
@@ -440,6 +439,26 @@ namespace snail{namespace audio{
         std::lock_guard<std::mutex> lock( _event_handle_mutex );
         _event_handle_list.push_back( std::move( handle ) );
     }
+
+	void AudioRoomImpl::RespondLogin(std::string roomkey, std::string uid, int ec)
+	{
+		int err = TransformErrorCode(ec);
+		auto handle = [=]() {
+			Log.d("Call IAudioRoomEventHandler::RespondLogin(%s,%s,%d)\n", roomkey.c_str(), uid.c_str(), err);
+			_handler->RespondLogin(roomkey.c_str(), uid.c_str(), err); };
+		RecvAsyncEvent(std::move(handle));
+	}
+
+	void AudioRoomImpl::RespondLogout(std::string roomkey, std::string uid, int ec)
+	{
+		int err = TransformErrorCode(ec);
+		auto handle = [=]()
+		{
+			Log.d("Call IAudioRoomEventHandler::RespondLogout(%s,%s,%d)\n", _roomkey.c_str(), _uid.c_str(), err);
+			_handler->RespondLogout(roomkey.c_str(), uid.c_str(), err);
+		};
+		RecvAsyncEvent(std::move(handle));
+	}
 
     void AudioRoomImpl::ConsumeAllEvent()
     {

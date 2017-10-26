@@ -15,14 +15,14 @@
  		  \										                  /
            -----------------------LS_CONNECTED------LS_LOGOUT-----
 */														     
-
+//凡是临时状态，都要加定时器，且值为奇数，方便过滤
 enum LoginState{
-    LS_NONE,          // 未连接服务器
-	LS_CONNECTING,    // 正在连接服务器
-	LS_CONNECTED,     // 已经连接服务器
-	LS_VERIFY_ACCOUNT,// 连接成功，验证账号有效性
-	LS_LOGOUT,        // 正在登出
-	LS_LOGINED,       // 验证通过，登陆流程走完。
+    LS_NONE            =0,          // 未连接服务器
+	LS_CONNECTING      = 1,         // 正在连接服务器
+	LS_CONNECTED       = 2,         // 已经连接服务器
+	LS_VERIFY_ACCOUNT  = 3,         // 连接成功，验证账号有效性
+	LS_LOGINED         = 4,         // 验证通过，登陆流程走完。
+	LS_LOGOUT          = 5,         // 正在执行登出操作
 };
 
 
@@ -31,7 +31,7 @@ class UserEventHandler
 public:
 	virtual ~UserEventHandler(){}
 	virtual void UpdateLoginState(LoginState state) = 0;
-	virtual void UserEnterRoom(UserPtr user) = 0;
+	virtual void UserEnterRoom(MemberPtr user) = 0;
 	virtual void UserLeaveRoom(std::string user_id) = 0;
 	virtual void UpdateUserState(std::string user_id, int state) = 0;
 	virtual void UpdateUserExtend(std::string user_id, std::string extend) = 0;
@@ -45,9 +45,12 @@ public:
     ~UserManager();
 public:
     void SetEventCallback(UserEventHandler* handler );
-    int  Login(std::string userid);
+    int  Login(std::string userid,std::string roomkey);
 	void Logout();
-    int  GetLoginState();
+    int  GetCurState();
+	int  GetTargetState();
+	std::string GetUserID();
+	std::string GetRoomKey();
 private:
 	void DoLogout();
 	void ConnectServer();
@@ -64,10 +67,12 @@ public:
 	UserServicePtr _user_service;
 	STimerPtr   _timer;
 	std::string  _user_id;
+	std::string _roomkey;
 	std::string _user_name;
 	std::string _extend;
 	int      _device_type;
 	int64_t  _token;
 	LoginState _cur_state = LS_NONE;
 	LoginState _target_state = LS_NONE;
+	uint64_t   _cur_state_time = 0;
 };
