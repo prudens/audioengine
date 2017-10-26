@@ -11,10 +11,12 @@ MasterControl::~MasterControl()
 
 void MasterControl::Initialize()
 {
+	_user_mgr.SetEventCallback(this);
 }
 
 void MasterControl::Terminate()
 {
+	_user_mgr.SetEventCallback(nullptr);
 }
 
 void MasterControl::UpdateLoginState(LoginState state)
@@ -28,9 +30,9 @@ void MasterControl::UpdateLoginState(LoginState state)
 	{
 		_event_handler->RespondLogout(_user_mgr.GetRoomKey().c_str(), _user_mgr.GetUserID().c_str(), 0);
 	}
-	else if (_user_mgr.GetTargetState() == LS_LOGINED && state != LS_LOGINED)
+	else if (_user_mgr.GetTargetState() == LS_LOGINED && state == LS_RESET)
 	{
-		_event_handler->RespondLogout(_user_mgr.GetRoomKey().c_str(), _user_mgr.GetUserID().c_str(), 0);
+		_event_handler->RespondLogin(_user_mgr.GetRoomKey().c_str(), _user_mgr.GetUserID().c_str(), -2);
 	}
 }
 

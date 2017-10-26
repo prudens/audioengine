@@ -156,6 +156,7 @@ namespace snail{namespace audio{
     {
         _run_flag = true;
 		_master_control.RegisterEventHandler(this);
+		_master_control.Initialize();
 		EnableAudioMessage(false);
 		EnablePullUserList(false);
 		EnableRealAudio(false);
@@ -321,53 +322,17 @@ namespace snail{namespace audio{
         {
             StartThreadLoop();
         }
+        // 检查登陆状态。
+		_master_control.Login(_roomkey,_uid);
 
-//        int st = _media_base_client->IO_GetLoginedStatus();
-        //if ( st == LSLogined )
-        //{
-        //    Log.d( "has login status is :%d",st );
-        //    return ERR_OK;
-        //}
-
-        return DoLogin( );
+		return ERR_OK;
     }
 
     int AudioRoomImpl::Logout()
     {
         Log.v( "IAudioRoom::Logout()\n" );
-        if (_try_logout)
-        {
-            Log.w( "IAudioRoom::Logout 重复调用无效" );
-            return ERR_ALREADY_IN_USE;
-        }
-        _try_logout = true;
-        _try_login = false;
-        std::string uid = _uid;
-        std::string roomkey = _roomkey;
-		int ec = ERR_NOT_SUPPORTED;
-/*	    ec = _media_base_client->IO_Logout( [=] ( int ec )
-        {
-            _try_logout = false;
-            int err = TransformErrorCode( ec );
-            auto handle = [=] ()
-            {
-                Log.d( "Call IAudioRoomEventHandler::RespondLogout(%s,%s,%d)\n", _roomkey.c_str(), _uid.c_str(), err );
-                _handler->RespondLogout( roomkey.c_str(), uid.c_str(), err );
-                if ( _try_login )
-                {
-                    _try_login = false;
-                    Log.d("在登出房间之后又立即登陆房间，自动重新进入\n");
-                    DoLogin( );
-                }
-            };
-            RecvAsyncEvent( std::move( handle ) );
-        } );
-*/
-        if ( ec != 0 )
-        {
-            _try_logout = false;
-        }
-        return TransformErrorCode( ec );
+		_master_control.Logout();
+		return ERR_OK;
     }
 
     int AudioRoomImpl::GetLoginStatus()

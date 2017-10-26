@@ -82,8 +82,9 @@ void UserManager::DoLogout()
 	_cur_state_time = TimeStampMs();
 	_timer->AddTask(1000, [=] 
 	{
-		if (_cur_state_time + 1000 < TimeStampMs())
+		if ((_cur_state_time + 1000 < TimeStampMs()) && (_cur_state == LS_LOGOUT))
 		{
+			printf("logout time out");
 			Transform(LS_CONNECTED);
 		}
 	});
@@ -147,7 +148,7 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
 		{
 			if (++_try_login_count > MAX_TRY_LOGIN)
 			{
-				_target_state = LS_NONE;
+				_target_state = LS_RESET;
 			}
 			Transform(LS_CONNECTED);
 		}
@@ -164,6 +165,7 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
         {
             printf("Unknown user token");
         }
+		_cur_state_time = TimeStampMs();
 		Transform(LS_CONNECTED);
     } 
     else if ( pb->has_login_notify() )
@@ -210,9 +212,9 @@ bool UserManager::HandleError( int server_type, std::error_code ec )
     std::cout << "server_type:"<<server_type<<" "<< ec.message() << "\n";
 	if (++_try_login_count > MAX_TRY_LOGIN)
 	{
-		_target_state = LS_NONE;
+		_target_state = LS_RESET;
 	}
-	Transform(LS_NONE);
+	Transform(LS_RESET);
 
     return true;
 }

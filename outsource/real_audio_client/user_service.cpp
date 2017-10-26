@@ -43,8 +43,13 @@ void UserService::ConnectServer( int server_type, std::string ip, int port )
 
 void UserService::DisconnectServer( int server_type )
 {
-	_tcp_socket->DisConnect();
-	_tcp_socket.reset();
+	if (_tcp_socket)
+	{
+		std::cout << "\nthread id:"<<std::this_thread::get_id() << std::endl;
+		_tcp_socket->DisConnect();
+		_tcp_socket.reset();
+	}
+
 }
 
 void UserService::RegisterHandler( ProtoPacketizer *p )
@@ -109,6 +114,7 @@ void UserService::Write( int server_type, BufferPtr buf )
 
 void UserService::HandleError( int server_type, std::error_code ec )
 {
+	std::cout << "\nthread id:" << std::this_thread::get_id() << std::endl;
     _lock_handle.lock();
     for ( auto&p : _proto_handlers )
     {

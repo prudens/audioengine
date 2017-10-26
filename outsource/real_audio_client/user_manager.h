@@ -17,12 +17,13 @@
 */														     
 //凡是临时状态，都要加定时器，且值为奇数，方便过滤
 enum LoginState{
-    LS_NONE            =0,          // 未连接服务器
+    LS_NONE            = 0,          // 未连接服务器
 	LS_CONNECTING      = 1,         // 正在连接服务器
 	LS_CONNECTED       = 2,         // 已经连接服务器
 	LS_VERIFY_ACCOUNT  = 3,         // 连接成功，验证账号有效性
 	LS_LOGINED         = 4,         // 验证通过，登陆流程走完。
 	LS_LOGOUT          = 5,         // 正在执行登出操作
+	LS_RESET           = 6,
 };
 
 #define MAX_TRY_LOGIN 5
