@@ -25,6 +25,7 @@ enum LoginState{
 	LS_LOGOUT          = 5,         // 正在执行登出操作
 };
 
+#define MAX_TRY_LOGIN 5
 
 class UserEventHandler
 {
@@ -45,7 +46,7 @@ public:
     ~UserManager();
 public:
     void SetEventCallback(UserEventHandler* handler );
-    int  Login(std::string userid,std::string roomkey);
+    int  Login(std::string roomkey,std::string userid);
 	void Logout();
     int  GetCurState();
 	int  GetTargetState();
@@ -75,4 +76,5 @@ public:
 	LoginState _cur_state = LS_NONE;
 	LoginState _target_state = LS_NONE;
 	uint64_t   _cur_state_time = 0;
+	uint32_t _try_login_count = 0;
 };

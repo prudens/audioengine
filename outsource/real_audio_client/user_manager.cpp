@@ -36,12 +36,13 @@ void UserManager::SetEventCallback(UserEventHandler* handle )
     _event_handle = handle;
 }
 
-int UserManager::Login( std::string userid, std::string roomkey)
+int UserManager::Login(std::string roomkey,std::string userid)
 {
     _user_id = userid;
 	_roomkey = roomkey;
 	_target_state = LS_LOGINED;
 	Transform(_cur_state);
+	_try_login_count = 0;
     return 0;
 }
 
@@ -144,6 +145,10 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
         }
 		else
 		{
+			if (++_try_login_count > MAX_TRY_LOGIN)
+			{
+				_target_state = LS_NONE;
+			}
 			Transform(LS_CONNECTED);
 		}
     }
@@ -203,7 +208,12 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
 bool UserManager::HandleError( int server_type, std::error_code ec )
 {
     std::cout << "server_type:"<<server_type<<" "<< ec.message() << "\n";
+	if (++_try_login_count > MAX_TRY_LOGIN)
+	{
+		_target_state = LS_NONE;
+	}
 	Transform(LS_NONE);
+
     return true;
 }
 

@@ -57,3 +57,13 @@ void MasterControl::RegisterEventHandler(IAsyncEventHandler * handler)
 {
 	_event_handler = handler;
 }
+
+void MasterControl::Login(std::string roomkey, std::string uid)
+{
+	_user_mgr.Login(roomkey,uid);
+}
+
+void MasterControl::Logout()
+{
+	_user_mgr.Logout();
+}
