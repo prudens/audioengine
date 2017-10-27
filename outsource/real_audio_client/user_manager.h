@@ -34,9 +34,10 @@ public:
 	virtual ~UserEventHandler(){}
 	virtual void UpdateLoginState(LoginState state) = 0;
 	virtual void UserEnterRoom(MemberPtr user) = 0;
-	virtual void UserLeaveRoom(std::string user_id) = 0;
-	virtual void UpdateUserState(std::string user_id, int state) = 0;
-	virtual void UpdateUserExtend(std::string user_id, std::string extend) = 0;
+	virtual void UserLeaveRoom(int64_t token) = 0;
+	virtual void UpdateUserState(int64_t src_token, int64_t dst_token, int state,int ec) = 0;
+	virtual void UpdateUserExtend(int64_t token, std::string extend,int ec) = 0;
+	virtual void UpdateUserList(const std::vector<MemberPtr>&users) = 0;
 };
 
 
@@ -53,6 +54,7 @@ public:
 	int  GetTargetState();
 	std::string GetUserID();
 	std::string GetRoomKey();
+	int64_t GetToken();
 private:
 	void DoLogout();
 	void ConnectServer();
@@ -70,12 +72,13 @@ public:
 	STimerPtr   _timer;
 	std::string  _user_id;
 	std::string _roomkey;
-	std::string _user_name;
 	std::string _extend;
-	int      _device_type;
+	audio_engine::DEVICE_TYPE      _device_type;
 	int64_t  _token;
 	LoginState _cur_state = LS_NONE;
 	LoginState _target_state = LS_NONE;
 	uint64_t   _cur_state_time = 0;
 	uint32_t _try_login_count = 0;
+	int _error_code = 0;
+	std::vector<MemberPtr> _cache_userlist;
 };

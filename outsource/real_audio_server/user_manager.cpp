@@ -46,12 +46,12 @@ void UserManager::HandleLogin( std::shared_ptr<User> user)
     _users.push_back( user );
     _lock.unlock();
     auto pb = std::make_shared<audio_engine::RAUserMessage>();
-    auto login_ntf = pb->mutable_login_notify();
-    login_ntf->set_status( 1 );
+    auto login_ntf = pb->mutable_notify_login();
+    login_ntf->set_state( static_cast<audio_engine::USER_STATE>(user->state()) );
     login_ntf->set_userid( user->userid() );
-    login_ntf->set_username( user->username() );
+    login_ntf->set_token( user->token() );
     login_ntf->set_extend( user->extend() );
-    login_ntf->set_devtype( audio_engine::DEVICE_LINUX );
+    login_ntf->set_devtype( static_cast<audio_engine::DEVICE_TYPE>( user->device_type()) );
     BufferPtr buf = _packet.Build( pb );
     if ( buf )
     {
@@ -78,11 +78,8 @@ void UserManager::HandleLogout( std::shared_ptr<User> user )
     _users.remove( user );
     _lock.unlock();
     auto pb2 = std::make_shared<audio_engine::RAUserMessage>();
-    auto login_ntf = pb2->mutable_login_notify();
-    login_ntf->set_status( 0 );
-    login_ntf->set_userid( user->userid() );
-    login_ntf->set_username( user->username() );
-    login_ntf->set_extend( user->extend() );
+    auto login_ntf = pb2->mutable_notify_logout();
+    login_ntf->set_token(user->token());
     BufferPtr buf = _packet.Build( pb2 );
     if ( buf )
     {
@@ -96,6 +93,36 @@ void UserManager::HandleLogout( std::shared_ptr<User> user )
         }
         _lock.unlock();
     }
+}
+
+void UserManager::UpdateUserExtend(std::shared_ptr<User> user, std::shared_ptr< audio_engine::RAUserMessage> pb)
+{
+	auto update_extend = pb->update_user_extend();
+	update_extend.set_error_code(0);
+	BufferPtr buf = _packet.Build(pb);
+	_lock.lock();
+	for (auto u:_users)
+	{
+		u->Send(1,buf);
+	}
+	_lock.unlock();
+}
+
+void UserManager::UpdateUserState(std::shared_ptr<User> user, std::shared_ptr< audio_engine::RAUserMessage> pb)
+{
+	auto update_state = pb->update_user_state();
+	update_state.set_error_code(0);
+	BufferPtr buf = _packet.Build(pb);
+	_lock.lock();
+	for (auto u : _users)
+	{
+		if (u->token() == update_state.dst_token())
+		{
+			u->set_state(update_state.state());
+		}
+		user->Send(1, buf);
+	}
+	_lock.unlock();
 }
 
 bool UserManager::HandleAccept( std::error_code ec, TcpSocketPtr tcp )

@@ -152,5 +152,8 @@
     <ClInclude Include="..\..\base\jvm_manager.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\base\log.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

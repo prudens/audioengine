@@ -1,15 +1,6 @@
 syntax = "proto3";
 package audio_engine;
 option optimize_for = LITE_RUNTIME;
-enum RAMSG
-{
-    Invalid=0;
-    Login_Request = 0x101;
-	Login_Response= 0x102;
-	Logout_Request = 0x103;
-	Logout_Response = 0x104;
-	Logout_Notify   = 0x105;
-}
 
 enum DEVICE_TYPE
 {
@@ -21,46 +12,101 @@ enum DEVICE_TYPE
 	DEVICE_WEB     = 8;
 }
 
-message LoginRequest
+enum USER_STATE
 {
-  string userid = 1;
-  string username = 2;
-  DEVICE_TYPE devtype = 3;
-  string extends = 4;
+     STATE_INVALID = 0;
+     STATE_CAPTURE = 1; // 某人打开麦克风采集声音
+	 STATE_PLAYOUT = 2; // 某人打开播放器播放声音
+	 STATE_BLOCKED = 4; // 拒绝听某人发言，服务器不下发流到本地，其他人不受影响
+	 STATE_BANNED  = 8; // 某人被禁止发言，需要管理员权限
 }
 
-message LoginResponse
+message RequestLogin
 {
-   string userid = 1;
-   int32 result = 2;
-   int64 token = 3;
+  string userid       = 1;       // 用户自定义，如果房间里有重复，就踢掉原先的老用户
+  string extend       = 2;       // 扩展信息，自定义
+  string version      = 3;       // sdk版本
+  DEVICE_TYPE devtype = 4;       // 登陆设备类型
+  USER_STATE state    = 5;       //
 }
 
-message LogoutRequst
+message ResponedLogin
 {
-    int64 token = 1;
+   string userid     = 1;    // request 传上来的userid，用户自定义的
+   int64  token      = 2;    // token是服务器统一分配的，唯一标识。
+   int32  error_code = 3;    // 登陆结果，0表示成功，非0参照错误码
 }
 
-message LogoutResponse
+message RequestLogout
 {
-    int64 token = 1;
-	int64 status = 2;
+    int64 token = 1;        // 之前登陆下发的token
 }
 
-message LoginNotify
+message ResponedLogout
 {
-    string userid   = 1;
-    string username = 2;
-	string extend   = 3;
-	DEVICE_TYPE devtype = 4;
-	int32 status    = 5;
+    int64 token = 1;       // 之前登陆下发的token
+	int64 error_code = 2;  // 错误码，尽管可能有错误，但是还是强制退出房间
 }
 
-message RAUserMessage{
-    RAMSG cmd = 1;
-	LoginRequest   login_requst = 2;
-	LoginResponse  login_response = 3;
-	LogoutRequst   logout_requst = 4;
-    LogoutResponse logout_response = 5;	
-    LoginNotify    login_notify = 6;
+message NotifyLogin
+{
+    string userid       = 1;   // ...
+	int64  token        = 2;   // ... 
+	string extend       = 3;   // ...
+	DEVICE_TYPE devtype = 4;   // ...
+	USER_STATE state    = 5;
+}
+
+message NotifyLogout
+{
+    int64 token         = 1;
+}
+
+message UpdateUserState
+{
+    int64 src_token     = 1;
+    int64 dst_token     = 2;
+	USER_STATE state    = 3;
+	int32 error_code    = 4;
+}
+
+message UpdateUserExtend
+{
+    int64 token         = 1;
+	string extend       = 2;
+	int32 error_code    = 3;
+}
+
+message UserInfo
+{
+  string userid       = 1;       // 用户自定义，如果房间里有重复，就踢掉原先的老用户
+  string extend       = 2;       // 扩展信息，自定义
+  DEVICE_TYPE devtype = 3;       // 登陆设备类型
+  USER_STATE state    = 4;       //
+  int64  token        = 5;
+}
+
+enum eEndFlag
+{
+	FLAG_CONTINUE  = 0;
+    FLAG_FIRST_PKG = 1;
+	FLAG_LAST_PKG  = 2;
+}
+message NotifyUserList
+{
+    repeated UserInfo user = 1;
+	eEndFlag end_flag = 2;
+}
+
+message RAUserMessage
+{
+	RequestLogin        request_login         = 2;
+	ResponedLogin       responed_login        = 3;
+	RequestLogout       request_logout        = 4;
+    ResponedLogout      responed_logout       = 5;	
+    NotifyLogin         notify_login          = 6;
+	NotifyLogout        notify_logout         = 7;
+	UpdateUserState     update_user_state     = 8;
+	UpdateUserExtend    update_user_extend    = 9;
+	NotifyUserList      notify_user_list      = 10;
 }

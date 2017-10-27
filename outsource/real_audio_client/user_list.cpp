@@ -6,9 +6,9 @@ struct UserImpl : public IMember
 	{
 		_user_id = user_id;
 	}
-	virtual void SetUserName(std::string user_name)
+	virtual void SetToken(int64_t token)
 	{
-		_user_name = user_name;
+		_token = token;
 	}
 	virtual void SetUserExtend(std::string user_extend)
 	{
@@ -18,18 +18,18 @@ struct UserImpl : public IMember
 	{
 		_device_type = dev_type;
 	}
-	virtual void SetStatus(int status)
+	virtual void SetUserState(int state)
 	{
-		_status = status;
+		_state = state;
 	}
 
 	virtual const std::string& GetUserID()const
 	{
 		return _user_id;
 	}
-	virtual const std::string& GetUserName()const
+	virtual const int64_t GetToken()const
 	{
-		return _user_name;
+		return _token;
 	}
 	virtual const std::string& GetUserExtend()const
 	{
@@ -39,25 +39,25 @@ struct UserImpl : public IMember
 	{
 		return _device_type;
 	}
-	virtual int GetStatus()const
+	virtual int GetState()const
 	{
-		return _status;
+		return _state;
 	}
 
 	virtual void CopyFrom(const IMember* user)
 	{
 		_user_id = user->GetUserID();
-		_user_name = user->GetUserName();
+		_token = user->GetToken();
 		_user_extend = user->GetUserExtend();
 		_device_type = user->GetDeviceType();
-		_status = user->GetStatus();
+		_state = user->GetState();
 	}
 private:
 	std::string _user_id;
-	std::string _user_name;
+	int64_t     _token;
 	std::string _user_extend;
 	int _device_type = 0;
-	int _status = 0;
+	int _state = 0;
 
 };
 
@@ -76,6 +76,7 @@ bool MemberList::Add(MemberPtr ptr)
 	}
 	lockGuard lock(_mutex);
 	_users[ptr->GetUserID()] = ptr;
+	_tokens[ptr->GetToken()] = ptr->GetUserID();
 	return true;
 }
 
@@ -88,6 +89,20 @@ bool MemberList::Remove(std::string user_id)
 		return false;
 	}
 	_users.erase(it);
+	return true;
+}
+
+bool MemberList::Remove(int64_t token)
+{
+	lockGuard lock(_mutex);
+	auto it = _tokens.find(token);
+	if (it == _tokens.end())
+	{
+		return false;
+	}
+	std::string uid = it->second;
+	_tokens.erase(it);
+	Remove(uid);
 	return true;
 }
 
@@ -104,38 +119,36 @@ bool MemberList::Update(std::string user_id, MemberPtr ptr)
 	return true;
 }
 
-bool MemberList::Update(std::string user_id, std::string user_extend)
+bool MemberList::Update(int64_t token, std::string user_extend)
 {
-	lockGuard lock(_mutex);
-	auto it = _users.find(user_id);
-	if (it == _users.end())
+	auto it = GetUser(token);
+	if (!it)
 	{
 		return false;
 	}
 	MemberPtr new_user = CreateMember();
-	new_user->SetDeviceType( it->second->GetDeviceType());
-	new_user->SetUserID(it->second->GetUserID());
+	new_user->SetDeviceType( it->GetDeviceType());
+	new_user->SetUserID(it->GetUserID());
 	new_user->SetUserExtend(user_extend);
-	new_user->SetUserName(it->second->GetUserName());
-	it->second = new_user;
+	new_user->SetToken(it->GetToken());
+	Add(new_user);
 	return true;
 }
 
-bool MemberList::Update(std::string user_id, int state)
+bool MemberList::Update(int64_t token, int state)
 {
-	lockGuard lock(_mutex);
-	auto it = _users.find(user_id);
-	if (it == _users.end())
+	auto it = GetUser(token);
+	if (!it)
 	{
 		return false;
 	}
 	MemberPtr new_user = CreateMember();
-	new_user->SetDeviceType(it->second->GetDeviceType());
-	new_user->SetUserID(it->second->GetUserID());
-	new_user->SetUserName(it->second->GetUserName());
-	new_user->SetUserExtend(it->second->GetUserExtend());
-	new_user->SetStatus(state);
-	it->second = new_user;
+	new_user->SetDeviceType(it->GetDeviceType());
+	new_user->SetUserID(it->GetUserID());
+	new_user->SetToken(it->GetToken());
+	new_user->SetUserExtend(it->GetUserExtend());
+	new_user->SetUserState(state);
+	Add(new_user);
 	return false;
 }
 
@@ -148,6 +161,22 @@ ConstUserPtr MemberList::GetUser(std::string user_id)const
 		return nullptr;
 	}
 	return it->second;
+}
+
+ConstUserPtr MemberList::GetUser(int64_t token)const
+{
+	lockGuard lock(_mutex);
+	auto it = _tokens.find(token);
+	if (it == _tokens.end())
+	{
+		return nullptr;
+	}
+	auto v = _users.find(it->second);
+	if (v == _users.end())
+	{
+		return nullptr;
+	}
+	return v->second;
 }
 
 void MemberList::Traversal(std::function<void(ConstUserPtr)> cb)

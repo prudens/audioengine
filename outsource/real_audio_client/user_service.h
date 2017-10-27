@@ -19,7 +19,7 @@ public:
     ~UserService();
     void ConnectServer( int server_type, std::string ip, int port );
     void DisconnectServer( int server_type );
-
+	bool IsConnectServer();
     void RegisterHandler( ProtoPacketizer *p );
     void UnRegisterHandler( ProtoPacketizer* p );
 

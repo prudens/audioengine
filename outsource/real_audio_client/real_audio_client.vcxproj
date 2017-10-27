@@ -60,6 +60,9 @@
     <ClInclude Include="user_manager.h" />
     <ClInclude Include="user_service.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\user_service.proto" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B3780BDA-F699-447E-A998-12ED78C8681A}</ProjectGuid>
     <RootNamespace>real_audio_client</RootNamespace>

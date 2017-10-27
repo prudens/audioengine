@@ -19,9 +19,12 @@ public:
     void AttachTcp( TcpSocketPtr tcp );
     void DettachTcp();
     std::string userid();
-    std::string username();
+    int64_t token();
     std::string extend();
     int device_type();
+	int state() { return _state; }
+	void set_extend(std::string extend) { _extend = extend; }
+	void set_state(int state) { _state = state; }
 public:
     void RecvPacket( std::error_code ec, std::shared_ptr< audio_engine::RAUserMessage> pb );
     void Send( int type, BufferPtr buf );
@@ -29,14 +32,13 @@ private:
     void Read();
     void Write(int type, BufferPtr buf );
     void HandleError( std::error_code ec );
-    void HandleLogin(const audio_engine::LoginRequest& login_req);
-    void HandleLogout( const ::audio_engine::LogoutRequst& logout_req);
+    void HandleLogin(const audio_engine::RequestLogin& login_req);
+    void HandleLogout( const ::audio_engine::RequestLogout& logout_req);
     std::string _userid;
-    std::string _user_name;
     std::string _extend;
     int64_t _token = 0;
     int _device_type = 0;
-
+	int _state =   0;
     BufferPool* _buffer_pool = nullptr;
     AsyncTask* _task = nullptr;
 	TcpSocketPtr _tcp_socket;

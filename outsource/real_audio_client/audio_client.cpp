@@ -30,13 +30,13 @@ AudioClient::~AudioClient()
 
 void AudioClient::Login( int roomid,std::string uid )
 {
-    if ( uid.empty() )
+    if ( uid.empty() && _userid.empty())
     {
         std::srand( (unsigned int)std::time( 0 ) ); // use current time as seed for random generator
         int random_variable = std::rand();
         uid = std::to_string( random_variable );
+		_userid = uid;
     }
-    _userid = uid;
    _room->Login( std::to_string( roomid ).c_str(), _userid.c_str() );
 }
 

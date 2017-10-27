@@ -9,11 +9,12 @@
 #include "client_module.h"
 #include "base/timer.h"
 #include "user_service.pb.h"
-
+#include "base/log.h"
 using namespace audio_engine;
-
+Logger Log;
 UserManager::UserManager( std::shared_ptr<UserService> proto_packet )
 {
+	Log.setLevel(LEVEL_VERBOSE);
     _user_service = proto_packet;
     if (!_user_service)
     {
@@ -72,10 +73,15 @@ std::string UserManager::GetRoomKey()
 	return _roomkey;
 }
 
+int64_t UserManager::GetToken()
+{
+	return _token;
+}
+
 void UserManager::DoLogout()
 {
     auto pb = std::make_shared<audio_engine::RAUserMessage>();
-    auto logout_req = pb->mutable_logout_requst();
+	auto logout_req = pb->mutable_request_logout();
     logout_req->set_token(_token);
     _user_service->SendPacket( 1, pb );
 	Transform(LS_LOGOUT);
@@ -84,7 +90,7 @@ void UserManager::DoLogout()
 	{
 		if ((_cur_state_time + 1000 < TimeStampMs()) && (_cur_state == LS_LOGOUT))
 		{
-			printf("logout time out");
+			Log.w("logout time out");
 			Transform(LS_CONNECTED);
 		}
 	});
@@ -110,130 +116,161 @@ void UserManager::DisConnectServer()
 void UserManager::VerifyAccount()
 {
 	auto pb = std::make_shared<audio_engine::RAUserMessage>();
-	auto login_req = pb->mutable_login_requst();
+	auto login_req = pb->mutable_request_login();
 	login_req->set_userid(_user_id);
-	login_req->set_username(_user_name);
-	login_req->set_devtype(DEVICE_TYPE::DEVICE_WINDOWS);
+	login_req->set_extend(_extend);
+	login_req->set_devtype(_device_type);
 	_user_service->SendPacket(1, pb);
 	Transform(LS_VERIFY_ACCOUNT);
 }
 
 bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
 {
-    if (pb->has_login_response())
+    if (pb->has_responed_login())
     {
-        auto login_res = pb->login_response();
-        auto login_result = login_res.result();
+        auto &login_res = pb->responed_login();
+		_error_code = login_res.error_code();
         auto userid = login_res.userid();
         auto token = login_res.token();
-        std::cout << " username: " << userid << "\n"
-            << "login_result: " << login_result << "\n"
-            << "token: " << token << "\n";
-        if (login_result)
+		Log.d("收到用户登陆结果:userid:%s,token:%d,ec:%d\n", userid.c_str(), token, _error_code);
+        if (_error_code == 0)
         {
             _user_id = userid;
             _token = token;
-			auto user = CreateMember();
-			user->SetDeviceType(_device_type);
-			user->SetUserID( _user_id);
-			user->SetUserName( _user_name);
-			user->SetStatus(0);
-            if (_event_handle )
-            {
-				_event_handle->UserEnterRoom(user);
-            }
-			Transform(LS_LOGINED);
+			//Transform(LS_LOGINED);
         }
 		else
 		{
 			if (++_try_login_count > MAX_TRY_LOGIN)
 			{
-				_target_state = LS_RESET;
+				_target_state = LS_NONE;
 			}
 			Transform(LS_CONNECTED);
 		}
     }
-    else if ( pb->has_logout_response() )
+    if ( pb->has_responed_logout() )
     {
-        printf( "收到登出消息回复\n" );
-        auto logout_res = pb->logout_response();
+		Log.v( "收到登出消息回复\n" );
+        auto logout_res = pb->responed_logout();
+		_error_code = logout_res.error_code();
         if (logout_res.token() == _token)
         {
-			printf("退出操作结果:%d",(int)logout_res.status());
+			Log.d("退出操作结果:%d\n", _error_code);
         }
         else
-        {
-            printf("Unknown user token");
+		{
+            Log.w("未知token，抛弃当前包\n");
+			
         }
 		_cur_state_time = TimeStampMs();
 		Transform(LS_CONNECTED);
     } 
-    else if ( pb->has_login_notify() )
+    if ( pb->has_notify_login() )
     {
-        auto login_ntf = pb->login_notify();
-        auto userid = login_ntf.userid();
-        std::string username = login_ntf.username();
-        std::string extend = login_ntf.extend();
-        int dev_type = login_ntf.devtype();
-        int status = login_ntf.status();
-        if (status == 1)
-        {
-            printf( "new user online :\nuserid:%s\nusername:%s\nextend:%s\ndev_type:%d\n",
-                    userid.c_str(), username.c_str(), extend.c_str(), dev_type );
+        auto login_ntf = pb->notify_login();
+		auto userid = login_ntf.userid();
+		std::string extend = login_ntf.extend();
+		int dev_type = login_ntf.devtype();
+		int status = login_ntf.state();
+        Log.d( "new user online :\nuserid:%s\nextend:%s\ndev_type:%d\n",
+                userid.c_str(), extend.c_str(), dev_type );
+		auto user = CreateMember();
+		user->SetUserID(userid);
+		user->SetUserExtend(login_ntf.extend());
+		user->SetToken( login_ntf.token() );
+		user->SetUserState(login_ntf.state());
+		user->SetDeviceType(dev_type);
+		if (_event_handle)
+		{
+			_event_handle->UserEnterRoom(user);
+		}
+    }
+
+	if (pb->has_notify_logout())
+	{
+		auto logout_ntf = pb->notify_logout();
+		if (_event_handle)
+		{
+			_event_handle->UserLeaveRoom(logout_ntf.token());
+		}
+	}
+
+	if (pb->has_update_user_state())
+	{
+		auto update_user_state = pb->update_user_state();
+		if (_event_handle)
+		{
+			_event_handle->UpdateUserState(update_user_state.src_token(), update_user_state.dst_token(), update_user_state.state(), update_user_state.error_code());
+		}
+	}
+	if (pb->has_update_user_extend())
+	{
+		auto update_user_extend = pb->update_user_extend();
+		if (_event_handle)
+		{
+			_event_handle->UpdateUserExtend(update_user_extend.token(), update_user_extend.extend(), update_user_extend.error_code());
+		}
+	}
+
+	if (pb->has_notify_user_list())
+	{
+		// 能够走到这里，说明一定登陆验证成功了。
+		auto user_list = pb->notify_user_list();
+		auto size = user_list.user_size();
+		if (user_list.end_flag() & FLAG_FIRST_PKG)
+		{
+			_cache_userlist.clear();
+		}
+		for (int i = 0; i < size; i++)
+		{
+			const audio_engine::UserInfo & u = user_list.user(i);
 			auto user = CreateMember();
-			user->SetDeviceType( dev_type);
-			user->SetUserID(userid);
-			user->SetUserName( username );
+			user->SetUserID(u.userid());
+			user->SetUserExtend(u.extend());
+			user->SetToken(u.token());
+			user->SetUserState(u.state());
+			user->SetDeviceType(u.devtype());
+			_cache_userlist.push_back(user);
+		}
+
+		if (user_list.end_flag() & FLAG_LAST_PKG)
+		{
 			if (_event_handle)
 			{
-				_event_handle->UserEnterRoom(user);
+				_event_handle->UpdateUserList(_cache_userlist);
 			}
-        }
-        else
-        {
-            printf( "new user offline :\nuserid:%s\nusername:%s\n",
-                    userid.c_str(), username.c_str() );
-           if ( _event_handle )
-           {
-			   _event_handle->UserLeaveRoom(userid);
-           }
-        }
-    }
-    else
-    {
-        printf( "收到不识别的buffer\n" );
-        return false;
-    }
-    return true;
+			Transform(LS_LOGINED);
+		}
+	}
+    return false;
 }
 
 bool UserManager::HandleError( int server_type, std::error_code ec )
 {
-    std::cout << "server_type:"<<server_type<<" "<< ec.message() << "\n";
-	if (++_try_login_count > MAX_TRY_LOGIN)
+	if (_user_service->IsConnectServer() || LS_NONE != _cur_state)
 	{
-		_target_state = LS_RESET;
+		Log.w("socket[%d] 读写失败：%s\n", server_type,ec.message());
+		if (++_try_login_count > MAX_TRY_LOGIN)
+		{
+			_target_state = LS_NONE;
+		}
+		Transform(LS_NONE);
 	}
-	Transform(LS_RESET);
-
-    return true;
+    return server_type == 1;
 }
 
 bool UserManager::HandleConnect( int server_type )
 {
-    printf( "连接服务器(%d)成功！！！\n", server_type );
+    //printf( "连接服务器(%d)成功！！！\n", server_type );
+	Log.d("连接服务器(%d)成功.\n", server_type);
 	Transform(LS_CONNECTED);
-    return true;
-}
-
-
-void UserManager::OnTimer()
-{
+	return server_type == 1;
 
 }
 
 void UserManager::Transform(LoginState state)
 {
+	Update(state);
 	switch (_target_state)
 	{
 	case LS_NONE:
@@ -247,7 +284,6 @@ void UserManager::Transform(LoginState state)
 			DisConnectServer();
 			break;
 		case LS_VERIFY_ACCOUNT:
-			VerifyAccount();
 			break;
 		case LS_LOGOUT:
 			break;
@@ -310,7 +346,7 @@ void UserManager::Transform(LoginState state)
 		break;
 	}
 
-	Update(state);
+
 }
 
 

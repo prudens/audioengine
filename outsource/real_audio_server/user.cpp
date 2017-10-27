@@ -38,9 +38,9 @@ std::string User::userid()
     return _userid;
 }
 
-std::string User::username()
+int64_t User::token()
 {
-    return _user_name;
+    return _token;
 }
 
 std::string User::extend()
@@ -109,20 +109,36 @@ void User::RecvPacket(std::error_code ec, std::shared_ptr< audio_engine::RAUserM
         return;
     }
 
-    if ( pb->has_login_requst())
+    if ( pb->has_request_login())
     {
-        auto login_req = pb->login_requst();
+        auto login_req = pb->request_login();
         HandleLogin( login_req );
     }
-    else if ( pb->has_logout_requst())
+    if ( pb->has_request_logout())
     {
-        auto logout_req = pb->logout_requst();
+        auto logout_req = pb->request_logout();
         HandleLogout( logout_req );
     }
-    else
-    {
-        printf("Unknown message");
-    }
+    
+	if (pb->has_update_user_extend())
+	{
+		_extend = pb->update_user_extend().extend();
+		if (_host)
+		{
+			auto self = shared_from_this();
+			_host->UpdateUserExtend(self,pb);
+		}
+	}
+
+	if (pb->has_update_user_state())
+	{
+		auto update_state = pb->update_user_state();
+		if (_host)
+		{
+			auto self = shared_from_this();
+			_host->UpdateUserState(self,pb);
+		}
+	}
 }
 
 void User::HandleError( std::error_code ec )
@@ -131,8 +147,10 @@ void User::HandleError( std::error_code ec )
     {
         return;
     }
+
     if (ec)
     {
+		_tcp_socket.reset();
         printf( ec.message().c_str() );
         printf( "\n" );
         _stop = true;
@@ -145,30 +163,27 @@ void User::HandleError( std::error_code ec )
 
 }
 
-void User::HandleLogin( const audio_engine::LoginRequest& login_req )
+void User::HandleLogin( const audio_engine::RequestLogin& login_req )
 {
-
     _userid = login_req.userid();
-    _user_name = login_req.username();
-    _extend = login_req.extends();
+    _extend = login_req.extend();
     _device_type = login_req.devtype();
     auto pb = std::make_shared<audio_engine::RAUserMessage>();
-    auto login_res = pb->mutable_login_response();
+    auto login_res = pb->mutable_responed_login();
     _token = ServerModule::GetInstance()->GetTokenGenerater()->NewToken( _userid );
     login_res->set_token( _token );
     login_res->set_userid( _userid );
-    login_res->set_result( 1 );//fixme  改成枚举
+    login_res->set_error_code( 0 );
     Write( 0, _proto_packet.Build( pb ) );
-  
     if (_host)
     {
         auto self = shared_from_this();
         _host->HandleLogin(self);
     }
-	printf("用户：%s登陆\n", _user_name.c_str());
+	printf("用户：%s登陆\n", _userid.c_str());
 }
 
-void User::HandleLogout( const ::audio_engine::LogoutRequst& logout_req )
+void User::HandleLogout( const ::audio_engine::RequestLogout& logout_req )
 {
     auto self = shared_from_this();
     auto token = logout_req.token();
@@ -182,22 +197,16 @@ void User::HandleLogout( const ::audio_engine::LogoutRequst& logout_req )
 		return;
 	}
     auto pb = std::make_shared<audio_engine::RAUserMessage>();
-    auto logout_res = pb->mutable_logout_response();
+    auto logout_res = pb->mutable_responed_logout();
     logout_res->set_token( _token );
-    logout_res->set_status( 1 );
+    logout_res->set_error_code( 0 );
     BufferPtr buf = _proto_packet.Build( pb );
     if ( buf )
     {
 		_tcp_socket->AsyncWrite( buf->ReadData(),buf->ReadAvailable(),
                          [=] ( std::error_code ec, std::size_t length )
         {
-			if (_tcp_socket)
-			{
-				_tcp_socket->DisConnect();
-			}
             self->_buffer_pool->PushToBufferPool( buf );
-
-            _stop = true;
         } );
     }
 

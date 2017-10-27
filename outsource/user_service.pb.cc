@@ -15,31 +15,56 @@
 // @@protoc_insertion_point(includes)
 
 namespace audio_engine {
-class LoginRequestDefaultTypeInternal {
+class RequestLoginDefaultTypeInternal {
 public:
- ::google::protobuf::internal::ExplicitlyConstructed<LoginRequest>
+ ::google::protobuf::internal::ExplicitlyConstructed<RequestLogin>
      _instance;
-} _LoginRequest_default_instance_;
-class LoginResponseDefaultTypeInternal {
+} _RequestLogin_default_instance_;
+class ResponedLoginDefaultTypeInternal {
 public:
- ::google::protobuf::internal::ExplicitlyConstructed<LoginResponse>
+ ::google::protobuf::internal::ExplicitlyConstructed<ResponedLogin>
      _instance;
-} _LoginResponse_default_instance_;
-class LogoutRequstDefaultTypeInternal {
+} _ResponedLogin_default_instance_;
+class RequestLogoutDefaultTypeInternal {
 public:
- ::google::protobuf::internal::ExplicitlyConstructed<LogoutRequst>
+ ::google::protobuf::internal::ExplicitlyConstructed<RequestLogout>
      _instance;
-} _LogoutRequst_default_instance_;
-class LogoutResponseDefaultTypeInternal {
+} _RequestLogout_default_instance_;
+class ResponedLogoutDefaultTypeInternal {
 public:
- ::google::protobuf::internal::ExplicitlyConstructed<LogoutResponse>
+ ::google::protobuf::internal::ExplicitlyConstructed<ResponedLogout>
      _instance;
-} _LogoutResponse_default_instance_;
-class LoginNotifyDefaultTypeInternal {
+} _ResponedLogout_default_instance_;
+class NotifyLoginDefaultTypeInternal {
 public:
- ::google::protobuf::internal::ExplicitlyConstructed<LoginNotify>
+ ::google::protobuf::internal::ExplicitlyConstructed<NotifyLogin>
      _instance;
-} _LoginNotify_default_instance_;
+} _NotifyLogin_default_instance_;
+class NotifyLogoutDefaultTypeInternal {
+public:
+ ::google::protobuf::internal::ExplicitlyConstructed<NotifyLogout>
+     _instance;
+} _NotifyLogout_default_instance_;
+class UpdateUserStateDefaultTypeInternal {
+public:
+ ::google::protobuf::internal::ExplicitlyConstructed<UpdateUserState>
+     _instance;
+} _UpdateUserState_default_instance_;
+class UpdateUserExtendDefaultTypeInternal {
+public:
+ ::google::protobuf::internal::ExplicitlyConstructed<UpdateUserExtend>
+     _instance;
+} _UpdateUserExtend_default_instance_;
+class UserInfoDefaultTypeInternal {
+public:
+ ::google::protobuf::internal::ExplicitlyConstructed<UserInfo>
+     _instance;
+} _UserInfo_default_instance_;
+class NotifyUserListDefaultTypeInternal {
+public:
+ ::google::protobuf::internal::ExplicitlyConstructed<NotifyUserList>
+     _instance;
+} _NotifyUserList_default_instance_;
 class RAUserMessageDefaultTypeInternal {
 public:
  ::google::protobuf::internal::ExplicitlyConstructed<RAUserMessage>
@@ -65,34 +90,57 @@ PROTOBUF_CONSTEXPR_VAR ::google::protobuf::internal::ParseTable const
   { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
   { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
   { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
+  { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
+  { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
+  { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
+  { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
+  { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
 };
 
 void TableStruct::InitDefaultsImpl() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::internal::InitProtobufDefaults();
-  _LoginRequest_default_instance_._instance.DefaultConstruct();
+  _RequestLogin_default_instance_._instance.DefaultConstruct();
   ::google::protobuf::internal::OnShutdownDestroyMessage(
-      &_LoginRequest_default_instance_);_LoginResponse_default_instance_._instance.DefaultConstruct();
+      &_RequestLogin_default_instance_);_ResponedLogin_default_instance_._instance.DefaultConstruct();
   ::google::protobuf::internal::OnShutdownDestroyMessage(
-      &_LoginResponse_default_instance_);_LogoutRequst_default_instance_._instance.DefaultConstruct();
+      &_ResponedLogin_default_instance_);_RequestLogout_default_instance_._instance.DefaultConstruct();
   ::google::protobuf::internal::OnShutdownDestroyMessage(
-      &_LogoutRequst_default_instance_);_LogoutResponse_default_instance_._instance.DefaultConstruct();
+      &_RequestLogout_default_instance_);_ResponedLogout_default_instance_._instance.DefaultConstruct();
   ::google::protobuf::internal::OnShutdownDestroyMessage(
-      &_LogoutResponse_default_instance_);_LoginNotify_default_instance_._instance.DefaultConstruct();
+      &_ResponedLogout_default_instance_);_NotifyLogin_default_instance_._instance.DefaultConstruct();
   ::google::protobuf::internal::OnShutdownDestroyMessage(
-      &_LoginNotify_default_instance_);_RAUserMessage_default_instance_._instance.DefaultConstruct();
+      &_NotifyLogin_default_instance_);_NotifyLogout_default_instance_._instance.DefaultConstruct();
   ::google::protobuf::internal::OnShutdownDestroyMessage(
-      &_RAUserMessage_default_instance_);_RAUserMessage_default_instance_._instance.get_mutable()->login_requst_ = const_cast< ::audio_engine::LoginRequest*>(
-      ::audio_engine::LoginRequest::internal_default_instance());
-  _RAUserMessage_default_instance_._instance.get_mutable()->login_response_ = const_cast< ::audio_engine::LoginResponse*>(
-      ::audio_engine::LoginResponse::internal_default_instance());
-  _RAUserMessage_default_instance_._instance.get_mutable()->logout_requst_ = const_cast< ::audio_engine::LogoutRequst*>(
-      ::audio_engine::LogoutRequst::internal_default_instance());
-  _RAUserMessage_default_instance_._instance.get_mutable()->logout_response_ = const_cast< ::audio_engine::LogoutResponse*>(
-      ::audio_engine::LogoutResponse::internal_default_instance());
-  _RAUserMessage_default_instance_._instance.get_mutable()->login_notify_ = const_cast< ::audio_engine::LoginNotify*>(
-      ::audio_engine::LoginNotify::internal_default_instance());
+      &_NotifyLogout_default_instance_);_UpdateUserState_default_instance_._instance.DefaultConstruct();
+  ::google::protobuf::internal::OnShutdownDestroyMessage(
+      &_UpdateUserState_default_instance_);_UpdateUserExtend_default_instance_._instance.DefaultConstruct();
+  ::google::protobuf::internal::OnShutdownDestroyMessage(
+      &_UpdateUserExtend_default_instance_);_UserInfo_default_instance_._instance.DefaultConstruct();
+  ::google::protobuf::internal::OnShutdownDestroyMessage(
+      &_UserInfo_default_instance_);_NotifyUserList_default_instance_._instance.DefaultConstruct();
+  ::google::protobuf::internal::OnShutdownDestroyMessage(
+      &_NotifyUserList_default_instance_);_RAUserMessage_default_instance_._instance.DefaultConstruct();
+  ::google::protobuf::internal::OnShutdownDestroyMessage(
+      &_RAUserMessage_default_instance_);_RAUserMessage_default_instance_._instance.get_mutable()->request_login_ = const_cast< ::audio_engine::RequestLogin*>(
+      ::audio_engine::RequestLogin::internal_default_instance());
+  _RAUserMessage_default_instance_._instance.get_mutable()->responed_login_ = const_cast< ::audio_engine::ResponedLogin*>(
+      ::audio_engine::ResponedLogin::internal_default_instance());
+  _RAUserMessage_default_instance_._instance.get_mutable()->request_logout_ = const_cast< ::audio_engine::RequestLogout*>(
+      ::audio_engine::RequestLogout::internal_default_instance());
+  _RAUserMessage_default_instance_._instance.get_mutable()->responed_logout_ = const_cast< ::audio_engine::ResponedLogout*>(
+      ::audio_engine::ResponedLogout::internal_default_instance());
+  _RAUserMessage_default_instance_._instance.get_mutable()->notify_login_ = const_cast< ::audio_engine::NotifyLogin*>(
+      ::audio_engine::NotifyLogin::internal_default_instance());
+  _RAUserMessage_default_instance_._instance.get_mutable()->notify_logout_ = const_cast< ::audio_engine::NotifyLogout*>(
+      ::audio_engine::NotifyLogout::internal_default_instance());
+  _RAUserMessage_default_instance_._instance.get_mutable()->update_user_state_ = const_cast< ::audio_engine::UpdateUserState*>(
+      ::audio_engine::UpdateUserState::internal_default_instance());
+  _RAUserMessage_default_instance_._instance.get_mutable()->update_user_extend_ = const_cast< ::audio_engine::UpdateUserExtend*>(
+      ::audio_engine::UpdateUserExtend::internal_default_instance());
+  _RAUserMessage_default_instance_._instance.get_mutable()->notify_user_list_ = const_cast< ::audio_engine::NotifyUserList*>(
+      ::audio_engine::NotifyUserList::internal_default_instance());
 }
 
 void InitDefaults() {
@@ -112,20 +160,6 @@ void AddDescriptors() {
 
 }  // namespace protobuf_user_5fservice_2eproto
 
-bool RAMSG_IsValid(int value) {
-  switch (value) {
-    case 0:
-    case 257:
-    case 258:
-    case 259:
-    case 260:
-    case 261:
-      return true;
-    default:
-      return false;
-  }
-}
-
 bool DEVICE_TYPE_IsValid(int value) {
   switch (value) {
     case 0:
@@ -140,25 +174,50 @@ bool DEVICE_TYPE_IsValid(int value) {
   }
 }
 
+bool USER_STATE_IsValid(int value) {
+  switch (value) {
+    case 0:
+    case 1:
+    case 2:
+    case 4:
+    case 8:
+      return true;
+    default:
+      return false;
+  }
+}
+
+bool eEndFlag_IsValid(int value) {
+  switch (value) {
+    case 0:
+    case 1:
+    case 2:
+      return true;
+    default:
+      return false;
+  }
+}
+
 
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int LoginRequest::kUseridFieldNumber;
-const int LoginRequest::kUsernameFieldNumber;
-const int LoginRequest::kDevtypeFieldNumber;
-const int LoginRequest::kExtendsFieldNumber;
+const int RequestLogin::kUseridFieldNumber;
+const int RequestLogin::kExtendFieldNumber;
+const int RequestLogin::kVersionFieldNumber;
+const int RequestLogin::kDevtypeFieldNumber;
+const int RequestLogin::kStateFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-LoginRequest::LoginRequest()
+RequestLogin::RequestLogin()
   : ::google::protobuf::MessageLite(), _internal_metadata_(NULL) {
   if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
     protobuf_user_5fservice_2eproto::InitDefaults();
   }
   SharedCtor();
-  // @@protoc_insertion_point(constructor:audio_engine.LoginRequest)
+  // @@protoc_insertion_point(constructor:audio_engine.RequestLogin)
 }
-LoginRequest::LoginRequest(const LoginRequest& from)
+RequestLogin::RequestLogin(const RequestLogin& from)
   : ::google::protobuf::MessageLite(),
       _internal_metadata_(NULL),
       _cached_size_(0) {
@@ -166,1424 +225,76 @@ LoginRequest::LoginRequest(const LoginRequest& from)
   userid_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (from.userid().size() > 0) {
     userid_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.userid_);
-  }
-  username_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.username().size() > 0) {
-    username_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.username_);
-  }
-  extends_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.extends().size() > 0) {
-    extends_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.extends_);
-  }
-  devtype_ = from.devtype_;
-  // @@protoc_insertion_point(copy_constructor:audio_engine.LoginRequest)
-}
-
-void LoginRequest::SharedCtor() {
-  userid_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  username_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  extends_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  devtype_ = 0;
-  _cached_size_ = 0;
-}
-
-LoginRequest::~LoginRequest() {
-  // @@protoc_insertion_point(destructor:audio_engine.LoginRequest)
-  SharedDtor();
-}
-
-void LoginRequest::SharedDtor() {
-  userid_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  username_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  extends_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-
-void LoginRequest::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const LoginRequest& LoginRequest::default_instance() {
-  protobuf_user_5fservice_2eproto::InitDefaults();
-  return *internal_default_instance();
-}
-
-LoginRequest* LoginRequest::New(::google::protobuf::Arena* arena) const {
-  LoginRequest* n = new LoginRequest;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
-
-void LoginRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:audio_engine.LoginRequest)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  userid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  username_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  extends_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  devtype_ = 0;
-  _internal_metadata_.Clear();
-}
-
-bool LoginRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
-      ::google::protobuf::NewPermanentCallback(&_internal_metadata_,
-          &::google::protobuf::internal::InternalMetadataWithArenaLite::
-              mutable_unknown_fields));
-  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
-      &unknown_fields_string, false);
-  // @@protoc_insertion_point(parse_start:audio_engine.LoginRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // string userid = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_userid()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->userid().data(), static_cast<int>(this->userid().length()),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "audio_engine.LoginRequest.userid"));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // string username = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_username()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->username().data(), static_cast<int>(this->username().length()),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "audio_engine.LoginRequest.username"));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // .audio_engine.DEVICE_TYPE devtype = 3;
-      case 3: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
-          int value;
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          set_devtype(static_cast< ::audio_engine::DEVICE_TYPE >(value));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // string extends = 4;
-      case 4: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_extends()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->extends().data(), static_cast<int>(this->extends().length()),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "audio_engine.LoginRequest.extends"));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
-            input, tag, &unknown_fields_stream));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:audio_engine.LoginRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:audio_engine.LoginRequest)
-  return false;
-#undef DO_
-}
-
-void LoginRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:audio_engine.LoginRequest)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // string userid = 1;
-  if (this->userid().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->userid().data(), static_cast<int>(this->userid().length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "audio_engine.LoginRequest.userid");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      1, this->userid(), output);
-  }
-
-  // string username = 2;
-  if (this->username().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->username().data(), static_cast<int>(this->username().length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "audio_engine.LoginRequest.username");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      2, this->username(), output);
-  }
-
-  // .audio_engine.DEVICE_TYPE devtype = 3;
-  if (this->devtype() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      3, this->devtype(), output);
-  }
-
-  // string extends = 4;
-  if (this->extends().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->extends().data(), static_cast<int>(this->extends().length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "audio_engine.LoginRequest.extends");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      4, this->extends(), output);
-  }
-
-  output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
-                   static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
-  // @@protoc_insertion_point(serialize_end:audio_engine.LoginRequest)
-}
-
-size_t LoginRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:audio_engine.LoginRequest)
-  size_t total_size = 0;
-
-  total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
-
-  // string userid = 1;
-  if (this->userid().size() > 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->userid());
-  }
-
-  // string username = 2;
-  if (this->username().size() > 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->username());
-  }
-
-  // string extends = 4;
-  if (this->extends().size() > 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->extends());
-  }
-
-  // .audio_engine.DEVICE_TYPE devtype = 3;
-  if (this->devtype() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::EnumSize(this->devtype());
-  }
-
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void LoginRequest::CheckTypeAndMergeFrom(
-    const ::google::protobuf::MessageLite& from) {
-  MergeFrom(*::google::protobuf::down_cast<const LoginRequest*>(&from));
-}
-
-void LoginRequest::MergeFrom(const LoginRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:audio_engine.LoginRequest)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (from.userid().size() > 0) {
-
-    userid_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.userid_);
-  }
-  if (from.username().size() > 0) {
-
-    username_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.username_);
-  }
-  if (from.extends().size() > 0) {
-
-    extends_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.extends_);
-  }
-  if (from.devtype() != 0) {
-    set_devtype(from.devtype());
-  }
-}
-
-void LoginRequest::CopyFrom(const LoginRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:audio_engine.LoginRequest)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool LoginRequest::IsInitialized() const {
-  return true;
-}
-
-void LoginRequest::Swap(LoginRequest* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
-void LoginRequest::InternalSwap(LoginRequest* other) {
-  using std::swap;
-  userid_.Swap(&other->userid_);
-  username_.Swap(&other->username_);
-  extends_.Swap(&other->extends_);
-  swap(devtype_, other->devtype_);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
-}
-
-::std::string LoginRequest::GetTypeName() const {
-  return "audio_engine.LoginRequest";
-}
-
-#if PROTOBUF_INLINE_NOT_IN_HEADERS
-// LoginRequest
-
-// string userid = 1;
-void LoginRequest::clear_userid() {
-  userid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-const ::std::string& LoginRequest::userid() const {
-  // @@protoc_insertion_point(field_get:audio_engine.LoginRequest.userid)
-  return userid_.GetNoArena();
-}
-void LoginRequest::set_userid(const ::std::string& value) {
-  
-  userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:audio_engine.LoginRequest.userid)
-}
-#if LANG_CXX11
-void LoginRequest::set_userid(::std::string&& value) {
-  
-  userid_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:audio_engine.LoginRequest.userid)
-}
-#endif
-void LoginRequest::set_userid(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  
-  userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:audio_engine.LoginRequest.userid)
-}
-void LoginRequest::set_userid(const char* value, size_t size) {
-  
-  userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:audio_engine.LoginRequest.userid)
-}
-::std::string* LoginRequest::mutable_userid() {
-  
-  // @@protoc_insertion_point(field_mutable:audio_engine.LoginRequest.userid)
-  return userid_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-::std::string* LoginRequest::release_userid() {
-  // @@protoc_insertion_point(field_release:audio_engine.LoginRequest.userid)
-  
-  return userid_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-void LoginRequest::set_allocated_userid(::std::string* userid) {
-  if (userid != NULL) {
-    
-  } else {
-    
-  }
-  userid_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), userid);
-  // @@protoc_insertion_point(field_set_allocated:audio_engine.LoginRequest.userid)
-}
-
-// string username = 2;
-void LoginRequest::clear_username() {
-  username_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-const ::std::string& LoginRequest::username() const {
-  // @@protoc_insertion_point(field_get:audio_engine.LoginRequest.username)
-  return username_.GetNoArena();
-}
-void LoginRequest::set_username(const ::std::string& value) {
-  
-  username_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:audio_engine.LoginRequest.username)
-}
-#if LANG_CXX11
-void LoginRequest::set_username(::std::string&& value) {
-  
-  username_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:audio_engine.LoginRequest.username)
-}
-#endif
-void LoginRequest::set_username(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  
-  username_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:audio_engine.LoginRequest.username)
-}
-void LoginRequest::set_username(const char* value, size_t size) {
-  
-  username_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:audio_engine.LoginRequest.username)
-}
-::std::string* LoginRequest::mutable_username() {
-  
-  // @@protoc_insertion_point(field_mutable:audio_engine.LoginRequest.username)
-  return username_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-::std::string* LoginRequest::release_username() {
-  // @@protoc_insertion_point(field_release:audio_engine.LoginRequest.username)
-  
-  return username_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-void LoginRequest::set_allocated_username(::std::string* username) {
-  if (username != NULL) {
-    
-  } else {
-    
-  }
-  username_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), username);
-  // @@protoc_insertion_point(field_set_allocated:audio_engine.LoginRequest.username)
-}
-
-// .audio_engine.DEVICE_TYPE devtype = 3;
-void LoginRequest::clear_devtype() {
-  devtype_ = 0;
-}
-::audio_engine::DEVICE_TYPE LoginRequest::devtype() const {
-  // @@protoc_insertion_point(field_get:audio_engine.LoginRequest.devtype)
-  return static_cast< ::audio_engine::DEVICE_TYPE >(devtype_);
-}
-void LoginRequest::set_devtype(::audio_engine::DEVICE_TYPE value) {
-  
-  devtype_ = value;
-  // @@protoc_insertion_point(field_set:audio_engine.LoginRequest.devtype)
-}
-
-// string extends = 4;
-void LoginRequest::clear_extends() {
-  extends_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-const ::std::string& LoginRequest::extends() const {
-  // @@protoc_insertion_point(field_get:audio_engine.LoginRequest.extends)
-  return extends_.GetNoArena();
-}
-void LoginRequest::set_extends(const ::std::string& value) {
-  
-  extends_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:audio_engine.LoginRequest.extends)
-}
-#if LANG_CXX11
-void LoginRequest::set_extends(::std::string&& value) {
-  
-  extends_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:audio_engine.LoginRequest.extends)
-}
-#endif
-void LoginRequest::set_extends(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  
-  extends_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:audio_engine.LoginRequest.extends)
-}
-void LoginRequest::set_extends(const char* value, size_t size) {
-  
-  extends_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:audio_engine.LoginRequest.extends)
-}
-::std::string* LoginRequest::mutable_extends() {
-  
-  // @@protoc_insertion_point(field_mutable:audio_engine.LoginRequest.extends)
-  return extends_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-::std::string* LoginRequest::release_extends() {
-  // @@protoc_insertion_point(field_release:audio_engine.LoginRequest.extends)
-  
-  return extends_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-void LoginRequest::set_allocated_extends(::std::string* extends) {
-  if (extends != NULL) {
-    
-  } else {
-    
-  }
-  extends_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), extends);
-  // @@protoc_insertion_point(field_set_allocated:audio_engine.LoginRequest.extends)
-}
-
-#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
-
-// ===================================================================
-
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int LoginResponse::kUseridFieldNumber;
-const int LoginResponse::kResultFieldNumber;
-const int LoginResponse::kTokenFieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
-
-LoginResponse::LoginResponse()
-  : ::google::protobuf::MessageLite(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    protobuf_user_5fservice_2eproto::InitDefaults();
-  }
-  SharedCtor();
-  // @@protoc_insertion_point(constructor:audio_engine.LoginResponse)
-}
-LoginResponse::LoginResponse(const LoginResponse& from)
-  : ::google::protobuf::MessageLite(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  userid_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.userid().size() > 0) {
-    userid_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.userid_);
-  }
-  ::memcpy(&token_, &from.token_,
-    static_cast<size_t>(reinterpret_cast<char*>(&result_) -
-    reinterpret_cast<char*>(&token_)) + sizeof(result_));
-  // @@protoc_insertion_point(copy_constructor:audio_engine.LoginResponse)
-}
-
-void LoginResponse::SharedCtor() {
-  userid_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&token_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&result_) -
-      reinterpret_cast<char*>(&token_)) + sizeof(result_));
-  _cached_size_ = 0;
-}
-
-LoginResponse::~LoginResponse() {
-  // @@protoc_insertion_point(destructor:audio_engine.LoginResponse)
-  SharedDtor();
-}
-
-void LoginResponse::SharedDtor() {
-  userid_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-
-void LoginResponse::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const LoginResponse& LoginResponse::default_instance() {
-  protobuf_user_5fservice_2eproto::InitDefaults();
-  return *internal_default_instance();
-}
-
-LoginResponse* LoginResponse::New(::google::protobuf::Arena* arena) const {
-  LoginResponse* n = new LoginResponse;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
-
-void LoginResponse::Clear() {
-// @@protoc_insertion_point(message_clear_start:audio_engine.LoginResponse)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  userid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&token_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&result_) -
-      reinterpret_cast<char*>(&token_)) + sizeof(result_));
-  _internal_metadata_.Clear();
-}
-
-bool LoginResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
-      ::google::protobuf::NewPermanentCallback(&_internal_metadata_,
-          &::google::protobuf::internal::InternalMetadataWithArenaLite::
-              mutable_unknown_fields));
-  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
-      &unknown_fields_string, false);
-  // @@protoc_insertion_point(parse_start:audio_engine.LoginResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // string userid = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_userid()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->userid().data(), static_cast<int>(this->userid().length()),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "audio_engine.LoginResponse.userid"));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // int32 result = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &result_)));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // int64 token = 3;
-      case 3: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
-                 input, &token_)));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
-            input, tag, &unknown_fields_stream));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:audio_engine.LoginResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:audio_engine.LoginResponse)
-  return false;
-#undef DO_
-}
-
-void LoginResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:audio_engine.LoginResponse)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // string userid = 1;
-  if (this->userid().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->userid().data(), static_cast<int>(this->userid().length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "audio_engine.LoginResponse.userid");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      1, this->userid(), output);
-  }
-
-  // int32 result = 2;
-  if (this->result() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->result(), output);
-  }
-
-  // int64 token = 3;
-  if (this->token() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt64(3, this->token(), output);
-  }
-
-  output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
-                   static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
-  // @@protoc_insertion_point(serialize_end:audio_engine.LoginResponse)
-}
-
-size_t LoginResponse::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:audio_engine.LoginResponse)
-  size_t total_size = 0;
-
-  total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
-
-  // string userid = 1;
-  if (this->userid().size() > 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->userid());
-  }
-
-  // int64 token = 3;
-  if (this->token() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int64Size(
-        this->token());
-  }
-
-  // int32 result = 2;
-  if (this->result() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->result());
-  }
-
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void LoginResponse::CheckTypeAndMergeFrom(
-    const ::google::protobuf::MessageLite& from) {
-  MergeFrom(*::google::protobuf::down_cast<const LoginResponse*>(&from));
-}
-
-void LoginResponse::MergeFrom(const LoginResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:audio_engine.LoginResponse)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (from.userid().size() > 0) {
-
-    userid_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.userid_);
-  }
-  if (from.token() != 0) {
-    set_token(from.token());
-  }
-  if (from.result() != 0) {
-    set_result(from.result());
-  }
-}
-
-void LoginResponse::CopyFrom(const LoginResponse& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:audio_engine.LoginResponse)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool LoginResponse::IsInitialized() const {
-  return true;
-}
-
-void LoginResponse::Swap(LoginResponse* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
-void LoginResponse::InternalSwap(LoginResponse* other) {
-  using std::swap;
-  userid_.Swap(&other->userid_);
-  swap(token_, other->token_);
-  swap(result_, other->result_);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
-}
-
-::std::string LoginResponse::GetTypeName() const {
-  return "audio_engine.LoginResponse";
-}
-
-#if PROTOBUF_INLINE_NOT_IN_HEADERS
-// LoginResponse
-
-// string userid = 1;
-void LoginResponse::clear_userid() {
-  userid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-const ::std::string& LoginResponse::userid() const {
-  // @@protoc_insertion_point(field_get:audio_engine.LoginResponse.userid)
-  return userid_.GetNoArena();
-}
-void LoginResponse::set_userid(const ::std::string& value) {
-  
-  userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:audio_engine.LoginResponse.userid)
-}
-#if LANG_CXX11
-void LoginResponse::set_userid(::std::string&& value) {
-  
-  userid_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:audio_engine.LoginResponse.userid)
-}
-#endif
-void LoginResponse::set_userid(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  
-  userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:audio_engine.LoginResponse.userid)
-}
-void LoginResponse::set_userid(const char* value, size_t size) {
-  
-  userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:audio_engine.LoginResponse.userid)
-}
-::std::string* LoginResponse::mutable_userid() {
-  
-  // @@protoc_insertion_point(field_mutable:audio_engine.LoginResponse.userid)
-  return userid_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-::std::string* LoginResponse::release_userid() {
-  // @@protoc_insertion_point(field_release:audio_engine.LoginResponse.userid)
-  
-  return userid_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-void LoginResponse::set_allocated_userid(::std::string* userid) {
-  if (userid != NULL) {
-    
-  } else {
-    
-  }
-  userid_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), userid);
-  // @@protoc_insertion_point(field_set_allocated:audio_engine.LoginResponse.userid)
-}
-
-// int32 result = 2;
-void LoginResponse::clear_result() {
-  result_ = 0;
-}
-::google::protobuf::int32 LoginResponse::result() const {
-  // @@protoc_insertion_point(field_get:audio_engine.LoginResponse.result)
-  return result_;
-}
-void LoginResponse::set_result(::google::protobuf::int32 value) {
-  
-  result_ = value;
-  // @@protoc_insertion_point(field_set:audio_engine.LoginResponse.result)
-}
-
-// int64 token = 3;
-void LoginResponse::clear_token() {
-  token_ = GOOGLE_LONGLONG(0);
-}
-::google::protobuf::int64 LoginResponse::token() const {
-  // @@protoc_insertion_point(field_get:audio_engine.LoginResponse.token)
-  return token_;
-}
-void LoginResponse::set_token(::google::protobuf::int64 value) {
-  
-  token_ = value;
-  // @@protoc_insertion_point(field_set:audio_engine.LoginResponse.token)
-}
-
-#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
-
-// ===================================================================
-
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int LogoutRequst::kTokenFieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
-
-LogoutRequst::LogoutRequst()
-  : ::google::protobuf::MessageLite(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    protobuf_user_5fservice_2eproto::InitDefaults();
-  }
-  SharedCtor();
-  // @@protoc_insertion_point(constructor:audio_engine.LogoutRequst)
-}
-LogoutRequst::LogoutRequst(const LogoutRequst& from)
-  : ::google::protobuf::MessageLite(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  token_ = from.token_;
-  // @@protoc_insertion_point(copy_constructor:audio_engine.LogoutRequst)
-}
-
-void LogoutRequst::SharedCtor() {
-  token_ = GOOGLE_LONGLONG(0);
-  _cached_size_ = 0;
-}
-
-LogoutRequst::~LogoutRequst() {
-  // @@protoc_insertion_point(destructor:audio_engine.LogoutRequst)
-  SharedDtor();
-}
-
-void LogoutRequst::SharedDtor() {
-}
-
-void LogoutRequst::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const LogoutRequst& LogoutRequst::default_instance() {
-  protobuf_user_5fservice_2eproto::InitDefaults();
-  return *internal_default_instance();
-}
-
-LogoutRequst* LogoutRequst::New(::google::protobuf::Arena* arena) const {
-  LogoutRequst* n = new LogoutRequst;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
-
-void LogoutRequst::Clear() {
-// @@protoc_insertion_point(message_clear_start:audio_engine.LogoutRequst)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  token_ = GOOGLE_LONGLONG(0);
-  _internal_metadata_.Clear();
-}
-
-bool LogoutRequst::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
-      ::google::protobuf::NewPermanentCallback(&_internal_metadata_,
-          &::google::protobuf::internal::InternalMetadataWithArenaLite::
-              mutable_unknown_fields));
-  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
-      &unknown_fields_string, false);
-  // @@protoc_insertion_point(parse_start:audio_engine.LogoutRequst)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // int64 token = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
-                 input, &token_)));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
-            input, tag, &unknown_fields_stream));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:audio_engine.LogoutRequst)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:audio_engine.LogoutRequst)
-  return false;
-#undef DO_
-}
-
-void LogoutRequst::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:audio_engine.LogoutRequst)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // int64 token = 1;
-  if (this->token() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->token(), output);
-  }
-
-  output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
-                   static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
-  // @@protoc_insertion_point(serialize_end:audio_engine.LogoutRequst)
-}
-
-size_t LogoutRequst::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:audio_engine.LogoutRequst)
-  size_t total_size = 0;
-
-  total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
-
-  // int64 token = 1;
-  if (this->token() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int64Size(
-        this->token());
-  }
-
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void LogoutRequst::CheckTypeAndMergeFrom(
-    const ::google::protobuf::MessageLite& from) {
-  MergeFrom(*::google::protobuf::down_cast<const LogoutRequst*>(&from));
-}
-
-void LogoutRequst::MergeFrom(const LogoutRequst& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:audio_engine.LogoutRequst)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (from.token() != 0) {
-    set_token(from.token());
-  }
-}
-
-void LogoutRequst::CopyFrom(const LogoutRequst& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:audio_engine.LogoutRequst)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool LogoutRequst::IsInitialized() const {
-  return true;
-}
-
-void LogoutRequst::Swap(LogoutRequst* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
-void LogoutRequst::InternalSwap(LogoutRequst* other) {
-  using std::swap;
-  swap(token_, other->token_);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
-}
-
-::std::string LogoutRequst::GetTypeName() const {
-  return "audio_engine.LogoutRequst";
-}
-
-#if PROTOBUF_INLINE_NOT_IN_HEADERS
-// LogoutRequst
-
-// int64 token = 1;
-void LogoutRequst::clear_token() {
-  token_ = GOOGLE_LONGLONG(0);
-}
-::google::protobuf::int64 LogoutRequst::token() const {
-  // @@protoc_insertion_point(field_get:audio_engine.LogoutRequst.token)
-  return token_;
-}
-void LogoutRequst::set_token(::google::protobuf::int64 value) {
-  
-  token_ = value;
-  // @@protoc_insertion_point(field_set:audio_engine.LogoutRequst.token)
-}
-
-#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
-
-// ===================================================================
-
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int LogoutResponse::kTokenFieldNumber;
-const int LogoutResponse::kStatusFieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
-
-LogoutResponse::LogoutResponse()
-  : ::google::protobuf::MessageLite(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    protobuf_user_5fservice_2eproto::InitDefaults();
-  }
-  SharedCtor();
-  // @@protoc_insertion_point(constructor:audio_engine.LogoutResponse)
-}
-LogoutResponse::LogoutResponse(const LogoutResponse& from)
-  : ::google::protobuf::MessageLite(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::memcpy(&token_, &from.token_,
-    static_cast<size_t>(reinterpret_cast<char*>(&status_) -
-    reinterpret_cast<char*>(&token_)) + sizeof(status_));
-  // @@protoc_insertion_point(copy_constructor:audio_engine.LogoutResponse)
-}
-
-void LogoutResponse::SharedCtor() {
-  ::memset(&token_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&status_) -
-      reinterpret_cast<char*>(&token_)) + sizeof(status_));
-  _cached_size_ = 0;
-}
-
-LogoutResponse::~LogoutResponse() {
-  // @@protoc_insertion_point(destructor:audio_engine.LogoutResponse)
-  SharedDtor();
-}
-
-void LogoutResponse::SharedDtor() {
-}
-
-void LogoutResponse::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const LogoutResponse& LogoutResponse::default_instance() {
-  protobuf_user_5fservice_2eproto::InitDefaults();
-  return *internal_default_instance();
-}
-
-LogoutResponse* LogoutResponse::New(::google::protobuf::Arena* arena) const {
-  LogoutResponse* n = new LogoutResponse;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
-
-void LogoutResponse::Clear() {
-// @@protoc_insertion_point(message_clear_start:audio_engine.LogoutResponse)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  ::memset(&token_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&status_) -
-      reinterpret_cast<char*>(&token_)) + sizeof(status_));
-  _internal_metadata_.Clear();
-}
-
-bool LogoutResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
-      ::google::protobuf::NewPermanentCallback(&_internal_metadata_,
-          &::google::protobuf::internal::InternalMetadataWithArenaLite::
-              mutable_unknown_fields));
-  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
-      &unknown_fields_string, false);
-  // @@protoc_insertion_point(parse_start:audio_engine.LogoutResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // int64 token = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
-                 input, &token_)));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // int64 status = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
-                 input, &status_)));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
-            input, tag, &unknown_fields_stream));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:audio_engine.LogoutResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:audio_engine.LogoutResponse)
-  return false;
-#undef DO_
-}
-
-void LogoutResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:audio_engine.LogoutResponse)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // int64 token = 1;
-  if (this->token() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->token(), output);
-  }
-
-  // int64 status = 2;
-  if (this->status() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt64(2, this->status(), output);
-  }
-
-  output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
-                   static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
-  // @@protoc_insertion_point(serialize_end:audio_engine.LogoutResponse)
-}
-
-size_t LogoutResponse::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:audio_engine.LogoutResponse)
-  size_t total_size = 0;
-
-  total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
-
-  // int64 token = 1;
-  if (this->token() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int64Size(
-        this->token());
-  }
-
-  // int64 status = 2;
-  if (this->status() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int64Size(
-        this->status());
-  }
-
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void LogoutResponse::CheckTypeAndMergeFrom(
-    const ::google::protobuf::MessageLite& from) {
-  MergeFrom(*::google::protobuf::down_cast<const LogoutResponse*>(&from));
-}
-
-void LogoutResponse::MergeFrom(const LogoutResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:audio_engine.LogoutResponse)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (from.token() != 0) {
-    set_token(from.token());
-  }
-  if (from.status() != 0) {
-    set_status(from.status());
-  }
-}
-
-void LogoutResponse::CopyFrom(const LogoutResponse& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:audio_engine.LogoutResponse)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool LogoutResponse::IsInitialized() const {
-  return true;
-}
-
-void LogoutResponse::Swap(LogoutResponse* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
-void LogoutResponse::InternalSwap(LogoutResponse* other) {
-  using std::swap;
-  swap(token_, other->token_);
-  swap(status_, other->status_);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
-}
-
-::std::string LogoutResponse::GetTypeName() const {
-  return "audio_engine.LogoutResponse";
-}
-
-#if PROTOBUF_INLINE_NOT_IN_HEADERS
-// LogoutResponse
-
-// int64 token = 1;
-void LogoutResponse::clear_token() {
-  token_ = GOOGLE_LONGLONG(0);
-}
-::google::protobuf::int64 LogoutResponse::token() const {
-  // @@protoc_insertion_point(field_get:audio_engine.LogoutResponse.token)
-  return token_;
-}
-void LogoutResponse::set_token(::google::protobuf::int64 value) {
-  
-  token_ = value;
-  // @@protoc_insertion_point(field_set:audio_engine.LogoutResponse.token)
-}
-
-// int64 status = 2;
-void LogoutResponse::clear_status() {
-  status_ = GOOGLE_LONGLONG(0);
-}
-::google::protobuf::int64 LogoutResponse::status() const {
-  // @@protoc_insertion_point(field_get:audio_engine.LogoutResponse.status)
-  return status_;
-}
-void LogoutResponse::set_status(::google::protobuf::int64 value) {
-  
-  status_ = value;
-  // @@protoc_insertion_point(field_set:audio_engine.LogoutResponse.status)
-}
-
-#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
-
-// ===================================================================
-
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int LoginNotify::kUseridFieldNumber;
-const int LoginNotify::kUsernameFieldNumber;
-const int LoginNotify::kExtendFieldNumber;
-const int LoginNotify::kDevtypeFieldNumber;
-const int LoginNotify::kStatusFieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
-
-LoginNotify::LoginNotify()
-  : ::google::protobuf::MessageLite(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    protobuf_user_5fservice_2eproto::InitDefaults();
-  }
-  SharedCtor();
-  // @@protoc_insertion_point(constructor:audio_engine.LoginNotify)
-}
-LoginNotify::LoginNotify(const LoginNotify& from)
-  : ::google::protobuf::MessageLite(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  userid_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.userid().size() > 0) {
-    userid_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.userid_);
-  }
-  username_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.username().size() > 0) {
-    username_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.username_);
   }
   extend_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (from.extend().size() > 0) {
     extend_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.extend_);
   }
+  version_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.version().size() > 0) {
+    version_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.version_);
+  }
   ::memcpy(&devtype_, &from.devtype_,
-    static_cast<size_t>(reinterpret_cast<char*>(&status_) -
-    reinterpret_cast<char*>(&devtype_)) + sizeof(status_));
-  // @@protoc_insertion_point(copy_constructor:audio_engine.LoginNotify)
+    static_cast<size_t>(reinterpret_cast<char*>(&state_) -
+    reinterpret_cast<char*>(&devtype_)) + sizeof(state_));
+  // @@protoc_insertion_point(copy_constructor:audio_engine.RequestLogin)
 }
 
-void LoginNotify::SharedCtor() {
+void RequestLogin::SharedCtor() {
   userid_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  username_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   extend_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  version_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&devtype_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&status_) -
-      reinterpret_cast<char*>(&devtype_)) + sizeof(status_));
+      reinterpret_cast<char*>(&state_) -
+      reinterpret_cast<char*>(&devtype_)) + sizeof(state_));
   _cached_size_ = 0;
 }
 
-LoginNotify::~LoginNotify() {
-  // @@protoc_insertion_point(destructor:audio_engine.LoginNotify)
+RequestLogin::~RequestLogin() {
+  // @@protoc_insertion_point(destructor:audio_engine.RequestLogin)
   SharedDtor();
 }
 
-void LoginNotify::SharedDtor() {
+void RequestLogin::SharedDtor() {
   userid_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  username_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   extend_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  version_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-void LoginNotify::SetCachedSize(int size) const {
+void RequestLogin::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const LoginNotify& LoginNotify::default_instance() {
+const RequestLogin& RequestLogin::default_instance() {
   protobuf_user_5fservice_2eproto::InitDefaults();
   return *internal_default_instance();
 }
 
-LoginNotify* LoginNotify::New(::google::protobuf::Arena* arena) const {
-  LoginNotify* n = new LoginNotify;
+RequestLogin* RequestLogin::New(::google::protobuf::Arena* arena) const {
+  RequestLogin* n = new RequestLogin;
   if (arena != NULL) {
     arena->Own(n);
   }
   return n;
 }
 
-void LoginNotify::Clear() {
-// @@protoc_insertion_point(message_clear_start:audio_engine.LoginNotify)
+void RequestLogin::Clear() {
+// @@protoc_insertion_point(message_clear_start:audio_engine.RequestLogin)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   userid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  username_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   extend_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  version_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&devtype_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&status_) -
-      reinterpret_cast<char*>(&devtype_)) + sizeof(status_));
+      reinterpret_cast<char*>(&state_) -
+      reinterpret_cast<char*>(&devtype_)) + sizeof(state_));
   _internal_metadata_.Clear();
 }
 
-bool LoginNotify::MergePartialFromCodedStream(
+bool RequestLogin::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
@@ -1593,7 +304,7 @@ bool LoginNotify::MergePartialFromCodedStream(
               mutable_unknown_fields));
   ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
       &unknown_fields_string, false);
-  // @@protoc_insertion_point(parse_start:audio_engine.LoginNotify)
+  // @@protoc_insertion_point(parse_start:audio_engine.RequestLogin)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -1608,39 +319,39 @@ bool LoginNotify::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->userid().data(), static_cast<int>(this->userid().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "audio_engine.LoginNotify.userid"));
+            "audio_engine.RequestLogin.userid"));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // string username = 2;
+      // string extend = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_username()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->username().data(), static_cast<int>(this->username().length()),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "audio_engine.LoginNotify.username"));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // string extend = 3;
-      case 3: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_extend()));
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->extend().data(), static_cast<int>(this->extend().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "audio_engine.LoginNotify.extend"));
+            "audio_engine.RequestLogin.extend"));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // string version = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_version()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->version().data(), static_cast<int>(this->version().length()),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "audio_engine.RequestLogin.version"));
         } else {
           goto handle_unusual;
         }
@@ -1662,14 +373,15 @@ bool LoginNotify::MergePartialFromCodedStream(
         break;
       }
 
-      // int32 status = 5;
+      // .audio_engine.USER_STATE state = 5;
       case 5: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(40u /* 40 & 0xFF */)) {
-
+          int value;
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &status_)));
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          set_state(static_cast< ::audio_engine::USER_STATE >(value));
         } else {
           goto handle_unusual;
         }
@@ -1688,17 +400,17 @@ bool LoginNotify::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:audio_engine.LoginNotify)
+  // @@protoc_insertion_point(parse_success:audio_engine.RequestLogin)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:audio_engine.LoginNotify)
+  // @@protoc_insertion_point(parse_failure:audio_engine.RequestLogin)
   return false;
 #undef DO_
 }
 
-void LoginNotify::SerializeWithCachedSizes(
+void RequestLogin::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:audio_engine.LoginNotify)
+  // @@protoc_insertion_point(serialize_start:audio_engine.RequestLogin)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -1707,29 +419,29 @@ void LoginNotify::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->userid().data(), static_cast<int>(this->userid().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "audio_engine.LoginNotify.userid");
+      "audio_engine.RequestLogin.userid");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->userid(), output);
   }
 
-  // string username = 2;
-  if (this->username().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->username().data(), static_cast<int>(this->username().length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "audio_engine.LoginNotify.username");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      2, this->username(), output);
-  }
-
-  // string extend = 3;
+  // string extend = 2;
   if (this->extend().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->extend().data(), static_cast<int>(this->extend().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "audio_engine.LoginNotify.extend");
+      "audio_engine.RequestLogin.extend");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      3, this->extend(), output);
+      2, this->extend(), output);
+  }
+
+  // string version = 3;
+  if (this->version().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->version().data(), static_cast<int>(this->version().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "audio_engine.RequestLogin.version");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      3, this->version(), output);
   }
 
   // .audio_engine.DEVICE_TYPE devtype = 4;
@@ -1738,18 +450,19 @@ void LoginNotify::SerializeWithCachedSizes(
       4, this->devtype(), output);
   }
 
-  // int32 status = 5;
-  if (this->status() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->status(), output);
+  // .audio_engine.USER_STATE state = 5;
+  if (this->state() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      5, this->state(), output);
   }
 
   output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
                    static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
-  // @@protoc_insertion_point(serialize_end:audio_engine.LoginNotify)
+  // @@protoc_insertion_point(serialize_end:audio_engine.RequestLogin)
 }
 
-size_t LoginNotify::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:audio_engine.LoginNotify)
+size_t RequestLogin::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:audio_engine.RequestLogin)
   size_t total_size = 0;
 
   total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
@@ -1761,18 +474,18 @@ size_t LoginNotify::ByteSizeLong() const {
         this->userid());
   }
 
-  // string username = 2;
-  if (this->username().size() > 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->username());
-  }
-
-  // string extend = 3;
+  // string extend = 2;
   if (this->extend().size() > 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::StringSize(
         this->extend());
+  }
+
+  // string version = 3;
+  if (this->version().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->version());
   }
 
   // .audio_engine.DEVICE_TYPE devtype = 4;
@@ -1781,11 +494,10 @@ size_t LoginNotify::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormatLite::EnumSize(this->devtype());
   }
 
-  // int32 status = 5;
-  if (this->status() != 0) {
+  // .audio_engine.USER_STATE state = 5;
+  if (this->state() != 0) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->status());
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->state());
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -1795,13 +507,13 @@ size_t LoginNotify::ByteSizeLong() const {
   return total_size;
 }
 
-void LoginNotify::CheckTypeAndMergeFrom(
+void RequestLogin::CheckTypeAndMergeFrom(
     const ::google::protobuf::MessageLite& from) {
-  MergeFrom(*::google::protobuf::down_cast<const LoginNotify*>(&from));
+  MergeFrom(*::google::protobuf::down_cast<const RequestLogin*>(&from));
 }
 
-void LoginNotify::MergeFrom(const LoginNotify& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:audio_engine.LoginNotify)
+void RequestLogin::MergeFrom(const RequestLogin& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:audio_engine.RequestLogin)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -1811,9 +523,2826 @@ void LoginNotify::MergeFrom(const LoginNotify& from) {
 
     userid_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.userid_);
   }
-  if (from.username().size() > 0) {
+  if (from.extend().size() > 0) {
 
-    username_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.username_);
+    extend_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.extend_);
+  }
+  if (from.version().size() > 0) {
+
+    version_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.version_);
+  }
+  if (from.devtype() != 0) {
+    set_devtype(from.devtype());
+  }
+  if (from.state() != 0) {
+    set_state(from.state());
+  }
+}
+
+void RequestLogin::CopyFrom(const RequestLogin& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:audio_engine.RequestLogin)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool RequestLogin::IsInitialized() const {
+  return true;
+}
+
+void RequestLogin::Swap(RequestLogin* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void RequestLogin::InternalSwap(RequestLogin* other) {
+  using std::swap;
+  userid_.Swap(&other->userid_);
+  extend_.Swap(&other->extend_);
+  version_.Swap(&other->version_);
+  swap(devtype_, other->devtype_);
+  swap(state_, other->state_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(_cached_size_, other->_cached_size_);
+}
+
+::std::string RequestLogin::GetTypeName() const {
+  return "audio_engine.RequestLogin";
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// RequestLogin
+
+// string userid = 1;
+void RequestLogin::clear_userid() {
+  userid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+const ::std::string& RequestLogin::userid() const {
+  // @@protoc_insertion_point(field_get:audio_engine.RequestLogin.userid)
+  return userid_.GetNoArena();
+}
+void RequestLogin::set_userid(const ::std::string& value) {
+  
+  userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:audio_engine.RequestLogin.userid)
+}
+#if LANG_CXX11
+void RequestLogin::set_userid(::std::string&& value) {
+  
+  userid_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:audio_engine.RequestLogin.userid)
+}
+#endif
+void RequestLogin::set_userid(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:audio_engine.RequestLogin.userid)
+}
+void RequestLogin::set_userid(const char* value, size_t size) {
+  
+  userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:audio_engine.RequestLogin.userid)
+}
+::std::string* RequestLogin::mutable_userid() {
+  
+  // @@protoc_insertion_point(field_mutable:audio_engine.RequestLogin.userid)
+  return userid_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+::std::string* RequestLogin::release_userid() {
+  // @@protoc_insertion_point(field_release:audio_engine.RequestLogin.userid)
+  
+  return userid_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+void RequestLogin::set_allocated_userid(::std::string* userid) {
+  if (userid != NULL) {
+    
+  } else {
+    
+  }
+  userid_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), userid);
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.RequestLogin.userid)
+}
+
+// string extend = 2;
+void RequestLogin::clear_extend() {
+  extend_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+const ::std::string& RequestLogin::extend() const {
+  // @@protoc_insertion_point(field_get:audio_engine.RequestLogin.extend)
+  return extend_.GetNoArena();
+}
+void RequestLogin::set_extend(const ::std::string& value) {
+  
+  extend_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:audio_engine.RequestLogin.extend)
+}
+#if LANG_CXX11
+void RequestLogin::set_extend(::std::string&& value) {
+  
+  extend_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:audio_engine.RequestLogin.extend)
+}
+#endif
+void RequestLogin::set_extend(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  extend_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:audio_engine.RequestLogin.extend)
+}
+void RequestLogin::set_extend(const char* value, size_t size) {
+  
+  extend_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:audio_engine.RequestLogin.extend)
+}
+::std::string* RequestLogin::mutable_extend() {
+  
+  // @@protoc_insertion_point(field_mutable:audio_engine.RequestLogin.extend)
+  return extend_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+::std::string* RequestLogin::release_extend() {
+  // @@protoc_insertion_point(field_release:audio_engine.RequestLogin.extend)
+  
+  return extend_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+void RequestLogin::set_allocated_extend(::std::string* extend) {
+  if (extend != NULL) {
+    
+  } else {
+    
+  }
+  extend_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), extend);
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.RequestLogin.extend)
+}
+
+// string version = 3;
+void RequestLogin::clear_version() {
+  version_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+const ::std::string& RequestLogin::version() const {
+  // @@protoc_insertion_point(field_get:audio_engine.RequestLogin.version)
+  return version_.GetNoArena();
+}
+void RequestLogin::set_version(const ::std::string& value) {
+  
+  version_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:audio_engine.RequestLogin.version)
+}
+#if LANG_CXX11
+void RequestLogin::set_version(::std::string&& value) {
+  
+  version_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:audio_engine.RequestLogin.version)
+}
+#endif
+void RequestLogin::set_version(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  version_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:audio_engine.RequestLogin.version)
+}
+void RequestLogin::set_version(const char* value, size_t size) {
+  
+  version_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:audio_engine.RequestLogin.version)
+}
+::std::string* RequestLogin::mutable_version() {
+  
+  // @@protoc_insertion_point(field_mutable:audio_engine.RequestLogin.version)
+  return version_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+::std::string* RequestLogin::release_version() {
+  // @@protoc_insertion_point(field_release:audio_engine.RequestLogin.version)
+  
+  return version_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+void RequestLogin::set_allocated_version(::std::string* version) {
+  if (version != NULL) {
+    
+  } else {
+    
+  }
+  version_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), version);
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.RequestLogin.version)
+}
+
+// .audio_engine.DEVICE_TYPE devtype = 4;
+void RequestLogin::clear_devtype() {
+  devtype_ = 0;
+}
+::audio_engine::DEVICE_TYPE RequestLogin::devtype() const {
+  // @@protoc_insertion_point(field_get:audio_engine.RequestLogin.devtype)
+  return static_cast< ::audio_engine::DEVICE_TYPE >(devtype_);
+}
+void RequestLogin::set_devtype(::audio_engine::DEVICE_TYPE value) {
+  
+  devtype_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.RequestLogin.devtype)
+}
+
+// .audio_engine.USER_STATE state = 5;
+void RequestLogin::clear_state() {
+  state_ = 0;
+}
+::audio_engine::USER_STATE RequestLogin::state() const {
+  // @@protoc_insertion_point(field_get:audio_engine.RequestLogin.state)
+  return static_cast< ::audio_engine::USER_STATE >(state_);
+}
+void RequestLogin::set_state(::audio_engine::USER_STATE value) {
+  
+  state_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.RequestLogin.state)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int ResponedLogin::kUseridFieldNumber;
+const int ResponedLogin::kTokenFieldNumber;
+const int ResponedLogin::kErrorCodeFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+ResponedLogin::ResponedLogin()
+  : ::google::protobuf::MessageLite(), _internal_metadata_(NULL) {
+  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
+    protobuf_user_5fservice_2eproto::InitDefaults();
+  }
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:audio_engine.ResponedLogin)
+}
+ResponedLogin::ResponedLogin(const ResponedLogin& from)
+  : ::google::protobuf::MessageLite(),
+      _internal_metadata_(NULL),
+      _cached_size_(0) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  userid_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.userid().size() > 0) {
+    userid_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.userid_);
+  }
+  ::memcpy(&token_, &from.token_,
+    static_cast<size_t>(reinterpret_cast<char*>(&error_code_) -
+    reinterpret_cast<char*>(&token_)) + sizeof(error_code_));
+  // @@protoc_insertion_point(copy_constructor:audio_engine.ResponedLogin)
+}
+
+void ResponedLogin::SharedCtor() {
+  userid_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(&token_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&error_code_) -
+      reinterpret_cast<char*>(&token_)) + sizeof(error_code_));
+  _cached_size_ = 0;
+}
+
+ResponedLogin::~ResponedLogin() {
+  // @@protoc_insertion_point(destructor:audio_engine.ResponedLogin)
+  SharedDtor();
+}
+
+void ResponedLogin::SharedDtor() {
+  userid_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+void ResponedLogin::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ResponedLogin& ResponedLogin::default_instance() {
+  protobuf_user_5fservice_2eproto::InitDefaults();
+  return *internal_default_instance();
+}
+
+ResponedLogin* ResponedLogin::New(::google::protobuf::Arena* arena) const {
+  ResponedLogin* n = new ResponedLogin;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void ResponedLogin::Clear() {
+// @@protoc_insertion_point(message_clear_start:audio_engine.ResponedLogin)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  userid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(&token_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&error_code_) -
+      reinterpret_cast<char*>(&token_)) + sizeof(error_code_));
+  _internal_metadata_.Clear();
+}
+
+bool ResponedLogin::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(&_internal_metadata_,
+          &::google::protobuf::internal::InternalMetadataWithArenaLite::
+              mutable_unknown_fields));
+  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
+      &unknown_fields_string, false);
+  // @@protoc_insertion_point(parse_start:audio_engine.ResponedLogin)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // string userid = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_userid()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->userid().data(), static_cast<int>(this->userid().length()),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "audio_engine.ResponedLogin.userid"));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // int64 token = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &token_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // int32 error_code = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &error_code_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
+            input, tag, &unknown_fields_stream));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:audio_engine.ResponedLogin)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:audio_engine.ResponedLogin)
+  return false;
+#undef DO_
+}
+
+void ResponedLogin::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:audio_engine.ResponedLogin)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // string userid = 1;
+  if (this->userid().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->userid().data(), static_cast<int>(this->userid().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "audio_engine.ResponedLogin.userid");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      1, this->userid(), output);
+  }
+
+  // int64 token = 2;
+  if (this->token() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(2, this->token(), output);
+  }
+
+  // int32 error_code = 3;
+  if (this->error_code() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->error_code(), output);
+  }
+
+  output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
+                   static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
+  // @@protoc_insertion_point(serialize_end:audio_engine.ResponedLogin)
+}
+
+size_t ResponedLogin::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:audio_engine.ResponedLogin)
+  size_t total_size = 0;
+
+  total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
+
+  // string userid = 1;
+  if (this->userid().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->userid());
+  }
+
+  // int64 token = 2;
+  if (this->token() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int64Size(
+        this->token());
+  }
+
+  // int32 error_code = 3;
+  if (this->error_code() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->error_code());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = cached_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void ResponedLogin::CheckTypeAndMergeFrom(
+    const ::google::protobuf::MessageLite& from) {
+  MergeFrom(*::google::protobuf::down_cast<const ResponedLogin*>(&from));
+}
+
+void ResponedLogin::MergeFrom(const ResponedLogin& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:audio_engine.ResponedLogin)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.userid().size() > 0) {
+
+    userid_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.userid_);
+  }
+  if (from.token() != 0) {
+    set_token(from.token());
+  }
+  if (from.error_code() != 0) {
+    set_error_code(from.error_code());
+  }
+}
+
+void ResponedLogin::CopyFrom(const ResponedLogin& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:audio_engine.ResponedLogin)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ResponedLogin::IsInitialized() const {
+  return true;
+}
+
+void ResponedLogin::Swap(ResponedLogin* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void ResponedLogin::InternalSwap(ResponedLogin* other) {
+  using std::swap;
+  userid_.Swap(&other->userid_);
+  swap(token_, other->token_);
+  swap(error_code_, other->error_code_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(_cached_size_, other->_cached_size_);
+}
+
+::std::string ResponedLogin::GetTypeName() const {
+  return "audio_engine.ResponedLogin";
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// ResponedLogin
+
+// string userid = 1;
+void ResponedLogin::clear_userid() {
+  userid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+const ::std::string& ResponedLogin::userid() const {
+  // @@protoc_insertion_point(field_get:audio_engine.ResponedLogin.userid)
+  return userid_.GetNoArena();
+}
+void ResponedLogin::set_userid(const ::std::string& value) {
+  
+  userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:audio_engine.ResponedLogin.userid)
+}
+#if LANG_CXX11
+void ResponedLogin::set_userid(::std::string&& value) {
+  
+  userid_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:audio_engine.ResponedLogin.userid)
+}
+#endif
+void ResponedLogin::set_userid(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:audio_engine.ResponedLogin.userid)
+}
+void ResponedLogin::set_userid(const char* value, size_t size) {
+  
+  userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:audio_engine.ResponedLogin.userid)
+}
+::std::string* ResponedLogin::mutable_userid() {
+  
+  // @@protoc_insertion_point(field_mutable:audio_engine.ResponedLogin.userid)
+  return userid_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+::std::string* ResponedLogin::release_userid() {
+  // @@protoc_insertion_point(field_release:audio_engine.ResponedLogin.userid)
+  
+  return userid_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+void ResponedLogin::set_allocated_userid(::std::string* userid) {
+  if (userid != NULL) {
+    
+  } else {
+    
+  }
+  userid_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), userid);
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.ResponedLogin.userid)
+}
+
+// int64 token = 2;
+void ResponedLogin::clear_token() {
+  token_ = GOOGLE_LONGLONG(0);
+}
+::google::protobuf::int64 ResponedLogin::token() const {
+  // @@protoc_insertion_point(field_get:audio_engine.ResponedLogin.token)
+  return token_;
+}
+void ResponedLogin::set_token(::google::protobuf::int64 value) {
+  
+  token_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.ResponedLogin.token)
+}
+
+// int32 error_code = 3;
+void ResponedLogin::clear_error_code() {
+  error_code_ = 0;
+}
+::google::protobuf::int32 ResponedLogin::error_code() const {
+  // @@protoc_insertion_point(field_get:audio_engine.ResponedLogin.error_code)
+  return error_code_;
+}
+void ResponedLogin::set_error_code(::google::protobuf::int32 value) {
+  
+  error_code_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.ResponedLogin.error_code)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int RequestLogout::kTokenFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+RequestLogout::RequestLogout()
+  : ::google::protobuf::MessageLite(), _internal_metadata_(NULL) {
+  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
+    protobuf_user_5fservice_2eproto::InitDefaults();
+  }
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:audio_engine.RequestLogout)
+}
+RequestLogout::RequestLogout(const RequestLogout& from)
+  : ::google::protobuf::MessageLite(),
+      _internal_metadata_(NULL),
+      _cached_size_(0) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  token_ = from.token_;
+  // @@protoc_insertion_point(copy_constructor:audio_engine.RequestLogout)
+}
+
+void RequestLogout::SharedCtor() {
+  token_ = GOOGLE_LONGLONG(0);
+  _cached_size_ = 0;
+}
+
+RequestLogout::~RequestLogout() {
+  // @@protoc_insertion_point(destructor:audio_engine.RequestLogout)
+  SharedDtor();
+}
+
+void RequestLogout::SharedDtor() {
+}
+
+void RequestLogout::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const RequestLogout& RequestLogout::default_instance() {
+  protobuf_user_5fservice_2eproto::InitDefaults();
+  return *internal_default_instance();
+}
+
+RequestLogout* RequestLogout::New(::google::protobuf::Arena* arena) const {
+  RequestLogout* n = new RequestLogout;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void RequestLogout::Clear() {
+// @@protoc_insertion_point(message_clear_start:audio_engine.RequestLogout)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  token_ = GOOGLE_LONGLONG(0);
+  _internal_metadata_.Clear();
+}
+
+bool RequestLogout::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(&_internal_metadata_,
+          &::google::protobuf::internal::InternalMetadataWithArenaLite::
+              mutable_unknown_fields));
+  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
+      &unknown_fields_string, false);
+  // @@protoc_insertion_point(parse_start:audio_engine.RequestLogout)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // int64 token = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &token_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
+            input, tag, &unknown_fields_stream));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:audio_engine.RequestLogout)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:audio_engine.RequestLogout)
+  return false;
+#undef DO_
+}
+
+void RequestLogout::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:audio_engine.RequestLogout)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // int64 token = 1;
+  if (this->token() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->token(), output);
+  }
+
+  output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
+                   static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
+  // @@protoc_insertion_point(serialize_end:audio_engine.RequestLogout)
+}
+
+size_t RequestLogout::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:audio_engine.RequestLogout)
+  size_t total_size = 0;
+
+  total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
+
+  // int64 token = 1;
+  if (this->token() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int64Size(
+        this->token());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = cached_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void RequestLogout::CheckTypeAndMergeFrom(
+    const ::google::protobuf::MessageLite& from) {
+  MergeFrom(*::google::protobuf::down_cast<const RequestLogout*>(&from));
+}
+
+void RequestLogout::MergeFrom(const RequestLogout& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:audio_engine.RequestLogout)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.token() != 0) {
+    set_token(from.token());
+  }
+}
+
+void RequestLogout::CopyFrom(const RequestLogout& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:audio_engine.RequestLogout)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool RequestLogout::IsInitialized() const {
+  return true;
+}
+
+void RequestLogout::Swap(RequestLogout* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void RequestLogout::InternalSwap(RequestLogout* other) {
+  using std::swap;
+  swap(token_, other->token_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(_cached_size_, other->_cached_size_);
+}
+
+::std::string RequestLogout::GetTypeName() const {
+  return "audio_engine.RequestLogout";
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// RequestLogout
+
+// int64 token = 1;
+void RequestLogout::clear_token() {
+  token_ = GOOGLE_LONGLONG(0);
+}
+::google::protobuf::int64 RequestLogout::token() const {
+  // @@protoc_insertion_point(field_get:audio_engine.RequestLogout.token)
+  return token_;
+}
+void RequestLogout::set_token(::google::protobuf::int64 value) {
+  
+  token_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.RequestLogout.token)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int ResponedLogout::kTokenFieldNumber;
+const int ResponedLogout::kErrorCodeFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+ResponedLogout::ResponedLogout()
+  : ::google::protobuf::MessageLite(), _internal_metadata_(NULL) {
+  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
+    protobuf_user_5fservice_2eproto::InitDefaults();
+  }
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:audio_engine.ResponedLogout)
+}
+ResponedLogout::ResponedLogout(const ResponedLogout& from)
+  : ::google::protobuf::MessageLite(),
+      _internal_metadata_(NULL),
+      _cached_size_(0) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::memcpy(&token_, &from.token_,
+    static_cast<size_t>(reinterpret_cast<char*>(&error_code_) -
+    reinterpret_cast<char*>(&token_)) + sizeof(error_code_));
+  // @@protoc_insertion_point(copy_constructor:audio_engine.ResponedLogout)
+}
+
+void ResponedLogout::SharedCtor() {
+  ::memset(&token_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&error_code_) -
+      reinterpret_cast<char*>(&token_)) + sizeof(error_code_));
+  _cached_size_ = 0;
+}
+
+ResponedLogout::~ResponedLogout() {
+  // @@protoc_insertion_point(destructor:audio_engine.ResponedLogout)
+  SharedDtor();
+}
+
+void ResponedLogout::SharedDtor() {
+}
+
+void ResponedLogout::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ResponedLogout& ResponedLogout::default_instance() {
+  protobuf_user_5fservice_2eproto::InitDefaults();
+  return *internal_default_instance();
+}
+
+ResponedLogout* ResponedLogout::New(::google::protobuf::Arena* arena) const {
+  ResponedLogout* n = new ResponedLogout;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void ResponedLogout::Clear() {
+// @@protoc_insertion_point(message_clear_start:audio_engine.ResponedLogout)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  ::memset(&token_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&error_code_) -
+      reinterpret_cast<char*>(&token_)) + sizeof(error_code_));
+  _internal_metadata_.Clear();
+}
+
+bool ResponedLogout::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(&_internal_metadata_,
+          &::google::protobuf::internal::InternalMetadataWithArenaLite::
+              mutable_unknown_fields));
+  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
+      &unknown_fields_string, false);
+  // @@protoc_insertion_point(parse_start:audio_engine.ResponedLogout)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // int64 token = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &token_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // int64 error_code = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &error_code_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
+            input, tag, &unknown_fields_stream));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:audio_engine.ResponedLogout)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:audio_engine.ResponedLogout)
+  return false;
+#undef DO_
+}
+
+void ResponedLogout::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:audio_engine.ResponedLogout)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // int64 token = 1;
+  if (this->token() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->token(), output);
+  }
+
+  // int64 error_code = 2;
+  if (this->error_code() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(2, this->error_code(), output);
+  }
+
+  output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
+                   static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
+  // @@protoc_insertion_point(serialize_end:audio_engine.ResponedLogout)
+}
+
+size_t ResponedLogout::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:audio_engine.ResponedLogout)
+  size_t total_size = 0;
+
+  total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
+
+  // int64 token = 1;
+  if (this->token() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int64Size(
+        this->token());
+  }
+
+  // int64 error_code = 2;
+  if (this->error_code() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int64Size(
+        this->error_code());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = cached_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void ResponedLogout::CheckTypeAndMergeFrom(
+    const ::google::protobuf::MessageLite& from) {
+  MergeFrom(*::google::protobuf::down_cast<const ResponedLogout*>(&from));
+}
+
+void ResponedLogout::MergeFrom(const ResponedLogout& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:audio_engine.ResponedLogout)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.token() != 0) {
+    set_token(from.token());
+  }
+  if (from.error_code() != 0) {
+    set_error_code(from.error_code());
+  }
+}
+
+void ResponedLogout::CopyFrom(const ResponedLogout& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:audio_engine.ResponedLogout)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ResponedLogout::IsInitialized() const {
+  return true;
+}
+
+void ResponedLogout::Swap(ResponedLogout* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void ResponedLogout::InternalSwap(ResponedLogout* other) {
+  using std::swap;
+  swap(token_, other->token_);
+  swap(error_code_, other->error_code_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(_cached_size_, other->_cached_size_);
+}
+
+::std::string ResponedLogout::GetTypeName() const {
+  return "audio_engine.ResponedLogout";
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// ResponedLogout
+
+// int64 token = 1;
+void ResponedLogout::clear_token() {
+  token_ = GOOGLE_LONGLONG(0);
+}
+::google::protobuf::int64 ResponedLogout::token() const {
+  // @@protoc_insertion_point(field_get:audio_engine.ResponedLogout.token)
+  return token_;
+}
+void ResponedLogout::set_token(::google::protobuf::int64 value) {
+  
+  token_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.ResponedLogout.token)
+}
+
+// int64 error_code = 2;
+void ResponedLogout::clear_error_code() {
+  error_code_ = GOOGLE_LONGLONG(0);
+}
+::google::protobuf::int64 ResponedLogout::error_code() const {
+  // @@protoc_insertion_point(field_get:audio_engine.ResponedLogout.error_code)
+  return error_code_;
+}
+void ResponedLogout::set_error_code(::google::protobuf::int64 value) {
+  
+  error_code_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.ResponedLogout.error_code)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int NotifyLogin::kUseridFieldNumber;
+const int NotifyLogin::kTokenFieldNumber;
+const int NotifyLogin::kExtendFieldNumber;
+const int NotifyLogin::kDevtypeFieldNumber;
+const int NotifyLogin::kStateFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+NotifyLogin::NotifyLogin()
+  : ::google::protobuf::MessageLite(), _internal_metadata_(NULL) {
+  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
+    protobuf_user_5fservice_2eproto::InitDefaults();
+  }
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:audio_engine.NotifyLogin)
+}
+NotifyLogin::NotifyLogin(const NotifyLogin& from)
+  : ::google::protobuf::MessageLite(),
+      _internal_metadata_(NULL),
+      _cached_size_(0) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  userid_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.userid().size() > 0) {
+    userid_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.userid_);
+  }
+  extend_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.extend().size() > 0) {
+    extend_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.extend_);
+  }
+  ::memcpy(&token_, &from.token_,
+    static_cast<size_t>(reinterpret_cast<char*>(&state_) -
+    reinterpret_cast<char*>(&token_)) + sizeof(state_));
+  // @@protoc_insertion_point(copy_constructor:audio_engine.NotifyLogin)
+}
+
+void NotifyLogin::SharedCtor() {
+  userid_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  extend_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(&token_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&state_) -
+      reinterpret_cast<char*>(&token_)) + sizeof(state_));
+  _cached_size_ = 0;
+}
+
+NotifyLogin::~NotifyLogin() {
+  // @@protoc_insertion_point(destructor:audio_engine.NotifyLogin)
+  SharedDtor();
+}
+
+void NotifyLogin::SharedDtor() {
+  userid_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  extend_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+void NotifyLogin::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const NotifyLogin& NotifyLogin::default_instance() {
+  protobuf_user_5fservice_2eproto::InitDefaults();
+  return *internal_default_instance();
+}
+
+NotifyLogin* NotifyLogin::New(::google::protobuf::Arena* arena) const {
+  NotifyLogin* n = new NotifyLogin;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void NotifyLogin::Clear() {
+// @@protoc_insertion_point(message_clear_start:audio_engine.NotifyLogin)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  userid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  extend_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(&token_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&state_) -
+      reinterpret_cast<char*>(&token_)) + sizeof(state_));
+  _internal_metadata_.Clear();
+}
+
+bool NotifyLogin::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(&_internal_metadata_,
+          &::google::protobuf::internal::InternalMetadataWithArenaLite::
+              mutable_unknown_fields));
+  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
+      &unknown_fields_string, false);
+  // @@protoc_insertion_point(parse_start:audio_engine.NotifyLogin)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // string userid = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_userid()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->userid().data(), static_cast<int>(this->userid().length()),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "audio_engine.NotifyLogin.userid"));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // int64 token = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &token_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // string extend = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_extend()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->extend().data(), static_cast<int>(this->extend().length()),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "audio_engine.NotifyLogin.extend"));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // .audio_engine.DEVICE_TYPE devtype = 4;
+      case 4: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          set_devtype(static_cast< ::audio_engine::DEVICE_TYPE >(value));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // .audio_engine.USER_STATE state = 5;
+      case 5: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(40u /* 40 & 0xFF */)) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          set_state(static_cast< ::audio_engine::USER_STATE >(value));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
+            input, tag, &unknown_fields_stream));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:audio_engine.NotifyLogin)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:audio_engine.NotifyLogin)
+  return false;
+#undef DO_
+}
+
+void NotifyLogin::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:audio_engine.NotifyLogin)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // string userid = 1;
+  if (this->userid().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->userid().data(), static_cast<int>(this->userid().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "audio_engine.NotifyLogin.userid");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      1, this->userid(), output);
+  }
+
+  // int64 token = 2;
+  if (this->token() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(2, this->token(), output);
+  }
+
+  // string extend = 3;
+  if (this->extend().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->extend().data(), static_cast<int>(this->extend().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "audio_engine.NotifyLogin.extend");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      3, this->extend(), output);
+  }
+
+  // .audio_engine.DEVICE_TYPE devtype = 4;
+  if (this->devtype() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      4, this->devtype(), output);
+  }
+
+  // .audio_engine.USER_STATE state = 5;
+  if (this->state() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      5, this->state(), output);
+  }
+
+  output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
+                   static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
+  // @@protoc_insertion_point(serialize_end:audio_engine.NotifyLogin)
+}
+
+size_t NotifyLogin::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:audio_engine.NotifyLogin)
+  size_t total_size = 0;
+
+  total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
+
+  // string userid = 1;
+  if (this->userid().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->userid());
+  }
+
+  // string extend = 3;
+  if (this->extend().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->extend());
+  }
+
+  // int64 token = 2;
+  if (this->token() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int64Size(
+        this->token());
+  }
+
+  // .audio_engine.DEVICE_TYPE devtype = 4;
+  if (this->devtype() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->devtype());
+  }
+
+  // .audio_engine.USER_STATE state = 5;
+  if (this->state() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->state());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = cached_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void NotifyLogin::CheckTypeAndMergeFrom(
+    const ::google::protobuf::MessageLite& from) {
+  MergeFrom(*::google::protobuf::down_cast<const NotifyLogin*>(&from));
+}
+
+void NotifyLogin::MergeFrom(const NotifyLogin& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:audio_engine.NotifyLogin)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.userid().size() > 0) {
+
+    userid_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.userid_);
+  }
+  if (from.extend().size() > 0) {
+
+    extend_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.extend_);
+  }
+  if (from.token() != 0) {
+    set_token(from.token());
+  }
+  if (from.devtype() != 0) {
+    set_devtype(from.devtype());
+  }
+  if (from.state() != 0) {
+    set_state(from.state());
+  }
+}
+
+void NotifyLogin::CopyFrom(const NotifyLogin& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:audio_engine.NotifyLogin)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool NotifyLogin::IsInitialized() const {
+  return true;
+}
+
+void NotifyLogin::Swap(NotifyLogin* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void NotifyLogin::InternalSwap(NotifyLogin* other) {
+  using std::swap;
+  userid_.Swap(&other->userid_);
+  extend_.Swap(&other->extend_);
+  swap(token_, other->token_);
+  swap(devtype_, other->devtype_);
+  swap(state_, other->state_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(_cached_size_, other->_cached_size_);
+}
+
+::std::string NotifyLogin::GetTypeName() const {
+  return "audio_engine.NotifyLogin";
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// NotifyLogin
+
+// string userid = 1;
+void NotifyLogin::clear_userid() {
+  userid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+const ::std::string& NotifyLogin::userid() const {
+  // @@protoc_insertion_point(field_get:audio_engine.NotifyLogin.userid)
+  return userid_.GetNoArena();
+}
+void NotifyLogin::set_userid(const ::std::string& value) {
+  
+  userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:audio_engine.NotifyLogin.userid)
+}
+#if LANG_CXX11
+void NotifyLogin::set_userid(::std::string&& value) {
+  
+  userid_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:audio_engine.NotifyLogin.userid)
+}
+#endif
+void NotifyLogin::set_userid(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:audio_engine.NotifyLogin.userid)
+}
+void NotifyLogin::set_userid(const char* value, size_t size) {
+  
+  userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:audio_engine.NotifyLogin.userid)
+}
+::std::string* NotifyLogin::mutable_userid() {
+  
+  // @@protoc_insertion_point(field_mutable:audio_engine.NotifyLogin.userid)
+  return userid_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+::std::string* NotifyLogin::release_userid() {
+  // @@protoc_insertion_point(field_release:audio_engine.NotifyLogin.userid)
+  
+  return userid_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+void NotifyLogin::set_allocated_userid(::std::string* userid) {
+  if (userid != NULL) {
+    
+  } else {
+    
+  }
+  userid_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), userid);
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.NotifyLogin.userid)
+}
+
+// int64 token = 2;
+void NotifyLogin::clear_token() {
+  token_ = GOOGLE_LONGLONG(0);
+}
+::google::protobuf::int64 NotifyLogin::token() const {
+  // @@protoc_insertion_point(field_get:audio_engine.NotifyLogin.token)
+  return token_;
+}
+void NotifyLogin::set_token(::google::protobuf::int64 value) {
+  
+  token_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.NotifyLogin.token)
+}
+
+// string extend = 3;
+void NotifyLogin::clear_extend() {
+  extend_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+const ::std::string& NotifyLogin::extend() const {
+  // @@protoc_insertion_point(field_get:audio_engine.NotifyLogin.extend)
+  return extend_.GetNoArena();
+}
+void NotifyLogin::set_extend(const ::std::string& value) {
+  
+  extend_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:audio_engine.NotifyLogin.extend)
+}
+#if LANG_CXX11
+void NotifyLogin::set_extend(::std::string&& value) {
+  
+  extend_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:audio_engine.NotifyLogin.extend)
+}
+#endif
+void NotifyLogin::set_extend(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  extend_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:audio_engine.NotifyLogin.extend)
+}
+void NotifyLogin::set_extend(const char* value, size_t size) {
+  
+  extend_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:audio_engine.NotifyLogin.extend)
+}
+::std::string* NotifyLogin::mutable_extend() {
+  
+  // @@protoc_insertion_point(field_mutable:audio_engine.NotifyLogin.extend)
+  return extend_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+::std::string* NotifyLogin::release_extend() {
+  // @@protoc_insertion_point(field_release:audio_engine.NotifyLogin.extend)
+  
+  return extend_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+void NotifyLogin::set_allocated_extend(::std::string* extend) {
+  if (extend != NULL) {
+    
+  } else {
+    
+  }
+  extend_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), extend);
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.NotifyLogin.extend)
+}
+
+// .audio_engine.DEVICE_TYPE devtype = 4;
+void NotifyLogin::clear_devtype() {
+  devtype_ = 0;
+}
+::audio_engine::DEVICE_TYPE NotifyLogin::devtype() const {
+  // @@protoc_insertion_point(field_get:audio_engine.NotifyLogin.devtype)
+  return static_cast< ::audio_engine::DEVICE_TYPE >(devtype_);
+}
+void NotifyLogin::set_devtype(::audio_engine::DEVICE_TYPE value) {
+  
+  devtype_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.NotifyLogin.devtype)
+}
+
+// .audio_engine.USER_STATE state = 5;
+void NotifyLogin::clear_state() {
+  state_ = 0;
+}
+::audio_engine::USER_STATE NotifyLogin::state() const {
+  // @@protoc_insertion_point(field_get:audio_engine.NotifyLogin.state)
+  return static_cast< ::audio_engine::USER_STATE >(state_);
+}
+void NotifyLogin::set_state(::audio_engine::USER_STATE value) {
+  
+  state_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.NotifyLogin.state)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int NotifyLogout::kTokenFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+NotifyLogout::NotifyLogout()
+  : ::google::protobuf::MessageLite(), _internal_metadata_(NULL) {
+  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
+    protobuf_user_5fservice_2eproto::InitDefaults();
+  }
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:audio_engine.NotifyLogout)
+}
+NotifyLogout::NotifyLogout(const NotifyLogout& from)
+  : ::google::protobuf::MessageLite(),
+      _internal_metadata_(NULL),
+      _cached_size_(0) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  token_ = from.token_;
+  // @@protoc_insertion_point(copy_constructor:audio_engine.NotifyLogout)
+}
+
+void NotifyLogout::SharedCtor() {
+  token_ = GOOGLE_LONGLONG(0);
+  _cached_size_ = 0;
+}
+
+NotifyLogout::~NotifyLogout() {
+  // @@protoc_insertion_point(destructor:audio_engine.NotifyLogout)
+  SharedDtor();
+}
+
+void NotifyLogout::SharedDtor() {
+}
+
+void NotifyLogout::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const NotifyLogout& NotifyLogout::default_instance() {
+  protobuf_user_5fservice_2eproto::InitDefaults();
+  return *internal_default_instance();
+}
+
+NotifyLogout* NotifyLogout::New(::google::protobuf::Arena* arena) const {
+  NotifyLogout* n = new NotifyLogout;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void NotifyLogout::Clear() {
+// @@protoc_insertion_point(message_clear_start:audio_engine.NotifyLogout)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  token_ = GOOGLE_LONGLONG(0);
+  _internal_metadata_.Clear();
+}
+
+bool NotifyLogout::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(&_internal_metadata_,
+          &::google::protobuf::internal::InternalMetadataWithArenaLite::
+              mutable_unknown_fields));
+  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
+      &unknown_fields_string, false);
+  // @@protoc_insertion_point(parse_start:audio_engine.NotifyLogout)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // int64 token = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &token_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
+            input, tag, &unknown_fields_stream));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:audio_engine.NotifyLogout)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:audio_engine.NotifyLogout)
+  return false;
+#undef DO_
+}
+
+void NotifyLogout::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:audio_engine.NotifyLogout)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // int64 token = 1;
+  if (this->token() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->token(), output);
+  }
+
+  output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
+                   static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
+  // @@protoc_insertion_point(serialize_end:audio_engine.NotifyLogout)
+}
+
+size_t NotifyLogout::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:audio_engine.NotifyLogout)
+  size_t total_size = 0;
+
+  total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
+
+  // int64 token = 1;
+  if (this->token() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int64Size(
+        this->token());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = cached_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void NotifyLogout::CheckTypeAndMergeFrom(
+    const ::google::protobuf::MessageLite& from) {
+  MergeFrom(*::google::protobuf::down_cast<const NotifyLogout*>(&from));
+}
+
+void NotifyLogout::MergeFrom(const NotifyLogout& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:audio_engine.NotifyLogout)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.token() != 0) {
+    set_token(from.token());
+  }
+}
+
+void NotifyLogout::CopyFrom(const NotifyLogout& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:audio_engine.NotifyLogout)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool NotifyLogout::IsInitialized() const {
+  return true;
+}
+
+void NotifyLogout::Swap(NotifyLogout* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void NotifyLogout::InternalSwap(NotifyLogout* other) {
+  using std::swap;
+  swap(token_, other->token_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(_cached_size_, other->_cached_size_);
+}
+
+::std::string NotifyLogout::GetTypeName() const {
+  return "audio_engine.NotifyLogout";
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// NotifyLogout
+
+// int64 token = 1;
+void NotifyLogout::clear_token() {
+  token_ = GOOGLE_LONGLONG(0);
+}
+::google::protobuf::int64 NotifyLogout::token() const {
+  // @@protoc_insertion_point(field_get:audio_engine.NotifyLogout.token)
+  return token_;
+}
+void NotifyLogout::set_token(::google::protobuf::int64 value) {
+  
+  token_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.NotifyLogout.token)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int UpdateUserState::kSrcTokenFieldNumber;
+const int UpdateUserState::kDstTokenFieldNumber;
+const int UpdateUserState::kStateFieldNumber;
+const int UpdateUserState::kErrorCodeFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+UpdateUserState::UpdateUserState()
+  : ::google::protobuf::MessageLite(), _internal_metadata_(NULL) {
+  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
+    protobuf_user_5fservice_2eproto::InitDefaults();
+  }
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:audio_engine.UpdateUserState)
+}
+UpdateUserState::UpdateUserState(const UpdateUserState& from)
+  : ::google::protobuf::MessageLite(),
+      _internal_metadata_(NULL),
+      _cached_size_(0) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::memcpy(&src_token_, &from.src_token_,
+    static_cast<size_t>(reinterpret_cast<char*>(&error_code_) -
+    reinterpret_cast<char*>(&src_token_)) + sizeof(error_code_));
+  // @@protoc_insertion_point(copy_constructor:audio_engine.UpdateUserState)
+}
+
+void UpdateUserState::SharedCtor() {
+  ::memset(&src_token_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&error_code_) -
+      reinterpret_cast<char*>(&src_token_)) + sizeof(error_code_));
+  _cached_size_ = 0;
+}
+
+UpdateUserState::~UpdateUserState() {
+  // @@protoc_insertion_point(destructor:audio_engine.UpdateUserState)
+  SharedDtor();
+}
+
+void UpdateUserState::SharedDtor() {
+}
+
+void UpdateUserState::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const UpdateUserState& UpdateUserState::default_instance() {
+  protobuf_user_5fservice_2eproto::InitDefaults();
+  return *internal_default_instance();
+}
+
+UpdateUserState* UpdateUserState::New(::google::protobuf::Arena* arena) const {
+  UpdateUserState* n = new UpdateUserState;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void UpdateUserState::Clear() {
+// @@protoc_insertion_point(message_clear_start:audio_engine.UpdateUserState)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  ::memset(&src_token_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&error_code_) -
+      reinterpret_cast<char*>(&src_token_)) + sizeof(error_code_));
+  _internal_metadata_.Clear();
+}
+
+bool UpdateUserState::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(&_internal_metadata_,
+          &::google::protobuf::internal::InternalMetadataWithArenaLite::
+              mutable_unknown_fields));
+  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
+      &unknown_fields_string, false);
+  // @@protoc_insertion_point(parse_start:audio_engine.UpdateUserState)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // int64 src_token = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &src_token_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // int64 dst_token = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &dst_token_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // .audio_engine.USER_STATE state = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          set_state(static_cast< ::audio_engine::USER_STATE >(value));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // int32 error_code = 4;
+      case 4: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &error_code_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
+            input, tag, &unknown_fields_stream));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:audio_engine.UpdateUserState)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:audio_engine.UpdateUserState)
+  return false;
+#undef DO_
+}
+
+void UpdateUserState::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:audio_engine.UpdateUserState)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // int64 src_token = 1;
+  if (this->src_token() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->src_token(), output);
+  }
+
+  // int64 dst_token = 2;
+  if (this->dst_token() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(2, this->dst_token(), output);
+  }
+
+  // .audio_engine.USER_STATE state = 3;
+  if (this->state() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      3, this->state(), output);
+  }
+
+  // int32 error_code = 4;
+  if (this->error_code() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->error_code(), output);
+  }
+
+  output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
+                   static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
+  // @@protoc_insertion_point(serialize_end:audio_engine.UpdateUserState)
+}
+
+size_t UpdateUserState::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:audio_engine.UpdateUserState)
+  size_t total_size = 0;
+
+  total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
+
+  // int64 src_token = 1;
+  if (this->src_token() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int64Size(
+        this->src_token());
+  }
+
+  // int64 dst_token = 2;
+  if (this->dst_token() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int64Size(
+        this->dst_token());
+  }
+
+  // .audio_engine.USER_STATE state = 3;
+  if (this->state() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->state());
+  }
+
+  // int32 error_code = 4;
+  if (this->error_code() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->error_code());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = cached_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void UpdateUserState::CheckTypeAndMergeFrom(
+    const ::google::protobuf::MessageLite& from) {
+  MergeFrom(*::google::protobuf::down_cast<const UpdateUserState*>(&from));
+}
+
+void UpdateUserState::MergeFrom(const UpdateUserState& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:audio_engine.UpdateUserState)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.src_token() != 0) {
+    set_src_token(from.src_token());
+  }
+  if (from.dst_token() != 0) {
+    set_dst_token(from.dst_token());
+  }
+  if (from.state() != 0) {
+    set_state(from.state());
+  }
+  if (from.error_code() != 0) {
+    set_error_code(from.error_code());
+  }
+}
+
+void UpdateUserState::CopyFrom(const UpdateUserState& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:audio_engine.UpdateUserState)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool UpdateUserState::IsInitialized() const {
+  return true;
+}
+
+void UpdateUserState::Swap(UpdateUserState* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void UpdateUserState::InternalSwap(UpdateUserState* other) {
+  using std::swap;
+  swap(src_token_, other->src_token_);
+  swap(dst_token_, other->dst_token_);
+  swap(state_, other->state_);
+  swap(error_code_, other->error_code_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(_cached_size_, other->_cached_size_);
+}
+
+::std::string UpdateUserState::GetTypeName() const {
+  return "audio_engine.UpdateUserState";
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// UpdateUserState
+
+// int64 src_token = 1;
+void UpdateUserState::clear_src_token() {
+  src_token_ = GOOGLE_LONGLONG(0);
+}
+::google::protobuf::int64 UpdateUserState::src_token() const {
+  // @@protoc_insertion_point(field_get:audio_engine.UpdateUserState.src_token)
+  return src_token_;
+}
+void UpdateUserState::set_src_token(::google::protobuf::int64 value) {
+  
+  src_token_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.UpdateUserState.src_token)
+}
+
+// int64 dst_token = 2;
+void UpdateUserState::clear_dst_token() {
+  dst_token_ = GOOGLE_LONGLONG(0);
+}
+::google::protobuf::int64 UpdateUserState::dst_token() const {
+  // @@protoc_insertion_point(field_get:audio_engine.UpdateUserState.dst_token)
+  return dst_token_;
+}
+void UpdateUserState::set_dst_token(::google::protobuf::int64 value) {
+  
+  dst_token_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.UpdateUserState.dst_token)
+}
+
+// .audio_engine.USER_STATE state = 3;
+void UpdateUserState::clear_state() {
+  state_ = 0;
+}
+::audio_engine::USER_STATE UpdateUserState::state() const {
+  // @@protoc_insertion_point(field_get:audio_engine.UpdateUserState.state)
+  return static_cast< ::audio_engine::USER_STATE >(state_);
+}
+void UpdateUserState::set_state(::audio_engine::USER_STATE value) {
+  
+  state_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.UpdateUserState.state)
+}
+
+// int32 error_code = 4;
+void UpdateUserState::clear_error_code() {
+  error_code_ = 0;
+}
+::google::protobuf::int32 UpdateUserState::error_code() const {
+  // @@protoc_insertion_point(field_get:audio_engine.UpdateUserState.error_code)
+  return error_code_;
+}
+void UpdateUserState::set_error_code(::google::protobuf::int32 value) {
+  
+  error_code_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.UpdateUserState.error_code)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int UpdateUserExtend::kTokenFieldNumber;
+const int UpdateUserExtend::kExtendFieldNumber;
+const int UpdateUserExtend::kErrorCodeFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+UpdateUserExtend::UpdateUserExtend()
+  : ::google::protobuf::MessageLite(), _internal_metadata_(NULL) {
+  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
+    protobuf_user_5fservice_2eproto::InitDefaults();
+  }
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:audio_engine.UpdateUserExtend)
+}
+UpdateUserExtend::UpdateUserExtend(const UpdateUserExtend& from)
+  : ::google::protobuf::MessageLite(),
+      _internal_metadata_(NULL),
+      _cached_size_(0) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  extend_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.extend().size() > 0) {
+    extend_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.extend_);
+  }
+  ::memcpy(&token_, &from.token_,
+    static_cast<size_t>(reinterpret_cast<char*>(&error_code_) -
+    reinterpret_cast<char*>(&token_)) + sizeof(error_code_));
+  // @@protoc_insertion_point(copy_constructor:audio_engine.UpdateUserExtend)
+}
+
+void UpdateUserExtend::SharedCtor() {
+  extend_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(&token_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&error_code_) -
+      reinterpret_cast<char*>(&token_)) + sizeof(error_code_));
+  _cached_size_ = 0;
+}
+
+UpdateUserExtend::~UpdateUserExtend() {
+  // @@protoc_insertion_point(destructor:audio_engine.UpdateUserExtend)
+  SharedDtor();
+}
+
+void UpdateUserExtend::SharedDtor() {
+  extend_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+void UpdateUserExtend::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const UpdateUserExtend& UpdateUserExtend::default_instance() {
+  protobuf_user_5fservice_2eproto::InitDefaults();
+  return *internal_default_instance();
+}
+
+UpdateUserExtend* UpdateUserExtend::New(::google::protobuf::Arena* arena) const {
+  UpdateUserExtend* n = new UpdateUserExtend;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void UpdateUserExtend::Clear() {
+// @@protoc_insertion_point(message_clear_start:audio_engine.UpdateUserExtend)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  extend_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(&token_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&error_code_) -
+      reinterpret_cast<char*>(&token_)) + sizeof(error_code_));
+  _internal_metadata_.Clear();
+}
+
+bool UpdateUserExtend::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(&_internal_metadata_,
+          &::google::protobuf::internal::InternalMetadataWithArenaLite::
+              mutable_unknown_fields));
+  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
+      &unknown_fields_string, false);
+  // @@protoc_insertion_point(parse_start:audio_engine.UpdateUserExtend)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // int64 token = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &token_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // string extend = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_extend()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->extend().data(), static_cast<int>(this->extend().length()),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "audio_engine.UpdateUserExtend.extend"));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // int32 error_code = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &error_code_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
+            input, tag, &unknown_fields_stream));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:audio_engine.UpdateUserExtend)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:audio_engine.UpdateUserExtend)
+  return false;
+#undef DO_
+}
+
+void UpdateUserExtend::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:audio_engine.UpdateUserExtend)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // int64 token = 1;
+  if (this->token() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->token(), output);
+  }
+
+  // string extend = 2;
+  if (this->extend().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->extend().data(), static_cast<int>(this->extend().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "audio_engine.UpdateUserExtend.extend");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      2, this->extend(), output);
+  }
+
+  // int32 error_code = 3;
+  if (this->error_code() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->error_code(), output);
+  }
+
+  output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
+                   static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
+  // @@protoc_insertion_point(serialize_end:audio_engine.UpdateUserExtend)
+}
+
+size_t UpdateUserExtend::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:audio_engine.UpdateUserExtend)
+  size_t total_size = 0;
+
+  total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
+
+  // string extend = 2;
+  if (this->extend().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->extend());
+  }
+
+  // int64 token = 1;
+  if (this->token() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int64Size(
+        this->token());
+  }
+
+  // int32 error_code = 3;
+  if (this->error_code() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->error_code());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = cached_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void UpdateUserExtend::CheckTypeAndMergeFrom(
+    const ::google::protobuf::MessageLite& from) {
+  MergeFrom(*::google::protobuf::down_cast<const UpdateUserExtend*>(&from));
+}
+
+void UpdateUserExtend::MergeFrom(const UpdateUserExtend& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:audio_engine.UpdateUserExtend)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.extend().size() > 0) {
+
+    extend_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.extend_);
+  }
+  if (from.token() != 0) {
+    set_token(from.token());
+  }
+  if (from.error_code() != 0) {
+    set_error_code(from.error_code());
+  }
+}
+
+void UpdateUserExtend::CopyFrom(const UpdateUserExtend& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:audio_engine.UpdateUserExtend)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool UpdateUserExtend::IsInitialized() const {
+  return true;
+}
+
+void UpdateUserExtend::Swap(UpdateUserExtend* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void UpdateUserExtend::InternalSwap(UpdateUserExtend* other) {
+  using std::swap;
+  extend_.Swap(&other->extend_);
+  swap(token_, other->token_);
+  swap(error_code_, other->error_code_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(_cached_size_, other->_cached_size_);
+}
+
+::std::string UpdateUserExtend::GetTypeName() const {
+  return "audio_engine.UpdateUserExtend";
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// UpdateUserExtend
+
+// int64 token = 1;
+void UpdateUserExtend::clear_token() {
+  token_ = GOOGLE_LONGLONG(0);
+}
+::google::protobuf::int64 UpdateUserExtend::token() const {
+  // @@protoc_insertion_point(field_get:audio_engine.UpdateUserExtend.token)
+  return token_;
+}
+void UpdateUserExtend::set_token(::google::protobuf::int64 value) {
+  
+  token_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.UpdateUserExtend.token)
+}
+
+// string extend = 2;
+void UpdateUserExtend::clear_extend() {
+  extend_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+const ::std::string& UpdateUserExtend::extend() const {
+  // @@protoc_insertion_point(field_get:audio_engine.UpdateUserExtend.extend)
+  return extend_.GetNoArena();
+}
+void UpdateUserExtend::set_extend(const ::std::string& value) {
+  
+  extend_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:audio_engine.UpdateUserExtend.extend)
+}
+#if LANG_CXX11
+void UpdateUserExtend::set_extend(::std::string&& value) {
+  
+  extend_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:audio_engine.UpdateUserExtend.extend)
+}
+#endif
+void UpdateUserExtend::set_extend(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  extend_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:audio_engine.UpdateUserExtend.extend)
+}
+void UpdateUserExtend::set_extend(const char* value, size_t size) {
+  
+  extend_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:audio_engine.UpdateUserExtend.extend)
+}
+::std::string* UpdateUserExtend::mutable_extend() {
+  
+  // @@protoc_insertion_point(field_mutable:audio_engine.UpdateUserExtend.extend)
+  return extend_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+::std::string* UpdateUserExtend::release_extend() {
+  // @@protoc_insertion_point(field_release:audio_engine.UpdateUserExtend.extend)
+  
+  return extend_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+void UpdateUserExtend::set_allocated_extend(::std::string* extend) {
+  if (extend != NULL) {
+    
+  } else {
+    
+  }
+  extend_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), extend);
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.UpdateUserExtend.extend)
+}
+
+// int32 error_code = 3;
+void UpdateUserExtend::clear_error_code() {
+  error_code_ = 0;
+}
+::google::protobuf::int32 UpdateUserExtend::error_code() const {
+  // @@protoc_insertion_point(field_get:audio_engine.UpdateUserExtend.error_code)
+  return error_code_;
+}
+void UpdateUserExtend::set_error_code(::google::protobuf::int32 value) {
+  
+  error_code_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.UpdateUserExtend.error_code)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int UserInfo::kUseridFieldNumber;
+const int UserInfo::kExtendFieldNumber;
+const int UserInfo::kDevtypeFieldNumber;
+const int UserInfo::kStateFieldNumber;
+const int UserInfo::kTokenFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+UserInfo::UserInfo()
+  : ::google::protobuf::MessageLite(), _internal_metadata_(NULL) {
+  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
+    protobuf_user_5fservice_2eproto::InitDefaults();
+  }
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:audio_engine.UserInfo)
+}
+UserInfo::UserInfo(const UserInfo& from)
+  : ::google::protobuf::MessageLite(),
+      _internal_metadata_(NULL),
+      _cached_size_(0) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  userid_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.userid().size() > 0) {
+    userid_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.userid_);
+  }
+  extend_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.extend().size() > 0) {
+    extend_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.extend_);
+  }
+  ::memcpy(&devtype_, &from.devtype_,
+    static_cast<size_t>(reinterpret_cast<char*>(&token_) -
+    reinterpret_cast<char*>(&devtype_)) + sizeof(token_));
+  // @@protoc_insertion_point(copy_constructor:audio_engine.UserInfo)
+}
+
+void UserInfo::SharedCtor() {
+  userid_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  extend_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(&devtype_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&token_) -
+      reinterpret_cast<char*>(&devtype_)) + sizeof(token_));
+  _cached_size_ = 0;
+}
+
+UserInfo::~UserInfo() {
+  // @@protoc_insertion_point(destructor:audio_engine.UserInfo)
+  SharedDtor();
+}
+
+void UserInfo::SharedDtor() {
+  userid_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  extend_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+void UserInfo::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const UserInfo& UserInfo::default_instance() {
+  protobuf_user_5fservice_2eproto::InitDefaults();
+  return *internal_default_instance();
+}
+
+UserInfo* UserInfo::New(::google::protobuf::Arena* arena) const {
+  UserInfo* n = new UserInfo;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void UserInfo::Clear() {
+// @@protoc_insertion_point(message_clear_start:audio_engine.UserInfo)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  userid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  extend_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(&devtype_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&token_) -
+      reinterpret_cast<char*>(&devtype_)) + sizeof(token_));
+  _internal_metadata_.Clear();
+}
+
+bool UserInfo::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(&_internal_metadata_,
+          &::google::protobuf::internal::InternalMetadataWithArenaLite::
+              mutable_unknown_fields));
+  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
+      &unknown_fields_string, false);
+  // @@protoc_insertion_point(parse_start:audio_engine.UserInfo)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // string userid = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_userid()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->userid().data(), static_cast<int>(this->userid().length()),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "audio_engine.UserInfo.userid"));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // string extend = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_extend()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->extend().data(), static_cast<int>(this->extend().length()),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "audio_engine.UserInfo.extend"));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // .audio_engine.DEVICE_TYPE devtype = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          set_devtype(static_cast< ::audio_engine::DEVICE_TYPE >(value));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // .audio_engine.USER_STATE state = 4;
+      case 4: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          set_state(static_cast< ::audio_engine::USER_STATE >(value));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // int64 token = 5;
+      case 5: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(40u /* 40 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &token_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
+            input, tag, &unknown_fields_stream));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:audio_engine.UserInfo)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:audio_engine.UserInfo)
+  return false;
+#undef DO_
+}
+
+void UserInfo::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:audio_engine.UserInfo)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // string userid = 1;
+  if (this->userid().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->userid().data(), static_cast<int>(this->userid().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "audio_engine.UserInfo.userid");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      1, this->userid(), output);
+  }
+
+  // string extend = 2;
+  if (this->extend().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->extend().data(), static_cast<int>(this->extend().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "audio_engine.UserInfo.extend");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      2, this->extend(), output);
+  }
+
+  // .audio_engine.DEVICE_TYPE devtype = 3;
+  if (this->devtype() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      3, this->devtype(), output);
+  }
+
+  // .audio_engine.USER_STATE state = 4;
+  if (this->state() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      4, this->state(), output);
+  }
+
+  // int64 token = 5;
+  if (this->token() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(5, this->token(), output);
+  }
+
+  output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
+                   static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
+  // @@protoc_insertion_point(serialize_end:audio_engine.UserInfo)
+}
+
+size_t UserInfo::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:audio_engine.UserInfo)
+  size_t total_size = 0;
+
+  total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
+
+  // string userid = 1;
+  if (this->userid().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->userid());
+  }
+
+  // string extend = 2;
+  if (this->extend().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->extend());
+  }
+
+  // .audio_engine.DEVICE_TYPE devtype = 3;
+  if (this->devtype() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->devtype());
+  }
+
+  // .audio_engine.USER_STATE state = 4;
+  if (this->state() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->state());
+  }
+
+  // int64 token = 5;
+  if (this->token() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int64Size(
+        this->token());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = cached_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void UserInfo::CheckTypeAndMergeFrom(
+    const ::google::protobuf::MessageLite& from) {
+  MergeFrom(*::google::protobuf::down_cast<const UserInfo*>(&from));
+}
+
+void UserInfo::MergeFrom(const UserInfo& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:audio_engine.UserInfo)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.userid().size() > 0) {
+
+    userid_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.userid_);
   }
   if (from.extend().size() > 0) {
 
@@ -1822,229 +3351,193 @@ void LoginNotify::MergeFrom(const LoginNotify& from) {
   if (from.devtype() != 0) {
     set_devtype(from.devtype());
   }
-  if (from.status() != 0) {
-    set_status(from.status());
+  if (from.state() != 0) {
+    set_state(from.state());
+  }
+  if (from.token() != 0) {
+    set_token(from.token());
   }
 }
 
-void LoginNotify::CopyFrom(const LoginNotify& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:audio_engine.LoginNotify)
+void UserInfo::CopyFrom(const UserInfo& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:audio_engine.UserInfo)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool LoginNotify::IsInitialized() const {
+bool UserInfo::IsInitialized() const {
   return true;
 }
 
-void LoginNotify::Swap(LoginNotify* other) {
+void UserInfo::Swap(UserInfo* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void LoginNotify::InternalSwap(LoginNotify* other) {
+void UserInfo::InternalSwap(UserInfo* other) {
   using std::swap;
   userid_.Swap(&other->userid_);
-  username_.Swap(&other->username_);
   extend_.Swap(&other->extend_);
   swap(devtype_, other->devtype_);
-  swap(status_, other->status_);
+  swap(state_, other->state_);
+  swap(token_, other->token_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(_cached_size_, other->_cached_size_);
 }
 
-::std::string LoginNotify::GetTypeName() const {
-  return "audio_engine.LoginNotify";
+::std::string UserInfo::GetTypeName() const {
+  return "audio_engine.UserInfo";
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
-// LoginNotify
+// UserInfo
 
 // string userid = 1;
-void LoginNotify::clear_userid() {
+void UserInfo::clear_userid() {
   userid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-const ::std::string& LoginNotify::userid() const {
-  // @@protoc_insertion_point(field_get:audio_engine.LoginNotify.userid)
+const ::std::string& UserInfo::userid() const {
+  // @@protoc_insertion_point(field_get:audio_engine.UserInfo.userid)
   return userid_.GetNoArena();
 }
-void LoginNotify::set_userid(const ::std::string& value) {
+void UserInfo::set_userid(const ::std::string& value) {
   
   userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:audio_engine.LoginNotify.userid)
+  // @@protoc_insertion_point(field_set:audio_engine.UserInfo.userid)
 }
 #if LANG_CXX11
-void LoginNotify::set_userid(::std::string&& value) {
+void UserInfo::set_userid(::std::string&& value) {
   
   userid_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:audio_engine.LoginNotify.userid)
+  // @@protoc_insertion_point(field_set_rvalue:audio_engine.UserInfo.userid)
 }
 #endif
-void LoginNotify::set_userid(const char* value) {
+void UserInfo::set_userid(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   
   userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:audio_engine.LoginNotify.userid)
+  // @@protoc_insertion_point(field_set_char:audio_engine.UserInfo.userid)
 }
-void LoginNotify::set_userid(const char* value, size_t size) {
+void UserInfo::set_userid(const char* value, size_t size) {
   
   userid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:audio_engine.LoginNotify.userid)
+  // @@protoc_insertion_point(field_set_pointer:audio_engine.UserInfo.userid)
 }
-::std::string* LoginNotify::mutable_userid() {
+::std::string* UserInfo::mutable_userid() {
   
-  // @@protoc_insertion_point(field_mutable:audio_engine.LoginNotify.userid)
+  // @@protoc_insertion_point(field_mutable:audio_engine.UserInfo.userid)
   return userid_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-::std::string* LoginNotify::release_userid() {
-  // @@protoc_insertion_point(field_release:audio_engine.LoginNotify.userid)
+::std::string* UserInfo::release_userid() {
+  // @@protoc_insertion_point(field_release:audio_engine.UserInfo.userid)
   
   return userid_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-void LoginNotify::set_allocated_userid(::std::string* userid) {
+void UserInfo::set_allocated_userid(::std::string* userid) {
   if (userid != NULL) {
     
   } else {
     
   }
   userid_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), userid);
-  // @@protoc_insertion_point(field_set_allocated:audio_engine.LoginNotify.userid)
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.UserInfo.userid)
 }
 
-// string username = 2;
-void LoginNotify::clear_username() {
-  username_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-const ::std::string& LoginNotify::username() const {
-  // @@protoc_insertion_point(field_get:audio_engine.LoginNotify.username)
-  return username_.GetNoArena();
-}
-void LoginNotify::set_username(const ::std::string& value) {
-  
-  username_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:audio_engine.LoginNotify.username)
-}
-#if LANG_CXX11
-void LoginNotify::set_username(::std::string&& value) {
-  
-  username_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:audio_engine.LoginNotify.username)
-}
-#endif
-void LoginNotify::set_username(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  
-  username_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:audio_engine.LoginNotify.username)
-}
-void LoginNotify::set_username(const char* value, size_t size) {
-  
-  username_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:audio_engine.LoginNotify.username)
-}
-::std::string* LoginNotify::mutable_username() {
-  
-  // @@protoc_insertion_point(field_mutable:audio_engine.LoginNotify.username)
-  return username_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-::std::string* LoginNotify::release_username() {
-  // @@protoc_insertion_point(field_release:audio_engine.LoginNotify.username)
-  
-  return username_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-void LoginNotify::set_allocated_username(::std::string* username) {
-  if (username != NULL) {
-    
-  } else {
-    
-  }
-  username_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), username);
-  // @@protoc_insertion_point(field_set_allocated:audio_engine.LoginNotify.username)
-}
-
-// string extend = 3;
-void LoginNotify::clear_extend() {
+// string extend = 2;
+void UserInfo::clear_extend() {
   extend_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-const ::std::string& LoginNotify::extend() const {
-  // @@protoc_insertion_point(field_get:audio_engine.LoginNotify.extend)
+const ::std::string& UserInfo::extend() const {
+  // @@protoc_insertion_point(field_get:audio_engine.UserInfo.extend)
   return extend_.GetNoArena();
 }
-void LoginNotify::set_extend(const ::std::string& value) {
+void UserInfo::set_extend(const ::std::string& value) {
   
   extend_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:audio_engine.LoginNotify.extend)
+  // @@protoc_insertion_point(field_set:audio_engine.UserInfo.extend)
 }
 #if LANG_CXX11
-void LoginNotify::set_extend(::std::string&& value) {
+void UserInfo::set_extend(::std::string&& value) {
   
   extend_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:audio_engine.LoginNotify.extend)
+  // @@protoc_insertion_point(field_set_rvalue:audio_engine.UserInfo.extend)
 }
 #endif
-void LoginNotify::set_extend(const char* value) {
+void UserInfo::set_extend(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   
   extend_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:audio_engine.LoginNotify.extend)
+  // @@protoc_insertion_point(field_set_char:audio_engine.UserInfo.extend)
 }
-void LoginNotify::set_extend(const char* value, size_t size) {
+void UserInfo::set_extend(const char* value, size_t size) {
   
   extend_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:audio_engine.LoginNotify.extend)
+  // @@protoc_insertion_point(field_set_pointer:audio_engine.UserInfo.extend)
 }
-::std::string* LoginNotify::mutable_extend() {
+::std::string* UserInfo::mutable_extend() {
   
-  // @@protoc_insertion_point(field_mutable:audio_engine.LoginNotify.extend)
+  // @@protoc_insertion_point(field_mutable:audio_engine.UserInfo.extend)
   return extend_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-::std::string* LoginNotify::release_extend() {
-  // @@protoc_insertion_point(field_release:audio_engine.LoginNotify.extend)
+::std::string* UserInfo::release_extend() {
+  // @@protoc_insertion_point(field_release:audio_engine.UserInfo.extend)
   
   return extend_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-void LoginNotify::set_allocated_extend(::std::string* extend) {
+void UserInfo::set_allocated_extend(::std::string* extend) {
   if (extend != NULL) {
     
   } else {
     
   }
   extend_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), extend);
-  // @@protoc_insertion_point(field_set_allocated:audio_engine.LoginNotify.extend)
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.UserInfo.extend)
 }
 
-// .audio_engine.DEVICE_TYPE devtype = 4;
-void LoginNotify::clear_devtype() {
+// .audio_engine.DEVICE_TYPE devtype = 3;
+void UserInfo::clear_devtype() {
   devtype_ = 0;
 }
-::audio_engine::DEVICE_TYPE LoginNotify::devtype() const {
-  // @@protoc_insertion_point(field_get:audio_engine.LoginNotify.devtype)
+::audio_engine::DEVICE_TYPE UserInfo::devtype() const {
+  // @@protoc_insertion_point(field_get:audio_engine.UserInfo.devtype)
   return static_cast< ::audio_engine::DEVICE_TYPE >(devtype_);
 }
-void LoginNotify::set_devtype(::audio_engine::DEVICE_TYPE value) {
+void UserInfo::set_devtype(::audio_engine::DEVICE_TYPE value) {
   
   devtype_ = value;
-  // @@protoc_insertion_point(field_set:audio_engine.LoginNotify.devtype)
+  // @@protoc_insertion_point(field_set:audio_engine.UserInfo.devtype)
 }
 
-// int32 status = 5;
-void LoginNotify::clear_status() {
-  status_ = 0;
+// .audio_engine.USER_STATE state = 4;
+void UserInfo::clear_state() {
+  state_ = 0;
 }
-::google::protobuf::int32 LoginNotify::status() const {
-  // @@protoc_insertion_point(field_get:audio_engine.LoginNotify.status)
-  return status_;
+::audio_engine::USER_STATE UserInfo::state() const {
+  // @@protoc_insertion_point(field_get:audio_engine.UserInfo.state)
+  return static_cast< ::audio_engine::USER_STATE >(state_);
 }
-void LoginNotify::set_status(::google::protobuf::int32 value) {
+void UserInfo::set_state(::audio_engine::USER_STATE value) {
   
-  status_ = value;
-  // @@protoc_insertion_point(field_set:audio_engine.LoginNotify.status)
+  state_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.UserInfo.state)
+}
+
+// int64 token = 5;
+void UserInfo::clear_token() {
+  token_ = GOOGLE_LONGLONG(0);
+}
+::google::protobuf::int64 UserInfo::token() const {
+  // @@protoc_insertion_point(field_get:audio_engine.UserInfo.token)
+  return token_;
+}
+void UserInfo::set_token(::google::protobuf::int64 value) {
+  
+  token_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.UserInfo.token)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -2052,12 +3545,293 @@ void LoginNotify::set_status(::google::protobuf::int32 value) {
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int RAUserMessage::kCmdFieldNumber;
-const int RAUserMessage::kLoginRequstFieldNumber;
-const int RAUserMessage::kLoginResponseFieldNumber;
-const int RAUserMessage::kLogoutRequstFieldNumber;
-const int RAUserMessage::kLogoutResponseFieldNumber;
-const int RAUserMessage::kLoginNotifyFieldNumber;
+const int NotifyUserList::kUserFieldNumber;
+const int NotifyUserList::kEndFlagFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+NotifyUserList::NotifyUserList()
+  : ::google::protobuf::MessageLite(), _internal_metadata_(NULL) {
+  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
+    protobuf_user_5fservice_2eproto::InitDefaults();
+  }
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:audio_engine.NotifyUserList)
+}
+NotifyUserList::NotifyUserList(const NotifyUserList& from)
+  : ::google::protobuf::MessageLite(),
+      _internal_metadata_(NULL),
+      user_(from.user_),
+      _cached_size_(0) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  end_flag_ = from.end_flag_;
+  // @@protoc_insertion_point(copy_constructor:audio_engine.NotifyUserList)
+}
+
+void NotifyUserList::SharedCtor() {
+  end_flag_ = 0;
+  _cached_size_ = 0;
+}
+
+NotifyUserList::~NotifyUserList() {
+  // @@protoc_insertion_point(destructor:audio_engine.NotifyUserList)
+  SharedDtor();
+}
+
+void NotifyUserList::SharedDtor() {
+}
+
+void NotifyUserList::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const NotifyUserList& NotifyUserList::default_instance() {
+  protobuf_user_5fservice_2eproto::InitDefaults();
+  return *internal_default_instance();
+}
+
+NotifyUserList* NotifyUserList::New(::google::protobuf::Arena* arena) const {
+  NotifyUserList* n = new NotifyUserList;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void NotifyUserList::Clear() {
+// @@protoc_insertion_point(message_clear_start:audio_engine.NotifyUserList)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  user_.Clear();
+  end_flag_ = 0;
+  _internal_metadata_.Clear();
+}
+
+bool NotifyUserList::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(&_internal_metadata_,
+          &::google::protobuf::internal::InternalMetadataWithArenaLite::
+              mutable_unknown_fields));
+  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
+      &unknown_fields_string, false);
+  // @@protoc_insertion_point(parse_start:audio_engine.NotifyUserList)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated .audio_engine.UserInfo user = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_user()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // .audio_engine.eEndFlag end_flag = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          set_end_flag(static_cast< ::audio_engine::eEndFlag >(value));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
+            input, tag, &unknown_fields_stream));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:audio_engine.NotifyUserList)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:audio_engine.NotifyUserList)
+  return false;
+#undef DO_
+}
+
+void NotifyUserList::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:audio_engine.NotifyUserList)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // repeated .audio_engine.UserInfo user = 1;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->user_size()); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessage(
+      1, this->user(static_cast<int>(i)), output);
+  }
+
+  // .audio_engine.eEndFlag end_flag = 2;
+  if (this->end_flag() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      2, this->end_flag(), output);
+  }
+
+  output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
+                   static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
+  // @@protoc_insertion_point(serialize_end:audio_engine.NotifyUserList)
+}
+
+size_t NotifyUserList::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:audio_engine.NotifyUserList)
+  size_t total_size = 0;
+
+  total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
+
+  // repeated .audio_engine.UserInfo user = 1;
+  {
+    unsigned int count = static_cast<unsigned int>(this->user_size());
+    total_size += 1UL * count;
+    for (unsigned int i = 0; i < count; i++) {
+      total_size +=
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->user(static_cast<int>(i)));
+    }
+  }
+
+  // .audio_engine.eEndFlag end_flag = 2;
+  if (this->end_flag() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->end_flag());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = cached_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void NotifyUserList::CheckTypeAndMergeFrom(
+    const ::google::protobuf::MessageLite& from) {
+  MergeFrom(*::google::protobuf::down_cast<const NotifyUserList*>(&from));
+}
+
+void NotifyUserList::MergeFrom(const NotifyUserList& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:audio_engine.NotifyUserList)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  user_.MergeFrom(from.user_);
+  if (from.end_flag() != 0) {
+    set_end_flag(from.end_flag());
+  }
+}
+
+void NotifyUserList::CopyFrom(const NotifyUserList& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:audio_engine.NotifyUserList)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool NotifyUserList::IsInitialized() const {
+  return true;
+}
+
+void NotifyUserList::Swap(NotifyUserList* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void NotifyUserList::InternalSwap(NotifyUserList* other) {
+  using std::swap;
+  user_.InternalSwap(&other->user_);
+  swap(end_flag_, other->end_flag_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(_cached_size_, other->_cached_size_);
+}
+
+::std::string NotifyUserList::GetTypeName() const {
+  return "audio_engine.NotifyUserList";
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// NotifyUserList
+
+// repeated .audio_engine.UserInfo user = 1;
+int NotifyUserList::user_size() const {
+  return user_.size();
+}
+void NotifyUserList::clear_user() {
+  user_.Clear();
+}
+const ::audio_engine::UserInfo& NotifyUserList::user(int index) const {
+  // @@protoc_insertion_point(field_get:audio_engine.NotifyUserList.user)
+  return user_.Get(index);
+}
+::audio_engine::UserInfo* NotifyUserList::mutable_user(int index) {
+  // @@protoc_insertion_point(field_mutable:audio_engine.NotifyUserList.user)
+  return user_.Mutable(index);
+}
+::audio_engine::UserInfo* NotifyUserList::add_user() {
+  // @@protoc_insertion_point(field_add:audio_engine.NotifyUserList.user)
+  return user_.Add();
+}
+::google::protobuf::RepeatedPtrField< ::audio_engine::UserInfo >*
+NotifyUserList::mutable_user() {
+  // @@protoc_insertion_point(field_mutable_list:audio_engine.NotifyUserList.user)
+  return &user_;
+}
+const ::google::protobuf::RepeatedPtrField< ::audio_engine::UserInfo >&
+NotifyUserList::user() const {
+  // @@protoc_insertion_point(field_list:audio_engine.NotifyUserList.user)
+  return user_;
+}
+
+// .audio_engine.eEndFlag end_flag = 2;
+void NotifyUserList::clear_end_flag() {
+  end_flag_ = 0;
+}
+::audio_engine::eEndFlag NotifyUserList::end_flag() const {
+  // @@protoc_insertion_point(field_get:audio_engine.NotifyUserList.end_flag)
+  return static_cast< ::audio_engine::eEndFlag >(end_flag_);
+}
+void NotifyUserList::set_end_flag(::audio_engine::eEndFlag value) {
+  
+  end_flag_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.NotifyUserList.end_flag)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int RAUserMessage::kRequestLoginFieldNumber;
+const int RAUserMessage::kResponedLoginFieldNumber;
+const int RAUserMessage::kRequestLogoutFieldNumber;
+const int RAUserMessage::kResponedLogoutFieldNumber;
+const int RAUserMessage::kNotifyLoginFieldNumber;
+const int RAUserMessage::kNotifyLogoutFieldNumber;
+const int RAUserMessage::kUpdateUserStateFieldNumber;
+const int RAUserMessage::kUpdateUserExtendFieldNumber;
+const int RAUserMessage::kNotifyUserListFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 RAUserMessage::RAUserMessage()
@@ -2073,39 +3847,58 @@ RAUserMessage::RAUserMessage(const RAUserMessage& from)
       _internal_metadata_(NULL),
       _cached_size_(0) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  if (from.has_login_requst()) {
-    login_requst_ = new ::audio_engine::LoginRequest(*from.login_requst_);
+  if (from.has_request_login()) {
+    request_login_ = new ::audio_engine::RequestLogin(*from.request_login_);
   } else {
-    login_requst_ = NULL;
+    request_login_ = NULL;
   }
-  if (from.has_login_response()) {
-    login_response_ = new ::audio_engine::LoginResponse(*from.login_response_);
+  if (from.has_responed_login()) {
+    responed_login_ = new ::audio_engine::ResponedLogin(*from.responed_login_);
   } else {
-    login_response_ = NULL;
+    responed_login_ = NULL;
   }
-  if (from.has_logout_requst()) {
-    logout_requst_ = new ::audio_engine::LogoutRequst(*from.logout_requst_);
+  if (from.has_request_logout()) {
+    request_logout_ = new ::audio_engine::RequestLogout(*from.request_logout_);
   } else {
-    logout_requst_ = NULL;
+    request_logout_ = NULL;
   }
-  if (from.has_logout_response()) {
-    logout_response_ = new ::audio_engine::LogoutResponse(*from.logout_response_);
+  if (from.has_responed_logout()) {
+    responed_logout_ = new ::audio_engine::ResponedLogout(*from.responed_logout_);
   } else {
-    logout_response_ = NULL;
+    responed_logout_ = NULL;
   }
-  if (from.has_login_notify()) {
-    login_notify_ = new ::audio_engine::LoginNotify(*from.login_notify_);
+  if (from.has_notify_login()) {
+    notify_login_ = new ::audio_engine::NotifyLogin(*from.notify_login_);
   } else {
-    login_notify_ = NULL;
+    notify_login_ = NULL;
   }
-  cmd_ = from.cmd_;
+  if (from.has_notify_logout()) {
+    notify_logout_ = new ::audio_engine::NotifyLogout(*from.notify_logout_);
+  } else {
+    notify_logout_ = NULL;
+  }
+  if (from.has_update_user_state()) {
+    update_user_state_ = new ::audio_engine::UpdateUserState(*from.update_user_state_);
+  } else {
+    update_user_state_ = NULL;
+  }
+  if (from.has_update_user_extend()) {
+    update_user_extend_ = new ::audio_engine::UpdateUserExtend(*from.update_user_extend_);
+  } else {
+    update_user_extend_ = NULL;
+  }
+  if (from.has_notify_user_list()) {
+    notify_user_list_ = new ::audio_engine::NotifyUserList(*from.notify_user_list_);
+  } else {
+    notify_user_list_ = NULL;
+  }
   // @@protoc_insertion_point(copy_constructor:audio_engine.RAUserMessage)
 }
 
 void RAUserMessage::SharedCtor() {
-  ::memset(&login_requst_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&cmd_) -
-      reinterpret_cast<char*>(&login_requst_)) + sizeof(cmd_));
+  ::memset(&request_login_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&notify_user_list_) -
+      reinterpret_cast<char*>(&request_login_)) + sizeof(notify_user_list_));
   _cached_size_ = 0;
 }
 
@@ -2115,11 +3908,15 @@ RAUserMessage::~RAUserMessage() {
 }
 
 void RAUserMessage::SharedDtor() {
-  if (this != internal_default_instance()) delete login_requst_;
-  if (this != internal_default_instance()) delete login_response_;
-  if (this != internal_default_instance()) delete logout_requst_;
-  if (this != internal_default_instance()) delete logout_response_;
-  if (this != internal_default_instance()) delete login_notify_;
+  if (this != internal_default_instance()) delete request_login_;
+  if (this != internal_default_instance()) delete responed_login_;
+  if (this != internal_default_instance()) delete request_logout_;
+  if (this != internal_default_instance()) delete responed_logout_;
+  if (this != internal_default_instance()) delete notify_login_;
+  if (this != internal_default_instance()) delete notify_logout_;
+  if (this != internal_default_instance()) delete update_user_state_;
+  if (this != internal_default_instance()) delete update_user_extend_;
+  if (this != internal_default_instance()) delete notify_user_list_;
 }
 
 void RAUserMessage::SetCachedSize(int size) const {
@@ -2146,27 +3943,42 @@ void RAUserMessage::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaNoVirtual() == NULL && login_requst_ != NULL) {
-    delete login_requst_;
+  if (GetArenaNoVirtual() == NULL && request_login_ != NULL) {
+    delete request_login_;
   }
-  login_requst_ = NULL;
-  if (GetArenaNoVirtual() == NULL && login_response_ != NULL) {
-    delete login_response_;
+  request_login_ = NULL;
+  if (GetArenaNoVirtual() == NULL && responed_login_ != NULL) {
+    delete responed_login_;
   }
-  login_response_ = NULL;
-  if (GetArenaNoVirtual() == NULL && logout_requst_ != NULL) {
-    delete logout_requst_;
+  responed_login_ = NULL;
+  if (GetArenaNoVirtual() == NULL && request_logout_ != NULL) {
+    delete request_logout_;
   }
-  logout_requst_ = NULL;
-  if (GetArenaNoVirtual() == NULL && logout_response_ != NULL) {
-    delete logout_response_;
+  request_logout_ = NULL;
+  if (GetArenaNoVirtual() == NULL && responed_logout_ != NULL) {
+    delete responed_logout_;
   }
-  logout_response_ = NULL;
-  if (GetArenaNoVirtual() == NULL && login_notify_ != NULL) {
-    delete login_notify_;
+  responed_logout_ = NULL;
+  if (GetArenaNoVirtual() == NULL && notify_login_ != NULL) {
+    delete notify_login_;
   }
-  login_notify_ = NULL;
-  cmd_ = 0;
+  notify_login_ = NULL;
+  if (GetArenaNoVirtual() == NULL && notify_logout_ != NULL) {
+    delete notify_logout_;
+  }
+  notify_logout_ = NULL;
+  if (GetArenaNoVirtual() == NULL && update_user_state_ != NULL) {
+    delete update_user_state_;
+  }
+  update_user_state_ = NULL;
+  if (GetArenaNoVirtual() == NULL && update_user_extend_ != NULL) {
+    delete update_user_extend_;
+  }
+  update_user_extend_ = NULL;
+  if (GetArenaNoVirtual() == NULL && notify_user_list_ != NULL) {
+    delete notify_user_list_;
+  }
+  notify_user_list_ = NULL;
   _internal_metadata_.Clear();
 }
 
@@ -2186,75 +3998,108 @@ bool RAUserMessage::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // .audio_engine.RAMSG cmd = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
-          int value;
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          set_cmd(static_cast< ::audio_engine::RAMSG >(value));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // .audio_engine.LoginRequest login_requst = 2;
+      // .audio_engine.RequestLogin request_login = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_login_requst()));
+               input, mutable_request_login()));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // .audio_engine.LoginResponse login_response = 3;
+      // .audio_engine.ResponedLogin responed_login = 3;
       case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_login_response()));
+               input, mutable_responed_login()));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // .audio_engine.LogoutRequst logout_requst = 4;
+      // .audio_engine.RequestLogout request_logout = 4;
       case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_logout_requst()));
+               input, mutable_request_logout()));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // .audio_engine.LogoutResponse logout_response = 5;
+      // .audio_engine.ResponedLogout responed_logout = 5;
       case 5: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_logout_response()));
+               input, mutable_responed_logout()));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // .audio_engine.LoginNotify login_notify = 6;
+      // .audio_engine.NotifyLogin notify_login = 6;
       case 6: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_login_notify()));
+               input, mutable_notify_login()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // .audio_engine.NotifyLogout notify_logout = 7;
+      case 7: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(58u /* 58 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_notify_logout()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // .audio_engine.UpdateUserState update_user_state = 8;
+      case 8: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(66u /* 66 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_update_user_state()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // .audio_engine.UpdateUserExtend update_user_extend = 9;
+      case 9: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(74u /* 74 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_update_user_extend()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // .audio_engine.NotifyUserList notify_user_list = 10;
+      case 10: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(82u /* 82 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_notify_user_list()));
         } else {
           goto handle_unusual;
         }
@@ -2287,40 +4132,58 @@ void RAUserMessage::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // .audio_engine.RAMSG cmd = 1;
-  if (this->cmd() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      1, this->cmd(), output);
+  // .audio_engine.RequestLogin request_login = 2;
+  if (this->has_request_login()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessage(
+      2, *this->request_login_, output);
   }
 
-  // .audio_engine.LoginRequest login_requst = 2;
-  if (this->has_login_requst()) {
+  // .audio_engine.ResponedLogin responed_login = 3;
+  if (this->has_responed_login()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessage(
-      2, *this->login_requst_, output);
+      3, *this->responed_login_, output);
   }
 
-  // .audio_engine.LoginResponse login_response = 3;
-  if (this->has_login_response()) {
+  // .audio_engine.RequestLogout request_logout = 4;
+  if (this->has_request_logout()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessage(
-      3, *this->login_response_, output);
+      4, *this->request_logout_, output);
   }
 
-  // .audio_engine.LogoutRequst logout_requst = 4;
-  if (this->has_logout_requst()) {
+  // .audio_engine.ResponedLogout responed_logout = 5;
+  if (this->has_responed_logout()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessage(
-      4, *this->logout_requst_, output);
+      5, *this->responed_logout_, output);
   }
 
-  // .audio_engine.LogoutResponse logout_response = 5;
-  if (this->has_logout_response()) {
+  // .audio_engine.NotifyLogin notify_login = 6;
+  if (this->has_notify_login()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessage(
-      5, *this->logout_response_, output);
+      6, *this->notify_login_, output);
   }
 
-  // .audio_engine.LoginNotify login_notify = 6;
-  if (this->has_login_notify()) {
+  // .audio_engine.NotifyLogout notify_logout = 7;
+  if (this->has_notify_logout()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessage(
-      6, *this->login_notify_, output);
+      7, *this->notify_logout_, output);
+  }
+
+  // .audio_engine.UpdateUserState update_user_state = 8;
+  if (this->has_update_user_state()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessage(
+      8, *this->update_user_state_, output);
+  }
+
+  // .audio_engine.UpdateUserExtend update_user_extend = 9;
+  if (this->has_update_user_extend()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessage(
+      9, *this->update_user_extend_, output);
+  }
+
+  // .audio_engine.NotifyUserList notify_user_list = 10;
+  if (this->has_notify_user_list()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessage(
+      10, *this->notify_user_list_, output);
   }
 
   output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
@@ -2334,45 +4197,67 @@ size_t RAUserMessage::ByteSizeLong() const {
 
   total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
 
-  // .audio_engine.LoginRequest login_requst = 2;
-  if (this->has_login_requst()) {
+  // .audio_engine.RequestLogin request_login = 2;
+  if (this->has_request_login()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        *this->login_requst_);
+        *this->request_login_);
   }
 
-  // .audio_engine.LoginResponse login_response = 3;
-  if (this->has_login_response()) {
+  // .audio_engine.ResponedLogin responed_login = 3;
+  if (this->has_responed_login()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        *this->login_response_);
+        *this->responed_login_);
   }
 
-  // .audio_engine.LogoutRequst logout_requst = 4;
-  if (this->has_logout_requst()) {
+  // .audio_engine.RequestLogout request_logout = 4;
+  if (this->has_request_logout()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        *this->logout_requst_);
+        *this->request_logout_);
   }
 
-  // .audio_engine.LogoutResponse logout_response = 5;
-  if (this->has_logout_response()) {
+  // .audio_engine.ResponedLogout responed_logout = 5;
+  if (this->has_responed_logout()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        *this->logout_response_);
+        *this->responed_logout_);
   }
 
-  // .audio_engine.LoginNotify login_notify = 6;
-  if (this->has_login_notify()) {
+  // .audio_engine.NotifyLogin notify_login = 6;
+  if (this->has_notify_login()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        *this->login_notify_);
+        *this->notify_login_);
   }
 
-  // .audio_engine.RAMSG cmd = 1;
-  if (this->cmd() != 0) {
+  // .audio_engine.NotifyLogout notify_logout = 7;
+  if (this->has_notify_logout()) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::EnumSize(this->cmd());
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        *this->notify_logout_);
+  }
+
+  // .audio_engine.UpdateUserState update_user_state = 8;
+  if (this->has_update_user_state()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        *this->update_user_state_);
+  }
+
+  // .audio_engine.UpdateUserExtend update_user_extend = 9;
+  if (this->has_update_user_extend()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        *this->update_user_extend_);
+  }
+
+  // .audio_engine.NotifyUserList notify_user_list = 10;
+  if (this->has_notify_user_list()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        *this->notify_user_list_);
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -2394,23 +4279,32 @@ void RAUserMessage::MergeFrom(const RAUserMessage& from) {
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.has_login_requst()) {
-    mutable_login_requst()->::audio_engine::LoginRequest::MergeFrom(from.login_requst());
+  if (from.has_request_login()) {
+    mutable_request_login()->::audio_engine::RequestLogin::MergeFrom(from.request_login());
   }
-  if (from.has_login_response()) {
-    mutable_login_response()->::audio_engine::LoginResponse::MergeFrom(from.login_response());
+  if (from.has_responed_login()) {
+    mutable_responed_login()->::audio_engine::ResponedLogin::MergeFrom(from.responed_login());
   }
-  if (from.has_logout_requst()) {
-    mutable_logout_requst()->::audio_engine::LogoutRequst::MergeFrom(from.logout_requst());
+  if (from.has_request_logout()) {
+    mutable_request_logout()->::audio_engine::RequestLogout::MergeFrom(from.request_logout());
   }
-  if (from.has_logout_response()) {
-    mutable_logout_response()->::audio_engine::LogoutResponse::MergeFrom(from.logout_response());
+  if (from.has_responed_logout()) {
+    mutable_responed_logout()->::audio_engine::ResponedLogout::MergeFrom(from.responed_logout());
   }
-  if (from.has_login_notify()) {
-    mutable_login_notify()->::audio_engine::LoginNotify::MergeFrom(from.login_notify());
+  if (from.has_notify_login()) {
+    mutable_notify_login()->::audio_engine::NotifyLogin::MergeFrom(from.notify_login());
   }
-  if (from.cmd() != 0) {
-    set_cmd(from.cmd());
+  if (from.has_notify_logout()) {
+    mutable_notify_logout()->::audio_engine::NotifyLogout::MergeFrom(from.notify_logout());
+  }
+  if (from.has_update_user_state()) {
+    mutable_update_user_state()->::audio_engine::UpdateUserState::MergeFrom(from.update_user_state());
+  }
+  if (from.has_update_user_extend()) {
+    mutable_update_user_extend()->::audio_engine::UpdateUserExtend::MergeFrom(from.update_user_extend());
+  }
+  if (from.has_notify_user_list()) {
+    mutable_notify_user_list()->::audio_engine::NotifyUserList::MergeFrom(from.notify_user_list());
   }
 }
 
@@ -2431,12 +4325,15 @@ void RAUserMessage::Swap(RAUserMessage* other) {
 }
 void RAUserMessage::InternalSwap(RAUserMessage* other) {
   using std::swap;
-  swap(login_requst_, other->login_requst_);
-  swap(login_response_, other->login_response_);
-  swap(logout_requst_, other->logout_requst_);
-  swap(logout_response_, other->logout_response_);
-  swap(login_notify_, other->login_notify_);
-  swap(cmd_, other->cmd_);
+  swap(request_login_, other->request_login_);
+  swap(responed_login_, other->responed_login_);
+  swap(request_logout_, other->request_logout_);
+  swap(responed_logout_, other->responed_logout_);
+  swap(notify_login_, other->notify_login_);
+  swap(notify_logout_, other->notify_logout_);
+  swap(update_user_state_, other->update_user_state_);
+  swap(update_user_extend_, other->update_user_extend_);
+  swap(notify_user_list_, other->notify_user_list_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(_cached_size_, other->_cached_size_);
 }
@@ -2448,218 +4345,364 @@ void RAUserMessage::InternalSwap(RAUserMessage* other) {
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
 // RAUserMessage
 
-// .audio_engine.RAMSG cmd = 1;
-void RAUserMessage::clear_cmd() {
-  cmd_ = 0;
+// .audio_engine.RequestLogin request_login = 2;
+bool RAUserMessage::has_request_login() const {
+  return this != internal_default_instance() && request_login_ != NULL;
 }
-::audio_engine::RAMSG RAUserMessage::cmd() const {
-  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.cmd)
-  return static_cast< ::audio_engine::RAMSG >(cmd_);
+void RAUserMessage::clear_request_login() {
+  if (GetArenaNoVirtual() == NULL && request_login_ != NULL) delete request_login_;
+  request_login_ = NULL;
 }
-void RAUserMessage::set_cmd(::audio_engine::RAMSG value) {
+const ::audio_engine::RequestLogin& RAUserMessage::request_login() const {
+  const ::audio_engine::RequestLogin* p = request_login_;
+  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.request_login)
+  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::RequestLogin*>(
+      &::audio_engine::_RequestLogin_default_instance_);
+}
+::audio_engine::RequestLogin* RAUserMessage::mutable_request_login() {
   
-  cmd_ = value;
-  // @@protoc_insertion_point(field_set:audio_engine.RAUserMessage.cmd)
-}
-
-// .audio_engine.LoginRequest login_requst = 2;
-bool RAUserMessage::has_login_requst() const {
-  return this != internal_default_instance() && login_requst_ != NULL;
-}
-void RAUserMessage::clear_login_requst() {
-  if (GetArenaNoVirtual() == NULL && login_requst_ != NULL) delete login_requst_;
-  login_requst_ = NULL;
-}
-const ::audio_engine::LoginRequest& RAUserMessage::login_requst() const {
-  const ::audio_engine::LoginRequest* p = login_requst_;
-  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.login_requst)
-  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::LoginRequest*>(
-      &::audio_engine::_LoginRequest_default_instance_);
-}
-::audio_engine::LoginRequest* RAUserMessage::mutable_login_requst() {
-  
-  if (login_requst_ == NULL) {
-    login_requst_ = new ::audio_engine::LoginRequest;
+  if (request_login_ == NULL) {
+    request_login_ = new ::audio_engine::RequestLogin;
   }
-  // @@protoc_insertion_point(field_mutable:audio_engine.RAUserMessage.login_requst)
-  return login_requst_;
+  // @@protoc_insertion_point(field_mutable:audio_engine.RAUserMessage.request_login)
+  return request_login_;
 }
-::audio_engine::LoginRequest* RAUserMessage::release_login_requst() {
-  // @@protoc_insertion_point(field_release:audio_engine.RAUserMessage.login_requst)
+::audio_engine::RequestLogin* RAUserMessage::release_request_login() {
+  // @@protoc_insertion_point(field_release:audio_engine.RAUserMessage.request_login)
   
-  ::audio_engine::LoginRequest* temp = login_requst_;
-  login_requst_ = NULL;
+  ::audio_engine::RequestLogin* temp = request_login_;
+  request_login_ = NULL;
   return temp;
 }
-void RAUserMessage::set_allocated_login_requst(::audio_engine::LoginRequest* login_requst) {
-  delete login_requst_;
-  login_requst_ = login_requst;
-  if (login_requst) {
+void RAUserMessage::set_allocated_request_login(::audio_engine::RequestLogin* request_login) {
+  delete request_login_;
+  request_login_ = request_login;
+  if (request_login) {
     
   } else {
     
   }
-  // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.login_requst)
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.request_login)
 }
 
-// .audio_engine.LoginResponse login_response = 3;
-bool RAUserMessage::has_login_response() const {
-  return this != internal_default_instance() && login_response_ != NULL;
+// .audio_engine.ResponedLogin responed_login = 3;
+bool RAUserMessage::has_responed_login() const {
+  return this != internal_default_instance() && responed_login_ != NULL;
 }
-void RAUserMessage::clear_login_response() {
-  if (GetArenaNoVirtual() == NULL && login_response_ != NULL) delete login_response_;
-  login_response_ = NULL;
+void RAUserMessage::clear_responed_login() {
+  if (GetArenaNoVirtual() == NULL && responed_login_ != NULL) delete responed_login_;
+  responed_login_ = NULL;
 }
-const ::audio_engine::LoginResponse& RAUserMessage::login_response() const {
-  const ::audio_engine::LoginResponse* p = login_response_;
-  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.login_response)
-  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::LoginResponse*>(
-      &::audio_engine::_LoginResponse_default_instance_);
+const ::audio_engine::ResponedLogin& RAUserMessage::responed_login() const {
+  const ::audio_engine::ResponedLogin* p = responed_login_;
+  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.responed_login)
+  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::ResponedLogin*>(
+      &::audio_engine::_ResponedLogin_default_instance_);
 }
-::audio_engine::LoginResponse* RAUserMessage::mutable_login_response() {
+::audio_engine::ResponedLogin* RAUserMessage::mutable_responed_login() {
   
-  if (login_response_ == NULL) {
-    login_response_ = new ::audio_engine::LoginResponse;
+  if (responed_login_ == NULL) {
+    responed_login_ = new ::audio_engine::ResponedLogin;
   }
-  // @@protoc_insertion_point(field_mutable:audio_engine.RAUserMessage.login_response)
-  return login_response_;
+  // @@protoc_insertion_point(field_mutable:audio_engine.RAUserMessage.responed_login)
+  return responed_login_;
 }
-::audio_engine::LoginResponse* RAUserMessage::release_login_response() {
-  // @@protoc_insertion_point(field_release:audio_engine.RAUserMessage.login_response)
+::audio_engine::ResponedLogin* RAUserMessage::release_responed_login() {
+  // @@protoc_insertion_point(field_release:audio_engine.RAUserMessage.responed_login)
   
-  ::audio_engine::LoginResponse* temp = login_response_;
-  login_response_ = NULL;
+  ::audio_engine::ResponedLogin* temp = responed_login_;
+  responed_login_ = NULL;
   return temp;
 }
-void RAUserMessage::set_allocated_login_response(::audio_engine::LoginResponse* login_response) {
-  delete login_response_;
-  login_response_ = login_response;
-  if (login_response) {
+void RAUserMessage::set_allocated_responed_login(::audio_engine::ResponedLogin* responed_login) {
+  delete responed_login_;
+  responed_login_ = responed_login;
+  if (responed_login) {
     
   } else {
     
   }
-  // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.login_response)
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.responed_login)
 }
 
-// .audio_engine.LogoutRequst logout_requst = 4;
-bool RAUserMessage::has_logout_requst() const {
-  return this != internal_default_instance() && logout_requst_ != NULL;
+// .audio_engine.RequestLogout request_logout = 4;
+bool RAUserMessage::has_request_logout() const {
+  return this != internal_default_instance() && request_logout_ != NULL;
 }
-void RAUserMessage::clear_logout_requst() {
-  if (GetArenaNoVirtual() == NULL && logout_requst_ != NULL) delete logout_requst_;
-  logout_requst_ = NULL;
+void RAUserMessage::clear_request_logout() {
+  if (GetArenaNoVirtual() == NULL && request_logout_ != NULL) delete request_logout_;
+  request_logout_ = NULL;
 }
-const ::audio_engine::LogoutRequst& RAUserMessage::logout_requst() const {
-  const ::audio_engine::LogoutRequst* p = logout_requst_;
-  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.logout_requst)
-  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::LogoutRequst*>(
-      &::audio_engine::_LogoutRequst_default_instance_);
+const ::audio_engine::RequestLogout& RAUserMessage::request_logout() const {
+  const ::audio_engine::RequestLogout* p = request_logout_;
+  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.request_logout)
+  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::RequestLogout*>(
+      &::audio_engine::_RequestLogout_default_instance_);
 }
-::audio_engine::LogoutRequst* RAUserMessage::mutable_logout_requst() {
+::audio_engine::RequestLogout* RAUserMessage::mutable_request_logout() {
   
-  if (logout_requst_ == NULL) {
-    logout_requst_ = new ::audio_engine::LogoutRequst;
+  if (request_logout_ == NULL) {
+    request_logout_ = new ::audio_engine::RequestLogout;
   }
-  // @@protoc_insertion_point(field_mutable:audio_engine.RAUserMessage.logout_requst)
-  return logout_requst_;
+  // @@protoc_insertion_point(field_mutable:audio_engine.RAUserMessage.request_logout)
+  return request_logout_;
 }
-::audio_engine::LogoutRequst* RAUserMessage::release_logout_requst() {
-  // @@protoc_insertion_point(field_release:audio_engine.RAUserMessage.logout_requst)
+::audio_engine::RequestLogout* RAUserMessage::release_request_logout() {
+  // @@protoc_insertion_point(field_release:audio_engine.RAUserMessage.request_logout)
   
-  ::audio_engine::LogoutRequst* temp = logout_requst_;
-  logout_requst_ = NULL;
+  ::audio_engine::RequestLogout* temp = request_logout_;
+  request_logout_ = NULL;
   return temp;
 }
-void RAUserMessage::set_allocated_logout_requst(::audio_engine::LogoutRequst* logout_requst) {
-  delete logout_requst_;
-  logout_requst_ = logout_requst;
-  if (logout_requst) {
+void RAUserMessage::set_allocated_request_logout(::audio_engine::RequestLogout* request_logout) {
+  delete request_logout_;
+  request_logout_ = request_logout;
+  if (request_logout) {
     
   } else {
     
   }
-  // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.logout_requst)
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.request_logout)
 }
 
-// .audio_engine.LogoutResponse logout_response = 5;
-bool RAUserMessage::has_logout_response() const {
-  return this != internal_default_instance() && logout_response_ != NULL;
+// .audio_engine.ResponedLogout responed_logout = 5;
+bool RAUserMessage::has_responed_logout() const {
+  return this != internal_default_instance() && responed_logout_ != NULL;
 }
-void RAUserMessage::clear_logout_response() {
-  if (GetArenaNoVirtual() == NULL && logout_response_ != NULL) delete logout_response_;
-  logout_response_ = NULL;
+void RAUserMessage::clear_responed_logout() {
+  if (GetArenaNoVirtual() == NULL && responed_logout_ != NULL) delete responed_logout_;
+  responed_logout_ = NULL;
 }
-const ::audio_engine::LogoutResponse& RAUserMessage::logout_response() const {
-  const ::audio_engine::LogoutResponse* p = logout_response_;
-  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.logout_response)
-  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::LogoutResponse*>(
-      &::audio_engine::_LogoutResponse_default_instance_);
+const ::audio_engine::ResponedLogout& RAUserMessage::responed_logout() const {
+  const ::audio_engine::ResponedLogout* p = responed_logout_;
+  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.responed_logout)
+  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::ResponedLogout*>(
+      &::audio_engine::_ResponedLogout_default_instance_);
 }
-::audio_engine::LogoutResponse* RAUserMessage::mutable_logout_response() {
+::audio_engine::ResponedLogout* RAUserMessage::mutable_responed_logout() {
   
-  if (logout_response_ == NULL) {
-    logout_response_ = new ::audio_engine::LogoutResponse;
+  if (responed_logout_ == NULL) {
+    responed_logout_ = new ::audio_engine::ResponedLogout;
   }
-  // @@protoc_insertion_point(field_mutable:audio_engine.RAUserMessage.logout_response)
-  return logout_response_;
+  // @@protoc_insertion_point(field_mutable:audio_engine.RAUserMessage.responed_logout)
+  return responed_logout_;
 }
-::audio_engine::LogoutResponse* RAUserMessage::release_logout_response() {
-  // @@protoc_insertion_point(field_release:audio_engine.RAUserMessage.logout_response)
+::audio_engine::ResponedLogout* RAUserMessage::release_responed_logout() {
+  // @@protoc_insertion_point(field_release:audio_engine.RAUserMessage.responed_logout)
   
-  ::audio_engine::LogoutResponse* temp = logout_response_;
-  logout_response_ = NULL;
+  ::audio_engine::ResponedLogout* temp = responed_logout_;
+  responed_logout_ = NULL;
   return temp;
 }
-void RAUserMessage::set_allocated_logout_response(::audio_engine::LogoutResponse* logout_response) {
-  delete logout_response_;
-  logout_response_ = logout_response;
-  if (logout_response) {
+void RAUserMessage::set_allocated_responed_logout(::audio_engine::ResponedLogout* responed_logout) {
+  delete responed_logout_;
+  responed_logout_ = responed_logout;
+  if (responed_logout) {
     
   } else {
     
   }
-  // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.logout_response)
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.responed_logout)
 }
 
-// .audio_engine.LoginNotify login_notify = 6;
-bool RAUserMessage::has_login_notify() const {
-  return this != internal_default_instance() && login_notify_ != NULL;
+// .audio_engine.NotifyLogin notify_login = 6;
+bool RAUserMessage::has_notify_login() const {
+  return this != internal_default_instance() && notify_login_ != NULL;
 }
-void RAUserMessage::clear_login_notify() {
-  if (GetArenaNoVirtual() == NULL && login_notify_ != NULL) delete login_notify_;
-  login_notify_ = NULL;
+void RAUserMessage::clear_notify_login() {
+  if (GetArenaNoVirtual() == NULL && notify_login_ != NULL) delete notify_login_;
+  notify_login_ = NULL;
 }
-const ::audio_engine::LoginNotify& RAUserMessage::login_notify() const {
-  const ::audio_engine::LoginNotify* p = login_notify_;
-  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.login_notify)
-  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::LoginNotify*>(
-      &::audio_engine::_LoginNotify_default_instance_);
+const ::audio_engine::NotifyLogin& RAUserMessage::notify_login() const {
+  const ::audio_engine::NotifyLogin* p = notify_login_;
+  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.notify_login)
+  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::NotifyLogin*>(
+      &::audio_engine::_NotifyLogin_default_instance_);
 }
-::audio_engine::LoginNotify* RAUserMessage::mutable_login_notify() {
+::audio_engine::NotifyLogin* RAUserMessage::mutable_notify_login() {
   
-  if (login_notify_ == NULL) {
-    login_notify_ = new ::audio_engine::LoginNotify;
+  if (notify_login_ == NULL) {
+    notify_login_ = new ::audio_engine::NotifyLogin;
   }
-  // @@protoc_insertion_point(field_mutable:audio_engine.RAUserMessage.login_notify)
-  return login_notify_;
+  // @@protoc_insertion_point(field_mutable:audio_engine.RAUserMessage.notify_login)
+  return notify_login_;
 }
-::audio_engine::LoginNotify* RAUserMessage::release_login_notify() {
-  // @@protoc_insertion_point(field_release:audio_engine.RAUserMessage.login_notify)
+::audio_engine::NotifyLogin* RAUserMessage::release_notify_login() {
+  // @@protoc_insertion_point(field_release:audio_engine.RAUserMessage.notify_login)
   
-  ::audio_engine::LoginNotify* temp = login_notify_;
-  login_notify_ = NULL;
+  ::audio_engine::NotifyLogin* temp = notify_login_;
+  notify_login_ = NULL;
   return temp;
 }
-void RAUserMessage::set_allocated_login_notify(::audio_engine::LoginNotify* login_notify) {
-  delete login_notify_;
-  login_notify_ = login_notify;
-  if (login_notify) {
+void RAUserMessage::set_allocated_notify_login(::audio_engine::NotifyLogin* notify_login) {
+  delete notify_login_;
+  notify_login_ = notify_login;
+  if (notify_login) {
     
   } else {
     
   }
-  // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.login_notify)
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.notify_login)
+}
+
+// .audio_engine.NotifyLogout notify_logout = 7;
+bool RAUserMessage::has_notify_logout() const {
+  return this != internal_default_instance() && notify_logout_ != NULL;
+}
+void RAUserMessage::clear_notify_logout() {
+  if (GetArenaNoVirtual() == NULL && notify_logout_ != NULL) delete notify_logout_;
+  notify_logout_ = NULL;
+}
+const ::audio_engine::NotifyLogout& RAUserMessage::notify_logout() const {
+  const ::audio_engine::NotifyLogout* p = notify_logout_;
+  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.notify_logout)
+  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::NotifyLogout*>(
+      &::audio_engine::_NotifyLogout_default_instance_);
+}
+::audio_engine::NotifyLogout* RAUserMessage::mutable_notify_logout() {
+  
+  if (notify_logout_ == NULL) {
+    notify_logout_ = new ::audio_engine::NotifyLogout;
+  }
+  // @@protoc_insertion_point(field_mutable:audio_engine.RAUserMessage.notify_logout)
+  return notify_logout_;
+}
+::audio_engine::NotifyLogout* RAUserMessage::release_notify_logout() {
+  // @@protoc_insertion_point(field_release:audio_engine.RAUserMessage.notify_logout)
+  
+  ::audio_engine::NotifyLogout* temp = notify_logout_;
+  notify_logout_ = NULL;
+  return temp;
+}
+void RAUserMessage::set_allocated_notify_logout(::audio_engine::NotifyLogout* notify_logout) {
+  delete notify_logout_;
+  notify_logout_ = notify_logout;
+  if (notify_logout) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.notify_logout)
+}
+
+// .audio_engine.UpdateUserState update_user_state = 8;
+bool RAUserMessage::has_update_user_state() const {
+  return this != internal_default_instance() && update_user_state_ != NULL;
+}
+void RAUserMessage::clear_update_user_state() {
+  if (GetArenaNoVirtual() == NULL && update_user_state_ != NULL) delete update_user_state_;
+  update_user_state_ = NULL;
+}
+const ::audio_engine::UpdateUserState& RAUserMessage::update_user_state() const {
+  const ::audio_engine::UpdateUserState* p = update_user_state_;
+  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.update_user_state)
+  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::UpdateUserState*>(
+      &::audio_engine::_UpdateUserState_default_instance_);
+}
+::audio_engine::UpdateUserState* RAUserMessage::mutable_update_user_state() {
+  
+  if (update_user_state_ == NULL) {
+    update_user_state_ = new ::audio_engine::UpdateUserState;
+  }
+  // @@protoc_insertion_point(field_mutable:audio_engine.RAUserMessage.update_user_state)
+  return update_user_state_;
+}
+::audio_engine::UpdateUserState* RAUserMessage::release_update_user_state() {
+  // @@protoc_insertion_point(field_release:audio_engine.RAUserMessage.update_user_state)
+  
+  ::audio_engine::UpdateUserState* temp = update_user_state_;
+  update_user_state_ = NULL;
+  return temp;
+}
+void RAUserMessage::set_allocated_update_user_state(::audio_engine::UpdateUserState* update_user_state) {
+  delete update_user_state_;
+  update_user_state_ = update_user_state;
+  if (update_user_state) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.update_user_state)
+}
+
+// .audio_engine.UpdateUserExtend update_user_extend = 9;
+bool RAUserMessage::has_update_user_extend() const {
+  return this != internal_default_instance() && update_user_extend_ != NULL;
+}
+void RAUserMessage::clear_update_user_extend() {
+  if (GetArenaNoVirtual() == NULL && update_user_extend_ != NULL) delete update_user_extend_;
+  update_user_extend_ = NULL;
+}
+const ::audio_engine::UpdateUserExtend& RAUserMessage::update_user_extend() const {
+  const ::audio_engine::UpdateUserExtend* p = update_user_extend_;
+  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.update_user_extend)
+  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::UpdateUserExtend*>(
+      &::audio_engine::_UpdateUserExtend_default_instance_);
+}
+::audio_engine::UpdateUserExtend* RAUserMessage::mutable_update_user_extend() {
+  
+  if (update_user_extend_ == NULL) {
+    update_user_extend_ = new ::audio_engine::UpdateUserExtend;
+  }
+  // @@protoc_insertion_point(field_mutable:audio_engine.RAUserMessage.update_user_extend)
+  return update_user_extend_;
+}
+::audio_engine::UpdateUserExtend* RAUserMessage::release_update_user_extend() {
+  // @@protoc_insertion_point(field_release:audio_engine.RAUserMessage.update_user_extend)
+  
+  ::audio_engine::UpdateUserExtend* temp = update_user_extend_;
+  update_user_extend_ = NULL;
+  return temp;
+}
+void RAUserMessage::set_allocated_update_user_extend(::audio_engine::UpdateUserExtend* update_user_extend) {
+  delete update_user_extend_;
+  update_user_extend_ = update_user_extend;
+  if (update_user_extend) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.update_user_extend)
+}
+
+// .audio_engine.NotifyUserList notify_user_list = 10;
+bool RAUserMessage::has_notify_user_list() const {
+  return this != internal_default_instance() && notify_user_list_ != NULL;
+}
+void RAUserMessage::clear_notify_user_list() {
+  if (GetArenaNoVirtual() == NULL && notify_user_list_ != NULL) delete notify_user_list_;
+  notify_user_list_ = NULL;
+}
+const ::audio_engine::NotifyUserList& RAUserMessage::notify_user_list() const {
+  const ::audio_engine::NotifyUserList* p = notify_user_list_;
+  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.notify_user_list)
+  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::NotifyUserList*>(
+      &::audio_engine::_NotifyUserList_default_instance_);
+}
+::audio_engine::NotifyUserList* RAUserMessage::mutable_notify_user_list() {
+  
+  if (notify_user_list_ == NULL) {
+    notify_user_list_ = new ::audio_engine::NotifyUserList;
+  }
+  // @@protoc_insertion_point(field_mutable:audio_engine.RAUserMessage.notify_user_list)
+  return notify_user_list_;
+}
+::audio_engine::NotifyUserList* RAUserMessage::release_notify_user_list() {
+  // @@protoc_insertion_point(field_release:audio_engine.RAUserMessage.notify_user_list)
+  
+  ::audio_engine::NotifyUserList* temp = notify_user_list_;
+  notify_user_list_ = NULL;
+  return temp;
+}
+void RAUserMessage::set_allocated_notify_user_list(::audio_engine::NotifyUserList* notify_user_list) {
+  delete notify_user_list_;
+  notify_user_list_ = notify_user_list;
+  if (notify_user_list) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.notify_user_list)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS

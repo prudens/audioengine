@@ -16,6 +16,8 @@ public:
     void Stop();
     void HandleLogin( std::shared_ptr<User> user);
     void HandleLogout( std::shared_ptr<User> user );
+	void UpdateUserExtend(std::shared_ptr<User> user, std::shared_ptr< audio_engine::RAUserMessage> pb);
+	void UpdateUserState(std::shared_ptr<User> user, std::shared_ptr< audio_engine::RAUserMessage> pb);
 private:
     bool HandleAccept( std::error_code ec, TcpSocketPtr tcp );
 	TcpAcceptorPtr _acceptor;

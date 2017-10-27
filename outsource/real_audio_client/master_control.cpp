@@ -41,17 +41,44 @@ void MasterControl::UserEnterRoom(MemberPtr user)
 	_room_member_list.Add(user);
 }
 
-void MasterControl::UserLeaveRoom(std::string user_id)
+void MasterControl::UserLeaveRoom(int64_t token)
 {
-	_room_member_list.Remove(user_id);
+	_room_member_list.Remove(token);
 }
 
-void MasterControl::UpdateUserState(std::string user_id, int state)
+void MasterControl::UpdateUserState(int64_t src_token, int64_t dst_token, int state,int ec)
 {
+	if (_room_member_list.Update(dst_token, state))
+	{
+		//这里处理其他模块逻辑
+		if (src_token == _user_mgr.GetToken())
+		{
+			//说明是自己操作的，通知上层。
+		}
+		else
+		{
 
+		}
+	}
 }
 
-void MasterControl::UpdateUserExtend(std::string user_id, std::string extend)
+void MasterControl::UpdateUserExtend(int64_t token, std::string extend,int ec)
+{
+	if (_room_member_list.Update(token, extend))
+	{
+		//这里处理其他模块逻辑
+		if (token == _user_mgr.GetToken())
+		{
+			//说明是自己设置的，通知上层。
+		}
+		else
+		{
+
+		}
+	}
+}
+
+void MasterControl::UpdateUserList(const std::vector<MemberPtr>& users)
 {
 }
 
