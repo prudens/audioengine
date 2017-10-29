@@ -187,7 +187,7 @@ bool USER_STATE_IsValid(int value) {
   }
 }
 
-bool eEndFlag_IsValid(int value) {
+bool ePkgFlag_IsValid(int value) {
   switch (value) {
     case 0:
     case 1:
@@ -373,15 +373,14 @@ bool RequestLogin::MergePartialFromCodedStream(
         break;
       }
 
-      // .audio_engine.USER_STATE state = 5;
+      // int32 state = 5;
       case 5: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(40u /* 40 & 0xFF */)) {
-          int value;
+
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          set_state(static_cast< ::audio_engine::USER_STATE >(value));
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &state_)));
         } else {
           goto handle_unusual;
         }
@@ -450,10 +449,9 @@ void RequestLogin::SerializeWithCachedSizes(
       4, this->devtype(), output);
   }
 
-  // .audio_engine.USER_STATE state = 5;
+  // int32 state = 5;
   if (this->state() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      5, this->state(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->state(), output);
   }
 
   output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
@@ -494,10 +492,11 @@ size_t RequestLogin::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormatLite::EnumSize(this->devtype());
   }
 
-  // .audio_engine.USER_STATE state = 5;
+  // int32 state = 5;
   if (this->state() != 0) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::EnumSize(this->state());
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->state());
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -745,15 +744,15 @@ void RequestLogin::set_devtype(::audio_engine::DEVICE_TYPE value) {
   // @@protoc_insertion_point(field_set:audio_engine.RequestLogin.devtype)
 }
 
-// .audio_engine.USER_STATE state = 5;
+// int32 state = 5;
 void RequestLogin::clear_state() {
   state_ = 0;
 }
-::audio_engine::USER_STATE RequestLogin::state() const {
+::google::protobuf::int32 RequestLogin::state() const {
   // @@protoc_insertion_point(field_get:audio_engine.RequestLogin.state)
-  return static_cast< ::audio_engine::USER_STATE >(state_);
+  return state_;
 }
-void RequestLogin::set_state(::audio_engine::USER_STATE value) {
+void RequestLogin::set_state(::google::protobuf::int32 value) {
   
   state_ = value;
   // @@protoc_insertion_point(field_set:audio_engine.RequestLogin.state)
@@ -1763,15 +1762,14 @@ bool NotifyLogin::MergePartialFromCodedStream(
         break;
       }
 
-      // .audio_engine.USER_STATE state = 5;
+      // int32 state = 5;
       case 5: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(40u /* 40 & 0xFF */)) {
-          int value;
+
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          set_state(static_cast< ::audio_engine::USER_STATE >(value));
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &state_)));
         } else {
           goto handle_unusual;
         }
@@ -1835,10 +1833,9 @@ void NotifyLogin::SerializeWithCachedSizes(
       4, this->devtype(), output);
   }
 
-  // .audio_engine.USER_STATE state = 5;
+  // int32 state = 5;
   if (this->state() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      5, this->state(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->state(), output);
   }
 
   output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
@@ -1879,10 +1876,11 @@ size_t NotifyLogin::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormatLite::EnumSize(this->devtype());
   }
 
-  // .audio_engine.USER_STATE state = 5;
+  // int32 state = 5;
   if (this->state() != 0) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::EnumSize(this->state());
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->state());
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -2090,15 +2088,15 @@ void NotifyLogin::set_devtype(::audio_engine::DEVICE_TYPE value) {
   // @@protoc_insertion_point(field_set:audio_engine.NotifyLogin.devtype)
 }
 
-// .audio_engine.USER_STATE state = 5;
+// int32 state = 5;
 void NotifyLogin::clear_state() {
   state_ = 0;
 }
-::audio_engine::USER_STATE NotifyLogin::state() const {
+::google::protobuf::int32 NotifyLogin::state() const {
   // @@protoc_insertion_point(field_get:audio_engine.NotifyLogin.state)
-  return static_cast< ::audio_engine::USER_STATE >(state_);
+  return state_;
 }
-void NotifyLogin::set_state(::audio_engine::USER_STATE value) {
+void NotifyLogin::set_state(::google::protobuf::int32 value) {
   
   state_ = value;
   // @@protoc_insertion_point(field_set:audio_engine.NotifyLogin.state)
@@ -2435,15 +2433,14 @@ bool UpdateUserState::MergePartialFromCodedStream(
         break;
       }
 
-      // .audio_engine.USER_STATE state = 3;
+      // int32 state = 3;
       case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
-          int value;
+
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          set_state(static_cast< ::audio_engine::USER_STATE >(value));
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &state_)));
         } else {
           goto handle_unusual;
         }
@@ -2500,10 +2497,9 @@ void UpdateUserState::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt64(2, this->dst_token(), output);
   }
 
-  // .audio_engine.USER_STATE state = 3;
+  // int32 state = 3;
   if (this->state() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      3, this->state(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->state(), output);
   }
 
   // int32 error_code = 4;
@@ -2536,10 +2532,11 @@ size_t UpdateUserState::ByteSizeLong() const {
         this->dst_token());
   }
 
-  // .audio_engine.USER_STATE state = 3;
+  // int32 state = 3;
   if (this->state() != 0) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::EnumSize(this->state());
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->state());
   }
 
   // int32 error_code = 4;
@@ -2642,15 +2639,15 @@ void UpdateUserState::set_dst_token(::google::protobuf::int64 value) {
   // @@protoc_insertion_point(field_set:audio_engine.UpdateUserState.dst_token)
 }
 
-// .audio_engine.USER_STATE state = 3;
+// int32 state = 3;
 void UpdateUserState::clear_state() {
   state_ = 0;
 }
-::audio_engine::USER_STATE UpdateUserState::state() const {
+::google::protobuf::int32 UpdateUserState::state() const {
   // @@protoc_insertion_point(field_get:audio_engine.UpdateUserState.state)
-  return static_cast< ::audio_engine::USER_STATE >(state_);
+  return state_;
 }
-void UpdateUserState::set_state(::audio_engine::USER_STATE value) {
+void UpdateUserState::set_state(::google::protobuf::int32 value) {
   
   state_ = value;
   // @@protoc_insertion_point(field_set:audio_engine.UpdateUserState.state)
@@ -3185,15 +3182,14 @@ bool UserInfo::MergePartialFromCodedStream(
         break;
       }
 
-      // .audio_engine.USER_STATE state = 4;
+      // int32 state = 4;
       case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
-          int value;
+
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          set_state(static_cast< ::audio_engine::USER_STATE >(value));
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &state_)));
         } else {
           goto handle_unusual;
         }
@@ -3266,10 +3262,9 @@ void UserInfo::SerializeWithCachedSizes(
       3, this->devtype(), output);
   }
 
-  // .audio_engine.USER_STATE state = 4;
+  // int32 state = 4;
   if (this->state() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      4, this->state(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->state(), output);
   }
 
   // int64 token = 5;
@@ -3308,10 +3303,11 @@ size_t UserInfo::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormatLite::EnumSize(this->devtype());
   }
 
-  // .audio_engine.USER_STATE state = 4;
+  // int32 state = 4;
   if (this->state() != 0) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::EnumSize(this->state());
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->state());
   }
 
   // int64 token = 5;
@@ -3512,15 +3508,15 @@ void UserInfo::set_devtype(::audio_engine::DEVICE_TYPE value) {
   // @@protoc_insertion_point(field_set:audio_engine.UserInfo.devtype)
 }
 
-// .audio_engine.USER_STATE state = 4;
+// int32 state = 4;
 void UserInfo::clear_state() {
   state_ = 0;
 }
-::audio_engine::USER_STATE UserInfo::state() const {
+::google::protobuf::int32 UserInfo::state() const {
   // @@protoc_insertion_point(field_get:audio_engine.UserInfo.state)
-  return static_cast< ::audio_engine::USER_STATE >(state_);
+  return state_;
 }
-void UserInfo::set_state(::audio_engine::USER_STATE value) {
+void UserInfo::set_state(::google::protobuf::int32 value) {
   
   state_ = value;
   // @@protoc_insertion_point(field_set:audio_engine.UserInfo.state)
@@ -3546,7 +3542,7 @@ void UserInfo::set_token(::google::protobuf::int64 value) {
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int NotifyUserList::kUserFieldNumber;
-const int NotifyUserList::kEndFlagFieldNumber;
+const int NotifyUserList::kPkgFlagFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 NotifyUserList::NotifyUserList()
@@ -3563,12 +3559,12 @@ NotifyUserList::NotifyUserList(const NotifyUserList& from)
       user_(from.user_),
       _cached_size_(0) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  end_flag_ = from.end_flag_;
+  pkg_flag_ = from.pkg_flag_;
   // @@protoc_insertion_point(copy_constructor:audio_engine.NotifyUserList)
 }
 
 void NotifyUserList::SharedCtor() {
-  end_flag_ = 0;
+  pkg_flag_ = 0;
   _cached_size_ = 0;
 }
 
@@ -3605,7 +3601,7 @@ void NotifyUserList::Clear() {
   (void) cached_has_bits;
 
   user_.Clear();
-  end_flag_ = 0;
+  pkg_flag_ = 0;
   _internal_metadata_.Clear();
 }
 
@@ -3637,15 +3633,14 @@ bool NotifyUserList::MergePartialFromCodedStream(
         break;
       }
 
-      // .audio_engine.eEndFlag end_flag = 2;
+      // int32 pkg_flag = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
-          int value;
+
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          set_end_flag(static_cast< ::audio_engine::eEndFlag >(value));
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &pkg_flag_)));
         } else {
           goto handle_unusual;
         }
@@ -3685,10 +3680,9 @@ void NotifyUserList::SerializeWithCachedSizes(
       1, this->user(static_cast<int>(i)), output);
   }
 
-  // .audio_engine.eEndFlag end_flag = 2;
-  if (this->end_flag() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      2, this->end_flag(), output);
+  // int32 pkg_flag = 2;
+  if (this->pkg_flag() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->pkg_flag(), output);
   }
 
   output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
@@ -3713,10 +3707,11 @@ size_t NotifyUserList::ByteSizeLong() const {
     }
   }
 
-  // .audio_engine.eEndFlag end_flag = 2;
-  if (this->end_flag() != 0) {
+  // int32 pkg_flag = 2;
+  if (this->pkg_flag() != 0) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::EnumSize(this->end_flag());
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->pkg_flag());
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -3739,8 +3734,8 @@ void NotifyUserList::MergeFrom(const NotifyUserList& from) {
   (void) cached_has_bits;
 
   user_.MergeFrom(from.user_);
-  if (from.end_flag() != 0) {
-    set_end_flag(from.end_flag());
+  if (from.pkg_flag() != 0) {
+    set_pkg_flag(from.pkg_flag());
   }
 }
 
@@ -3762,7 +3757,7 @@ void NotifyUserList::Swap(NotifyUserList* other) {
 void NotifyUserList::InternalSwap(NotifyUserList* other) {
   using std::swap;
   user_.InternalSwap(&other->user_);
-  swap(end_flag_, other->end_flag_);
+  swap(pkg_flag_, other->pkg_flag_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(_cached_size_, other->_cached_size_);
 }
@@ -3804,18 +3799,18 @@ NotifyUserList::user() const {
   return user_;
 }
 
-// .audio_engine.eEndFlag end_flag = 2;
-void NotifyUserList::clear_end_flag() {
-  end_flag_ = 0;
+// int32 pkg_flag = 2;
+void NotifyUserList::clear_pkg_flag() {
+  pkg_flag_ = 0;
 }
-::audio_engine::eEndFlag NotifyUserList::end_flag() const {
-  // @@protoc_insertion_point(field_get:audio_engine.NotifyUserList.end_flag)
-  return static_cast< ::audio_engine::eEndFlag >(end_flag_);
+::google::protobuf::int32 NotifyUserList::pkg_flag() const {
+  // @@protoc_insertion_point(field_get:audio_engine.NotifyUserList.pkg_flag)
+  return pkg_flag_;
 }
-void NotifyUserList::set_end_flag(::audio_engine::eEndFlag value) {
+void NotifyUserList::set_pkg_flag(::google::protobuf::int32 value) {
   
-  end_flag_ = value;
-  // @@protoc_insertion_point(field_set:audio_engine.NotifyUserList.end_flag)
+  pkg_flag_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.NotifyUserList.pkg_flag)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -3823,6 +3818,7 @@ void NotifyUserList::set_end_flag(::audio_engine::eEndFlag value) {
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int RAUserMessage::kSnFieldNumber;
 const int RAUserMessage::kRequestLoginFieldNumber;
 const int RAUserMessage::kResponedLoginFieldNumber;
 const int RAUserMessage::kRequestLogoutFieldNumber;
@@ -3892,13 +3888,14 @@ RAUserMessage::RAUserMessage(const RAUserMessage& from)
   } else {
     notify_user_list_ = NULL;
   }
+  sn_ = from.sn_;
   // @@protoc_insertion_point(copy_constructor:audio_engine.RAUserMessage)
 }
 
 void RAUserMessage::SharedCtor() {
   ::memset(&request_login_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&notify_user_list_) -
-      reinterpret_cast<char*>(&request_login_)) + sizeof(notify_user_list_));
+      reinterpret_cast<char*>(&sn_) -
+      reinterpret_cast<char*>(&request_login_)) + sizeof(sn_));
   _cached_size_ = 0;
 }
 
@@ -3979,6 +3976,7 @@ void RAUserMessage::Clear() {
     delete notify_user_list_;
   }
   notify_user_list_ = NULL;
+  sn_ = 0;
   _internal_metadata_.Clear();
 }
 
@@ -3998,6 +3996,20 @@ bool RAUserMessage::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // int32 sn = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &sn_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       // .audio_engine.RequestLogin request_login = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
@@ -4132,6 +4144,11 @@ void RAUserMessage::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  // int32 sn = 1;
+  if (this->sn() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->sn(), output);
+  }
+
   // .audio_engine.RequestLogin request_login = 2;
   if (this->has_request_login()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessage(
@@ -4260,6 +4277,13 @@ size_t RAUserMessage::ByteSizeLong() const {
         *this->notify_user_list_);
   }
 
+  // int32 sn = 1;
+  if (this->sn() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->sn());
+  }
+
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = cached_size;
@@ -4306,6 +4330,9 @@ void RAUserMessage::MergeFrom(const RAUserMessage& from) {
   if (from.has_notify_user_list()) {
     mutable_notify_user_list()->::audio_engine::NotifyUserList::MergeFrom(from.notify_user_list());
   }
+  if (from.sn() != 0) {
+    set_sn(from.sn());
+  }
 }
 
 void RAUserMessage::CopyFrom(const RAUserMessage& from) {
@@ -4334,6 +4361,7 @@ void RAUserMessage::InternalSwap(RAUserMessage* other) {
   swap(update_user_state_, other->update_user_state_);
   swap(update_user_extend_, other->update_user_extend_);
   swap(notify_user_list_, other->notify_user_list_);
+  swap(sn_, other->sn_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(_cached_size_, other->_cached_size_);
 }
@@ -4344,6 +4372,20 @@ void RAUserMessage::InternalSwap(RAUserMessage* other) {
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
 // RAUserMessage
+
+// int32 sn = 1;
+void RAUserMessage::clear_sn() {
+  sn_ = 0;
+}
+::google::protobuf::int32 RAUserMessage::sn() const {
+  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.sn)
+  return sn_;
+}
+void RAUserMessage::set_sn(::google::protobuf::int32 value) {
+  
+  sn_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.RAUserMessage.sn)
+}
 
 // .audio_engine.RequestLogin request_login = 2;
 bool RAUserMessage::has_request_login() const {

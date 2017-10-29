@@ -1,5 +1,7 @@
 #pragma once
 #include <list>
+#include <mutex>
+#include <atomic>
 #include "real_audio_common.h"
 #include "protobuf_packet.h"
 #include "user_service.h"
@@ -7,23 +9,24 @@
 #include "user_list.h"
 
 //状态图
-/*  LS_NONE----LS_CONNECTING-----LS_CONNECTED----LS_VERIFY_ACCOUNT
-      \                                                           \
-	   \													       \
-		\												            LS_LOGINED
-         \                                                         /
- 		  \										                  /
-           -----------------------LS_CONNECTED------LS_LOGOUT-----
+/*             LS_CONNECTING-----LS_CONNECTED-----LS_VERIFY_ACCOUNT
+               /                                          \
+	   		  /										       \
+LS_NONE-----LS_INIT	                     			       LS_LOGINED
+              \                                           /
+ 		       \									     /
+               ---------LS_CONNECTED-------------LS_LOGOUT
 */														     
 //凡是临时状态，都要加定时器，且值为奇数，方便过滤
 enum LoginState{
-    LS_NONE            = 0,          // 未连接服务器
-	LS_CONNECTING      = 1,         // 正在连接服务器
-	LS_CONNECTED       = 2,         // 已经连接服务器
-	LS_VERIFY_ACCOUNT  = 3,         // 连接成功，验证账号有效性
-	LS_LOGINED         = 4,         // 验证通过，登陆流程走完。
-	LS_LOGOUT          = 5,         // 正在执行登出操作
-	LS_RESET           = 6,
+	LS_NONE            = 0,
+    LS_INIT            = 2,         // 未连接服务器
+	LS_CONNECTING      = 3,         // 正在连接服务器
+	LS_CONNECTED       = 4,         // 已经连接服务器
+	LS_VERIFY_ACCOUNT  = 5,         // 连接成功，验证账号有效性
+	LS_LOGINED         = 6,         // 验证通过，登陆流程走完。
+	LS_LOGOUT          = 7,         // 正在执行登出操作
+
 };
 
 #define MAX_TRY_LOGIN 5
@@ -55,12 +58,13 @@ public:
 	std::string GetUserID();
 	std::string GetRoomKey();
 	int64_t GetToken();
+	void SetUserExtend( std::string& extend);
+	void SetUserState(int64_t dst_token, int state);
 private:
 	void DoLogout();
 	void ConnectServer();
 	void DisConnectServer();
     void VerifyAccount();
-	void OnTimer();
 	void Transform(LoginState state);
 public:
     virtual bool RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb );
@@ -69,16 +73,20 @@ public:
 	void Update(LoginState state);
 	UserEventHandler* _event_handle;
 	UserServicePtr _user_service;
+	AsyncTask*    _task = nullptr;
 	STimerPtr   _timer;
 	std::string  _user_id;
 	std::string _roomkey;
 	std::string _extend;
-	audio_engine::DEVICE_TYPE      _device_type;
+	audio_engine::DEVICE_TYPE _device_type = audio_engine::DEVICE_WINDOWS;
+	int  _user_state = audio_engine::STATE_PLAYOUT;
 	int64_t  _token;
 	LoginState _cur_state = LS_NONE;
+	std::atomic<LoginState> _target_state_internel = LS_NONE;
 	LoginState _target_state = LS_NONE;
-	uint64_t   _cur_state_time = 0;
+	int   _cur_state_time = 0;
 	uint32_t _try_login_count = 0;
 	int _error_code = 0;
 	std::vector<MemberPtr> _cache_userlist;
+	std::recursive_mutex _mutex;
 };

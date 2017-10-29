@@ -338,8 +338,7 @@ namespace snail{namespace audio{
     int AudioRoomImpl::GetLoginStatus()
     {
         Log.v( "IAudioRoom::GetLoginStatus()\n" );
-        //return _media_base_client->IO_GetLoginedStatus();
-		return ERR_NOT_SUPPORTED;
+		return _master_control.GetLoginState();
     }
 
     void AudioRoomImpl::Poll()
@@ -569,45 +568,11 @@ namespace snail{namespace audio{
 		*/
     }
 
-    int AudioRoomImpl::DoLogin()
-    {
-		/*
-        if ( _media_base_client->IO_GetLoginedStatus() == LSLogined )
-        {
-            return ERR_OK;
-        }
-        Log.d( "AudioRoomImpl::DoLogin\n" );
-        std::string uid = _uid;
-        std::string roomkey = _roomkey;
-        int ec = _media_base_client->IO_Login( _uid.c_str(), _roomkey.c_str(), _enable_pull_user_list, _user_extend.c_str(), _loop_try_login, [=] ( int ec )
-        {
-            Log.d( "IAudioRoom::Login 返回结果：%s\n",ec==0?"登陆成功":"登陆失败\n" );
-            if( _try_login && _media_base_client->IO_GetLoginedStatus() != LSLogined )
-            {
-                _try_login = false;
-                ec = DoLogin();
-                if ( ec == 0 )
-                {
-                    Log.i("IAudioRoom::Login 重新尝试登陆\n");
-                    return;
-                }
-            }
-            int err = TransformErrorCode( ec );
-            auto handle = [=] () { 
-                Log.d( "Call IAudioRoomEventHandler::RespondLogin(%s,%s,%d)\n", roomkey.c_str(), uid.c_str(), err );
-                _handler->RespondLogin( roomkey.c_str(), uid.c_str(), err ); };
-            RecvAsyncEvent( std::move( handle ) );
-        } );
-        return TransformErrorCode( ec );// 需要转换下
-		*/
-		return ERR_NOT_SUPPORTED;
-    }
-
 //////////////////////////////////////////////////////////////
-    UserModuleImpl::UserModuleImpl( AudioRoomImpl*host )
+    UserModuleImpl::UserModuleImpl( AudioRoomImpl*host ):
+		_master_control(host->_master_control)
     {
         _host = host;
-        //_media_base_client = _host->_media_base_client.get();
     }
 
     void UserModuleImpl::RegisterEventHandler( IUserEventHandler* handler )
@@ -637,6 +602,7 @@ namespace snail{namespace audio{
         std::string struid = uid;
         std::string strname = STR(name);
         std::string strvalue = STR(value);
+		_master_control.SetUserExtend(strvalue);
 /*        int err = _media_base_client->IO_SetUserAttr( uid, name, value, [=] (int ec)
         {
             int err = TransformErrorCode( ec );

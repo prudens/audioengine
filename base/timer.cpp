@@ -71,7 +71,7 @@ Timer::Timer(int sleepMs)
                 if (block)
                 {
                     this->condition.wait_for( lock, std::chrono::milliseconds( sleep_time ),
-                                              [this] { return this->_stop || !this->_tasks.empty(); } );
+                                              [this] { return this->_stop ; } );
                     if ( this->_stop && this->_tasks.empty() )
                         return;
                 }
@@ -100,6 +100,7 @@ void Timer::AddTask( int elapsed_ms, TaskExecute executer )
     }
     TimerTask task( elapsed_ms + CurrentTimeMs(), std::move( executer ) );
     _tasks.emplace( std::move( task ) );
+	condition.notify_all();
 }
 
 void Timer::ClearTask()

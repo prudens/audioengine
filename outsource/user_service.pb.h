@@ -112,17 +112,17 @@ const USER_STATE USER_STATE_MIN = STATE_INVALID;
 const USER_STATE USER_STATE_MAX = STATE_BANNED;
 const int USER_STATE_ARRAYSIZE = USER_STATE_MAX + 1;
 
-enum eEndFlag {
+enum ePkgFlag {
   FLAG_CONTINUE = 0,
   FLAG_FIRST_PKG = 1,
   FLAG_LAST_PKG = 2,
-  eEndFlag_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
-  eEndFlag_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
+  ePkgFlag_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
+  ePkgFlag_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
 };
-bool eEndFlag_IsValid(int value);
-const eEndFlag eEndFlag_MIN = FLAG_CONTINUE;
-const eEndFlag eEndFlag_MAX = FLAG_LAST_PKG;
-const int eEndFlag_ARRAYSIZE = eEndFlag_MAX + 1;
+bool ePkgFlag_IsValid(int value);
+const ePkgFlag ePkgFlag_MIN = FLAG_CONTINUE;
+const ePkgFlag ePkgFlag_MAX = FLAG_LAST_PKG;
+const int ePkgFlag_ARRAYSIZE = ePkgFlag_MAX + 1;
 
 // ===================================================================
 
@@ -253,11 +253,11 @@ class RequestLogin : public ::google::protobuf::MessageLite /* @@protoc_insertio
   ::audio_engine::DEVICE_TYPE devtype() const;
   void set_devtype(::audio_engine::DEVICE_TYPE value);
 
-  // .audio_engine.USER_STATE state = 5;
+  // int32 state = 5;
   void clear_state();
   static const int kStateFieldNumber = 5;
-  ::audio_engine::USER_STATE state() const;
-  void set_state(::audio_engine::USER_STATE value);
+  ::google::protobuf::int32 state() const;
+  void set_state(::google::protobuf::int32 value);
 
   // @@protoc_insertion_point(class_scope:audio_engine.RequestLogin)
  private:
@@ -267,7 +267,7 @@ class RequestLogin : public ::google::protobuf::MessageLite /* @@protoc_insertio
   ::google::protobuf::internal::ArenaStringPtr extend_;
   ::google::protobuf::internal::ArenaStringPtr version_;
   int devtype_;
-  int state_;
+  ::google::protobuf::int32 state_;
   mutable int _cached_size_;
   friend struct protobuf_user_5fservice_2eproto::TableStruct;
 };
@@ -706,11 +706,11 @@ class NotifyLogin : public ::google::protobuf::MessageLite /* @@protoc_insertion
   ::audio_engine::DEVICE_TYPE devtype() const;
   void set_devtype(::audio_engine::DEVICE_TYPE value);
 
-  // .audio_engine.USER_STATE state = 5;
+  // int32 state = 5;
   void clear_state();
   static const int kStateFieldNumber = 5;
-  ::audio_engine::USER_STATE state() const;
-  void set_state(::audio_engine::USER_STATE value);
+  ::google::protobuf::int32 state() const;
+  void set_state(::google::protobuf::int32 value);
 
   // @@protoc_insertion_point(class_scope:audio_engine.NotifyLogin)
  private:
@@ -720,7 +720,7 @@ class NotifyLogin : public ::google::protobuf::MessageLite /* @@protoc_insertion
   ::google::protobuf::internal::ArenaStringPtr extend_;
   ::google::protobuf::int64 token_;
   int devtype_;
-  int state_;
+  ::google::protobuf::int32 state_;
   mutable int _cached_size_;
   friend struct protobuf_user_5fservice_2eproto::TableStruct;
 };
@@ -912,11 +912,11 @@ class UpdateUserState : public ::google::protobuf::MessageLite /* @@protoc_inser
   ::google::protobuf::int64 dst_token() const;
   void set_dst_token(::google::protobuf::int64 value);
 
-  // .audio_engine.USER_STATE state = 3;
+  // int32 state = 3;
   void clear_state();
   static const int kStateFieldNumber = 3;
-  ::audio_engine::USER_STATE state() const;
-  void set_state(::audio_engine::USER_STATE value);
+  ::google::protobuf::int32 state() const;
+  void set_state(::google::protobuf::int32 value);
 
   // int32 error_code = 4;
   void clear_error_code();
@@ -930,7 +930,7 @@ class UpdateUserState : public ::google::protobuf::MessageLite /* @@protoc_inser
   ::google::protobuf::internal::InternalMetadataWithArenaLite _internal_metadata_;
   ::google::protobuf::int64 src_token_;
   ::google::protobuf::int64 dst_token_;
-  int state_;
+  ::google::protobuf::int32 state_;
   ::google::protobuf::int32 error_code_;
   mutable int _cached_size_;
   friend struct protobuf_user_5fservice_2eproto::TableStruct;
@@ -1167,11 +1167,11 @@ class UserInfo : public ::google::protobuf::MessageLite /* @@protoc_insertion_po
   ::audio_engine::DEVICE_TYPE devtype() const;
   void set_devtype(::audio_engine::DEVICE_TYPE value);
 
-  // .audio_engine.USER_STATE state = 4;
+  // int32 state = 4;
   void clear_state();
   static const int kStateFieldNumber = 4;
-  ::audio_engine::USER_STATE state() const;
-  void set_state(::audio_engine::USER_STATE value);
+  ::google::protobuf::int32 state() const;
+  void set_state(::google::protobuf::int32 value);
 
   // int64 token = 5;
   void clear_token();
@@ -1186,7 +1186,7 @@ class UserInfo : public ::google::protobuf::MessageLite /* @@protoc_insertion_po
   ::google::protobuf::internal::ArenaStringPtr userid_;
   ::google::protobuf::internal::ArenaStringPtr extend_;
   int devtype_;
-  int state_;
+  ::google::protobuf::int32 state_;
   ::google::protobuf::int64 token_;
   mutable int _cached_size_;
   friend struct protobuf_user_5fservice_2eproto::TableStruct;
@@ -1284,18 +1284,18 @@ class NotifyUserList : public ::google::protobuf::MessageLite /* @@protoc_insert
   const ::google::protobuf::RepeatedPtrField< ::audio_engine::UserInfo >&
       user() const;
 
-  // .audio_engine.eEndFlag end_flag = 2;
-  void clear_end_flag();
-  static const int kEndFlagFieldNumber = 2;
-  ::audio_engine::eEndFlag end_flag() const;
-  void set_end_flag(::audio_engine::eEndFlag value);
+  // int32 pkg_flag = 2;
+  void clear_pkg_flag();
+  static const int kPkgFlagFieldNumber = 2;
+  ::google::protobuf::int32 pkg_flag() const;
+  void set_pkg_flag(::google::protobuf::int32 value);
 
   // @@protoc_insertion_point(class_scope:audio_engine.NotifyUserList)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArenaLite _internal_metadata_;
   ::google::protobuf::RepeatedPtrField< ::audio_engine::UserInfo > user_;
-  int end_flag_;
+  ::google::protobuf::int32 pkg_flag_;
   mutable int _cached_size_;
   friend struct protobuf_user_5fservice_2eproto::TableStruct;
 };
@@ -1461,6 +1461,12 @@ class RAUserMessage : public ::google::protobuf::MessageLite /* @@protoc_inserti
   ::audio_engine::NotifyUserList* release_notify_user_list();
   void set_allocated_notify_user_list(::audio_engine::NotifyUserList* notify_user_list);
 
+  // int32 sn = 1;
+  void clear_sn();
+  static const int kSnFieldNumber = 1;
+  ::google::protobuf::int32 sn() const;
+  void set_sn(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:audio_engine.RAUserMessage)
  private:
 
@@ -1474,6 +1480,7 @@ class RAUserMessage : public ::google::protobuf::MessageLite /* @@protoc_inserti
   ::audio_engine::UpdateUserState* update_user_state_;
   ::audio_engine::UpdateUserExtend* update_user_extend_;
   ::audio_engine::NotifyUserList* notify_user_list_;
+  ::google::protobuf::int32 sn_;
   mutable int _cached_size_;
   friend struct protobuf_user_5fservice_2eproto::TableStruct;
 };
@@ -1662,15 +1669,15 @@ inline void RequestLogin::set_devtype(::audio_engine::DEVICE_TYPE value) {
   // @@protoc_insertion_point(field_set:audio_engine.RequestLogin.devtype)
 }
 
-// .audio_engine.USER_STATE state = 5;
+// int32 state = 5;
 inline void RequestLogin::clear_state() {
   state_ = 0;
 }
-inline ::audio_engine::USER_STATE RequestLogin::state() const {
+inline ::google::protobuf::int32 RequestLogin::state() const {
   // @@protoc_insertion_point(field_get:audio_engine.RequestLogin.state)
-  return static_cast< ::audio_engine::USER_STATE >(state_);
+  return state_;
 }
-inline void RequestLogin::set_state(::audio_engine::USER_STATE value) {
+inline void RequestLogin::set_state(::google::protobuf::int32 value) {
   
   state_ = value;
   // @@protoc_insertion_point(field_set:audio_engine.RequestLogin.state)
@@ -1949,15 +1956,15 @@ inline void NotifyLogin::set_devtype(::audio_engine::DEVICE_TYPE value) {
   // @@protoc_insertion_point(field_set:audio_engine.NotifyLogin.devtype)
 }
 
-// .audio_engine.USER_STATE state = 5;
+// int32 state = 5;
 inline void NotifyLogin::clear_state() {
   state_ = 0;
 }
-inline ::audio_engine::USER_STATE NotifyLogin::state() const {
+inline ::google::protobuf::int32 NotifyLogin::state() const {
   // @@protoc_insertion_point(field_get:audio_engine.NotifyLogin.state)
-  return static_cast< ::audio_engine::USER_STATE >(state_);
+  return state_;
 }
-inline void NotifyLogin::set_state(::audio_engine::USER_STATE value) {
+inline void NotifyLogin::set_state(::google::protobuf::int32 value) {
   
   state_ = value;
   // @@protoc_insertion_point(field_set:audio_engine.NotifyLogin.state)
@@ -2013,15 +2020,15 @@ inline void UpdateUserState::set_dst_token(::google::protobuf::int64 value) {
   // @@protoc_insertion_point(field_set:audio_engine.UpdateUserState.dst_token)
 }
 
-// .audio_engine.USER_STATE state = 3;
+// int32 state = 3;
 inline void UpdateUserState::clear_state() {
   state_ = 0;
 }
-inline ::audio_engine::USER_STATE UpdateUserState::state() const {
+inline ::google::protobuf::int32 UpdateUserState::state() const {
   // @@protoc_insertion_point(field_get:audio_engine.UpdateUserState.state)
-  return static_cast< ::audio_engine::USER_STATE >(state_);
+  return state_;
 }
-inline void UpdateUserState::set_state(::audio_engine::USER_STATE value) {
+inline void UpdateUserState::set_state(::google::protobuf::int32 value) {
   
   state_ = value;
   // @@protoc_insertion_point(field_set:audio_engine.UpdateUserState.state)
@@ -2250,15 +2257,15 @@ inline void UserInfo::set_devtype(::audio_engine::DEVICE_TYPE value) {
   // @@protoc_insertion_point(field_set:audio_engine.UserInfo.devtype)
 }
 
-// .audio_engine.USER_STATE state = 4;
+// int32 state = 4;
 inline void UserInfo::clear_state() {
   state_ = 0;
 }
-inline ::audio_engine::USER_STATE UserInfo::state() const {
+inline ::google::protobuf::int32 UserInfo::state() const {
   // @@protoc_insertion_point(field_get:audio_engine.UserInfo.state)
-  return static_cast< ::audio_engine::USER_STATE >(state_);
+  return state_;
 }
-inline void UserInfo::set_state(::audio_engine::USER_STATE value) {
+inline void UserInfo::set_state(::google::protobuf::int32 value) {
   
   state_ = value;
   // @@protoc_insertion_point(field_set:audio_engine.UserInfo.state)
@@ -2312,23 +2319,37 @@ NotifyUserList::user() const {
   return user_;
 }
 
-// .audio_engine.eEndFlag end_flag = 2;
-inline void NotifyUserList::clear_end_flag() {
-  end_flag_ = 0;
+// int32 pkg_flag = 2;
+inline void NotifyUserList::clear_pkg_flag() {
+  pkg_flag_ = 0;
 }
-inline ::audio_engine::eEndFlag NotifyUserList::end_flag() const {
-  // @@protoc_insertion_point(field_get:audio_engine.NotifyUserList.end_flag)
-  return static_cast< ::audio_engine::eEndFlag >(end_flag_);
+inline ::google::protobuf::int32 NotifyUserList::pkg_flag() const {
+  // @@protoc_insertion_point(field_get:audio_engine.NotifyUserList.pkg_flag)
+  return pkg_flag_;
 }
-inline void NotifyUserList::set_end_flag(::audio_engine::eEndFlag value) {
+inline void NotifyUserList::set_pkg_flag(::google::protobuf::int32 value) {
   
-  end_flag_ = value;
-  // @@protoc_insertion_point(field_set:audio_engine.NotifyUserList.end_flag)
+  pkg_flag_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.NotifyUserList.pkg_flag)
 }
 
 // -------------------------------------------------------------------
 
 // RAUserMessage
+
+// int32 sn = 1;
+inline void RAUserMessage::clear_sn() {
+  sn_ = 0;
+}
+inline ::google::protobuf::int32 RAUserMessage::sn() const {
+  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.sn)
+  return sn_;
+}
+inline void RAUserMessage::set_sn(::google::protobuf::int32 value) {
+  
+  sn_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.RAUserMessage.sn)
+}
 
 // .audio_engine.RequestLogin request_login = 2;
 inline bool RAUserMessage::has_request_login() const {
@@ -2725,7 +2746,7 @@ namespace protobuf {
 
 template <> struct is_proto_enum< ::audio_engine::DEVICE_TYPE> : ::google::protobuf::internal::true_type {};
 template <> struct is_proto_enum< ::audio_engine::USER_STATE> : ::google::protobuf::internal::true_type {};
-template <> struct is_proto_enum< ::audio_engine::eEndFlag> : ::google::protobuf::internal::true_type {};
+template <> struct is_proto_enum< ::audio_engine::ePkgFlag> : ::google::protobuf::internal::true_type {};
 
 }  // namespace protobuf
 }  // namespace google

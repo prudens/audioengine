@@ -59,7 +59,6 @@ private:
 	void      StartThreadLoop();
 	void      StopThreadLoop();
 	void      EventNotifyHandler(int eventid, const void* param);
-    int       DoLogin();
 
 public:
 	MasterControl _master_control;
@@ -93,6 +92,7 @@ public:
 	void*       Handler() { return (IModuleHandler*)this; }
 	EventHandle EventNotifyHandler(int eventid, const void* param);
 private:
+	MasterControl& _master_control;
     AudioRoomImpl* _host = nullptr;
     IUserEventHandler* _handler = nullptr;
 //    snail::client::media::imedia_base_client* _media_base_client;

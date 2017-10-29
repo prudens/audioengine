@@ -28,6 +28,8 @@ public:
 	void RegisterEventHandler(IAsyncEventHandler* handler);
 	void Login(std::string roomkey, std::string uid);
 	void Logout();
+	int  GetLoginState();
+	void SetUserExtend(std::string extend);
 private:
 	MemberList _room_member_list;
 	UserManager _user_mgr;

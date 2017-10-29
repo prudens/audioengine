@@ -48,7 +48,7 @@ std::string User::extend()
     return _extend;
 }
 
-int User::device_type()
+audio_engine::DEVICE_TYPE User::device_type()
 {
     return _device_type;
 }
@@ -123,6 +123,7 @@ void User::RecvPacket(std::error_code ec, std::shared_ptr< audio_engine::RAUserM
 	if (pb->has_update_user_extend())
 	{
 		_extend = pb->update_user_extend().extend();
+	    pb->mutable_update_user_extend()->set_error_code(0);
 		if (_host)
 		{
 			auto self = shared_from_this();
@@ -132,7 +133,11 @@ void User::RecvPacket(std::error_code ec, std::shared_ptr< audio_engine::RAUserM
 
 	if (pb->has_update_user_state())
 	{
-		auto update_state = pb->update_user_state();
+		auto update_state = pb->mutable_update_user_state();
+		update_state->set_error_code(0);
+		_state = update_state->state();
+		Write(0, _proto_packet.Build(pb));
+		pb->set_sn(0);
 		if (_host)
 		{
 			auto self = shared_from_this();
@@ -174,6 +179,20 @@ void User::HandleLogin( const audio_engine::RequestLogin& login_req )
     login_res->set_token( _token );
     login_res->set_userid( _userid );
     login_res->set_error_code( 0 );
+	auto user_list = pb->mutable_notify_user_list();
+	auto users = _host->GetUserList();
+	auto size = users.size();
+	for (const auto& user:users)
+	{
+		auto item = user_list->add_user();
+		item->set_userid(user->userid());
+		item->set_devtype(user->device_type());
+		item->set_extend(user->extend());
+		item->set_token(user->token());
+		item->set_state(user->state());
+	}
+
+	user_list->set_pkg_flag( audio_engine::FLAG_LAST_PKG | audio_engine::FLAG_FIRST_PKG);
     Write( 0, _proto_packet.Build( pb ) );
     if (_host)
     {

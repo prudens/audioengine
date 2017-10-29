@@ -25,6 +25,7 @@ MemberPtr CreateMember();
 class MemberList
 {
 public:
+	void UpdateList(std::vector<MemberPtr> users);
 	bool Add(MemberPtr ptr);
 	bool Remove(std::string user_id);
 	bool Remove(int64_t token);

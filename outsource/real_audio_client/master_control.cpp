@@ -1,7 +1,9 @@
 #include "master_control.h"
-
+#include "base/log.h"
+static audio_engine::Logger Log;
 MasterControl::MasterControl()
 {
+	Log.setLevel(audio_engine::LEVEL_VERBOSE);
 }
 
 
@@ -30,7 +32,7 @@ void MasterControl::UpdateLoginState(LoginState state)
 	{
 		_event_handler->RespondLogout(_user_mgr.GetRoomKey().c_str(), _user_mgr.GetUserID().c_str(), 0);
 	}
-	else if (_user_mgr.GetTargetState() == LS_LOGINED && state == LS_RESET)
+	else if (_user_mgr.GetTargetState() == LS_LOGINED && state == LS_NONE)
 	{
 		_event_handler->RespondLogin(_user_mgr.GetRoomKey().c_str(), _user_mgr.GetUserID().c_str(), -2);
 	}
@@ -57,13 +59,14 @@ void MasterControl::UpdateUserState(int64_t src_token, int64_t dst_token, int st
 		}
 		else
 		{
-
+			
 		}
 	}
 }
 
 void MasterControl::UpdateUserExtend(int64_t token, std::string extend,int ec)
 {
+	Log.d("MasterControl::UpdateUserExtend:%s\n",extend.c_str());
 	if (_room_member_list.Update(token, extend))
 	{
 		//这里处理其他模块逻辑
@@ -80,6 +83,7 @@ void MasterControl::UpdateUserExtend(int64_t token, std::string extend,int ec)
 
 void MasterControl::UpdateUserList(const std::vector<MemberPtr>& users)
 {
+	_room_member_list.UpdateList(users);
 }
 
 void MasterControl::RegisterEventHandler(IAsyncEventHandler * handler)
@@ -95,4 +99,26 @@ void MasterControl::Login(std::string roomkey, std::string uid)
 void MasterControl::Logout()
 {
 	_user_mgr.Logout();
+}
+
+int MasterControl::GetLoginState()
+{
+	int state = _user_mgr.GetCurState();
+	if (state == LS_LOGINED)
+	{
+		return 1;
+	}
+	else if ( state == LS_NONE)
+	{
+		return 0;
+	}
+	else
+	{
+		return 2;
+	}
+}
+
+void MasterControl::SetUserExtend(std::string extend)
+{
+	_user_mgr.SetUserExtend(extend);
 }

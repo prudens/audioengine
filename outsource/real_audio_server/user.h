@@ -21,7 +21,7 @@ public:
     std::string userid();
     int64_t token();
     std::string extend();
-    int device_type();
+    audio_engine::DEVICE_TYPE device_type();
 	int state() { return _state; }
 	void set_extend(std::string extend) { _extend = extend; }
 	void set_state(int state) { _state = state; }
@@ -37,8 +37,8 @@ private:
     std::string _userid;
     std::string _extend;
     int64_t _token = 0;
-    int _device_type = 0;
-	int _state =   0;
+	audio_engine::DEVICE_TYPE _device_type = audio_engine::DEVICE_UNKNOWN;
+	int _state = audio_engine::STATE_INVALID;
     BufferPool* _buffer_pool = nullptr;
     AsyncTask* _task = nullptr;
 	TcpSocketPtr _tcp_socket;

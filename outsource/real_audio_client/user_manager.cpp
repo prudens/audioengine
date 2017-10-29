@@ -10,11 +10,12 @@
 #include "base/timer.h"
 #include "user_service.pb.h"
 #include "base/log.h"
+#include "SnailAudioEngineHelper.h"
 using namespace audio_engine;
-Logger Log;
+static audio_engine::Logger Log;
 UserManager::UserManager( std::shared_ptr<UserService> proto_packet )
 {
-	Log.setLevel(LEVEL_VERBOSE);
+	Log.setLevel(audio_engine::LEVEL_VERBOSE);
     _user_service = proto_packet;
     if (!_user_service)
     {
@@ -22,7 +23,7 @@ UserManager::UserManager( std::shared_ptr<UserService> proto_packet )
         _user_service->RegisterHandler( this );
     }
 	_timer = ClientModule::GetInstance()->CreateSTimer();
-
+	_task = ClientModule::GetInstance()->GetAsyncTask();
 }
 
 UserManager::~UserManager()
@@ -42,7 +43,8 @@ int UserManager::Login(std::string roomkey,std::string userid)
     _user_id = userid;
 	_roomkey = roomkey;
 	_target_state = LS_LOGINED;
-	Transform(_cur_state);
+	_target_state_internel = _target_state;
+	Transform(_cur_state == LS_NONE ? LS_INIT:_cur_state);
 	_try_login_count = 0;
     return 0;
 }
@@ -50,6 +52,7 @@ int UserManager::Login(std::string roomkey,std::string userid)
 void UserManager::Logout()
 {
 	_target_state = LS_NONE;
+	_target_state_internel = LS_NONE;
 	Transform(_cur_state);
 }
 
@@ -78,17 +81,56 @@ int64_t UserManager::GetToken()
 	return _token;
 }
 
+void UserManager::SetUserExtend( std::string & extend)
+{
+	auto pb = std::make_shared<audio_engine::RAUserMessage>();
+	audio_engine::UpdateUserExtend* user_extend = pb->mutable_update_user_extend();
+	user_extend->set_extend(extend);
+	user_extend->set_token(_token);
+	int16_t sn = _user_service->SendPacket(1, pb);
+
+	_timer->AddTask(2000, [=]
+	{
+		if (_user_service->RemoveSn(sn))
+		{
+			if (_event_handle)
+			{
+				_event_handle->UpdateUserExtend(_token, extend, ERR_TIME_OUT);
+			}
+		}
+	});
+}
+
+void UserManager::SetUserState(int64_t dst_token, int state)
+{
+	auto pb = std::make_shared<audio_engine::RAUserMessage>();
+	audio_engine::UpdateUserState* user_state = pb->mutable_update_user_state();
+	user_state->set_state(state);
+	user_state->set_src_token(_token);
+	user_state->set_dst_token(dst_token);
+	int16_t sn = _user_service->SendPacket(1, pb);
+	_timer->AddTask(2000, [=]
+	{
+		if (_user_service->RemoveSn(sn))
+		{
+			if (_event_handle)
+			{
+				_event_handle->UpdateUserState(_token, dst_token, state, ERR_TIME_OUT);
+			}
+		}
+	});
+}
+
 void UserManager::DoLogout()
 {
     auto pb = std::make_shared<audio_engine::RAUserMessage>();
 	auto logout_req = pb->mutable_request_logout();
     logout_req->set_token(_token);
-    _user_service->SendPacket( 1, pb );
+    int16_t sn = _user_service->SendPacket( 1, pb );
 	Transform(LS_LOGOUT);
-	_cur_state_time = TimeStampMs();
 	_timer->AddTask(1000, [=] 
 	{
-		if ((_cur_state_time + 1000 < TimeStampMs()) && (_cur_state == LS_LOGOUT))
+		if (_user_service->RemoveSn(sn))
 		{
 			Log.w("logout time out");
 			Transform(LS_CONNECTED);
@@ -105,12 +147,21 @@ void UserManager::ConnectServer()
 		_user_service->ConnectServer(1, ip, port );
 	}
 	Transform(LS_CONNECTING);
+	int time = _cur_state_time;
+	_timer->AddTask(5000, [=]
+	{
+		if (_cur_state_time == time)
+		{
+			Log.w("connect  server time out");
+			Transform(LS_INIT);
+		}
+	});
 }
 
 void UserManager::DisConnectServer()
 {
 	_user_service->DisconnectServer(1);
-	Transform(LS_NONE);
+	Transform(LS_INIT);
 }
 
 void UserManager::VerifyAccount()
@@ -120,15 +171,31 @@ void UserManager::VerifyAccount()
 	login_req->set_userid(_user_id);
 	login_req->set_extend(_extend);
 	login_req->set_devtype(_device_type);
-	_user_service->SendPacket(1, pb);
+	login_req->set_state(_user_state);
+	login_req->set_version("20171028");
+	int16_t sn = _user_service->SendPacket(1, pb);
 	Transform(LS_VERIFY_ACCOUNT);
+	_timer->AddTask(5000, [=] {
+		if (_user_service->RemoveSn(sn))
+		{
+			if (++_try_login_count > MAX_TRY_LOGIN)
+			{
+				_target_state_internel = LS_NONE;
+				Transform(LS_NONE);
+			}
+			else
+			{
+				Transform(LS_CONNECTED);
+			}
+		}
+	});
 }
 
 bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
 {
     if (pb->has_responed_login())
     {
-        auto &login_res = pb->responed_login();
+        const auto &login_res = pb->responed_login();
 		_error_code = login_res.error_code();
         auto userid = login_res.userid();
         auto token = login_res.token();
@@ -137,15 +204,13 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
         {
             _user_id = userid;
             _token = token;
-			//Transform(LS_LOGINED);
+			//登陆结状态改变由用户列表来做。
         }
 		else
 		{
-			if (++_try_login_count > MAX_TRY_LOGIN)
-			{
-				_target_state = LS_NONE;
-			}
-			Transform(LS_CONNECTED);
+			//登陆验证失败，直接退出流程。
+			_target_state_internel = LS_NONE;
+			Transform(LS_NONE);
 		}
     }
     if ( pb->has_responed_logout() )
@@ -155,14 +220,12 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
 		_error_code = logout_res.error_code();
         if (logout_res.token() == _token)
         {
-			Log.d("退出操作结果:%d\n", _error_code);
+			Log.d("登出操作结果:%d\n", _error_code);
         }
         else
 		{
             Log.w("未知token，抛弃当前包\n");
-			
         }
-		_cur_state_time = TimeStampMs();
 		Transform(LS_CONNECTED);
     } 
     if ( pb->has_notify_login() )
@@ -217,9 +280,17 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
 		// 能够走到这里，说明一定登陆验证成功了。
 		auto user_list = pb->notify_user_list();
 		auto size = user_list.user_size();
-		if (user_list.end_flag() & FLAG_FIRST_PKG)
+		if (user_list.pkg_flag() & FLAG_FIRST_PKG)
 		{
+			// 自己也放到列表里去。
 			_cache_userlist.clear();
+			auto user = CreateMember();
+			user->SetUserID(_user_id);
+			user->SetUserExtend(_extend);
+			user->SetToken(_token);
+			user->SetUserState(_user_state);
+			user->SetDeviceType(_device_type);
+			_cache_userlist.push_back(user);
 		}
 		for (int i = 0; i < size; i++)
 		{
@@ -232,8 +303,14 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
 			user->SetDeviceType(u.devtype());
 			_cache_userlist.push_back(user);
 		}
-
-		if (user_list.end_flag() & FLAG_LAST_PKG)
+	    auto user = CreateMember();
+		user->SetUserID(_user_id);
+		user->SetUserExtend(_extend);
+		user->SetToken(_token);
+		user->SetUserState(_user_state);
+		user->SetDeviceType(_device_type);
+		_cache_userlist.push_back(user);
+		if (user_list.pkg_flag() & FLAG_LAST_PKG)
 		{
 			if (_event_handle)
 			{
@@ -242,19 +319,24 @@ bool UserManager::RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb )
 			Transform(LS_LOGINED);
 		}
 	}
+
     return false;
 }
 
 bool UserManager::HandleError( int server_type, std::error_code ec )
 {
-	if (_user_service->IsConnectServer() || LS_NONE != _cur_state)
+	if (_user_service->IsConnectServer() || LS_INIT < _cur_state)
 	{
-		Log.w("socket[%d] 读写失败：%s\n", server_type,ec.message());
+		Log.w("socket[%d] 读写失败：%s\n", server_type,ec.message().c_str());
 		if (++_try_login_count > MAX_TRY_LOGIN)
 		{
-			_target_state = LS_NONE;
+			_target_state_internel = LS_NONE;
+			Transform(LS_NONE);
 		}
-		Transform(LS_NONE);
+		else
+		{
+			Transform(LS_INIT);
+		}
 	}
     return server_type == 1;
 }
@@ -270,83 +352,116 @@ bool UserManager::HandleConnect( int server_type )
 
 void UserManager::Transform(LoginState state)
 {
-	Update(state);
-	switch (_target_state)
-	{
-	case LS_NONE:
-		switch (state)
-		{
-		case LS_NONE:
-			break;
-		case LS_CONNECTING:
-			break;
-		case LS_CONNECTED:
-			DisConnectServer();
-			break;
-		case LS_VERIFY_ACCOUNT:
-			break;
-		case LS_LOGOUT:
-			break;
-		case LS_LOGINED:
-			DoLogout();
-			break;
-		default:
-			break;
-		}
-		break;
-	case LS_CONNECTING:
-		break;
-	case LS_CONNECTED:
-		switch (state)
-		{
-		case LS_NONE:
-			ConnectServer();
-			break;
-		case LS_CONNECTING:
-			break;
-		case LS_CONNECTED:
-			break;
-		case LS_VERIFY_ACCOUNT:
-			break;
-		case LS_LOGOUT:
-			break;
-		case LS_LOGINED:
-			break;
-		default:
-			break;
-		}
-		break;
-	case LS_VERIFY_ACCOUNT:
-		break;
-	case LS_LOGOUT:
-		break;
-	case LS_LOGINED:
-		switch (state)
-		{
-		case LS_NONE:
-			ConnectServer();
-			break;
-		case LS_CONNECTING:
-			break;
-		case LS_CONNECTED:
-			VerifyAccount();
-			break;
-		case LS_VERIFY_ACCOUNT:
-			break;
-		case LS_LOGOUT:
-			break;
-		case LS_LOGINED:
-			
-			break;
-		default:
-			break;
-		}
-		break;
-	default:
-		break;
-	}
+	Log.d("cur_state:%d\n",state);
+//	_task->AddTask( [=] {
 
+	std::lock_guard<std::recursive_mutex> lock(_mutex);
+		Update(state);
+		switch (_target_state_internel)
+		{
+		case LS_INIT:
+			switch (state)
+			{
+			case LS_INIT:
+				break;
+			case LS_CONNECTING:
+				break;
+			case LS_CONNECTED:
+				DisConnectServer();
+				break;
+			case LS_VERIFY_ACCOUNT:
+				break;
+			case LS_LOGOUT:
+				break;
+			case LS_LOGINED:
+				DoLogout();
+				break;
+			case LS_NONE:
+				break;
+			default:
+				break;
+			}
+			break;
+		case LS_CONNECTING:
+			break;
+		case LS_CONNECTED:
+			switch (state)
+			{
+			case LS_NONE:
+			case LS_INIT:
+				ConnectServer();
+				break;
+			case LS_CONNECTING:
+				break;
+			case LS_CONNECTED:
+				break;
+			case LS_VERIFY_ACCOUNT:
+				break;
+			case LS_LOGOUT:
+				break;
+			case LS_LOGINED:
+				break;
+			default:
+				break;
+			}
+			break;
+		case LS_VERIFY_ACCOUNT:
+			break;
+		case LS_LOGOUT:
+			break;
+		case LS_LOGINED:
+			switch (state)
+			{
+			case LS_NONE:
+			case LS_INIT:
+				ConnectServer();
+				break;
+			case LS_CONNECTING:
+				break;
+			case LS_CONNECTED:
+				VerifyAccount();
+				break;
+			case LS_VERIFY_ACCOUNT:
+				break;
+			case LS_LOGOUT:
+				break;
+			case LS_LOGINED:
+				break;
+			default:
+				break;
+			}
+			break;
+		case LS_NONE:
+		{
+			switch (state)
+			{
+			case LS_INIT:
+				Update(LS_NONE);
+				break;
+			case LS_CONNECTING:
+				break;
+			case LS_CONNECTED:
+				DisConnectServer();
+				break;
+			case LS_VERIFY_ACCOUNT:
+				break;
+			case LS_LOGINED:
+				DoLogout();
+				break;
+			case LS_LOGOUT:
+				break;
+			case LS_NONE:
+				break;
+			default:
+				break;
+			}
+		}
+			break;
+		default:
+			break;
+		}
 
+//	});
 }
 
 
@@ -354,10 +469,12 @@ void UserManager::Update(LoginState state)
 {
 	if ( _cur_state != state )
 	{
+		_cur_state_time++;
 		if (_event_handle && (state % 2 == 0))
 		{
 			_event_handle->UpdateLoginState(state);
 		}
 	}
 	_cur_state = state;
+
 }

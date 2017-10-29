@@ -22,9 +22,9 @@ public:
 	bool IsConnectServer();
     void RegisterHandler( ProtoPacketizer *p );
     void UnRegisterHandler( ProtoPacketizer* p );
-
+	bool RemoveSn(int16_t sn);
     void RecvPacket( int server_type, std::error_code ec, std::shared_ptr<audio_engine::RAUserMessage> pb );
-    void SendPacket( int server_type, std::shared_ptr<audio_engine::RAUserMessage> pb );
+	int16_t SendPacket( int server_type, std::shared_ptr<audio_engine::RAUserMessage> pb );
 private:
     void     Read( int server_type,BufferPtr buf );
     void     Write( int server_type, BufferPtr buf );
@@ -36,6 +36,9 @@ private:
     BufferPool* _buffer_pool;
     std::mutex _lock_handle;
     std::list<ProtoPacketizer*> _proto_handlers;
+	int16_t        _sn;
+	std::list<int16_t> _sns;
+	std::mutex _sns_mutex;
 };
 
 typedef std::shared_ptr<UserService> UserServicePtr;

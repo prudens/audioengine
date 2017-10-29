@@ -116,6 +116,10 @@ void UserManager::UpdateUserState(std::shared_ptr<User> user, std::shared_ptr< a
 	_lock.lock();
 	for (auto u : _users)
 	{
+		if (u == user)
+		{
+			continue;
+		}
 		if (u->token() == update_state.dst_token())
 		{
 			u->set_state(update_state.state());

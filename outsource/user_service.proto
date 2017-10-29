@@ -27,7 +27,7 @@ message RequestLogin
   string extend       = 2;       // 扩展信息，自定义
   string version      = 3;       // sdk版本
   DEVICE_TYPE devtype = 4;       // 登陆设备类型
-  USER_STATE state    = 5;       //
+  int32 state    = 5;       //
 }
 
 message ResponedLogin
@@ -54,7 +54,7 @@ message NotifyLogin
 	int64  token        = 2;   // ... 
 	string extend       = 3;   // ...
 	DEVICE_TYPE devtype = 4;   // ...
-	USER_STATE state    = 5;
+	int32 state    = 5;
 }
 
 message NotifyLogout
@@ -66,7 +66,7 @@ message UpdateUserState
 {
     int64 src_token     = 1;
     int64 dst_token     = 2;
-	USER_STATE state    = 3;
+	int32 state    = 3;
 	int32 error_code    = 4;
 }
 
@@ -82,11 +82,11 @@ message UserInfo
   string userid       = 1;       // 用户自定义，如果房间里有重复，就踢掉原先的老用户
   string extend       = 2;       // 扩展信息，自定义
   DEVICE_TYPE devtype = 3;       // 登陆设备类型
-  USER_STATE state    = 4;       //
-  int64  token        = 5;
+  int32  state        = 4;       // see USER_STATE
+  int64  token        = 5; 
 }
 
-enum eEndFlag
+enum ePkgFlag
 {
 	FLAG_CONTINUE  = 0;
     FLAG_FIRST_PKG = 1;
@@ -95,11 +95,12 @@ enum eEndFlag
 message NotifyUserList
 {
     repeated UserInfo user = 1;
-	eEndFlag end_flag = 2;
+	int32    pkg_flag      = 2; //see eEndFlag
 }
 
 message RAUserMessage
 {
+    int32               sn = 1;//0表示推送消息，其他表示响应消息
 	RequestLogin        request_login         = 2;
 	ResponedLogin       responed_login        = 3;
 	RequestLogout       request_logout        = 4;

@@ -1,7 +1,13 @@
 #include "tcp_socket.h"
-
+#include <mutex>
 class TcpSocketImpl :public TcpSocket
 {
+	struct  BufferCache
+	{
+		const void* buffer = nullptr;
+		size_t length = 0;
+		WriteHandler handler;
+	};
 public:
 	TcpSocketImpl(asio::io_context& context, asio::ip::tcp::endpoint local_ep)
 		:_socket(context), _local_ep(local_ep)
@@ -51,6 +57,11 @@ public:
 	}
 	virtual std::error_code Write(const void* buffer, size_t length)override
 	{
+		if (_writing)
+		{
+			printf("不能在执行异步写操作还未完成的时候，执行同步写操作");
+			assert(false);
+		}
 		std::error_code ec;
 		length = asio::write(_socket, asio::buffer(buffer, length), ec);
 		return ec;
@@ -63,10 +74,49 @@ public:
 	}
 	virtual void  AsyncWrite(const void* buffer, size_t length, WriteHandler handle)override
 	{
+		BufferCache bc;
+		bc.buffer = buffer;
+		bc.length = length;
+		bc.handler = handle;
+		_mutex.lock();
+		_buffers.push_back(bc);
+		if (!_writing)
+		{
+			_writing = true;
+			bc = _buffers.front();
+			_buffers.pop_front();
+		}
+		_mutex.unlock();
+		if (bc.buffer)
+		{
+			DoAsyncWrite(bc.buffer, bc.length, bc.handler);
+		}
+
+	}
+
+	void DoAsyncWrite(const void* buffer, size_t length, WriteHandler handle)
+	{
 		asio::async_write(_socket, asio::buffer(buffer, length),
 			[=](asio::error_code ec, std::size_t len)
 		{
 			handle(ec, len);
+			BufferCache bc;
+			_mutex.lock();
+			if (!_buffers.empty())
+			{
+				bc = std::move(_buffers.front());
+				_buffers.pop_front();
+			}
+			else
+			{
+				_writing = false;
+			}
+			_mutex.unlock();
+			if (bc.buffer)
+			{
+				DoAsyncWrite(bc.buffer, bc.length, bc.handler);
+			}
+
 		});
 	}
 	virtual void AsyncRead(void* buffer, size_t length, ReadHandler handle)override
@@ -102,6 +152,9 @@ private:
 	asio::ip::tcp::socket _socket;
 	asio::ip::tcp::endpoint _local_ep;
 
+	std::list<BufferCache> _buffers;
+	bool _writing = false;
+	std::mutex _mutex;
 };
 typedef std::shared_ptr<TcpSocketImpl> TcpSocketImplPtr;
 

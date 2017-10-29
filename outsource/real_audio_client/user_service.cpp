@@ -18,6 +18,9 @@ UserService::~UserService()
 
 void UserService::ConnectServer( int server_type, std::string ip, int port )
 {
+	_sns_mutex.lock();
+	_sns.clear();
+	_sns_mutex.unlock();
     auto self = shared_from_this();
 	TcpFactory* fac = ClientModule::GetInstance()->GetTcpFactory();
 	_tcp_socket = fac->CreateTcpConnection("", 0);
@@ -47,6 +50,9 @@ void UserService::DisconnectServer( int server_type )
 	{
 		_tcp_socket->DisConnect();
 		_tcp_socket.reset();
+		_sns_mutex.lock();
+		_sns.clear();
+		_sns_mutex.unlock();
 	}
 
 }
@@ -68,6 +74,17 @@ void UserService::UnRegisterHandler( ProtoPacketizer* p )
     _lock_handle.lock();
     _proto_handlers.remove( p );
     _lock_handle.unlock();
+}
+
+bool UserService::RemoveSn(int16_t sn)
+{
+	auto it = std::find(_sns.begin(), _sns.end(), sn);
+	if (it == _sns.end())
+	{
+		return false;
+	}
+	_sns.erase(it);
+	return true;
 }
 
 void UserService::Read( int server_type, BufferPtr buf )
@@ -146,6 +163,22 @@ void UserService::HandleConnect( int server_type )
 
 void UserService::RecvPacket( int server_type, std::error_code ec, std::shared_ptr<audio_engine::RAUserMessage> pb )
 {
+	_sns_mutex.lock();
+	int16_t sn = pb->sn();
+	if (sn > 0)
+	{
+		auto it = std::find(_sns.begin(), _sns.end(), sn);
+		if ( it == _sns.end())
+		{
+			printf("超时被忽略的包。\n");
+			return;
+		}
+		else
+		{
+			_sns.erase(it);
+		}
+	}
+	_sns_mutex.unlock();
     _lock_handle.lock();
     for ( auto& p:_proto_handlers)
     {
@@ -157,11 +190,23 @@ void UserService::RecvPacket( int server_type, std::error_code ec, std::shared_p
     _lock_handle.unlock();
 }
 
-void UserService::SendPacket( int server_type, std::shared_ptr<audio_engine::RAUserMessage> pb )
+int16_t UserService::SendPacket( int server_type, std::shared_ptr<audio_engine::RAUserMessage> pb )
 {
+	int sn = 0;
+	_sns_mutex.lock();
+	if (++_sn < 0)
+	{
+		_sn = 1;
+	}
+	_sns.push_back(_sn);
+	_sn = _sn;
+	_sns_mutex.unlock();
+	pb->set_sn(_sn);
     auto buf = _proto_packet.Build( pb );
     if ( buf )
     {
         Write( server_type, buf );
     }
+
+	return _sn;
 }

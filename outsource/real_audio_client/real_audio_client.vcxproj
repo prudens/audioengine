@@ -28,7 +28,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="master_control.cpp" />
     <ClCompile Include="message_queue.cpp" />
-    <ClCompile Include="real_audio_client.cpp" />
     <ClCompile Include="server_config.cpp" />
     <ClCompile Include="user_list.cpp" />
     <ClCompile Include="user_manager.cpp" />
@@ -54,7 +53,6 @@
     <ClInclude Include="engine.h" />
     <ClInclude Include="master_control.h" />
     <ClInclude Include="message_queue.h" />
-    <ClInclude Include="real_audio_client.h" />
     <ClInclude Include="server_config.h" />
     <ClInclude Include="user_list.h" />
     <ClInclude Include="user_manager.h" />

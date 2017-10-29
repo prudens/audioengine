@@ -68,6 +68,18 @@ MemberPtr CreateMember()
 	return std::make_shared<UserImpl>();
 }
 
+void MemberList::UpdateList(std::vector<MemberPtr> users)
+{
+	lockGuard lock(_mutex);
+	_users.clear();
+	_tokens.clear();
+	for (auto & user:users)
+	{
+		_users[user->GetUserID()] = user;
+		_tokens[user->GetToken()] = user->GetUserID();
+	}
+}
+
 bool MemberList::Add(MemberPtr ptr)
 {
 	if (!ptr)

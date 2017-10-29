@@ -416,7 +416,7 @@ void help()
         << "msglist [-mid -index -count   ]           : 获取语音消息列表 -index表示消息索引号的起始点，-count表示获取的列表长度\n"
         << "stt -msgid [ -mid  --stop     ]           : 语音转文本功能\n"
         << "ts [ -mid --stop -uid         ]           : 打开用户讲话状态，会一直打印,默认全部用户都打开\n"
-
+		<< "uattr [-mid] -uid -key -value"
 
 
         ;
