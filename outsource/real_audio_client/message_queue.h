@@ -5,17 +5,18 @@
 #include <memory>
 #include "cmd.h"
 
-
-class MessageQueue
-{
-public:
-    MessageQueue()=default;
-    ~MessageQueue()=default;
-    void AddMessage(CMD cmd);
-    void AddMessage( stMSG* msg );
-    bool GetMessage( stMSG* msg );
-    void ClearMessage();
-private:
-    std::mutex     _mutex;
-    std::list< stMSG* > _queue;
-};
+namespace audio_engine{
+	class MessageQueue
+	{
+	public:
+		MessageQueue() = default;
+		~MessageQueue() = default;
+		void AddMessage( CMD cmd );
+		void AddMessage( stMSG* msg );
+		bool GetMessage( stMSG* msg );
+		void ClearMessage();
+	private:
+		std::mutex     _mutex;
+		std::list< stMSG* > _queue;
+	};
+}

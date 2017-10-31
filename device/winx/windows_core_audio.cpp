@@ -3,6 +3,8 @@
 #include <strsafe.h>
 #include <cassert>
 
+namespace audio_engine
+{
 #define PARTID_MASK 0x0000ffff //HQH 增加一行
 
 
@@ -1540,6 +1542,4 @@ DWORD WINAPI WindowsCoreAudio::WSAPICaptureThread( LPVOID context )
         DoCaptureThread();
 }
 
-
-
-
+}

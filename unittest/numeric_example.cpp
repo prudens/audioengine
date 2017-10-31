@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <bitset>
 #include <map>
+using namespace audio_engine;
 void test_valarray()
 {
     using namespace std;

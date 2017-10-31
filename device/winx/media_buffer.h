@@ -1,5 +1,6 @@
 //  CMediaBuffer class.
 #include <dmo.h>
+
 class CMediaBuffer : public IMediaBuffer
 {
 private:

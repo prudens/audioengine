@@ -4,7 +4,7 @@
 #include "io/include/audiodecoder.h"
 #include "backward_redundant_frame.h"
 #include "audio_resample.h"
-
+using namespace audio_engine;
 void test_aac_enc()
 {
     WavReader reader( "d:/泉水叮咚响.wav" );

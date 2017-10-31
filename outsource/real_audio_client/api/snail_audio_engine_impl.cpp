@@ -10,9 +10,9 @@
 #define STR(s) s?s:""
 
 //    using namespace snail::client::media;
-    using namespace snail::audio;
-    SDKLog Log;
-    AudioSDKCfg g_sdk_cfg;
+
+    audio_engine::SDKLog Log;
+    audio_engine::AudioSDKCfg g_sdk_cfg;
 extern "C"{
     int InitAndroid( void* JavaAppilcationContext )
     {
@@ -43,7 +43,7 @@ extern "C"{
             Log.w( "SetRegion(%d) 调用失败，无效参数\n", region );
         }
         g_sdk_cfg._regionver = region;
-		ClientModule::CreateInstance();
+		audio_engine::ClientModule::CreateInstance();
         g_sdk_cfg._init = true;
         return ERR_OK;
     }
@@ -51,7 +51,7 @@ extern "C"{
     void CleanAudioSDK()
     {
         Log.v( "CleanAudioSDK()\n" );
-		ClientModule::DestroyInstance();
+		audio_engine::ClientModule::DestroyInstance();
         g_sdk_cfg._init = false;
     }
 
@@ -106,6 +106,7 @@ extern "C"{
 
     const char* GetErrorDescription( int ec )
     {
+		using namespace audio_engine;
         Log.v("GetErrorDescription(%d)",ec);
         if ( g_sdk_cfg._cfg_locale == "zh_cn" )
         {
@@ -139,7 +140,7 @@ extern "C"{
         return "3.0.1";
     }
 }
-namespace snail{namespace audio{
+namespace audio_engine{
     int CreateAudioRoom( IAudioRoom** audioRoom )
     {
         Log.v( "CreateAudioRoom(%p)\n", audioRoom );
@@ -1386,4 +1387,4 @@ namespace snail{namespace audio{
         return ERR_NOT_SUPPORTED;
     }
 
-}}
+}

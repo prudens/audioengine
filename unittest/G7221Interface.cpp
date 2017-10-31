@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "header.h"
 #include "io/include/audiodecoder.h"
+using namespace audio_engine;
 class G7221EncoderProc : public  AudioBufferProc
 {
     AudioEncoder* encoder;

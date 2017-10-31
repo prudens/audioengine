@@ -29,28 +29,29 @@
 #include <iosfwd>
 
 //------------------------------------------------------------------------------
-
-class RGBA
+namespace audio_engine
 {
-    public:
-        RGBA();
-        RGBA(int red, int green, int blue, int alpha = 255);
+	class RGBA
+	{
+	public:
+		RGBA();
+		RGBA(int red, int green, int blue, int alpha = 255);
 
-        bool hasAlpha() const { return alpha != 255; }
+		bool hasAlpha() const { return alpha != 255; }
 
-    public:
-        int red;
-        int green;
-        int blue;
-        int alpha;
-};
+	public:
+		int red;
+		int green;
+		int blue;
+		int alpha;
+	};
 
-//------------------------------------------------------------------------------
+	//------------------------------------------------------------------------------
 
-std::istream& operator>>(std::istream& stream, RGBA& rgba);
+	std::istream& operator>>(std::istream& stream, RGBA& rgba);
 
-//------------------------------------------------------------------------------
-
+	//------------------------------------------------------------------------------
+}
 #endif // #if !defined(INC_RGBA_H)
 
 //------------------------------------------------------------------------------

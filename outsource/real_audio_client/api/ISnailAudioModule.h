@@ -2,7 +2,7 @@
 #define SNAIL_AUDIO_MODULE_H
 #pragma once
 #include "SnailAudioEngineHelper.h"
-namespace snail {namespace audio{
+namespace audio_engine{
 
 class IUserEventHandler
 {
@@ -530,5 +530,5 @@ public:
     virtual int GetMicUser( UID uid, UserPtr& user ) = 0;
 };
 
-}}//snail::audio
+}//audio_engine
 #endif//SNAIL_AUDIO_MODULE_H

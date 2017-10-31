@@ -3,8 +3,7 @@
 #include <vector>
 #include <string>
 #include "SnailAudioEngineHelper.h"
-namespace snail {
-    namespace audio{
+namespace audio_engine{
         struct AudioSDKCfg
         {
             bool _init_android = false;
@@ -230,4 +229,4 @@ namespace snail {
         extern ErrorCodeDesc g_error_code_en_us[ERROR_CODE_COUNT];
 
         int TransformErrorCode( int ec );
-}}
+}

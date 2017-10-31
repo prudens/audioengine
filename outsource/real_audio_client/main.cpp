@@ -2,6 +2,7 @@
 #include <iostream>
 #include <thread>
 #include "engine.h"
+using namespace audio_engine;
 int main(int argc, char** argv)
 {
 	std::string filename;

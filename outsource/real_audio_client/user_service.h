@@ -3,42 +3,51 @@
 #include "protobuf_packet.h"
 #include "user_service.pb.h"
 #include "base/tcp_socket.h"
-class ProtoPacketizer
-{
-public:
-    virtual bool RecvPacket( std::shared_ptr<audio_engine::RAUserMessage> pb ) = 0;
-    virtual bool HandleError( int server_type, std::error_code ec ) = 0;
-    virtual bool HandleConnect( int server_type ) = 0;
-};
+#include "base/timer.h"
+namespace audio_engine{
+	class ProtoPacketizer
+	{
+	public:
+		virtual bool RecvPacket( std::shared_ptr<RAUserMessage> pb ) = 0;
+		virtual bool HandleError( std::error_code ec ) = 0;
+		virtual bool HandleConnect() = 0;
+	};
 
-class UserService :
-    public std::enable_shared_from_this<UserService>
-{
-public:
-    UserService();
-    ~UserService();
-    void ConnectServer( int server_type, std::string ip, int port );
-    void DisconnectServer( int server_type );
-	bool IsConnectServer();
-    void RegisterHandler( ProtoPacketizer *p );
-    void UnRegisterHandler( ProtoPacketizer* p );
-	bool RemoveSn(int16_t sn);
-    void RecvPacket( int server_type, std::error_code ec, std::shared_ptr<audio_engine::RAUserMessage> pb );
-	int16_t SendPacket( int server_type, std::shared_ptr<audio_engine::RAUserMessage> pb );
-private:
-    void     Read( int server_type,BufferPtr buf );
-    void     Write( int server_type, BufferPtr buf );
-    void     HandleConnect( int server_type );
-    void     HandleError( int server_type, std::error_code ec );
-    AsyncTask*    _task = nullptr;
-	TcpSocketPtr _tcp_socket;
-    ProtoPacket _proto_packet;
-    BufferPool* _buffer_pool;
-    std::mutex _lock_handle;
-    std::list<ProtoPacketizer*> _proto_handlers;
-	int16_t        _sn;
-	std::list<int16_t> _sns;
-	std::mutex _sns_mutex;
-};
+	class UserService :
+		public std::enable_shared_from_this<UserService>
+	{
+		struct stWaitRespPacket
+		{
 
-typedef std::shared_ptr<UserService> UserServicePtr;
+		};
+	public:
+		UserService();
+		~UserService();
+		void ConnectServer( std::string ip, int port );
+		void DisconnectServer();
+		bool IsConnectServer();
+		void RegisterHandler( ProtoPacketizer *p );
+		void UnRegisterHandler( ProtoPacketizer* p );
+		bool RemoveSn( int16_t sn );
+		void RecvPacket( std::error_code ec, std::shared_ptr<RAUserMessage> pb );
+		int16_t SendPacket( std::shared_ptr<RAUserMessage> pb );
+	private:
+		void     Read( BufferPtr buf );
+		void     Write( BufferPtr buf );
+		void     HandleConnect();
+		void     HandleError( std::error_code ec );
+		AsyncTask*    _task = nullptr;
+		TcpSocketPtr _tcp_socket;
+		ProtoPacket _proto_packet;
+		BufferPool* _buffer_pool;
+		std::mutex _lock_handle;
+		std::list<ProtoPacketizer*> _proto_handlers;
+		int16_t        _sn;
+		std::list<int16_t> _sns;
+		std::mutex _sns_mutex;
+		STimerPtr   _timer;
+
+	};
+
+	typedef std::shared_ptr<UserService> UserServicePtr;
+}

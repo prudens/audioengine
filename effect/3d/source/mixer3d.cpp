@@ -3,6 +3,7 @@
 #include "base/fft.h"
 #include <assert.h>
 #include <algorithm>
+using namespace audio_engine;
 Mixer3D::Mixer3D() :m_prevBuffer(nullptr, nFFT / 2)
 ,m_audio_buffer_in(nFFT * 2)
 ,m_audio_buffer_out(nFFT*2)

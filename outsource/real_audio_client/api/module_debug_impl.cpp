@@ -7,9 +7,7 @@
 
 //#include <audio_engine/IAudio_Module.h>
 //#include <media_audio_realtime/imedia_audio_realtime.h>
-
-namespace snail{
-namespace audio{
+namespace audio_engine{
 	//using namespace snail::client::media;
 	//using namespace snail::client::media::audio;
 
@@ -148,4 +146,4 @@ namespace audio{
 	} 
 
 
-}}
+}

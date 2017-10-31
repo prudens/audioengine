@@ -28,59 +28,61 @@
 #include <stdexcept>
 
 //------------------------------------------------------------------------------
-
-RGBA::RGBA() :
-    red(0),
-    green(0),
-    blue(0),
-    alpha(255) // fully opaque
+namespace audio_engine
 {
+	RGBA::RGBA() :
+		red( 0 ),
+		green( 0 ),
+		blue( 0 ),
+		alpha( 255 ) // fully opaque
+	{
+	}
+
+	//------------------------------------------------------------------------------
+
+	RGBA::RGBA( int r, int g, int b, int a ) :
+		red( r ),
+		green( g ),
+		blue( b ),
+		alpha( a )
+	{
+	}
+
+	//------------------------------------------------------------------------------
+
+	static int parseHex( const std::string& str )
+	{
+		return static_cast<int>( strtoul( str.c_str(), nullptr, 16 ) );
+	}
+
+	//------------------------------------------------------------------------------
+
+	std::istream& operator>>( std::istream& stream, RGBA& rgba )
+	{
+		std::string value;
+		stream >> value;
+
+		static const std::regex regex(
+			"^([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})?$"
+		);
+
+		std::smatch match;
+
+		if(std::regex_match( value, match, regex )) {
+			rgba.red = parseHex( match[1].str() );
+			rgba.green = parseHex( match[2].str() );
+			rgba.blue = parseHex( match[3].str() );
+
+			if(match[4].matched) {
+				rgba.alpha = parseHex( match[4].str() );
+			}
+		}
+		else {
+			throw std::runtime_error( "Invalid color value" );
+		}
+
+		return stream;
+	}
+
+	//------------------------------------------------------------------------------
 }
-
-//------------------------------------------------------------------------------
-
-RGBA::RGBA(int r, int g, int b, int a) :
-    red(r),
-    green(g),
-    blue(b),
-    alpha(a)
-{
-}
-
-//------------------------------------------------------------------------------
-
-static int parseHex(const std::string& str)
-{
-    return static_cast<int>(strtoul(str.c_str(), nullptr, 16));
-}
-
-//------------------------------------------------------------------------------
-
-std::istream& operator>>(std::istream& stream, RGBA& rgba)
-{
-    std::string value;
-    stream >> value;
-
-    static const std::regex regex(
-        "^([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})?$"
-    );
-
-    std::smatch match;
-
-    if (std::regex_match(value, match, regex)) {
-        rgba.red   = parseHex(match[1].str());
-        rgba.green = parseHex(match[2].str());
-        rgba.blue  = parseHex(match[3].str());
-
-        if (match[4].matched) {
-            rgba.alpha = parseHex(match[4].str());
-        }
-    }
-    else {
-        throw std::runtime_error("Invalid color value");
-    }
-
-    return stream;
-}
-
-//------------------------------------------------------------------------------

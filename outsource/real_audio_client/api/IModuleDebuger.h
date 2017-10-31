@@ -7,7 +7,7 @@
 
 #include "ISnailAudioEngine.h"
  
-namespace snail{namespace audio{
+namespace audio_engine{
 
 #define INNER_MODULE_DEBUGGER  151
  
@@ -47,5 +47,5 @@ public:
 
  
 
-}}//snail::audio
+}
 #endif//INTERFACE_MODULE_DEBUG_H

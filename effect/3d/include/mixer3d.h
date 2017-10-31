@@ -16,7 +16,7 @@
 #include "base/circular_buffer.hpp"
 
 
-
+using namespace audio_engine;
 
 class Mixer3D
 {

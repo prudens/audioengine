@@ -7,7 +7,9 @@
 #ifndef _NOEXCEPT
 #define _NOEXCEPT
 #endif
-namespace {
+
+namespace audio_engine
+{
     template<class T, class Cmp = std::less<T>>
     class max_min_heap
     {

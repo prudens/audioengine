@@ -62,7 +62,7 @@ const char* GetErrorDescription( int ec );
 const char* GetSDKVersion();
 }
 
-namespace snail{namespace audio{
+namespace audio_engine{
 class IAudioRoom;
 /**
  * @brief     Create a audio room engine,caller should destroy it using Release function.
@@ -216,6 +216,6 @@ public:
 
 
 
-}}//snail::audio
+}//audio_engine
 
 #endif//INTERFACE_SNAIL_AUDIO_ENGINE_H

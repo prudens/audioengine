@@ -3,18 +3,19 @@
 #include "client_manager.h"
 #include <thread>
 #include <string>
+namespace audio_engine{
+	class Engine
+	{
+	public:
+		Engine( std::string filename, std::string path );
+		~Engine();
+		void Run();//À¿—≠ª∑
+		void SendCmd();
+	private:
+		MessageQueue* _queue;
+		ClientManager* _client_mgr;
+		std::thread _thread;
+	};
 
-class Engine
-{
-public:
-    Engine( std::string filename, std::string path );
-    ~Engine();
-    void Run();//À¿—≠ª∑
-    void SendCmd();
-private:
-    MessageQueue* _queue;
-    ClientManager* _client_mgr;
-    std::thread _thread;
-};
-
-void run_engine( std::string filename,std::string path );
+	void run_engine( std::string filename, std::string path );
+}

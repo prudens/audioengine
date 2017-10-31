@@ -4,7 +4,7 @@
 #include <type_traits>
 #include <cstddef>
 #include <cassert>
-namespace 
+namespace audio_engine
 {
     #if defined(WIN32) || defined(_WIN32)
     #if _MSC_VER < 1800

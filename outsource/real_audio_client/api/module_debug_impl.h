@@ -4,8 +4,7 @@
 #include "snail_audio_engine_impl.h"
 
 
-namespace snail{
-namespace audio{
+namespace audio_engine{
 	   
     class ModuleDebugerImpl :public IModuleDebuger
 {
@@ -26,4 +25,4 @@ private:
     //snail::client::media::imedia_base_client* _media_base_client;
 };
  
-}}
+}

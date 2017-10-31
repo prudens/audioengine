@@ -96,7 +96,7 @@ enum ModuleID
 };
 
 #ifdef __cplusplus
-namespace snail{ namespace audio{
+namespace audio_engine{
 template<class T>
 class AutoPtr
 {
@@ -224,6 +224,6 @@ public:
     virtual ~IModule() {}
 };
 
-}}//snail::audio
+}//namespace audio_engine
 #endif
 #endif//SNAIL_AUDIO_ENGINE_HELPER_H

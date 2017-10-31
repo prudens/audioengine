@@ -3,7 +3,7 @@
 #include "audio_typedef.h"
 //#include "system/media_error_code.h"
 
-namespace snail{namespace audio{
+namespace audio_engine{
         ErrorCodeDesc g_error_code_zh_cn[ERROR_CODE_COUNT] =
         {
             { ERR_OK, "³É¹¦" },
@@ -190,5 +190,4 @@ namespace snail{namespace audio{
             //return api_ec;
         }
 
-}
 }

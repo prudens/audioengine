@@ -9,8 +9,7 @@
 #include "ISnailAudioModule.h"
 #include "ISnailAudioEngine.h"
 
-namespace snail{
-namespace audio{
+namespace audio_engine{
 
 int  TransformErrorCode( int ec );
 
@@ -240,4 +239,4 @@ public:
     IAudioRoomEventHandler* _handler = nullptr;
    // snail::client::media::imedia_base_client* _media_base_client;
 };
-}}
+}

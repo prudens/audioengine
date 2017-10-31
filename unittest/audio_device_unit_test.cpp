@@ -5,7 +5,7 @@
 #include <cctype>
 #include "base/async_task.h"
 //#include "dispatch_example.cpp"
-
+using namespace audio_engine;
 // Example: main calls myfunc
 extern int test_vcl( int argc, char* argv[] );
 

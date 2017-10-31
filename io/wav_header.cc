@@ -21,7 +21,7 @@
 
 #include "base/audio_util.h"
 
-namespace {
+namespace audio_engine {
 
 struct ChunkHeader {
   uint32_t ID;
@@ -55,7 +55,7 @@ struct WavHeader {
 };
 static_assert(sizeof(WavHeader) == kWavHeaderSize, "no padding in header");
 
-}  // namespace
+
 
 bool CheckWavParameters(size_t num_channels,
                         int sample_rate,
@@ -236,3 +236,5 @@ bool ReadWavHeader(ReadableWav* readable,
   return CheckWavParameters(*num_channels, *sample_rate, *format,
                             *bytes_per_sample, *num_samples);
 }
+
+}  // namespace

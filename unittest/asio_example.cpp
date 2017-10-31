@@ -26,6 +26,7 @@
 #include <atomic>
 #include "base/io_context_pool.h"
 #include "base/tcp_socket.h"
+using namespace audio_engine;
 using asio::ip::tcp;
 static std::atomic<int> count = 0;
 class session

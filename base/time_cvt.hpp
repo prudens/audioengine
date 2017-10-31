@@ -17,83 +17,84 @@
 #endif
 #endif//
 
+namespace audio_engine
+{
+	inline  uint64_t TimeStampMs()
+	{
+		using namespace std::chrono;
+		/*system_clock::now() is current time by second,
+		  and default construct is start GMT time */
+		return duration_cast<milliseconds>(
+			system_clock::now() - time_point<system_clock>() ).count();
 
-  inline  uint64_t TimeStampMs()
-    {
-	  using namespace std::chrono;
-        /*system_clock::now() is current time by second,
-          and default construct is start GMT time */
-        return duration_cast<milliseconds>(
-            system_clock::now() - time_point<system_clock>() ).count();
+		// return time( nullptr );
+	}
 
-        // return time( nullptr );
-    }
-    
-   inline std::string FormatTime( uint64_t ts )
-    {
-        std::time_t t = ts;
-		time_t tt = (time_t)(t / 1000);
+	inline std::string FormatTime( uint64_t ts )
+	{
+		std::time_t t = ts;
+		time_t tt = (time_t)( t / 1000 );
 		int    micsec = t % 1000;
 		struct tm *local_time = NULL;
-		local_time = localtime(&tt);
+		local_time = localtime( &tt );
 		char szBuffer[32] = { 0 };
-		int len = strftime(szBuffer, sizeof(szBuffer), "%Y-%m-%d %H:%M:%S", local_time);
-		sprintf(szBuffer + len, ".%d", micsec);
+		int len = strftime( szBuffer, sizeof( szBuffer ), "%Y-%m-%d %H:%M:%S", local_time );
+		sprintf( szBuffer + len, ".%d", micsec );
 
-		return std::string(szBuffer);
-    }
+		return std::string( szBuffer );
+	}
 
-   inline std::string FormatTime()
-    {
-        return FormatTime( TimeStampMs() );
-    }
+	inline std::string FormatTime()
+	{
+		return FormatTime( TimeStampMs() );
+	}
 
-    // º∆ ±∆˜
-    class ChronoMeter
-    {
-    public:
-        ChronoMeter() : m_begin( std::chrono::high_resolution_clock::now() ) {}
-        void reset() { m_begin = std::chrono::high_resolution_clock::now(); }
+	// º∆ ±∆˜
+	class ChronoMeter
+	{
+	public:
+		ChronoMeter() : m_begin( std::chrono::high_resolution_clock::now() ) {}
+		void reset() { m_begin = std::chrono::high_resolution_clock::now(); }
 
-        //ƒ¨»œ ‰≥ˆ∫¡√Î
-        int64_t Elapsed() const
-        {
-            return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - m_begin ).count();
-        }
+		//ƒ¨»œ ‰≥ˆ∫¡√Î
+		int64_t Elapsed() const
+		{
+			return std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::high_resolution_clock::now() - m_begin ).count();
+		}
 
-        //Œ¢√Î
-        int64_t ElapsedMicro() const
-        {
-            return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - m_begin ).count();
-        }
+		//Œ¢√Î
+		int64_t ElapsedMicro() const
+		{
+			return std::chrono::duration_cast<std::chrono::microseconds>( std::chrono::high_resolution_clock::now() - m_begin ).count();
+		}
 
-        //ƒ…√Î
-        int64_t ElapsedNano() const
-        {
-            return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - m_begin ).count();
-        }
+		//ƒ…√Î
+		int64_t ElapsedNano() const
+		{
+			return std::chrono::duration_cast<std::chrono::nanoseconds>( std::chrono::high_resolution_clock::now() - m_begin ).count();
+		}
 
-        //√Î
-        int64_t ElapsedSeconds() const
-        {
-            return std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - m_begin ).count();
-        }
+		//√Î
+		int64_t ElapsedSeconds() const
+		{
+			return std::chrono::duration_cast<std::chrono::seconds>( std::chrono::high_resolution_clock::now() - m_begin ).count();
+		}
 
-        //∑÷
-        int64_t ElapsedMinutes() const
-        {
-            return std::chrono::duration_cast<std::chrono::minutes>(std::chrono::high_resolution_clock::now() - m_begin ).count();
-        }
+		//∑÷
+		int64_t ElapsedMinutes() const
+		{
+			return std::chrono::duration_cast<std::chrono::minutes>( std::chrono::high_resolution_clock::now() - m_begin ).count();
+		}
 
-        // ±
-        int64_t ElapsedHours() const
-        {
-            return std::chrono::duration_cast<std::chrono::hours>(std::chrono::high_resolution_clock::now() - m_begin ).count();
-        }
+		// ±
+		int64_t ElapsedHours() const
+		{
+			return std::chrono::duration_cast<std::chrono::hours>( std::chrono::high_resolution_clock::now() - m_begin ).count();
+		}
 
-    private:
+	private:
 		std::chrono::time_point<std::chrono::high_resolution_clock> m_begin;
-    };
+	};
 
-
+}
 #endif

@@ -5,7 +5,7 @@
 #include "header.h"
 #include "io/include/audioencoder.h"
 #include "io/include/audiodecoder.h"
-
+using namespace audio_engine;
 class CAudioBufferProc : public  AudioBufferProc
 {
     bool m_processhrtf;
