@@ -21,7 +21,7 @@ namespace audio_engine{
 		return _server_cfg;
 	}
 
-	AsyncTask* ClientModule::GetAsyncTask()
+	ThreadPoll* ClientModule::GetThreadPool()
 	{
 		return _task;
 	}
@@ -42,8 +42,8 @@ namespace audio_engine{
 		_buffer_pool = new BufferPool;
 		_socket_mgr = CreateTcpFactory( _io_context );
 		_server_cfg = new ServerConfig();
-		_task = new AsyncTask( 3 );
-		_timer = new Timer;
+		_task = new ThreadPoll( 3 );
+		_timer = new TimerThread;
 	}
 
 	ClientModule::~ClientModule()
@@ -78,14 +78,9 @@ namespace audio_engine{
 		}
 	}
 
-	Timer* ClientModule::GetTimer()
+	TimerThread* ClientModule::GetTimerThread()
 	{
 		return _timer;
-	}
-
-	STimerPtr ClientModule::CreateSTimer()
-	{
-		return std::make_shared<STimer>( _timer );
 	}
 
 	BufferPool* ClientModule::GetBufferPool()

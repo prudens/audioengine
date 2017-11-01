@@ -5,33 +5,32 @@
 #include <thread>
 #include <condition_variable>
 #include <functional>
+
 namespace audio_engine
 {
 	typedef  std::function<void() > TaskExecute;
-	class Timer;
-
-	//±ÿ–Î”√make_shared
-	class STimer :public std::enable_shared_from_this<STimer>
+	namespace detail
 	{
-	public:
-		STimer( Timer* timer );
-		void AddTask( int elapsed_ms, TaskExecute executer );
-		void Stop();
-	private:
-
-		Timer* _timer = nullptr;
-		bool _stop = false;
-		std::mutex _mutex;
-	};
-	typedef std::shared_ptr<STimer> STimerPtr;
-
-	struct TimerTask;
+		class STimer;
+	}
+	class TimerThread;
 	class Timer
 	{
 	public:
-		Timer( int sleepMs = 100 );
+		Timer( TimerThread* timer );
 		~Timer();
-		void AddTask( int elapsed_ms, TaskExecute executer );
+		void AddTask( int elapsed_ms, TaskExecute&& executer );
+	private:
+		std::shared_ptr<detail::STimer> _timer_impl;
+	};
+
+	struct TimerTask;
+	class TimerThread
+	{
+	public:
+		TimerThread( int sleepMs = 100 );
+		~TimerThread();
+		void AddTask( int elapsed_ms, TaskExecute &&executer );
 		void ClearTask();
 	private:
 		std::thread _worker;
@@ -40,5 +39,4 @@ namespace audio_engine
 		std::condition_variable condition;
 		bool _stop;
 	};
-
 }

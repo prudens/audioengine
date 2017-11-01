@@ -9,14 +9,72 @@ using namespace audio_engine;
 // Example: main calls myfunc
 extern int test_vcl( int argc, char* argv[] );
 
+class B
+{
+public:
+	B()
+	{
+		printf( "B" );
+	}
+	B( B&b )
+	{
+		printf( "B" );
+	}
+	void Print(int & n)
+	{
+		printf("lvalue");
+	}
+	void Print( int && n )
+	{
+		printf("rvalue");
+	}
+};
+class A
+{
+public:
+	//void Test(B i)
+	//{
+	//	i.Print();
+	//	printf( "value pass\n" );
+	//}
+	
+	void Test( int& i )
+	{
+		B b;
+		printf( "lvalue pass\n" );
+		b.Print( std::forward<int>( i ) );
+	}
+	//template<class T>
+	void Test( int&&i )
+	{
+		B b;
+		printf( "rvalue pass\n" );
+		b.Print(std::forward<int&>(i));
 
+	}
+};
 void test_async_task()
 {
-    AsyncTask asyn_task(1);
+	ThreadPoll pull( 3 );
+    AsyncTask asyn_task(&pull);
     for ( auto i : {5,2,3,3,1} )
     asyn_task.AddTask( [] ( uint32_t id ) { printf( "%d  ", id ); },i );
-
+	std::atomic<int> g;
+	int gg = g.load();
+	printf( "gg=%d", gg );
     system( "pause" );
+	std::vector<int> arr;
+	arr.push_back(0);
+	A a;
+	B b;
+	int i = 0;
+	int&j = i;
+	a.Test( i );
+
+	auto lambda = [&]()mutable
+	{i = 10; };
+	lambda();
+	printf( "\ni=%d",i );
 }
 
 #include "webrtc/common_audio/real_fourier.h"
@@ -137,10 +195,10 @@ int main( int argc, char** argv )
   //  Print( "%s%s" );
    // test_asio(argc,argv);
   // test_chrono();
-    test_numeric();
+  //  test_numeric();
   //  test_codec();
    // test_audio_processing(argc,argv);
-   // test_async_task();
+    test_async_task();
   //  test_audio_device();
    // test_conv();
    // test_hrtf(45,0,"C:/Users/zhangnaigan/Desktop/3D_test_Audio/es01.wav","D:/pro-48000-1.wav");

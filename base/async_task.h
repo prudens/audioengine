@@ -13,14 +13,13 @@
 #include <stdexcept>
 namespace audio_engine
 {
-	class AsyncTask
+	class ThreadPoll
 	{
 	public:
-		AsyncTask(size_t);
-		template<class F, class... Args>
-		auto AddTask(F&& f, Args&&... args)
-			->std::future < typename std::result_of<F(Args...)>::type >;
-		~AsyncTask();
+		ThreadPoll(size_t);
+		template<class F>
+		void AddTask( F&&task );
+		~ThreadPoll();
 	private:
 		// need to keep track of threads so we can join them
 		std::vector< std::thread > workers;
@@ -34,7 +33,7 @@ namespace audio_engine
 	};
 
 	// the constructor just launches some amount of workers
-	inline AsyncTask::AsyncTask(size_t threads)
+	inline ThreadPoll::ThreadPoll(size_t threads)
 		: stop(false)
 	{
 		for (size_t i = 0; i < threads; ++i)
@@ -62,17 +61,9 @@ namespace audio_engine
 	}
 
 	// add new work item to the pool
-	template<class F, class... Args>
-	auto AsyncTask::AddTask(F&& f, Args&&... args)
-		-> std::future < typename std::result_of<F(Args...)>::type >
+	template<class F>
+	void ThreadPoll::AddTask(F&& task)
 	{
-		using return_type = typename std::result_of<F(Args...)>::type;
-
-		auto task = std::make_shared< std::packaged_task<return_type()> >(
-			std::bind(std::forward<F>(f), std::forward<Args>(args)...)
-			);
-
-		std::future<return_type> res = task->get_future();
 		{
 			std::unique_lock<std::mutex> lock(queue_mutex);
 
@@ -80,14 +71,13 @@ namespace audio_engine
 			if (stop)
 				throw std::runtime_error("enqueue on stopped ThreadPool");
 
-			tasks.emplace([task]() { (*task)(); });
+			tasks.emplace( std::forward<F>(task) );
 		}
 		condition.notify_one();
-		return res;
 	}
 
 	// the destructor joins all threads
-	inline AsyncTask::~AsyncTask()
+	inline ThreadPoll::~ThreadPoll()
 	{
 		{
 			std::unique_lock<std::mutex> lock(queue_mutex);
@@ -97,5 +87,39 @@ namespace audio_engine
 		for (std::thread &worker : workers)
 			worker.join();
 	}
+
+	class AsyncTask
+	{
+	public:
+		AsyncTask( ThreadPoll* thread )
+		{
+			_thread = thread;
+		}
+		template<class F, class... Args>
+		auto AddTask( F&& f, Args&&... args )
+			->std::future < typename std::result_of<F( Args... )>::type >
+		{
+			using return_type = typename std::result_of<F( Args... )>::type;
+
+			auto task = std::make_shared< std::packaged_task<return_type()> >(
+				std::bind( std::forward<F>( f ), std::forward<Args>( args )... )
+				);
+
+			std::future<return_type> res = task->get_future();
+			auto t = [=]()
+			{
+				if(!_stop)
+				{
+					(*task)();
+				}
+			};
+			_thread->AddTask(std::move(t));
+			return res;
+		}
+	private:
+		ThreadPoll* _thread;
+		int         _thread_idx;
+		bool _stop = false;
+	};
 }
 #endif

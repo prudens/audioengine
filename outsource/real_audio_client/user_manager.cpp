@@ -14,6 +14,7 @@
 namespace audio_engine{
 	static audio_engine::Logger Log;
 	UserManager::UserManager( std::shared_ptr<UserService> proto_packet )
+		:_timer( ClientModule::GetInstance()->GetTimerThread())
 	{
 		Log.setLevel( audio_engine::LEVEL_VERBOSE );
 		_user_service = proto_packet;
@@ -22,15 +23,12 @@ namespace audio_engine{
 			_user_service = std::make_shared<UserService>();
 			_user_service->RegisterHandler( this );
 		}
-		_timer = ClientModule::GetInstance()->CreateSTimer();
-		_task = ClientModule::GetInstance()->GetAsyncTask();
+		_task = new AsyncTask( ClientModule::GetInstance()->GetThreadPool() );
 	}
 
 	UserManager::~UserManager()
 	{
 		_user_service->UnRegisterHandler( this );
-		_timer->Stop();
-		_timer.reset();
 	}
 
 	void UserManager::SetEventCallback( UserEventHandler* handle )
@@ -89,7 +87,7 @@ namespace audio_engine{
 		user_extend->set_token( _token );
 		int16_t sn = _user_service->SendPacket( pb );
 
-		_timer->AddTask( 2000, [=]
+		_timer.AddTask( 2000, [=]
 		{
 			if(_user_service->RemoveSn( sn ))
 			{
@@ -109,7 +107,7 @@ namespace audio_engine{
 		user_state->set_src_token( _token );
 		user_state->set_dst_token( dst_token );
 		int16_t sn = _user_service->SendPacket( pb );
-		_timer->AddTask( 2000, [=]
+		_timer.AddTask( 2000, [=]
 		{
 			if(_user_service->RemoveSn( sn ))
 			{
@@ -128,7 +126,7 @@ namespace audio_engine{
 		logout_req->set_token( _token );
 		int16_t sn = _user_service->SendPacket( pb );
 		Transform( LS_LOGOUT );
-		_timer->AddTask( 1000, [=]
+		_timer.AddTask( 1000, [=]
 		{
 			if(_user_service->RemoveSn( sn ))
 			{
@@ -148,7 +146,7 @@ namespace audio_engine{
 		}
 		Transform( LS_CONNECTING );
 		int time = _cur_state_time;
-		_timer->AddTask( 5000, [=]
+		_timer.AddTask( 5000, [=]
 		{
 			if(_cur_state_time == time)
 			{
@@ -175,7 +173,7 @@ namespace audio_engine{
 		login_req->set_version( "20171028" );
 		int16_t sn = _user_service->SendPacket( pb );
 		Transform( LS_VERIFY_ACCOUNT );
-		_timer->AddTask( 5000, [=] {
+		_timer.AddTask( 5000, [=] {
 			if(_user_service->RemoveSn( sn ))
 			{
 				if(++_try_login_count > MAX_TRY_LOGIN)

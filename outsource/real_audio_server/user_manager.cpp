@@ -8,7 +8,7 @@ namespace audio_engine{
 	UserManager::UserManager()
 		:_packet( nullptr )
 	{
-		_task = ServerModule::GetInstance()->GetAsyncTask();
+		_task = new AsyncTask(ServerModule::GetInstance()->GetThreadPool());
 	}
 
 	UserManager::~UserManager()

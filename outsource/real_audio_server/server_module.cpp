@@ -41,12 +41,12 @@ namespace audio_engine{
 		return _socket_mgr.get();
 	}
 
-	AsyncTask* ServerModule::GetAsyncTask()
+	ThreadPoll* ServerModule::GetThreadPool()
 	{
 		return _task;
 	}
 
-	Timer* ServerModule::GetTimer()
+	TimerThread* ServerModule::GetTimerThread()
 	{
 		return _timer;
 	}
@@ -64,8 +64,8 @@ namespace audio_engine{
 			}
 		} );
 		_buffer_pool = new BufferPool;
-		_task = new AsyncTask( 4 );
-		_timer = new Timer;
+		_task = new ThreadPoll( 4 );
+		_timer = new TimerThread;
 		_socket_mgr = CreateTcpFactory( _io_context );
 		_srv_cfg = new ServerConfig;
 		_token_gen = new TokenGenerater;

@@ -2,6 +2,7 @@
 #include "common_defines.h"
 namespace audio_engine
 {
+
 	typedef std::chrono::milliseconds ms;
 	typedef std::chrono::seconds      sec;
 	typedef ms::rep tick_t;
@@ -48,7 +49,7 @@ namespace audio_engine
 		TaskExecute executer;
 	};
 
-	Timer::Timer( int sleepMs )
+	TimerThread::TimerThread( int sleepMs )
 	{
 		_worker = std::thread( [=]
 		{
@@ -83,7 +84,7 @@ namespace audio_engine
 		} );
 	}
 
-	Timer::~Timer()
+	TimerThread::~TimerThread()
 	{
 		{
 			std::unique_lock<std::mutex> lock( _queue_mutex );
@@ -93,7 +94,7 @@ namespace audio_engine
 		_worker.join();
 	}
 
-	void Timer::AddTask( int elapsed_ms, TaskExecute executer )
+	void TimerThread::AddTask( int elapsed_ms, TaskExecute&& executer )
 	{
 		std::unique_lock<std::mutex> lock( this->_queue_mutex );
 		if(_stop)
@@ -105,7 +106,7 @@ namespace audio_engine
 		condition.notify_all();
 	}
 
-	void Timer::ClearTask()
+	void TimerThread::ClearTask()
 	{
 		std::unique_lock<std::mutex> lock( this->_queue_mutex );
 		while(!_tasks.empty())
@@ -113,37 +114,70 @@ namespace audio_engine
 			_tasks.pop();
 		}
 	}
-
-	void STimer::AddTask( int elapsed_ms, TaskExecute executer )
+	namespace detail
 	{
-		if(_stop || !executer)
+		//±ÿ–Î”√make_shared
+		class STimer :public std::enable_shared_from_this<STimer>
 		{
-			return;
+		public:
+			STimer( TimerThread* timer );
+			void AddTask( int elapsed_ms, TaskExecute&& executer );
+			void Stop();
+		private:
+			TimerThread* _timer = nullptr;
+			bool _stop = false;
+			std::mutex _mutex;
+		};
+		typedef std::shared_ptr<STimer> STimerPtr;
+
+		void STimer::AddTask( int elapsed_ms, TaskExecute&& executer )
+		{
+			if(_stop || !executer)
+			{
+				return;
+			}
+
+			auto self = shared_from_this();
+			_timer->AddTask( elapsed_ms, [=]
+			{
+				_mutex.lock();
+				if(!self->_stop)
+				{
+					executer();
+				}
+				_mutex.unlock();
+			} );
 		}
 
-		auto self = shared_from_this();
-		_timer->AddTask( elapsed_ms, [=]
+		void STimer::Stop()
 		{
 			_mutex.lock();
-			if(!self->_stop)
-			{
-				executer();
-			}
+			_stop = true;
 			_mutex.unlock();
-		} );
+		}
+
+		STimer::STimer( TimerThread* timer )
+		{
+			ASSERT( timer );
+			_timer = timer;
+		}
 	}
 
-	void STimer::Stop()
+
+	Timer::Timer( TimerThread * timer )
 	{
-		_mutex.lock();
-		_stop = true;
-		_mutex.unlock();
+		_timer_impl = std::make_shared<detail::STimer>( timer );
 	}
 
-	STimer::STimer( Timer* timer )
+	Timer::~Timer()
 	{
-		ASSERT( timer );
-		_timer = timer;
+		_timer_impl->Stop();
+		_timer_impl.reset();
+	}
+
+	void Timer::AddTask( int elapsed_ms, TaskExecute&& executer )
+	{
+		_timer_impl->AddTask( elapsed_ms, std::move( executer ) );
 	}
 
 }

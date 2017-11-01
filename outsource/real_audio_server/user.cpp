@@ -9,7 +9,7 @@ namespace audio_engine{
 		, _proto_packet( std::bind( &User::RecvPacket, this, std::placeholders::_1, std::placeholders::_2 ) )
 	{
 		_buffer_pool = ServerModule::GetInstance()->GetBufferPool();
-		_task = ServerModule::GetInstance()->GetAsyncTask();
+		_task = new AsyncTask( ServerModule::GetInstance()->GetThreadPool() );
 	}
 
 	User::~User()

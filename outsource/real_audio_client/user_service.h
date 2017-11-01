@@ -1,9 +1,10 @@
 #include <memory>
-#include "base/async_task.h"
+
 #include "protobuf_packet.h"
 #include "user_service.pb.h"
 #include "base/tcp_socket.h"
 #include "base/timer.h"
+#include "base/async_task.h"
 namespace audio_engine{
 	class ProtoPacketizer
 	{
@@ -45,7 +46,7 @@ namespace audio_engine{
 		int16_t        _sn;
 		std::list<int16_t> _sns;
 		std::mutex _sns_mutex;
-		STimerPtr   _timer;
+		Timer   _timer;
 
 	};
 

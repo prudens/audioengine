@@ -6,7 +6,7 @@
 
 namespace audio_engine{
 	   
-    class ModuleDebugerImpl :public IModuleDebuger
+class ModuleDebugerImpl :public IModuleDebuger
 {
 public:
 	ModuleDebugerImpl(AudioRoomImpl* host);

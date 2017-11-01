@@ -6,15 +6,15 @@
 namespace audio_engine{
 	UserService::UserService()
 		:_proto_packet( std::bind( &UserService::RecvPacket, this, std::placeholders::_1, std::placeholders::_2 ) )
+		,_timer( ClientModule::GetInstance()->GetTimerThread())
 	{
 		_buffer_pool = ClientModule::GetInstance()->GetBufferPool();
-		_task = ClientModule::GetInstance()->GetAsyncTask();
-		_timer = ClientModule::GetInstance()->CreateSTimer();
+		_task = new AsyncTask(ClientModule::GetInstance()->GetThreadPool());
 	}
 
 	UserService::~UserService()
 	{
-
+		delete _task;
 	}
 
 	void UserService::ConnectServer( std::string ip, int port )

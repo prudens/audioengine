@@ -8,6 +8,8 @@ namespace audio_engine{
 	class Timer;
 	class ServerConfig;
 	class TokenGenerater;
+	class ThreadPoll;
+	class TimerThread;
 	class ServerModule
 	{
 	public:
@@ -17,8 +19,8 @@ namespace audio_engine{
 	public:
 		ServerConfig*    GetServerCnfig();
 		TcpFactory*      GetSocketManager();
-		AsyncTask*       GetAsyncTask();
-		Timer*           GetTimer();
+		ThreadPoll*       GetThreadPool();
+		TimerThread*      GetTimerThread();
 		TokenGenerater*  GetTokenGenerater();
 		BufferPool*      GetBufferPool();
 	private:
@@ -31,8 +33,8 @@ namespace audio_engine{
 	private:
 		static ServerModule* s_instance;
 		std::shared_ptr<TcpFactory>  _socket_mgr;
-		AsyncTask*           _task = nullptr;
-		Timer*               _timer = nullptr;
+		ThreadPoll*           _task = nullptr;
+		TimerThread*               _timer = nullptr;
 		ServerConfig*        _srv_cfg = nullptr;
 		TokenGenerater*      _token_gen = nullptr;
 		BufferPool*          _buffer_pool = nullptr;

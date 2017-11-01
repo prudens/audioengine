@@ -75,7 +75,7 @@ namespace audio_engine{
 		UserEventHandler* _event_handle;
 		UserServicePtr _user_service;
 		AsyncTask*    _task = nullptr;
-		STimerPtr   _timer;
+		Timer   _timer;
 		std::string  _user_id;
 		std::string _roomkey;
 		std::string _extend;
