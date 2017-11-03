@@ -1,19 +1,8 @@
 #include "timer.h"
 #include "common_defines.h"
+#include "time_cvt.hpp"
 namespace audio_engine
 {
-
-	typedef std::chrono::milliseconds ms;
-	typedef std::chrono::seconds      sec;
-	typedef ms::rep tick_t;
-	tick_t CurrentTimeMs()
-	{
-		using namespace std::chrono;
-		return duration_cast<ms>(
-			system_clock::now() - time_point<system_clock>() ).count();
-	}
-
-
 	struct TimerTask
 	{
 	public:
@@ -45,11 +34,11 @@ namespace audio_engine
 		TimerTask& operator= ( const TimerTask& other ) = delete;
 
 
-		tick_t elapsed_ms = 0;
+		tick_t elapsed_ms;
 		TaskExecute executer;
 	};
 
-	TimerThread::TimerThread( int sleepMs )
+	TimerThread::TimerThread( tick_t sleepMs )
 	{
 		_worker = std::thread( [=]
 		{
@@ -63,8 +52,9 @@ namespace audio_engine
 					bool block = true;
 					if(!this->_tasks.empty())
 					{
-						sleep_time = _tasks.top().elapsed_ms - CurrentTimeMs();
-						if(sleep_time < 3)
+						using namespace std::chrono;
+						sleep_time = _tasks.top().elapsed_ms - TimeStamp();
+						if(sleep_time < 3ms)
 						{
 							task = std::move( this->_tasks.top().executer );
 							this->_tasks.pop();
@@ -73,8 +63,7 @@ namespace audio_engine
 					}
 					if(block)
 					{
-						this->condition.wait_for( lock, std::chrono::milliseconds( sleep_time ),
-							[this] { return this->_stop; } );
+						this->condition.wait_for( lock, sleep_time,[this] { return this->_stop; } );
 						if(this->_stop && this->_tasks.empty())
 							return;
 					}
@@ -94,14 +83,14 @@ namespace audio_engine
 		_worker.join();
 	}
 
-	void TimerThread::AddTask( int elapsed_ms, TaskExecute&& executer )
+	void TimerThread::AddTask( tick_t elapsed_ms, TaskExecute&& executer )
 	{
 		std::unique_lock<std::mutex> lock( this->_queue_mutex );
 		if(_stop)
 		{
 			throw std::runtime_error( "Add Task on stop Timer" );
 		}
-		TimerTask task( elapsed_ms + CurrentTimeMs(), std::move( executer ) );
+		TimerTask task( elapsed_ms + TimeStamp(), std::move( executer ) );
 		_tasks.emplace( std::move( task ) );
 		condition.notify_all();
 	}
@@ -121,7 +110,7 @@ namespace audio_engine
 		{
 		public:
 			STimer( TimerThread* timer );
-			void AddTask( int elapsed_ms, TaskExecute&& executer );
+			void AddTask( tick_t elapsed_ms, TaskExecute&& executer );
 			void Stop();
 		private:
 			TimerThread* _timer = nullptr;
@@ -130,7 +119,7 @@ namespace audio_engine
 		};
 		typedef std::shared_ptr<STimer> STimerPtr;
 
-		void STimer::AddTask( int elapsed_ms, TaskExecute&& executer )
+		void STimer::AddTask( tick_t elapsed_ms, TaskExecute&& executer )
 		{
 			if(_stop || !executer)
 			{
@@ -175,7 +164,7 @@ namespace audio_engine
 		_timer_impl.reset();
 	}
 
-	void Timer::AddTask( int elapsed_ms, TaskExecute&& executer )
+	void Timer::AddTask( tick_t elapsed_ms, TaskExecute&& executer )
 	{
 		_timer_impl->AddTask( elapsed_ms, std::move( executer ) );
 	}

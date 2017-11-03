@@ -490,7 +490,7 @@ namespace audio_engine
 			unsigned long dwCurDataPos = 0;
 
 			unsigned long filldelay_ttl = MIN_DELAY;
-			DWORD          less_timepoint = GetTickCount();
+			DWORD          less_timepoint = ::GetTickCount();
 
 			SetEvent( wait_playout_thread_start_handle_ );
 			while(playing_)
@@ -508,12 +508,12 @@ namespace audio_engine
 				{
 					if(datasize < (long)safe_delay)
 						filldelay_ttl = std::min<unsigned long>( dwBufferSize - frameSize, filldelay_ttl + frameSize );
-					less_timepoint = GetTickCount();
+					less_timepoint = ::GetTickCount();
 				}
 				else if(GetTickCount() - less_timepoint > 4000)
 				{
 					filldelay_ttl = std::max<unsigned long>( min_delay, filldelay_ttl - frameSize );
-					less_timepoint = GetTickCount();
+					less_timepoint = ::GetTickCount();
 				}
 
 
@@ -775,7 +775,7 @@ namespace audio_engine
 					if(audio_buffer_proc_)
 					{
 						audio_buffer_proc_->RecordingDataIsAvailable( pbCaptureData, dwLockedSize );
-						printf( "[%I64u]RecordingDataIsAvailable:%d\n", audio_engine::TimeStampMs(), dwLockedSize );
+						printf( "[%I64u]RecordingDataIsAvailable:%d\n", audio_engine::GetTickCount(), dwLockedSize );
 					}
 
 					capture_direct_sound_buf_->Unlock( pbCaptureData, dwLockedSize, NULL, NULL );

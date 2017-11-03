@@ -507,7 +507,7 @@ void test_ntp()
     NTPData data;
     int8_t arr[48] = { 0 };
      arr[0] = 0x1b;
-    int ts = (int)TimeStampMs();
+    int ts = (int)audio_engine::GetTickCount();
 
     for ( int i = 3; i >= 0; i-- )
     {

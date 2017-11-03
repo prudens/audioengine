@@ -4,12 +4,14 @@
 #include "base/async_task.h"
 #include "base/common_defines.h"
 namespace audio_engine{
+	using namespace std::chrono;
 	UserService::UserService()
 		:_proto_packet( std::bind( &UserService::RecvPacket, this, std::placeholders::_1, std::placeholders::_2 ) )
 		,_timer( ClientModule::GetInstance()->GetTimerThread())
 	{
 		_buffer_pool = ClientModule::GetInstance()->GetBufferPool();
 		_task = new AsyncTask(ClientModule::GetInstance()->GetThreadPool());
+		_timer.AddTask( 100ms, std::bind(&UserService::TimerLoop,this));
 	}
 
 	UserService::~UserService()
@@ -20,7 +22,7 @@ namespace audio_engine{
 	void UserService::ConnectServer( std::string ip, int port )
 	{
 		_sns_mutex.lock();
-		_sns.clear();
+		_req_packet_list.clear();
 		_sns_mutex.unlock();
 		auto self = shared_from_this();
 		TcpFactory* fac = ClientModule::GetInstance()->GetTcpFactory();
@@ -52,7 +54,7 @@ namespace audio_engine{
 			_tcp_socket->DisConnect();
 			_tcp_socket.reset();
 			_sns_mutex.lock();
-			_sns.clear();
+			_req_packet_list.clear();
 			_sns_mutex.unlock();
 		}
 
@@ -75,17 +77,6 @@ namespace audio_engine{
 		_lock_handle.lock();
 		_proto_handlers.remove( p );
 		_lock_handle.unlock();
-	}
-
-	bool UserService::RemoveSn( int16_t sn )
-	{
-		auto it = std::find( _sns.begin(), _sns.end(), sn );
-		if(it == _sns.end())
-		{
-			return false;
-		}
-		_sns.erase( it );
-		return true;
 	}
 
 	void UserService::Read( BufferPtr buf )
@@ -148,6 +139,31 @@ namespace audio_engine{
 		_lock_handle.unlock();
 	}
 
+	void UserService::TimerLoop()
+	{
+		{
+			std::lock_guard<std::mutex> lock( _sns_mutex );
+			auto ts = TimeStamp();
+			for(auto it = _req_packet_list.begin(); it != _req_packet_list.end();)
+			{
+				auto wait = it->second;
+				if(wait->timeout + wait->calltime < ts)
+				{
+					_task->AddTask( [wait]
+					{
+						wait->cb( wait->pb, wait->timeout );
+					} );
+					it = _req_packet_list.erase( it );
+				}
+				else
+				{
+					++it;
+				}
+			}
+		}
+		_timer.AddTask( 100ms, std::bind( &UserService::TimerLoop, this ) );
+	}
+
 	void UserService::HandleConnect()
 	{
 		_lock_handle.lock();
@@ -164,22 +180,28 @@ namespace audio_engine{
 
 	void UserService::RecvPacket( std::error_code ec, std::shared_ptr<RAUserMessage> pb )
 	{
-		_sns_mutex.lock();
+
 		int16_t sn = pb->sn();
 		if(sn > 0)
 		{
-			auto it = std::find( _sns.begin(), _sns.end(), sn );
-			if(it == _sns.end())
+			std::unique_lock<std::mutex> lock( _sns_mutex );
+			auto it = _req_packet_list.find( sn );
+			if(it == _req_packet_list.end())
 			{
 				printf( "超时被忽略的包。\n" );
 				return;
 			}
 			else
 			{
-				_sns.erase( it );
+				auto wait = it->second;
+				_req_packet_list.erase( it );
+				_task->AddTask( [wait]{
+					wait->cb( wait->pb, wait->timeout );
+				} );
+				return;
 			}
 		}
-		_sns_mutex.unlock();
+
 		_lock_handle.lock();
 		for(auto& p : _proto_handlers)
 		{
@@ -191,26 +213,6 @@ namespace audio_engine{
 		_lock_handle.unlock();
 	}
 
-	int16_t UserService::SendPacket( std::shared_ptr<RAUserMessage> pb )
-	{
-		int sn = 0;
-		_sns_mutex.lock();
-		if(++_sn < 0)
-		{
-			_sn = 1;
-		}
-		_sns.push_back( _sn );
-		_sn = _sn;
-		_sns_mutex.unlock();
-		pb->set_sn( _sn );
-		auto buf = _proto_packet.Build( pb );
-		if(buf)
-		{
-			Write( buf );
-		}
-
-		return _sn;
-	}
 	void UserService::SendPacket( RAUserMessagePtr pb, tick_t timeout, std::function<void( RAUserMessagePtr, tick_t )> cb )
 	{
 		int sn = 0;
@@ -219,20 +221,31 @@ namespace audio_engine{
 		{
 			_sn = 1;
 		}
-		_sns.push_back( _sn );
 		_sn = _sn;
 
+		pb->set_sn( _sn );
+		WaitRespPacketPtr wait = std::make_shared<WaitRespPacket>();
+		wait->timeout = timeout;
+		wait->cb = std::move(cb);
+		wait->pb = pb;
+		wait->calltime = TimeStamp();
+		_req_packet_list[sn] = wait;
+		_sns_mutex.unlock();
+		auto buf = _proto_packet.Build( pb );
+		if(buf)
+		{
+			Write( buf );
+		}
+	}
+
+	void UserService::SendPacket( RAUserMessagePtr pb )
+	{
 		pb->set_sn( _sn );
 		auto buf = _proto_packet.Build( pb );
 		if(buf)
 		{
 			Write( buf );
 		}
-		stWaitRespPacket wait;
-		wait.timeout = timeout;
-		wait.cb = cb;
-		wait.pb = pb;
-		_req_packet_list[sn] = wait;
-		_sns_mutex.unlock();
 	}
+
 }

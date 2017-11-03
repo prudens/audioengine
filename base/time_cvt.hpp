@@ -19,17 +19,25 @@
 
 namespace audio_engine
 {
-	inline  uint64_t TimeStampMs()
+
+	typedef std::chrono::milliseconds tick_t;
+
+	inline tick_t TimeStamp()
+	{
+		using namespace std::chrono;
+		return duration_cast<milliseconds>(
+			system_clock::now() - time_point<system_clock>() );
+	}
+
+	inline uint64_t GetTickCount()
 	{
 		using namespace std::chrono;
 		/*system_clock::now() is current time by second,
-		  and default construct is start GMT time */
-		return duration_cast<milliseconds>(
-			system_clock::now() - time_point<system_clock>() ).count();
+		and default construct is start GMT time */
+		return TimeStamp().count();
 
 		// return time( nullptr );
 	}
-
 	inline std::string FormatTime( uint64_t ts )
 	{
 		std::time_t t = ts;
@@ -46,7 +54,7 @@ namespace audio_engine
 
 	inline std::string FormatTime()
 	{
-		return FormatTime( TimeStampMs() );
+		return FormatTime( GetTickCount() );
 	}
 
 	// ¼ÆÊ±Æ÷

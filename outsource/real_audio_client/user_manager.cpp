@@ -12,6 +12,7 @@
 #include "base/log.h"
 #include "SnailAudioEngineHelper.h"
 namespace audio_engine{
+	using namespace std::chrono;
 	static audio_engine::Logger Log;
 	UserManager::UserManager( std::shared_ptr<UserService> proto_packet )
 		:_timer( ClientModule::GetInstance()->GetTimerThread())
@@ -85,16 +86,10 @@ namespace audio_engine{
 		audio_engine::UpdateUserExtend* user_extend = pb->mutable_update_user_extend();
 		user_extend->set_extend( extend );
 		user_extend->set_token( _token );
-		int16_t sn = _user_service->SendPacket( pb );
-
-		_timer.AddTask( 2000, [=]
-		{
-			if(_user_service->RemoveSn( sn ))
+		_user_service->SendPacket( pb, 2000ms, [=]( auto pb, auto timeout ){
+			if(_event_handle)
 			{
-				if(_event_handle)
-				{
-					_event_handle->UpdateUserExtend( _token, extend, ERR_TIME_OUT );
-				}
+				_event_handle->UpdateUserExtend( _token, extend, ERR_TIME_OUT );
 			}
 		} );
 	}
@@ -106,15 +101,10 @@ namespace audio_engine{
 		user_state->set_state( state );
 		user_state->set_src_token( _token );
 		user_state->set_dst_token( dst_token );
-		int16_t sn = _user_service->SendPacket( pb );
-		_timer.AddTask( 2000, [=]
-		{
-			if(_user_service->RemoveSn( sn ))
+		_user_service->SendPacket( pb, 2000ms, [=]( auto, auto ){
+			if(_event_handle)
 			{
-				if(_event_handle)
-				{
-					_event_handle->UpdateUserState( _token, dst_token, state, ERR_TIME_OUT );
-				}
+				_event_handle->UpdateUserState( _token, dst_token, state, ERR_TIME_OUT );
 			}
 		} );
 	}
@@ -124,16 +114,11 @@ namespace audio_engine{
 		auto pb = std::make_shared<RAUserMessage>();
 		auto logout_req = pb->mutable_request_logout();
 		logout_req->set_token( _token );
-		int16_t sn = _user_service->SendPacket( pb );
-		Transform( LS_LOGOUT );
-		_timer.AddTask( 1000, [=]
-		{
-			if(_user_service->RemoveSn( sn ))
-			{
-				Log.w( "logout time out" );
-				Transform( LS_CONNECTED );
-			}
+		_user_service->SendPacket( pb, 1000ms, [this]( auto, auto ){
+			Log.w( "logout time out" );
+			Transform( LS_CONNECTED );
 		} );
+		Transform( LS_LOGOUT );
 	}
 
 	void UserManager::ConnectServer()
@@ -146,7 +131,7 @@ namespace audio_engine{
 		}
 		Transform( LS_CONNECTING );
 		int time = _cur_state_time;
-		_timer.AddTask( 5000, [=]
+		_timer.AddTask( 5000ms, [=]
 		{
 			if(_cur_state_time == time)
 			{
@@ -171,22 +156,18 @@ namespace audio_engine{
 		login_req->set_devtype( _device_type );
 		login_req->set_state( _user_state );
 		login_req->set_version( "20171028" );
-		int16_t sn = _user_service->SendPacket( pb );
-		Transform( LS_VERIFY_ACCOUNT );
-		_timer.AddTask( 5000, [=] {
-			if(_user_service->RemoveSn( sn ))
+		_user_service->SendPacket( pb, 5000ms, [this]( auto, auto ){
+			if(++_try_login_count > MAX_TRY_LOGIN)
 			{
-				if(++_try_login_count > MAX_TRY_LOGIN)
-				{
-					_target_state_internel = LS_NONE;
-					Transform( LS_NONE );
-				}
-				else
-				{
-					Transform( LS_CONNECTED );
-				}
+				_target_state_internel = LS_NONE;
+				Transform( LS_NONE );
+			}
+			else
+			{
+				Transform( LS_CONNECTED );
 			}
 		} );
+		Transform( LS_VERIFY_ACCOUNT );
 	}
 
 	bool UserManager::RecvPacket( std::shared_ptr<RAUserMessage> pb )

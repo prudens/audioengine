@@ -150,7 +150,7 @@ public:
     }
     virtual bool SendRtcp( const uint8_t* packet, size_t length )
     {
-        printf( "[%I64u]send rtcp...\n",TimeStampMs() );
+        printf( "[%I64u]send rtcp...\n",audio_engine::GetTickCount() );
         return true;
     }
     virtual int32_t OnReceivedPayloadData( const uint8_t* payloadData,
@@ -177,7 +177,7 @@ void test_rtp()
     configure.audio = true;
     RtpRtcp* rtp_rtcp = RtpRtcp::CreateRtpRtcp( configure );
     printf("ssrc=%u\n",rtp_rtcp->SSRC());
-    rtp_rtcp->SetStartTimestamp(static_cast<int32_t>(TimeStampMs()));
+    rtp_rtcp->SetStartTimestamp(static_cast<int32_t>(audio_engine::GetTickCount()));
     printf("ts=%u\n",rtp_rtcp->StartTimestamp());
     for ( size_t i = 0; i < sizeof( database ) / sizeof( database[0] )-1; i++ )
     {
@@ -191,7 +191,7 @@ void test_rtp()
 
     while ( true )
     {
-        auto ts = TimeStampMs();
+        auto ts = audio_engine::GetTickCount();
         rtp_rtcp->SendOutgoingData( kAudioFrameSpeech,
                                     database[0].pltype,
                                     ts,

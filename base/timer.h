@@ -5,9 +5,11 @@
 #include <thread>
 #include <condition_variable>
 #include <functional>
-
+#include <chrono>
+#include "time_cvt.hpp"
 namespace audio_engine
 {
+
 	typedef  std::function<void() > TaskExecute;
 	namespace detail
 	{
@@ -19,7 +21,7 @@ namespace audio_engine
 	public:
 		Timer( TimerThread* timer );
 		~Timer();
-		void AddTask( int elapsed_ms, TaskExecute&& executer );
+		void AddTask( tick_t elapsed_ms, TaskExecute&& executer );
 	private:
 		std::shared_ptr<detail::STimer> _timer_impl;
 	};
@@ -28,9 +30,9 @@ namespace audio_engine
 	class TimerThread
 	{
 	public:
-		TimerThread( int sleepMs = 100 );
+		TimerThread( tick_t max_sleepMs );
 		~TimerThread();
-		void AddTask( int elapsed_ms, TaskExecute &&executer );
+		void AddTask( tick_t elapsed_ms, TaskExecute &&executer );
 		void ClearTask();
 	private:
 		std::thread _worker;

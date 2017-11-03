@@ -14,16 +14,17 @@ namespace audio_engine{
 		virtual bool HandleError( std::error_code ec ) = 0;
 		virtual bool HandleConnect() = 0;
 	};
-	typedef int64_t tick_t;
-	struct stWaitRespPacket
+
+	struct WaitRespPacket
 	{
 		RAUserMessagePtr pb;
 		tick_t timeout;
+		tick_t calltime;
 		std::function<void( RAUserMessagePtr, tick_t )> cb;
 	};
+	typedef std::shared_ptr<WaitRespPacket> WaitRespPacketPtr;
 	class UserService : public std::enable_shared_from_this<UserService>
 	{
-
 	public:
 		UserService();
 		~UserService();
@@ -32,15 +33,15 @@ namespace audio_engine{
 		bool IsConnectServer();
 		void RegisterHandler( ProtoPacketizer *p );
 		void UnRegisterHandler( ProtoPacketizer* p );
-		bool RemoveSn( int16_t sn );
 		void RecvPacket( std::error_code ec, std::shared_ptr<RAUserMessage> pb );
-		int16_t SendPacket( std::shared_ptr<RAUserMessage> pb );
 		void SendPacket( RAUserMessagePtr pb, tick_t timeout, std::function<void( RAUserMessagePtr, tick_t )> cb );
+		void SendPacket( RAUserMessagePtr pb );
 	private:
 		void     Read( BufferPtr buf );
 		void     Write( BufferPtr buf );
 		void     HandleConnect();
 		void     HandleError( std::error_code ec );
+		void     TimerLoop();
 		AsyncTask*    _task = nullptr;
 		TcpSocketPtr _tcp_socket;
 		ProtoPacket _proto_packet;
@@ -48,11 +49,9 @@ namespace audio_engine{
 		std::mutex _lock_handle;
 		std::list<ProtoPacketizer*> _proto_handlers;
 		int16_t        _sn;
-		std::list<int16_t> _sns;
 		std::mutex _sns_mutex;
 		Timer   _timer;
-		std::unordered_map<int16_t, stWaitRespPacket> _req_packet_list;
-
+		std::unordered_map<int16_t, WaitRespPacketPtr> _req_packet_list;
 	};
 
 	typedef std::shared_ptr<UserService> UserServicePtr;

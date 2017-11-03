@@ -9,6 +9,7 @@
 #include "token_generater.h"
 
 namespace audio_engine{
+	using namespace std::chrono;
 	ServerModule* ServerModule::s_instance = nullptr;
 	ServerModule* ServerModule::GetInstance()
 	{
@@ -65,7 +66,7 @@ namespace audio_engine{
 		} );
 		_buffer_pool = new BufferPool;
 		_task = new ThreadPool( 4 );
-		_timer = new TimerThread;
+		_timer = new TimerThread(100ms);
 		_socket_mgr = CreateTcpFactory( _io_context );
 		_srv_cfg = new ServerConfig;
 		_token_gen = new TokenGenerater;

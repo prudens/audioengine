@@ -8,7 +8,7 @@
 #include "server_config.h"
 #include "real_audio_common.h"
 namespace audio_engine{
-
+	using namespace std::chrono;
 	ClientModule* ClientModule::s_instance = nullptr;
 
 	TcpFactory* ClientModule::GetTcpFactory()
@@ -43,7 +43,7 @@ namespace audio_engine{
 		_socket_mgr = CreateTcpFactory( _io_context );
 		_server_cfg = new ServerConfig();
 		_task = new ThreadPool( 3 );
-		_timer = new TimerThread;
+		_timer = new TimerThread(100ms);
 	}
 
 	ClientModule::~ClientModule()

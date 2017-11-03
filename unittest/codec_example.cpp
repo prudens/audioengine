@@ -273,12 +273,12 @@ public:
         pMp3Reader = AudioReader::Create( "E:/CloudMusic/Mariage.mp3", AFT_MP3 );
         // pMp3Reader->SetSpeed( 1 );
         pMp3Writer = AudioWriter::Create( "D:/myvoice.aac", 44100, 2, AFT_AAC );
-        std::cout << TimeStampMs() << std::endl;
-        m_ts = TimeStampMs();
+        std::cout << audio_engine::GetTickCount() << std::endl;
+        m_ts = audio_engine::GetTickCount();
     }
     ~Mp3ReadProc()
     {
-        auto ts = TimeStampMs();
+        auto ts = audio_engine::GetTickCount();
         std::cout << "\n record time: " << ts - m_ts << " sample number： " << pMp3Writer->NumSamples() / pMp3Writer->SampleRate() / pMp3Writer->NumChannels() << std::endl;
         pMp3Reader->Destroy();
         pMp3Writer->Destroy();
