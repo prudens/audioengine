@@ -211,4 +211,28 @@ namespace audio_engine{
 
 		return _sn;
 	}
+	void UserService::SendPacket( RAUserMessagePtr pb, tick_t timeout, std::function<void( RAUserMessagePtr, tick_t )> cb )
+	{
+		int sn = 0;
+		_sns_mutex.lock();
+		if(++_sn < 0)
+		{
+			_sn = 1;
+		}
+		_sns.push_back( _sn );
+		_sn = _sn;
+
+		pb->set_sn( _sn );
+		auto buf = _proto_packet.Build( pb );
+		if(buf)
+		{
+			Write( buf );
+		}
+		stWaitRespPacket wait;
+		wait.timeout = timeout;
+		wait.cb = cb;
+		wait.pb = pb;
+		_req_packet_list[sn] = wait;
+		_sns_mutex.unlock();
+	}
 }

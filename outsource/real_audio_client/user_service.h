@@ -1,11 +1,12 @@
 #include <memory>
-
+#include <unordered_map>
 #include "protobuf_packet.h"
 #include "user_service.pb.h"
 #include "base/tcp_socket.h"
 #include "base/timer.h"
 #include "base/async_task.h"
 namespace audio_engine{
+	typedef std::shared_ptr<RAUserMessage> RAUserMessagePtr;
 	class ProtoPacketizer
 	{
 	public:
@@ -13,14 +14,16 @@ namespace audio_engine{
 		virtual bool HandleError( std::error_code ec ) = 0;
 		virtual bool HandleConnect() = 0;
 	};
-
-	class UserService :
-		public std::enable_shared_from_this<UserService>
+	typedef int64_t tick_t;
+	struct stWaitRespPacket
 	{
-		struct stWaitRespPacket
-		{
+		RAUserMessagePtr pb;
+		tick_t timeout;
+		std::function<void( RAUserMessagePtr, tick_t )> cb;
+	};
+	class UserService : public std::enable_shared_from_this<UserService>
+	{
 
-		};
 	public:
 		UserService();
 		~UserService();
@@ -32,6 +35,7 @@ namespace audio_engine{
 		bool RemoveSn( int16_t sn );
 		void RecvPacket( std::error_code ec, std::shared_ptr<RAUserMessage> pb );
 		int16_t SendPacket( std::shared_ptr<RAUserMessage> pb );
+		void SendPacket( RAUserMessagePtr pb, tick_t timeout, std::function<void( RAUserMessagePtr, tick_t )> cb );
 	private:
 		void     Read( BufferPtr buf );
 		void     Write( BufferPtr buf );
@@ -47,6 +51,7 @@ namespace audio_engine{
 		std::list<int16_t> _sns;
 		std::mutex _sns_mutex;
 		Timer   _timer;
+		std::unordered_map<int16_t, stWaitRespPacket> _req_packet_list;
 
 	};
 

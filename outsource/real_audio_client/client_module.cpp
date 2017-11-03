@@ -21,7 +21,7 @@ namespace audio_engine{
 		return _server_cfg;
 	}
 
-	ThreadPoll* ClientModule::GetThreadPool()
+	ThreadPool* ClientModule::GetThreadPool()
 	{
 		return _task;
 	}
@@ -42,7 +42,7 @@ namespace audio_engine{
 		_buffer_pool = new BufferPool;
 		_socket_mgr = CreateTcpFactory( _io_context );
 		_server_cfg = new ServerConfig();
-		_task = new ThreadPoll( 3 );
+		_task = new ThreadPool( 3 );
 		_timer = new TimerThread;
 	}
 

@@ -55,8 +55,8 @@ public:
 };
 void test_async_task()
 {
-	ThreadPoll pull( 3 );
-    AsyncTask asyn_task(&pull);
+	ThreadPool pool( 3 );
+    AsyncTask asyn_task(&pool);
     for ( auto i : {5,2,3,3,1} )
     asyn_task.AddTask( [] ( uint32_t id ) { printf( "%d  ", id ); },i );
 	std::atomic<int> g;

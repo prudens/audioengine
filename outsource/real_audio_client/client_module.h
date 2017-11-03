@@ -7,7 +7,7 @@ namespace audio_engine{
 	class TcpFactory;
 	//class TcpFactoryPtr;
 	class ServerConfig;
-	class ThreadPoll;//#include"base/async_task.h"
+	class ThreadPool;//#include"base/async_task.h"
 	class TimerThread;
 	class ClientModule
 	{
@@ -19,7 +19,7 @@ namespace audio_engine{
 	public:
 		TcpFactory*      GetTcpFactory();
 		ServerConfig*    GetServerCnfig();
-		ThreadPoll*       GetThreadPool();
+		ThreadPool*       GetThreadPool();
 		TimerThread*     GetTimerThread();
 		BufferPool*      GetBufferPool();
 	private:
@@ -30,7 +30,7 @@ namespace audio_engine{
 		static ClientModule* s_instance;
 		std::shared_ptr<TcpFactory>          _socket_mgr = nullptr;
 		ServerConfig*        _server_cfg = nullptr;
-		ThreadPoll*           _task = nullptr;
+		ThreadPool*           _task = nullptr;
 		TimerThread*         _timer = nullptr;
 		BufferPool*          _buffer_pool = nullptr;
 		asio::io_context     _io_context;

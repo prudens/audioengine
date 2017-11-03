@@ -13,87 +13,113 @@
 #include <stdexcept>
 namespace audio_engine
 {
-	class ThreadPoll
+	class TaskThread
 	{
 	public:
-		ThreadPoll(size_t);
+		TaskThread()
+		{
+			_worker = std::thread([this]
+			{
+				for(;; )
+				{
+					std::function<void()> task;
+					{
+						std::unique_lock<std::mutex> lock( this->queue_mutex );
+						this->condition.wait( lock,[this] { return stop || !tasks.empty(); } );
+						if(stop && tasks.empty())
+							return;
+						task = std::move( tasks.front() );
+						this->tasks.pop();
+					}
+					task();
+				}
+			});
+		}
+
+		TaskThread( TaskThread&& other )
+		{
+			this->_worker = std::move(other._worker );
+			this->tasks = std::move(other.tasks);
+			this->stop = other.stop;
+		}
 		template<class F>
-		void AddTask( F&&task );
-		~ThreadPoll();
+		void AddTask( F&&task )
+		{
+			{
+				std::unique_lock<std::mutex> lock( queue_mutex );
+
+				// don't allow enqueueing after stopping the pool
+				if(stop)
+					throw std::runtime_error( "enqueue on stopped ThreadPool" );
+
+				tasks.emplace( std::forward<F>( task ) );
+			}
+			condition.notify_one();
+		}
+		size_t TaskSize()const
+		{
+			std::unique_lock<std::mutex> lock( queue_mutex );
+			return tasks.size();
+		}
+		~TaskThread()
+		{
+			{
+				std::unique_lock<std::mutex> lock( queue_mutex );
+				stop = true;
+			}
+			condition.notify_all();
+			if(_worker.joinable())
+				_worker.join();
+		}
 	private:
 		// need to keep track of threads so we can join them
-		std::vector< std::thread > workers;
+		std::thread _worker;
 		// the task queue
 		std::queue< std::function<void()> > tasks;
 
 		// synchronization
-		std::mutex queue_mutex;
+		mutable std::mutex queue_mutex;
 		std::condition_variable condition;
-		bool stop;
+		bool stop = false;
 	};
 
-	// the constructor just launches some amount of workers
-	inline ThreadPoll::ThreadPoll(size_t threads)
-		: stop(false)
-	{
-		for (size_t i = 0; i < threads; ++i)
-			workers.emplace_back(
-				[this]
-		{
-			for (;; )
-			{
-				std::function<void()> task;
 
-				{
-					std::unique_lock<std::mutex> lock(this->queue_mutex);
-					this->condition.wait(lock,
-						[this] { return this->stop || !this->tasks.empty(); });
-					if (this->stop && this->tasks.empty())
-						return;
-					task = std::move(this->tasks.front());
-					this->tasks.pop();
-				}
-
-				task();
-			}
-		}
-		);
-	}
-
-	// add new work item to the pool
-	template<class F>
-	void ThreadPoll::AddTask(F&& task)
-	{
-		{
-			std::unique_lock<std::mutex> lock(queue_mutex);
-
-			// don't allow enqueueing after stopping the pool
-			if (stop)
-				throw std::runtime_error("enqueue on stopped ThreadPool");
-
-			tasks.emplace( std::forward<F>(task) );
-		}
-		condition.notify_one();
-	}
-
-	// the destructor joins all threads
-	inline ThreadPoll::~ThreadPoll()
-	{
-		{
-			std::unique_lock<std::mutex> lock(queue_mutex);
-			stop = true;
-		}
-		condition.notify_all();
-		for (std::thread &worker : workers)
-			worker.join();
-	}
-
-	class AsyncTask
+	class ThreadPool
 	{
 	public:
-		AsyncTask( ThreadPoll* thread )
+		ThreadPool( size_t threads )
 		{
-			_thread = thread;
+			_workers.resize( threads );
+		}
+		~ThreadPool()
+		{
+
+		}
+		TaskThread& GetTaskThread()
+		{
+			size_t size = _workers.size();
+			size_t idx = 0;
+			size_t num = _workers[idx].TaskSize();
+			for(size_t i = 1; i < size; i++)
+			{
+				auto s = _workers[i].TaskSize();
+				if(s < num)
+				{
+					num = s;
+					idx = i;
+				}
+			}
+			return _workers[idx];
+		}
+	private:
+		std::vector<TaskThread> _workers;
+	};
+	class STask: public std::enable_shared_from_this<STask>
+	{
+	public:
+		STask( ThreadPool* thread )
+			:_thread(thread->GetTaskThread())
+		{
 		}
 		template<class F, class... Args>
 		auto AddTask( F&& f, Args&&... args )
@@ -106,20 +132,49 @@ namespace audio_engine
 				);
 
 			std::future<return_type> res = task->get_future();
+			auto self = shared_from_this();
 			auto t = [=]()
 			{
+				self->_mutex.lock();
 				if(!_stop)
 				{
 					(*task)();
 				}
+				self->_mutex.unlock();
 			};
-			_thread->AddTask(std::move(t));
+			_thread.AddTask(std::move(t));
 			return res;
 		}
+		void Stop()
+		{
+			_stop = true;
+		}
 	private:
-		ThreadPoll* _thread;
-		int         _thread_idx;
+	    TaskThread& _thread;
 		bool _stop = false;
+		std::mutex _mutex;
+	};
+
+	class AsyncTask
+	{
+	public:
+		AsyncTask( ThreadPool*pool )
+		{
+			_stask = std::make_shared<STask>(pool);
+		}
+		~AsyncTask()
+		{
+			_stask->Stop();
+			_stask.reset();
+		}
+		template<class F, class... Args>
+		auto AddTask( F&& f, Args&&... args )
+			->std::future < typename std::result_of<F( Args... )>::type >
+		{
+			return _stask->AddTask(std::forward<F>(f),std::forward<Args>(args)...);
+		}
+	private:
+		std::shared_ptr<STask> _stask;
 	};
 }
 #endif

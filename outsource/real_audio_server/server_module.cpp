@@ -41,7 +41,7 @@ namespace audio_engine{
 		return _socket_mgr.get();
 	}
 
-	ThreadPoll* ServerModule::GetThreadPool()
+	ThreadPool* ServerModule::GetThreadPool()
 	{
 		return _task;
 	}
@@ -64,7 +64,7 @@ namespace audio_engine{
 			}
 		} );
 		_buffer_pool = new BufferPool;
-		_task = new ThreadPoll( 4 );
+		_task = new ThreadPool( 4 );
 		_timer = new TimerThread;
 		_socket_mgr = CreateTcpFactory( _io_context );
 		_srv_cfg = new ServerConfig;
