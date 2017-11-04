@@ -103,7 +103,6 @@ namespace audio_engine{
 			{
 				HandleError( ec );
 			}
-
 		} );
 	}
 
@@ -151,7 +150,7 @@ namespace audio_engine{
 				{
 					_task->AddTask( [wait]
 					{
-						wait->cb( wait->pb, wait->timeout );
+						wait->cb( wait->pb, std::make_error_code(std::errc::timed_out) );
 					} );
 					it = _req_packet_list.erase( it );
 				}
@@ -195,8 +194,8 @@ namespace audio_engine{
 			{
 				auto wait = it->second;
 				_req_packet_list.erase( it );
-				_task->AddTask( [wait]{
-					wait->cb( wait->pb, wait->timeout );
+				_task->AddTask( [=]{
+					wait->cb( pb, std::error_code() );
 				} );
 				return;
 			}
@@ -213,15 +212,14 @@ namespace audio_engine{
 		_lock_handle.unlock();
 	}
 
-	void UserService::SendPacket( RAUserMessagePtr pb, tick_t timeout, std::function<void( RAUserMessagePtr, tick_t )> cb )
+	void UserService::SendPacket( RAUserMessagePtr pb, tick_t timeout, std::function<void( RAUserMessagePtr, std::error_code )> cb )
 	{
-		int sn = 0;
 		_sns_mutex.lock();
-		if(++_sn < 0)
+		++_sn;
+		if( _sn <= 0)
 		{
 			_sn = 1;
 		}
-		_sn = _sn;
 
 		pb->set_sn( _sn );
 		WaitRespPacketPtr wait = std::make_shared<WaitRespPacket>();
@@ -229,7 +227,7 @@ namespace audio_engine{
 		wait->cb = std::move(cb);
 		wait->pb = pb;
 		wait->calltime = TimeStamp();
-		_req_packet_list[sn] = wait;
+		_req_packet_list[_sn] = wait;
 		_sns_mutex.unlock();
 		auto buf = _proto_packet.Build( pb );
 		if(buf)
@@ -240,7 +238,7 @@ namespace audio_engine{
 
 	void UserService::SendPacket( RAUserMessagePtr pb )
 	{
-		pb->set_sn( _sn );
+		pb->set_sn( 0 );
 		auto buf = _proto_packet.Build( pb );
 		if(buf)
 		{

@@ -63,8 +63,9 @@ namespace audio_engine
 					}
 					if(block)
 					{
+						// 这里有待改进，即是否要在退出的时候，把任务执行完。
 						this->condition.wait_for( lock, sleep_time,[this] { return this->_stop; } );
-						if(this->_stop && this->_tasks.empty())
+						if(this->_stop)
 							return;
 					}
 				}

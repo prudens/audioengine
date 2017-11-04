@@ -113,12 +113,12 @@ namespace audio_engine{
 		if(pb->has_request_login())
 		{
 			auto login_req = pb->request_login();
-			HandleLogin( login_req );
+			HandleLogin( login_req,pb->sn() );
 		}
 		if(pb->has_request_logout())
 		{
 			auto logout_req = pb->request_logout();
-			HandleLogout( logout_req );
+			HandleLogout( logout_req,pb->sn() );
 		}
 
 		if(pb->has_update_user_extend())
@@ -169,7 +169,7 @@ namespace audio_engine{
 
 	}
 
-	void User::HandleLogin( const audio_engine::RequestLogin& login_req )
+	void User::HandleLogin( const audio_engine::RequestLogin& login_req,int sn )
 	{
 		_userid = login_req.userid();
 		_extend = login_req.extend();
@@ -180,6 +180,7 @@ namespace audio_engine{
 		login_res->set_token( _token );
 		login_res->set_userid( _userid );
 		login_res->set_error_code( 0 );
+		pb->set_sn( sn );
 		auto user_list = pb->mutable_notify_user_list();
 		auto users = _host->GetUserList();
 		auto size = users.size();
@@ -203,7 +204,7 @@ namespace audio_engine{
 		printf( "ÓÃ»§£º%sµÇÂ½\n", _userid.c_str() );
 	}
 
-	void User::HandleLogout( const ::audio_engine::RequestLogout& logout_req )
+	void User::HandleLogout( const ::audio_engine::RequestLogout& logout_req,int sn )
 	{
 		auto self = shared_from_this();
 		auto token = logout_req.token();
@@ -220,6 +221,7 @@ namespace audio_engine{
 		auto logout_res = pb->mutable_responed_logout();
 		logout_res->set_token( _token );
 		logout_res->set_error_code( 0 );
+		pb->set_sn(sn);
 		BufferPtr buf = _proto_packet.Build( pb );
 		if(buf)
 		{

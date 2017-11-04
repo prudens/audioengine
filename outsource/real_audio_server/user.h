@@ -32,8 +32,8 @@ namespace audio_engine{
 		void Read();
 		void Write( int type, BufferPtr buf );
 		void HandleError( std::error_code ec );
-		void HandleLogin( const audio_engine::RequestLogin& login_req );
-		void HandleLogout( const ::audio_engine::RequestLogout& logout_req );
+		void HandleLogin( const audio_engine::RequestLogin& login_req,int sn );
+		void HandleLogout( const ::audio_engine::RequestLogout& logout_req,int sn );
 		std::string _userid;
 		std::string _extend;
 		int64_t _token = 0;

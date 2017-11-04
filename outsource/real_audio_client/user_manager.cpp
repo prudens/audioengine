@@ -30,6 +30,7 @@ namespace audio_engine{
 	UserManager::~UserManager()
 	{
 		_user_service->UnRegisterHandler( this );
+		_user_service.reset();
 	}
 
 	void UserManager::SetEventCallback( UserEventHandler* handle )
@@ -86,11 +87,19 @@ namespace audio_engine{
 		audio_engine::UpdateUserExtend* user_extend = pb->mutable_update_user_extend();
 		user_extend->set_extend( extend );
 		user_extend->set_token( _token );
-		_user_service->SendPacket( pb, 2000ms, [=]( auto pb, auto timeout ){
-			if(_event_handle)
+		_user_service->SendPacket( pb, 2000ms, [=]( auto pb, auto ec ){
+			if(!ec)
 			{
-				_event_handle->UpdateUserExtend( _token, extend, ERR_TIME_OUT );
+				RecvPacket( pb );
 			}
+			else
+			{
+				if(_event_handle)
+				{
+					_event_handle->UpdateUserExtend( _token, extend, ERR_TIME_OUT );
+				}
+			}
+
 		} );
 	}
 
@@ -101,10 +110,17 @@ namespace audio_engine{
 		user_state->set_state( state );
 		user_state->set_src_token( _token );
 		user_state->set_dst_token( dst_token );
-		_user_service->SendPacket( pb, 2000ms, [=]( auto, auto ){
-			if(_event_handle)
+		_user_service->SendPacket( pb, 2000ms, [=]( auto pb, auto ec ){
+			if(!ec)
 			{
-				_event_handle->UpdateUserState( _token, dst_token, state, ERR_TIME_OUT );
+				RecvPacket(pb);
+			}
+			else
+			{
+				if(_event_handle)
+				{
+					_event_handle->UpdateUserState( _token, dst_token, state, ERR_TIME_OUT );
+				}
 			}
 		} );
 	}
@@ -114,9 +130,17 @@ namespace audio_engine{
 		auto pb = std::make_shared<RAUserMessage>();
 		auto logout_req = pb->mutable_request_logout();
 		logout_req->set_token( _token );
-		_user_service->SendPacket( pb, 1000ms, [this]( auto, auto ){
-			Log.w( "logout time out" );
-			Transform( LS_CONNECTED );
+		_user_service->SendPacket( pb, 1000ms, [this]( auto pb, auto ec ){
+			if(!ec)
+			{
+				RecvPacket( pb );
+			}
+			else
+			{
+				Log.w( "logout time out" );
+				Transform( LS_CONNECTED );
+			}
+
 		} );
 		Transform( LS_LOGOUT );
 	}
@@ -143,8 +167,11 @@ namespace audio_engine{
 
 	void UserManager::DisConnectServer()
 	{
+		Log.d( "UserManager::DisConnectServer()1\n" );
 		_user_service->DisconnectServer();
+		Log.d( "UserManager::DisConnectServer()2\n" );
 		Transform( LS_INIT );
+		
 	}
 
 	void UserManager::VerifyAccount()
@@ -156,15 +183,22 @@ namespace audio_engine{
 		login_req->set_devtype( _device_type );
 		login_req->set_state( _user_state );
 		login_req->set_version( "20171028" );
-		_user_service->SendPacket( pb, 5000ms, [this]( auto, auto ){
-			if(++_try_login_count > MAX_TRY_LOGIN)
+		_user_service->SendPacket( pb, 5000ms, [this]( auto pb, auto ec ){
+			if(!ec)
 			{
-				_target_state_internel = LS_NONE;
-				Transform( LS_NONE );
+				RecvPacket( pb );
 			}
 			else
 			{
-				Transform( LS_CONNECTED );
+				if(++_try_login_count > MAX_TRY_LOGIN)
+				{
+					_target_state_internel = LS_NONE;
+					Transform( LS_NONE );
+				}
+				else
+				{
+					Transform( LS_CONNECTED );
+				}
 			}
 		} );
 		Transform( LS_VERIFY_ACCOUNT );
@@ -304,7 +338,8 @@ namespace audio_engine{
 
 	bool UserManager::HandleError( std::error_code ec )
 	{
-		if(_user_service->IsConnectServer() || LS_INIT < _cur_state)
+		Log.d( "UserManager::HandleError()\n" );
+		if(_target_state_internel > LS_INIT)
 		{
 			Log.w( "socket error ¶ÁÐ´Ê§°Ü£º%s\n", ec.message().c_str() );
 			if(++_try_login_count > MAX_TRY_LOGIN)
@@ -439,8 +474,6 @@ namespace audio_engine{
 		default:
 			break;
 		}
-
-		//	});
 	}
 
 
@@ -448,13 +481,14 @@ namespace audio_engine{
 	{
 		if(_cur_state != state)
 		{
+			_cur_state = state;
 			_cur_state_time++;
 			if(_event_handle && ( state % 2 == 0 ))
 			{
 				_event_handle->UpdateLoginState( state );
 			}
 		}
-		_cur_state = state;
+
 
 	}
 }

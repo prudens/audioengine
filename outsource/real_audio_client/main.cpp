@@ -11,7 +11,6 @@ int main(int argc, char** argv)
 		filename = argv[1];
 	}
 	std::thread(run_engine, filename, "d:/").join();
-
 	return 0;
 }
 

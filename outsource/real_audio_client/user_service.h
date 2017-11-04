@@ -20,7 +20,7 @@ namespace audio_engine{
 		RAUserMessagePtr pb;
 		tick_t timeout;
 		tick_t calltime;
-		std::function<void( RAUserMessagePtr, tick_t )> cb;
+		std::function<void( RAUserMessagePtr, std::error_code )> cb;
 	};
 	typedef std::shared_ptr<WaitRespPacket> WaitRespPacketPtr;
 	class UserService : public std::enable_shared_from_this<UserService>
@@ -34,7 +34,7 @@ namespace audio_engine{
 		void RegisterHandler( ProtoPacketizer *p );
 		void UnRegisterHandler( ProtoPacketizer* p );
 		void RecvPacket( std::error_code ec, std::shared_ptr<RAUserMessage> pb );
-		void SendPacket( RAUserMessagePtr pb, tick_t timeout, std::function<void( RAUserMessagePtr, tick_t )> cb );
+		void SendPacket( RAUserMessagePtr pb, tick_t timeout, std::function<void( RAUserMessagePtr, std::error_code )> cb );
 		void SendPacket( RAUserMessagePtr pb );
 	private:
 		void     Read( BufferPtr buf );
