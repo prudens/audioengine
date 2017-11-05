@@ -155,9 +155,11 @@ namespace audio_engine{
 
     AudioRoomImpl::AudioRoomImpl()
     {
+		namespace ph = std::placeholders;
         _run_flag = true;
-		_master_control.RegisterEventHandler(this);
 		_master_control.Initialize();
+		_master_control._RespondLogin.connect( 0, std::bind(&AudioRoomImpl::RespondLogin,this,ph::_1,ph::_2,ph::_3));
+		_master_control._RespondLogout.connect( 0, std::bind( &AudioRoomImpl::RespondLogout, this, ph::_1, ph::_2, ph::_3 ) );
 		EnableAudioMessage(false);
 		EnablePullUserList(false);
 		EnableRealAudio(false);
@@ -581,64 +583,58 @@ namespace audio_engine{
         Log.v( "IUserModule::RegisterEventHandler(%p)\n",handler );
         if (!handler)
         {
+
             Log.w("IUserModule::RegisterEventHandler 参数错误：handler指针不允许为空\n");
-        }
+			auto signalmgr = _master_control.GetUserModuleSignal();
+			signalmgr->_UserEnterRoom.disconnect( 1 );
+			signalmgr->_UserLeaveRoom.disconnect( 1 );
+			signalmgr->_UpdateUserExtend.disconnect( 1 );
+			signalmgr->_UpdateUserState.disconnect( 1 );
+		}
+		else
+		{
+			namespace ph = std::placeholders;
+			auto signalmgr = _master_control.GetUserModuleSignal();
+			signalmgr->_UserEnterRoom.connect( 1, std::bind( &UserModuleImpl::UserEnterRoom, this, ph::_1 ) );
+			signalmgr->_UserLeaveRoom.connect( 1, std::bind( &UserModuleImpl::UserLeaveRoom, this, ph::_1 ) );
+			signalmgr->_UpdateUserExtend.connect( 1, std::bind( &UserModuleImpl::UpdateUserExtend, this, ph::_1, ph::_2, ph::_3 ) );
+			signalmgr->_UpdateUserState.connect( 1, std::bind( &UserModuleImpl::UpdateUserState, this, ph::_1, ph::_2, ph::_3, ph::_4 ) );
+		}
         _handler = handler;
         _host->EnablePullUserList( true );
     }
 
-    int UserModuleImpl::SetUserAttr( UID uid, const char* name, const char* value )
+    int UserModuleImpl::SetUserExtend( UID uid, const char* value )
     {
-        Log.v( "IUserModule::SetUserAttr(%s,%s,%s)\n", STR( uid ), STR( name ), STR(value) );
+        Log.v( "IUserModule::SetUserAttr(%s,%s)\n", STR( uid ), STR(value) );
         if (!uid)
         {
             Log.e("IUserModule::SetUserAttr 参数错误：uid不允许为空\n");
             return ERR_INVALID_ARGUMENT;
         }
-        if (!name)
-        {
-            Log.e( "IUserModule::SetUserAttr 参数错误：name不允许为空\n" );
-            return ERR_INVALID_ARGUMENT;
-        }
         std::string struid = uid;
-        std::string strname = STR(name);
         std::string strvalue = STR(value);
 		_master_control.SetUserExtend(strvalue);
-/*        int err = _media_base_client->IO_SetUserAttr( uid, name, value, [=] (int ec)
-        {
-            int err = TransformErrorCode( ec );
-            auto handle = [=] {
-                Log.d( "Call IUserEventHandler::RespondSetUserAttr(%s,%s,%s,%d)\n", struid.c_str(), strname.c_str(), strvalue.c_str(), err );
-                _handler->RespondSetUserAttr( struid.c_str(), strname.c_str(), strvalue.c_str(), err ); };
-            _host->RecvAsyncEvent( std::move(handle) );
-        } );
-        return TransformErrorCode(err);
-		*/
-		return ERR_NOT_SUPPORTED;
+		return ERR_OK;
     }
 
     int UserModuleImpl::GetUserCount()
     {
         Log.v( "UserModule::GetUserCount()\n" );
-       // int count = _media_base_client->IO_LockUserList();
-       // _media_base_client->IO_UnLockUserList();
-       // return count;
-		return ERR_NOT_SUPPORTED;
+		return _master_control.GetMemberList()->Count();
     }
 
     int UserModuleImpl::GetUserList( UserListPtr& users )
     {
         Log.v( "IUserModule::GetUserList(users)\n" );
+
         //TODO 检查登陆状态
-		/*
-        auto userlist = new UserListImpl( _media_base_client,false );
-        size_t count = userlist->size();
-        for ( int i = 0; i < count; i++ )
-        {
-            userlist->_impl[i] = std::make_shared<UserImpl<IBaseUser*>>(_media_base_client->IO_GetUser(i));
-        }
+		
+        auto userlist = new UserListImpl();
+		_master_control.GetMemberList()->Traversal( [&](ConstMemberPtr user)mutable{
+			userlist->_impl.push_back( std::make_shared<UserImpl>( user ) );
+		} );
         users.reset( userlist );
-		*/
         return ERR_OK;
     }
 
@@ -650,14 +646,14 @@ namespace audio_engine{
             Log.e( "IUserModule::GetUser 参数错误：uid不允许为空\n" );
             return ERR_INVALID_ARGUMENT;
         }
-/*        auto p = _media_base_client->IO_GetUserByID( uid );
+
+		auto p = _master_control.GetMemberList()->GetMember( uid );
         if (!p)
         {
             Log.w("IUserModule::GetUser 找不到用户(%s)！\n",uid);
             return ERR_USER_NOT_FOUND;
         }
-        user.reset( new UserImpl<UserPtr_t>( p ) );
-		*/
+        user.reset( new UserImpl( p ) );
         return ERR_OK;
     }
 
@@ -682,69 +678,47 @@ namespace audio_engine{
 		return ERR_NOT_SUPPORTED;
     }
 
-    EventHandle UserModuleImpl::EventNotifyHandler( int eventid, const void* param )
-    {
-		/*
-        using namespace snail::client::media;
-        EventHandle handle;
-        if ( !_handler )
-        {
-            Log.w("IUserEventHandler::EventNotifyHandler 未注册事件处理接口\n");
-            return handle;
-        }
-        switch ( eventid )
-        {
-        case event_user_logined:
-        {
-            IBaseUser* user = (IBaseUser*)param;
-            std::string uid = user->userid()->c_str();
-            handle = [=] () {
-                Log.d( "Call IUserEventHandler::NotifyUserEnterRoom(%s)\n", uid.c_str() );
-                _handler->NotifyUserEnterRoom( uid.c_str() ); };
-        }break;
-        case event_user_leave:
-        {
-            IUserID*user = (IUserID*)param;
-            std::string uid = user->c_str();
-            handle = [=] () {
-                Log.d( "Call IUserEventHandler::NotifyUserLeaveRoom(%s)\n", uid.c_str() );
-                _handler->NotifyUserLeaveRoom( uid.c_str() ); };
-        }break;
-        case event_kickoff:
-        {
-            IUserID*user = (IUserID*)param;
-            std::string uid = user->c_str();
-            handle = [=] () { 
-                Log.d( "Call IUserEventHandler::NotifyKiceOff(%s)\n", uid.c_str() );
-                _handler->NotifyKiceOff( uid.c_str() ); };
-        }break;
-        case event_user_attr_changed:
-        {
-            user_key_value*user_attr = (user_key_value*)param;
-            std::string name = user_attr->name();
-            std::string value = user_attr->value();
-            std::string uid = user_attr->userid()->c_str();
-            handle = [=] {
-                Log.d( "Call IUserEventHandler::NotifyUserAttrChanged(%s,%s,%s)\n", uid.c_str(), name.c_str(), value.c_str() );
-                _handler->NotifyUserAttrChanged( uid.c_str(), name.c_str(), value.c_str() ); };
-        }break;
-        case event_user_speaking:
-        {
-            user_speaking* us = (user_speaking*)param;
-            std::string uid = us->userid()->c_str();
-            int volume = us->volume();
-            handle = [=] { 
-                Log.d( "Call IUserEventHandler::NotifyUserSpeaking(%s,%d)\n", uid.c_str(), volume );
-                _handler->NotifyUserSpeaking( uid.c_str(), volume ); };
-        }break;
-        default:
-            break;
-        }
-        return handle;
-		*/
-		return nullptr;
-    }
+	void UserModuleImpl::UserEnterRoom( ConstMemberPtr user )
+	{
+		std::string uid = user->GetUserID();
+		auto handle = [=]() {
+			Log.d( "Call IUserEventHandler::NotifyUserEnterRoom(%s)\n", uid.c_str() );
+			_handler->NotifyUserEnterRoom( uid.c_str() ); };
+		_host->RecvAsyncEvent( std::move( handle ) );
+	}
 
+	void UserModuleImpl::UserLeaveRoom( int64_t token )
+	{
+		auto uid = _master_control.GetMemberList()->GetUserID( token );
+		auto handle = [=]() {
+			Log.d( "Call IUserEventHandler::NotifyUserLeaveRoom(%s)\n", uid.c_str() );
+			_handler->NotifyUserLeaveRoom( uid.c_str() ); };
+		_host->RecvAsyncEvent( std::move( handle ) );
+	}
+
+	void UserModuleImpl::UpdateUserExtend( int64_t token, std::string extend, int ec )
+	{
+		auto uid = _master_control.GetMemberList()->GetUserID( token );
+		EventHandle handle;
+		if (uid == _host->_uid)
+		{
+			handle = [=]() {
+				Log.d( "Call IUserEventHandler::RespondSetUserAttr(%s,%s)\n", uid.c_str(), extend.c_str() );
+				_handler->RespondSetUserExtend( uid.c_str(), extend.c_str(),"",ec ); };
+		}
+		else
+		{
+			handle = [=]() {
+				Log.d( "Call IUserEventHandler::NotifyUserAttrChanged(%s)\n", uid.c_str() );
+				_handler->NotifyUserExtendChanged( uid.c_str(), extend.c_str(), "" ); };
+		}
+		_host->RecvAsyncEvent( std::move( handle ) );
+	}
+
+	void UserModuleImpl::UpdateUserState( int64_t src_token, int64_t dst_token, int state, int ec )
+	{
+		
+	}
 
 /////////////////////////////////////////////////////////////////
     MessageModuleImpl::MessageModuleImpl( AudioRoomImpl* host )

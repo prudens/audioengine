@@ -187,11 +187,11 @@ namespace audio_engine{
 				{
 					if(!msg.value.empty())
 					{
-						_client_mgr->SetUserAttr( msg.mid, msg.uid, msg.key, msg.value );
+						_client_mgr->SetUserExtend( msg.mid, msg.uid, msg.value );
 					}
 					else
 					{
-						_client_mgr->GetUserAttr( msg.mid, msg.uid, msg.key );
+						_client_mgr->GetUserExtend( msg.mid, msg.uid );
 					}
 
 				}break;

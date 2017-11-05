@@ -21,21 +21,21 @@ namespace audio_engine{
 		_user_service = proto_packet;
 		if(!_user_service)
 		{
+			namespace ph = std::placeholders;
 			_user_service = std::make_shared<UserService>();
-			_user_service->RegisterHandler( this );
+			_user_service->_RecvPacket.connect(0,std::bind(&UserManager::RecvPacket,this,ph::_1));
+			_user_service->_HandleConnect.connect(0,std::bind(&UserManager::HandleConnect,this,ph::_1));
+			_user_service->_HandleError.connect( 0, std::bind( &UserManager::HandleError, this, ph::_1 ) );
 		}
 		_task = new AsyncTask( ClientModule::GetInstance()->GetThreadPool() );
 	}
 
 	UserManager::~UserManager()
 	{
-		_user_service->UnRegisterHandler( this );
+		_user_service->_RecvPacket.disconnect( 0 );
+		_user_service->_HandleConnect.disconnect( 0 );
+		_user_service->_HandleError.disconnect( 0 );
 		_user_service.reset();
-	}
-
-	void UserManager::SetEventCallback( UserEventHandler* handle )
-	{
-		_event_handle = handle;
 	}
 
 	int UserManager::Login( std::string roomkey, std::string userid )
@@ -94,10 +94,7 @@ namespace audio_engine{
 			}
 			else
 			{
-				if(_event_handle)
-				{
-					_event_handle->UpdateUserExtend( _token, extend, ERR_TIME_OUT );
-				}
+				_UpdateUserExtend( _token, extend, ERR_TIME_OUT );
 			}
 
 		} );
@@ -117,10 +114,7 @@ namespace audio_engine{
 			}
 			else
 			{
-				if(_event_handle)
-				{
-					_event_handle->UpdateUserState( _token, dst_token, state, ERR_TIME_OUT );
-				}
+				_UpdateUserState( _token, dst_token, state, ERR_TIME_OUT );
 			}
 		} );
 	}
@@ -204,7 +198,7 @@ namespace audio_engine{
 		Transform( LS_VERIFY_ACCOUNT );
 	}
 
-	bool UserManager::RecvPacket( std::shared_ptr<RAUserMessage> pb )
+	void UserManager::RecvPacket( std::shared_ptr<RAUserMessage> pb )
 	{
 		if(pb->has_responed_login())
 		{
@@ -256,36 +250,27 @@ namespace audio_engine{
 			user->SetToken( login_ntf.token() );
 			user->SetUserState( login_ntf.state() );
 			user->SetDeviceType( dev_type );
-			if(_event_handle)
-			{
-				_event_handle->UserEnterRoom( user );
-			}
+			_UserEnterRoom( user );
 		}
 
 		if(pb->has_notify_logout())
 		{
 			auto logout_ntf = pb->notify_logout();
-			if(_event_handle)
-			{
-				_event_handle->UserLeaveRoom( logout_ntf.token() );
-			}
+			_UserLeaveRoom( logout_ntf.token() );
 		}
 
 		if(pb->has_update_user_state())
 		{
 			auto update_user_state = pb->update_user_state();
-			if(_event_handle)
-			{
-				_event_handle->UpdateUserState( update_user_state.src_token(), update_user_state.dst_token(), update_user_state.state(), update_user_state.error_code() );
-			}
+			_UpdateUserState( update_user_state.src_token(),
+				              update_user_state.dst_token(), 
+				              update_user_state.state(), 
+				              update_user_state.error_code() );
 		}
 		if(pb->has_update_user_extend())
 		{
 			auto update_user_extend = pb->update_user_extend();
-			if(_event_handle)
-			{
-				_event_handle->UpdateUserExtend( update_user_extend.token(), update_user_extend.extend(), update_user_extend.error_code() );
-			}
+			_UpdateUserExtend( update_user_extend.token(), update_user_extend.extend(), update_user_extend.error_code() );
 		}
 
 		if(pb->has_notify_user_list())
@@ -325,18 +310,14 @@ namespace audio_engine{
 			_cache_userlist.push_back( user );
 			if(user_list.pkg_flag() & FLAG_LAST_PKG)
 			{
-				if(_event_handle)
-				{
-					_event_handle->UpdateUserList( _cache_userlist );
-				}
+				_UpdateUserList( _cache_userlist );
 				Transform( LS_LOGINED );
 			}
 		}
 
-		return false;
 	}
 
-	bool UserManager::HandleError( std::error_code ec )
+	void UserManager::HandleError( std::error_code ec )
 	{
 		Log.d( "UserManager::HandleError()\n" );
 		if(_target_state_internel > LS_INIT)
@@ -352,15 +333,20 @@ namespace audio_engine{
 				Transform( LS_INIT );
 			}
 		}
-		return true;
 	}
 
-	bool UserManager::HandleConnect()
+	void UserManager::HandleConnect(std::error_code ec)
 	{
-		//printf( "连接服务器(%d)成功！！！\n", server_type );
-		Log.d( "连接服务器 成功.\n" );
-		Transform( LS_CONNECTED );
-		return true;
+		if (ec)
+		{
+			HandleError( ec );
+		}
+		else
+		{
+			Log.d( "连接服务器 成功.\n" );
+			Transform( LS_CONNECTED );
+		}
+
 
 	}
 
@@ -483,9 +469,9 @@ namespace audio_engine{
 		{
 			_cur_state = state;
 			_cur_state_time++;
-			if(_event_handle && ( state % 2 == 0 ))
+			if(( state % 2 == 0 ))
 			{
-				_event_handle->UpdateLoginState( state );
+				_UpdateLoginState( state );
 			}
 		}
 

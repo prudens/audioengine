@@ -32,8 +32,8 @@ namespace audio_engine
 		void TurnOnSpeakingStatus( bool status, std::string uid );
 		void SetRoomAttr( std::string key, std::string value );
 		void GetRoomAttr( std::string key );
-		void SetUserAttr( std::string uid, std::string key, std::string value );
-		void GetUserAttr( std::string uid, std::string key );
+		void SetUserExtend( std::string uid, std::string value );
+		void GetUserExtend( std::string uid );
 		void KickOff( std::string uid );
 		void BlockUser( std::string uid, bool enable );
 		void DisableSpeak( std::string uid, bool enable );
@@ -110,7 +110,7 @@ namespace audio_engine
 		* @param     const char * name
 		* @param     const char * value
 		*/
-		virtual void NotifyUserAttrChanged( UID uid, const char* name, const char* value )override;
+		virtual void NotifyUserExtendChanged( UID uid, const char* name, const char* value )override;
 
 		/**
 		* @brief     the sdk start recording audio message, response of the StartRecord().
@@ -224,7 +224,7 @@ namespace audio_engine
 		* @param     const char * value.passed to SetUserAttr().
 		* @param     int ec
 		*/
-		virtual void RespondSetUserAttr( UID uid, const char* name, const char* value, int ec )override;
+		virtual void RespondSetUserExtend( UID uid, const char* name, const char* value, int ec )override;
 		/**
 		* @brief     Called back when BlockUser() is called.
 		* @return    void

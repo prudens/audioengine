@@ -152,9 +152,9 @@ namespace audio_engine{
 		_room->SetRoomAttr( key.c_str(), value.c_str() );
 	}
 
-	void AudioClient::SetUserAttr( std::string uid, std::string key, std::string value )
+	void AudioClient::SetUserExtend( std::string uid, std::string value )
 	{
-		_user->SetUserAttr( uid.c_str(), key.c_str(), value.c_str() );
+		_user->SetUserExtend( uid.c_str(), value.c_str() );
 	}
 
 	//////////////////////////处理handler 异步事件///////////////////
@@ -296,7 +296,7 @@ namespace audio_engine{
 		logprint( "[%d]房间属性变化：name:%s,value:%s\n", _mid, name, value );
 	}
 
-	void AudioClient::NotifyUserAttrChanged( UID uid, const char* name, const char* value )
+	void AudioClient::NotifyUserExtendChanged( UID uid, const char* name, const char* value )
 	{
 		logprint( "[%d]用户(%s)属性变化：name:%s,value:%s\n", _mid, uid, name, value );
 	}
@@ -401,7 +401,7 @@ namespace audio_engine{
 
 	}
 
-	void AudioClient::RespondSetUserAttr( UID uid, const char* name, const char* value, int ec )
+	void AudioClient::RespondSetUserExtend( UID uid, const char* name, const char* value, int ec )
 	{
 		if(ec == 0)
 		{
@@ -440,17 +440,13 @@ namespace audio_engine{
 		}
 	}
 
-	void AudioClient::GetUserAttr( std::string uid, std::string key )
+	void AudioClient::GetUserExtend( std::string uid )
 	{
-		if(key.empty())
-		{
-			key = "ext";
-		}
 		UserPtr ptr;
 		_user->GetUser( uid.c_str(), ptr );
 		if(ptr)
 		{
-			auto str = ptr->attr( key.c_str() );
+			auto str = ptr->extends();
 			if(str)
 			{
 				logprint( "[%d]%s\n", _mid, str );

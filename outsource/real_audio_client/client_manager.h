@@ -28,8 +28,8 @@ namespace audio_engine{
 		const char* GetUserid( int mid );
 		void TurnOnSpeakingStatus( int mid, bool status, std::string uid );
 		void SetRoomAttr( int mid, std::string key, std::string value );
-		void SetUserAttr( int mid, std::string uid, std::string key, std::string value );
-		void GetUserAttr( int mid, std::string uid, std::string key );
+		void SetUserExtend( int mid, std::string uid, std::string value );
+		void GetUserExtend( int mid, std::string uid );
 		void KickOff( int mid, std::string uid );
 		void BlockUser( int mid, std::string uid, bool enable );
 		void DisableSpeak( int mid, std::string uid, bool enable );

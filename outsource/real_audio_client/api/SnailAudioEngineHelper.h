@@ -176,7 +176,6 @@ public:
     virtual const char*  extends()const = 0;        // extend data    
     virtual bool         IsDisableSpeak()const = 0; // is disable speak
     virtual bool         IsBlocked()const = 0;      // is block
-    virtual const char*  attr( const char* name ) const = 0;
     virtual void         release() = 0;        // can not call it.
     virtual ~User() {}
 };

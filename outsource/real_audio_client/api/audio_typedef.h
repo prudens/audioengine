@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 #include "SnailAudioEngineHelper.h"
+#include "user_service.pb.h"
+#include "../user_list.h"
 namespace audio_engine{
         struct AudioSDKCfg
         {
@@ -47,39 +49,34 @@ namespace audio_engine{
         private:
             std::string _impl;
         };
-        template<typename T>
         struct UserImpl :public User
         {
-            explicit UserImpl( T impl )
+            explicit UserImpl( ConstMemberPtr impl )
             {
                 _impl = impl;
             }
             virtual ~UserImpl() {}
             virtual const char* userid()const override
             {
-                return _impl->userid()->c_str();
+                return _impl->GetUserID().c_str();
             }
             virtual const char* extends()const override
             {
-                return _impl->extends();
+                return _impl->GetUserExtend().c_str();
             }
             virtual bool IsDisableSpeak()const override
             {
-                return _impl->IsDisableSpeak();
+                return _impl->GetState() & USER_STATE::STATE_BANNED;
             }
             virtual bool IsBlocked()const override
             {
-                return _impl->IsBlocked();
-            }
-            virtual const char* attr( const char* name )const override
-            {
-                return _impl->attr( name );
+				return _impl->GetState() & USER_STATE::STATE_BLOCKED;
             }
             virtual void release()override
             {
                 delete this;
             }
-            T _impl;
+			ConstMemberPtr _impl;
         };
 
         struct MessageImpl : public Message
@@ -132,23 +129,11 @@ namespace audio_engine{
 
         struct UserListImpl : public UserList
         {
-			virtual User* operator[](size_t idx)const override { return nullptr; /*return _impl[idx].get();*/ }
-			virtual User* at(size_t idx)const override { return nullptr;/*return _impl.at( idx ).get();*/ }
-			virtual size_t size()const override { return 0;/*return _impl.size();*/ }
+			virtual User* operator[](size_t idx)const override { return _impl[idx].get(); }
+			virtual User* at(size_t idx)const override { return _impl.at( idx ).get(); }
+			virtual size_t size()const override { return _impl.size(); }
             virtual void release()override { delete this; }
-            //UserListImpl( snail::client::media::imedia_base_client* client, bool mic_order )
-            //    :_client( client ), _mic_order( mic_order )
-            //{
-            //    int count = _mic_order ? _client->IO_LockMicList() : _client->IO_LockUserList();
-            //    _impl.resize( count );
-            //}
-            virtual ~UserListImpl()
-            {
-                //_mic_order ? _client->IO_UnLockMicList() : _client->IO_UnLockUserList();
-            }
             std::vector<std::shared_ptr<User>> _impl;
-           // snail::client::media::imedia_base_client*_client;
-            bool _mic_order;
         };
 
         class MessageListImpl : public MessageList

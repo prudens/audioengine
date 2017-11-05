@@ -1,5 +1,6 @@
 #include "master_control.h"
 #include "base/log.h"
+#include <boost/signals2.hpp>
 namespace audio_engine{
 	static audio_engine::Logger Log;
 	MasterControl::MasterControl()
@@ -14,12 +15,24 @@ namespace audio_engine{
 
 	void MasterControl::Initialize()
 	{
-		_user_mgr.SetEventCallback( this );
+	    namespace ph = std::placeholders;
+		_user_mgr._UpdateLoginState.connect(0, std::bind(&MasterControl::UpdateLoginState,this,
+			ph::_1));
+		_user_mgr._UserEnterRoom.connect(0, std::bind( &MasterControl::UserEnterRoom, this,
+			ph::_1 ) );
+		_user_mgr._UserLeaveRoom.connect(0, std::bind( &MasterControl::UserLeaveRoom, this,
+			ph::_1 ) );
+		_user_mgr._UpdateUserExtend.connect(0, std::bind( &MasterControl::UpdateUserExtend, this,
+			ph::_1, ph::_2, ph::_3 ) );
+		_user_mgr._UpdateUserState.connect( 0, std::bind( &MasterControl::UpdateUserState, this,
+			ph::_1, ph::_2, ph::_3, ph::_4 ) );
+		auto c = _user_mgr._UpdateUserList.connect(0, std::bind( &MasterControl::UpdateUserList, this,
+			ph::_1 ) );
 	}
 
 	void MasterControl::Terminate()
 	{
-		_user_mgr.SetEventCallback( nullptr );
+		_user_mgr._UpdateUserList.disconnect(0);
 	}
 
 	void MasterControl::UpdateLoginState( LoginState state )
@@ -27,19 +40,19 @@ namespace audio_engine{
 		// 只上报三种情况，登陆成功和失败，登出成功。但是内部要打印具体的操作
 		if(state == LS_LOGINED && _user_mgr.GetTargetState() == LS_LOGINED)
 		{
-			_event_handler->RespondLogin( _user_mgr.GetRoomKey().c_str(), _user_mgr.GetUserID().c_str(), 0 );
+			_RespondLogin( _user_mgr.GetRoomKey().c_str(), _user_mgr.GetUserID().c_str(), 0 );
 		}
 		else if(state == LS_NONE && _user_mgr.GetTargetState() == LS_NONE)
 		{
-			_event_handler->RespondLogout( _user_mgr.GetRoomKey().c_str(), _user_mgr.GetUserID().c_str(), 0 );
+			_RespondLogout( _user_mgr.GetRoomKey().c_str(), _user_mgr.GetUserID().c_str(), 0 );
 		}
 		else if(_user_mgr.GetTargetState() == LS_LOGINED && state == LS_NONE)
 		{
-			_event_handler->RespondLogin( _user_mgr.GetRoomKey().c_str(), _user_mgr.GetUserID().c_str(), -2 );
+			_RespondLogin( _user_mgr.GetRoomKey().c_str(), _user_mgr.GetUserID().c_str(), -2 );
 		}
 	}
 
-	void MasterControl::UserEnterRoom( MemberPtr user )
+	void MasterControl::UserEnterRoom( ConstMemberPtr user )
 	{
 		_room_member_list.Add( user );
 	}
@@ -74,6 +87,7 @@ namespace audio_engine{
 			if(token == _user_mgr.GetToken())
 			{
 				//说明是自己设置的，通知上层。
+				
 			}
 			else
 			{
@@ -82,14 +96,9 @@ namespace audio_engine{
 		}
 	}
 
-	void MasterControl::UpdateUserList( const std::vector<MemberPtr>& users )
+	void MasterControl::UpdateUserList( const std::vector<ConstMemberPtr>& users )
 	{
 		_room_member_list.UpdateList( users );
-	}
-
-	void MasterControl::RegisterEventHandler( IAsyncEventHandler * handler )
-	{
-		_event_handler = handler;
 	}
 
 	void MasterControl::Login( std::string roomkey, std::string uid )
@@ -123,4 +132,15 @@ namespace audio_engine{
 	{
 		_user_mgr.SetUserExtend( extend );
 	}
+
+	audio_engine::IUserModuleSignal* MasterControl::GetUserModuleSignal()
+	{
+		return &_user_mgr;
+	}
+
+	audio_engine::MemberList* MasterControl::GetMemberList()
+	{
+		return &_room_member_list;
+	}
+
 }

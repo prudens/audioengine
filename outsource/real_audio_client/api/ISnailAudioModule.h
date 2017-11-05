@@ -15,7 +15,7 @@ public:
     * @param     const char * value.passed to SetUserAttr().
     * @param     int ec
     */
-    virtual void RespondSetUserAttr( UID uid, const char* name, const char* value, int ec ) {}
+    virtual void RespondSetUserExtend( UID uid, const char* name, const char* value, int ec ) {}
 
     /**
     * @brief     Notify the user attribute has changed
@@ -24,7 +24,7 @@ public:
     * @param     const char * name
     * @param     const char * value
     */
-    virtual void NotifyUserAttrChanged( UID uid, const char* name, const char* value ) {}
+    virtual void NotifyUserExtendChanged( UID uid, const char* name, const char* value ) {}
     /**
     * @brief     Notify a new user joined this room.
     * @return    void
@@ -80,7 +80,7 @@ public:
     * @param     const char * name. null-terminated byte string.
     * @param     const char * value. null-terminated byte string.
     */
-    virtual int SetUserAttr( UID uid, const char* name, const char* value ) = 0;
+    virtual int SetUserExtend( UID uid, const char* value ) = 0;
     /**
     * @brief     Query total number of user in the same room.Caller must call EnablePullUserList(true) before Login().
     * @return    int

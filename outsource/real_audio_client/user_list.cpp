@@ -1,6 +1,6 @@
 #include "user_list.h"
 namespace audio_engine{
-	struct UserImpl : public IMember
+	struct MemberImpl : public IMember
 	{
 		virtual void SetUserID( std::string user_id )
 		{
@@ -62,15 +62,16 @@ namespace audio_engine{
 	};
 
 
-	typedef std::lock_guard<std::mutex> lockGuard;
+	typedef std::unique_lock<std::shared_mutex> WriteLock;
+	typedef std::shared_lock<std::shared_mutex> ReadLock;
 	MemberPtr CreateMember()
 	{
-		return std::make_shared<UserImpl>();
+		return std::make_shared<MemberImpl>();
 	}
 
-	void MemberList::UpdateList( std::vector<MemberPtr> users )
+	void MemberList::UpdateList( std::vector<ConstMemberPtr> users )
 	{
-		lockGuard lock( _mutex );
+		WriteLock lock( _mutex );
 		_users.clear();
 		_tokens.clear();
 		for(auto & user : users)
@@ -80,13 +81,13 @@ namespace audio_engine{
 		}
 	}
 
-	bool MemberList::Add( MemberPtr ptr )
+	bool MemberList::Add( ConstMemberPtr ptr )
 	{
 		if(!ptr)
 		{
 			return false;
 		}
-		lockGuard lock( _mutex );
+		WriteLock lock( _mutex );
 		_users[ptr->GetUserID()] = ptr;
 		_tokens[ptr->GetToken()] = ptr->GetUserID();
 		return true;
@@ -94,7 +95,7 @@ namespace audio_engine{
 
 	bool MemberList::Remove( std::string user_id )
 	{
-		lockGuard lock( _mutex );
+		WriteLock lock( _mutex );
 		auto it = _users.find( user_id );
 		if(it == _users.end())
 		{
@@ -106,21 +107,25 @@ namespace audio_engine{
 
 	bool MemberList::Remove( int64_t token )
 	{
-		lockGuard lock( _mutex );
+		WriteLock lock( _mutex );
 		auto it = _tokens.find( token );
 		if(it == _tokens.end())
 		{
 			return false;
 		}
 		std::string uid = it->second;
-		_tokens.erase( it );
-		Remove( uid );
+		auto itu = _users.find( uid );
+		if(itu == _users.end())
+		{
+			return false;
+		}
+		_users.erase( itu );
 		return true;
 	}
 
 	bool MemberList::Update( std::string user_id, MemberPtr ptr )
 	{
-		lockGuard lock( _mutex );
+		WriteLock lock( _mutex );
 		auto it = _users.find( user_id );
 		if(it == _users.end())
 		{
@@ -133,7 +138,7 @@ namespace audio_engine{
 
 	bool MemberList::Update( int64_t token, std::string user_extend )
 	{
-		auto it = GetUser( token );
+		auto it = GetMember( token );
 		if(!it)
 		{
 			return false;
@@ -149,7 +154,7 @@ namespace audio_engine{
 
 	bool MemberList::Update( int64_t token, int state )
 	{
-		auto it = GetUser( token );
+		auto it = GetMember( token );
 		if(!it)
 		{
 			return false;
@@ -164,9 +169,9 @@ namespace audio_engine{
 		return false;
 	}
 
-	ConstUserPtr MemberList::GetUser( std::string user_id )const
+	ConstMemberPtr MemberList::GetMember( std::string user_id )const
 	{
-		lockGuard lock( _mutex );
+		ReadLock lock( _mutex );
 		auto it = _users.find( user_id );
 		if(it == _users.end())
 		{
@@ -175,9 +180,9 @@ namespace audio_engine{
 		return it->second;
 	}
 
-	ConstUserPtr MemberList::GetUser( int64_t token )const
+	ConstMemberPtr MemberList::GetMember( int64_t token )const
 	{
-		lockGuard lock( _mutex );
+		ReadLock lock( _mutex );
 		auto it = _tokens.find( token );
 		if(it == _tokens.end())
 		{
@@ -191,10 +196,24 @@ namespace audio_engine{
 		return v->second;
 	}
 
-	void MemberList::Traversal( std::function<void( ConstUserPtr )> cb )
+	std::string MemberList::GetUserID( int64_t token ) const
 	{
-		lockGuard lock( _mutex );
-		for(auto& item : _users)
+		ReadLock lock( _mutex );
+		auto it = _tokens.find( token );
+		if(it == _tokens.end())
+		{
+			return "";
+		}
+		else
+		{
+			return it->second;
+		}
+	}
+
+	void MemberList::Traversal( std::function<void( ConstMemberPtr )> cb )const
+	{
+		ReadLock lock( _mutex );
+		for(auto item : _users)
 		{
 			cb( item.second );
 		}
@@ -202,7 +221,15 @@ namespace audio_engine{
 
 	void MemberList::Clear()
 	{
-		lockGuard lock( _mutex );
+		WriteLock lock( _mutex );
 		_users.clear();
+		_tokens.clear();
 	}
+
+	size_t MemberList::Count()const
+	{
+		ReadLock lock( _mutex );
+		return _users.size();
+	}
+
 }

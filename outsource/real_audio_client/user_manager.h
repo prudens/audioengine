@@ -2,6 +2,8 @@
 #include <list>
 #include <mutex>
 #include <atomic>
+
+#include <boost/signals2.hpp>
 #include "real_audio_common.h"
 #include "protobuf_packet.h"
 #include "user_service.h"
@@ -31,27 +33,25 @@ namespace audio_engine{
 	};
 
 #define MAX_TRY_LOGIN 5
-
-	class UserEventHandler
+	class IUserModuleSignal
 	{
 	public:
-		virtual ~UserEventHandler(){}
-		virtual void UpdateLoginState( LoginState state ) = 0;
-		virtual void UserEnterRoom( MemberPtr user ) = 0;
-		virtual void UserLeaveRoom( int64_t token ) = 0;
-		virtual void UpdateUserState( int64_t src_token, int64_t dst_token, int state, int ec ) = 0;
-		virtual void UpdateUserExtend( int64_t token, std::string extend, int ec ) = 0;
-		virtual void UpdateUserList( const std::vector<MemberPtr>&users ) = 0;
+		boost::signals2::signal<void( LoginState state )> _UpdateLoginState;
+		boost::signals2::signal<void( ConstMemberPtr user )> _UserEnterRoom;
+		boost::signals2::signal<void( int64_t token )> _UserLeaveRoom;
+		boost::signals2::signal<void( int64_t src_token, int64_t dst_token, int state, int ec )> _UpdateUserState;
+		boost::signals2::signal<void( int64_t token, std::string extend, int ec )> _UpdateUserExtend;
+		boost::signals2::signal<void( const std::vector<ConstMemberPtr>&users )> _UpdateUserList;
+		virtual std::string GetUserID() = 0;
+		virtual  std::string GetRoomKey() = 0;
+		virtual int64_t GetToken() = 0;
 	};
-
-
-	class UserManager : ProtoPacketizer
+	class UserManager : public IUserModuleSignal
 	{
 	public:
 		UserManager( std::shared_ptr<UserService>  proto_packet = nullptr );
 		~UserManager();
 	public:
-		void SetEventCallback( UserEventHandler* handler );
 		int  Login( std::string roomkey, std::string userid );
 		void Logout();
 		int  GetCurState();
@@ -67,12 +67,12 @@ namespace audio_engine{
 		void DisConnectServer();
 		void VerifyAccount();
 		void Transform( LoginState state );
+
 	public:
-		virtual bool RecvPacket( std::shared_ptr<RAUserMessage> pb );
-		virtual bool HandleError( std::error_code ec );
-		virtual bool HandleConnect();
+		virtual void RecvPacket( std::shared_ptr<RAUserMessage> pb );
+		virtual void HandleError( std::error_code ec );
+		virtual void HandleConnect( std::error_code ec );
 		void Update( LoginState state );
-		UserEventHandler* _event_handle;
 		UserServicePtr _user_service;
 		AsyncTask*    _task = nullptr;
 		Timer   _timer;
@@ -88,7 +88,7 @@ namespace audio_engine{
 		int   _cur_state_time = 0;
 		uint32_t _try_login_count = 0;
 		int _error_code = 0;
-		std::vector<MemberPtr> _cache_userlist;
+		std::vector<ConstMemberPtr> _cache_userlist;
 		std::recursive_mutex _mutex;
 	};
 }

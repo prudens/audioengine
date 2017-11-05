@@ -216,21 +216,21 @@ namespace audio_engine{
 		}
 	}
 
-	void ClientManager::SetUserAttr( int mid, std::string uid, std::string key, std::string value )
+	void ClientManager::SetUserExtend( int mid, std::string uid, std::string value )
 	{
 		auto it = _audio_clients.find( mid );
 		if(it != _audio_clients.end())
 		{
-			return it->second->SetUserAttr( uid, key, value );
+			return it->second->SetUserExtend( uid, value );
 		}
 	}
 
-	void ClientManager::GetUserAttr( int mid, std::string uid, std::string key )
+	void ClientManager::GetUserExtend( int mid, std::string uid )
 	{
 		auto it = _audio_clients.find( mid );
 		if(it != _audio_clients.end())
 		{
-			return it->second->GetUserAttr( uid, key );
+			return it->second->GetUserExtend( uid );
 		}
 	}
 

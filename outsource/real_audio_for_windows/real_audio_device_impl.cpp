@@ -9,6 +9,7 @@
 #include "audio_effect.h"
 #include "base/time_cvt.hpp"
 #if 1
+using namespace audio_engine;
 class CAudioBufferProc : public  AudioBufferProc
 {
 public:

@@ -34,16 +34,11 @@ namespace audio_engine{
 			{
 				BufferPtr buf = _buffer_pool->PullFromBufferPool();
 				self->Read( buf );
-				_task->AddTask( [=]
-				{
-					self->HandleConnect();
-				} );
-
 			}
-			else
+			_task->AddTask( [=]
 			{
-				self->HandleError( ec );
-			}
+				self->_HandleConnect(ec);
+			} );
 		} );
 	}
 
@@ -63,20 +58,6 @@ namespace audio_engine{
 	bool UserService::IsConnectServer()
 	{
 		return _tcp_socket != nullptr;
-	}
-
-	void UserService::RegisterHandler( ProtoPacketizer *p )
-	{
-		_lock_handle.lock();
-		_proto_handlers.push_back( p );
-		_lock_handle.unlock();
-	}
-
-	void UserService::UnRegisterHandler( ProtoPacketizer* p )
-	{
-		_lock_handle.lock();
-		_proto_handlers.remove( p );
-		_lock_handle.unlock();
 	}
 
 	void UserService::Read( BufferPtr buf )
@@ -101,7 +82,10 @@ namespace audio_engine{
 			}
 			else
 			{
-				HandleError( ec );
+				self->_task->AddTask( [=]
+				{
+					self->_HandleError( ec );
+				} );
 			}
 		} );
 	}
@@ -119,23 +103,12 @@ namespace audio_engine{
 			self->_buffer_pool->PushToBufferPool( buf );
 			if(ec)
 			{
-				self->HandleError( ec );
+				self->_task->AddTask( [=]
+				{
+					self->_HandleError( ec );
+				} );
 			}
 		} );
-	}
-
-
-	void UserService::HandleError( std::error_code ec )
-	{
-		_lock_handle.lock();
-		for(auto&p : _proto_handlers)
-		{
-			if(p->HandleError( ec ))
-			{
-				break;
-			}
-		}
-		_lock_handle.unlock();
 	}
 
 	void UserService::TimerLoop()
@@ -163,20 +136,6 @@ namespace audio_engine{
 		_timer.AddTask( 100ms, std::bind( &UserService::TimerLoop, this ) );
 	}
 
-	void UserService::HandleConnect()
-	{
-		_lock_handle.lock();
-		for(auto& p : _proto_handlers)
-		{
-			if(p->HandleConnect())
-			{
-				break;
-			}
-		}
-		_lock_handle.unlock();
-
-	}
-
 	void UserService::RecvPacket( std::error_code ec, std::shared_ptr<RAUserMessage> pb )
 	{
 
@@ -187,7 +146,7 @@ namespace audio_engine{
 			auto it = _req_packet_list.find( sn );
 			if(it == _req_packet_list.end())
 			{
-				printf( "超时被忽略的包。\n" );
+				printf( "超时，被忽略的包。\n" );
 				return;
 			}
 			else
@@ -201,15 +160,7 @@ namespace audio_engine{
 			}
 		}
 
-		_lock_handle.lock();
-		for(auto& p : _proto_handlers)
-		{
-			if(p->RecvPacket( pb ))
-			{
-				break;
-			}
-		}
-		_lock_handle.unlock();
+		_RecvPacket( pb );
 	}
 
 	void UserService::SendPacket( RAUserMessagePtr pb, tick_t timeout, std::function<void( RAUserMessagePtr, std::error_code )> cb )

@@ -28,7 +28,7 @@ public:
 };
 
 
-class AudioRoomImpl : public IAudioRoom,public IAsyncEventHandler
+class AudioRoomImpl : public IAudioRoom
 { 
 	typedef std::shared_ptr<IModule> moduleptr;
 public:
@@ -82,19 +82,21 @@ class UserModuleImpl :public IUserModule,public IModuleHandler
 public:
     UserModuleImpl( AudioRoomImpl*host );
     virtual void RegisterEventHandler( IUserEventHandler* handler );
-    virtual int  SetUserAttr( UID uid, const char* name, const char* value );
+    virtual int  SetUserExtend( UID uid, const char* value );
     virtual int  GetUserCount();
     virtual int  GetUserList( UserListPtr& userlist );
     virtual int  GetUser( UID uid, UserPtr& user );
     virtual int  KickOff( UID uid );
-public:
-	void*       Handler() { return (IModuleHandler*)this; }
-	EventHandle EventNotifyHandler(int eventid, const void* param);
+private:
+	void*        Handler() { return (IModuleHandler*)this; }
+	void         UserEnterRoom( ConstMemberPtr user );
+	void         UserLeaveRoom( int64_t token );
+	void         UpdateUserExtend( int64_t token, std::string extend, int ec );
+	void         UpdateUserState( int64_t src_token, int64_t dst_token, int state, int ec );
 private:
 	MasterControl& _master_control;
     AudioRoomImpl* _host = nullptr;
     IUserEventHandler* _handler = nullptr;
-//    snail::client::media::imedia_base_client* _media_base_client;
 };
 
 class MessageModuleImpl : public IMessageModule, public IModuleHandler
