@@ -9,7 +9,6 @@ namespace audio_engine{
 		:_proto_packet( std::bind( &UserService::RecvPacket, this, std::placeholders::_1, std::placeholders::_2 ) )
 		,_timer( ClientModule::GetInstance()->GetTimerThread())
 	{
-		_buffer_pool = ClientModule::GetInstance()->GetBufferPool();
 		_task = new AsyncTask(ClientModule::GetInstance()->GetThreadPool());
 		_timer.AddTask( 100ms, std::bind(&UserService::TimerLoop,this));
 	}
@@ -27,13 +26,13 @@ namespace audio_engine{
 		auto self = shared_from_this();
 		TcpFactory* fac = ClientModule::GetInstance()->GetTcpFactory();
 		_tcp_socket = fac->CreateTcpConnection( "", 0 );
+		_proto_packet.Reset();
 		ASSERT( _tcp_socket );
 		_tcp_socket->AsyncConnect( ip, port, [=]( std::error_code ec )
 		{
 			if(!ec)
 			{
-				BufferPtr buf = _buffer_pool->PullFromBufferPool();
-				self->Read( buf );
+				self->Read();
 			}
 			_task->AddTask( [=]
 			{
@@ -60,12 +59,13 @@ namespace audio_engine{
 		return _tcp_socket != nullptr;
 	}
 
-	void UserService::Read( BufferPtr buf )
+	void UserService::Read( )
 	{
 		if(!_tcp_socket)
 		{
 			return;
 		}
+		auto buf = std::make_shared<Buffer>();
 		auto self = shared_from_this();
 		_tcp_socket->AsyncRead( buf->WriteData(), buf->WriteAvailable(),
 			[=]( std::error_code ec, size_t length )
@@ -77,8 +77,7 @@ namespace audio_engine{
 				{
 					self->_proto_packet.Parse( buf );
 				} );
-				auto buf = _buffer_pool->PullFromBufferPool();
-				Read( buf );
+				Read( );
 			}
 			else
 			{
@@ -100,7 +99,6 @@ namespace audio_engine{
 		_tcp_socket->AsyncWrite( buf->ReadData(), buf->ReadAvailable(),
 			[=]( std::error_code ec, std::size_t length )
 		{
-			self->_buffer_pool->PushToBufferPool( buf );
 			if(ec)
 			{
 				self->_task->AddTask( [=]

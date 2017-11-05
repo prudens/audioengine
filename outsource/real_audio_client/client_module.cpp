@@ -83,8 +83,8 @@ namespace audio_engine{
 		return _timer;
 	}
 
-	BufferPool* ClientModule::GetBufferPool()
-	{
-		return _buffer_pool;
-	}
+// 	BufferPool* ClientModule::GetBufferPool()
+// 	{
+// 		return _buffer_pool;
+// 	}
 }

@@ -16,6 +16,7 @@ namespace audio_engine
 		~ProtoPacket() = default;
 		BufferPtr Build( std::shared_ptr<audio_engine::RAUserMessage> pb );
 		void Parse( BufferPtr buf );
+		void Reset();
 	private:
 		ReadPacket _cb;
 		BufferPtr _buffer;

@@ -53,4 +53,9 @@ namespace audio_engine{
 		}
 	}
 
+	void ProtoPacket::Reset()
+	{
+		_buffer->Reset();
+	}
+
 }

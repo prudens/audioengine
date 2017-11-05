@@ -21,7 +21,7 @@ namespace audio_engine{
 		ServerConfig*    GetServerCnfig();
 		ThreadPool*       GetThreadPool();
 		TimerThread*     GetTimerThread();
-		BufferPool*      GetBufferPool();
+		//BufferPool*      GetBufferPool();
 	private:
 		ClientModule();
 		~ClientModule();
@@ -35,6 +35,6 @@ namespace audio_engine{
 		BufferPool*          _buffer_pool = nullptr;
 		asio::io_context     _io_context;
 		asio::io_service::work* _work;
-		std::future<void> _future;
+		std::future<void>    _future;
 	};
 }

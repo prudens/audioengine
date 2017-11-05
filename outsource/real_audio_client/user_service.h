@@ -32,15 +32,13 @@ namespace audio_engine{
 		boost::signals2::signal<void( std::error_code ec )>  _HandleError;
 		boost::signals2::signal<void( std::error_code ec )>  _HandleConnect;
 	private:
-		void     Read( BufferPtr buf );
+		void     Read( );
 		void     Write( BufferPtr buf );
 		void     HandleConnect(std::error_code ec);
 		void     TimerLoop();
 		AsyncTask*    _task = nullptr;
 		TcpSocketPtr _tcp_socket;
 		ProtoPacket _proto_packet;
-		BufferPool* _buffer_pool;
-
 		int16_t        _sn;
 		std::mutex _sns_mutex;
 		Timer   _timer;
