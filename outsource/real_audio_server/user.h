@@ -9,13 +9,17 @@
 namespace audio_engine{
 #define DEFAULT_SEND
 	typedef int socket_t;
-
+	typedef std::shared_ptr<audio_engine::RAUserMessage> RAUserMessagePtr;
 	class UserManager;
-	class User : public std::enable_shared_from_this<User>
+	class UserConnection;
+	typedef std::shared_ptr<UserConnection> UserConnPtr;
+	class UserConnection : public std::enable_shared_from_this<UserConnection>
 	{
 	public:
-		User( UserManager* host );
-		~User();
+		UserConnection( UserManager* host );
+		UserConnection(TcpSocketPtr tcp);
+		void SetVerifyAccountCB( std::function<int(RAUserMessagePtr pb, UserConnPtr conn)> cb);
+		~UserConnection();
 		void AttachTcp( TcpSocketPtr tcp );
 		void DettachTcp();
 		std::string userid();
@@ -27,6 +31,7 @@ namespace audio_engine{
 		void set_state( int state ) { _state = state; }
 	public:
 		void RecvPacket( std::error_code ec, std::shared_ptr< audio_engine::RAUserMessage> pb );
+		void VerifyFailed();
 		void Send( int type, BufferPtr buf );
 	private:
 		void Read();
@@ -34,6 +39,7 @@ namespace audio_engine{
 		void HandleError( std::error_code ec );
 		void HandleLogin( const audio_engine::RequestLogin& login_req,int sn );
 		void HandleLogout( const ::audio_engine::RequestLogout& logout_req,int sn );
+		std::function<int( RAUserMessagePtr pb, UserConnPtr conn )> _VerifyAccount;
 		std::string _userid;
 		std::string _extend;
 		int64_t _token = 0;
@@ -44,7 +50,8 @@ namespace audio_engine{
 		TcpSocketPtr _tcp_socket;
 		ProtoPacket _proto_packet;
 		UserManager* _host;
-
+		bool _first_packet = true;
 		bool _stop = false;
 	};
+
 }

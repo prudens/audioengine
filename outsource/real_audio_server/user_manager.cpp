@@ -40,7 +40,7 @@ namespace audio_engine{
 		_lock.unlock();
 	}
 
-	void UserManager::HandleLogin( std::shared_ptr<User> user )
+	void UserManager::HandleLogin( std::shared_ptr<UserConnection> user )
 	{
 		_lock.lock();
 		_users.push_back( user );
@@ -67,7 +67,7 @@ namespace audio_engine{
 		}
 	}
 
-	void UserManager::HandleLogout( std::shared_ptr<User> user )
+	void UserManager::HandleLogout( std::shared_ptr<UserConnection> user )
 	{
 		_lock.lock();
 		if(std::find( _users.begin(), _users.end(), user ) == _users.end())
@@ -95,7 +95,7 @@ namespace audio_engine{
 		}
 	}
 
-	void UserManager::UpdateUserExtend( std::shared_ptr<User> user, std::shared_ptr< audio_engine::RAUserMessage> pb )
+	void UserManager::UpdateUserExtend( std::shared_ptr<UserConnection> user, std::shared_ptr< audio_engine::RAUserMessage> pb )
 	{
 		auto update_extend = pb->update_user_extend();
 		update_extend.set_error_code( 0 );
@@ -108,7 +108,7 @@ namespace audio_engine{
 		_lock.unlock();
 	}
 
-	void UserManager::UpdateUserState( std::shared_ptr<User> user, std::shared_ptr< audio_engine::RAUserMessage> pb )
+	void UserManager::UpdateUserState( std::shared_ptr<UserConnection> user, std::shared_ptr< audio_engine::RAUserMessage> pb )
 	{
 		auto update_state = pb->update_user_state();
 		update_state.set_error_code( 0 );
@@ -143,7 +143,7 @@ namespace audio_engine{
 			{
 				printf( "收到客户端新连接：%s:%u\n", ip.c_str(), (uint16_t)port );
 			}
-			auto user = std::make_shared<User>( this );
+			auto user = std::make_shared<UserConnection>( this );
 			user->AttachTcp( tcp );
 		}
 		if(_stop)

@@ -14,18 +14,18 @@ namespace audio_engine{
 	public:
 		void Start();
 		void Stop();
-		void HandleLogin( std::shared_ptr<User> user );
-		void HandleLogout( std::shared_ptr<User> user );
-		void UpdateUserExtend( std::shared_ptr<User> user, std::shared_ptr< audio_engine::RAUserMessage> pb );
-		void UpdateUserState( std::shared_ptr<User> user, std::shared_ptr< audio_engine::RAUserMessage> pb );
-		const std::list<std::shared_ptr<User>>& GetUserList() { return _users; }
+		void HandleLogin( std::shared_ptr<UserConnection> user );
+		void HandleLogout( std::shared_ptr<UserConnection> user );
+		void UpdateUserExtend( std::shared_ptr<UserConnection> user, std::shared_ptr< audio_engine::RAUserMessage> pb );
+		void UpdateUserState( std::shared_ptr<UserConnection> user, std::shared_ptr< audio_engine::RAUserMessage> pb );
+		const std::list<std::shared_ptr<UserConnection>>& GetUserList() { return _users; }
 	private:
 		bool HandleAccept( std::error_code ec, TcpSocketPtr tcp );
 		TcpAcceptorPtr _acceptor;
 		AsyncTask* _task = nullptr;
 		ProtoPacket _packet;
 		std::mutex _lock;
-		std::list<std::shared_ptr<User>> _users;
+		std::list<std::shared_ptr<UserConnection>> _users;
 		bool _stop = false;
 
 

@@ -4,27 +4,37 @@
 #include "token_generater.h"
 #include "user_manager.h"
 namespace audio_engine{
-	User::User( UserManager* host )
+	UserConnection::UserConnection( UserManager* host )
 		: _host( host )
-		, _proto_packet( std::bind( &User::RecvPacket, this, std::placeholders::_1, std::placeholders::_2 ) )
+		, _proto_packet( std::bind( &UserConnection::RecvPacket, this, std::placeholders::_1, std::placeholders::_2 ) )
 	{
 		_buffer_pool = ServerModule::GetInstance()->GetBufferPool();
 		_task = new AsyncTask( ServerModule::GetInstance()->GetThreadPool() );
 	}
 
-	User::~User()
+	UserConnection::UserConnection( TcpSocketPtr tcp )
+	{
+
+	}
+
+	void UserConnection::SetVerifyAccountCB( std::function<int( RAUserMessagePtr pb, UserConnPtr conn )> cb )
+	{
+		_VerifyAccount = cb;
+	}
+
+	UserConnection::~UserConnection()
 	{
 		DettachTcp();
 		printf( "user:%s offline\n", _userid.c_str() );
 	}
 
-	void User::AttachTcp( TcpSocketPtr tcp )
+	void UserConnection::AttachTcp( TcpSocketPtr tcp )
 	{
 		_tcp_socket = tcp;
 		Read();
 	}
 
-	void User::DettachTcp()
+	void UserConnection::DettachTcp()
 	{
 		if(!_tcp_socket)
 		{
@@ -34,27 +44,27 @@ namespace audio_engine{
 		_tcp_socket->DisConnect();
 	}
 
-	std::string User::userid()
+	std::string UserConnection::userid()
 	{
 		return _userid;
 	}
 
-	int64_t User::token()
+	int64_t UserConnection::token()
 	{
 		return _token;
 	}
 
-	std::string User::extend()
+	std::string UserConnection::extend()
 	{
 		return _extend;
 	}
 
-	audio_engine::DEVICE_TYPE User::device_type()
+	audio_engine::DEVICE_TYPE UserConnection::device_type()
 	{
 		return _device_type;
 	}
 
-	void User::Read()
+	void UserConnection::Read()
 	{
 		if(_stop)
 		{
@@ -86,7 +96,7 @@ namespace audio_engine{
 		} );
 	}
 
-	void User::Write( int type, BufferPtr buf )
+	void UserConnection::Write( int type, BufferPtr buf )
 	{
 		if(!_tcp_socket)
 		{
@@ -103,51 +113,35 @@ namespace audio_engine{
 		} );
 	}
 
-	void User::RecvPacket( std::error_code ec, std::shared_ptr< audio_engine::RAUserMessage> pb )
+	void UserConnection::RecvPacket( std::error_code ec, std::shared_ptr< audio_engine::RAUserMessage> pb )
 	{
 		if(!pb)
 		{
 			return;
 		}
-
-		if(pb->has_request_login())
+		int err;
+		if ( _first_packet )
 		{
-			auto login_req = pb->request_login();
-			HandleLogin( login_req,pb->sn() );
-		}
-		if(pb->has_request_logout())
-		{
-			auto logout_req = pb->request_logout();
-			HandleLogout( logout_req,pb->sn() );
+			_first_packet = false;
+			auto self = shared_from_this();
+			err = _VerifyAccount( pb,self );
 		}
 
-		if(pb->has_update_user_extend())
+		if (err != 0)
 		{
-			_extend = pb->update_user_extend().extend();
-			pb->mutable_update_user_extend()->set_error_code( 0 );
-			if(_host)
-			{
-				auto self = shared_from_this();
-				_host->UpdateUserExtend( self, pb );
-			}
+			_stop = true;
+			VerifyFailed(pb);
+			return;
 		}
 
-		if(pb->has_update_user_state())
-		{
-			auto update_state = pb->mutable_update_user_state();
-			update_state->set_error_code( 0 );
-			_state = update_state->state();
-			Write( 0, _proto_packet.Build( pb ) );
-			pb->set_sn( 0 );
-			if(_host)
-			{
-				auto self = shared_from_this();
-				_host->UpdateUserState( self, pb );
-			}
-		}
+		// 正常流程处理。
+
 	}
 
-	void User::HandleError( std::error_code ec )
+	void UserConnection::VerifyFailed(RAUserMessagePtr pb)
+	{
+	}
+	void UserConnection::HandleError( std::error_code ec )
 	{
 		if(_stop)
 		{
@@ -169,7 +163,7 @@ namespace audio_engine{
 
 	}
 
-	void User::HandleLogin( const audio_engine::RequestLogin& login_req,int sn )
+	void UserConnection::HandleLogin( const audio_engine::RequestLogin& login_req,int sn )
 	{
 		_userid = login_req.userid();
 		_extend = login_req.extend();
@@ -204,7 +198,7 @@ namespace audio_engine{
 		printf( "用户：%s登陆\n", _userid.c_str() );
 	}
 
-	void User::HandleLogout( const ::audio_engine::RequestLogout& logout_req,int sn )
+	void UserConnection::HandleLogout( const ::audio_engine::RequestLogout& logout_req,int sn )
 	{
 		auto self = shared_from_this();
 		auto token = logout_req.token();
@@ -238,7 +232,7 @@ namespace audio_engine{
 		}
 	}
 
-	void User::Send( int type, BufferPtr buf )
+	void UserConnection::Send( int type, BufferPtr buf )
 	{
 		Write( type, buf );
 	}

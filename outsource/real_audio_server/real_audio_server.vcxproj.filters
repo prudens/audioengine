@@ -45,6 +45,21 @@
     <ClCompile Include="..\protobuf_packet.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="master_control.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="room.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="user_client.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="user_list.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="account_verify.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\real_audio_common.h">
@@ -72,6 +87,24 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\protobuf_packet.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="master_control.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="room.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="user_client.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="user_list.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="account_verify.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="error_code.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
