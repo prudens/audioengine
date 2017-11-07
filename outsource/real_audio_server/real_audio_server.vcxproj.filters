@@ -24,16 +24,10 @@
     <ClCompile Include="import_lib.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="user_manager.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\user_service.pb.cc">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\server_config.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="user.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="token_generater.cpp">
@@ -57,7 +51,13 @@
     <ClCompile Include="user_list.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="account_verify.cpp">
+    <ClCompile Include="client_conn_mgr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="user_connection.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="service.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -68,16 +68,10 @@
     <ClInclude Include="server_module.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="user_manager.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="..\user_service.pb.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\server_config.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="user.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="token_generater.h">
@@ -101,11 +95,17 @@
     <ClInclude Include="user_list.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="account_verify.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
     <ClInclude Include="error_code.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="client_conn_mgr.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="user_connection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="service.h">
+      <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

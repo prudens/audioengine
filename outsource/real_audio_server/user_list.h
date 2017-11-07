@@ -31,7 +31,7 @@ namespace audio_engine{
 		bool Add( ConstMemberPtr ptr );
 		bool Remove( std::string user_id );
 		bool Remove( int64_t token );
-		bool Update( std::string user_id, MemberPtr ptr );
+		bool Update( ConstMemberPtr ptr );
 		bool Update( int64_t token, std::string user_extend );
 		bool Update( int64_t token, int state );
 		ConstMemberPtr GetMember( std::string user_id )const;

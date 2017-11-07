@@ -23,11 +23,12 @@ enum USER_STATE
 
 message RequestLogin
 {
-  string userid       = 1;       // 用户自定义，如果房间里有重复，就踢掉原先的老用户
-  string extend       = 2;       // 扩展信息，自定义
-  string version      = 3;       // sdk版本
-  DEVICE_TYPE devtype = 4;       // 登陆设备类型
-  int32 state    = 5;       //
+  string roomkey      = 1;
+  string userid       = 2;       // 用户自定义，如果房间里有重复，就踢掉原先的老用户
+  string extend       = 3;       // 扩展信息，自定义
+  string version      = 4;       // sdk版本
+  DEVICE_TYPE devtype = 5;       // 登陆设备类型
+  int32 state         = 6;       //
 }
 
 message ResponedLogin

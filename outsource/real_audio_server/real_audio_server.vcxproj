@@ -49,6 +49,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_MBCS;ASIO_STANDALONE;ASIO_ENABLE_CANCELIO;_WIN32_WINNT=0x0501;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\;..\..\processing\src;../../network/asio/asio/include;../;</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4251</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -64,6 +65,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <DisableSpecificWarnings>4251;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -76,17 +78,17 @@
     <ClCompile Include="..\protobuf_packet.cpp" />
     <ClCompile Include="..\server_config.cpp" />
     <ClCompile Include="..\user_service.pb.cc" />
-    <ClCompile Include="account_verify.cpp" />
+    <ClCompile Include="client_conn_mgr.cpp" />
     <ClCompile Include="import_lib.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="master_control.cpp" />
     <ClCompile Include="room.cpp" />
     <ClCompile Include="server_module.cpp" />
+    <ClCompile Include="service.cpp" />
     <ClCompile Include="token_generater.cpp" />
-    <ClCompile Include="user.cpp" />
+    <ClCompile Include="user_connection.cpp" />
     <ClCompile Include="user_client.cpp" />
     <ClCompile Include="user_list.cpp" />
-    <ClCompile Include="user_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\packet.h" />
@@ -94,16 +96,16 @@
     <ClInclude Include="..\real_audio_common.h" />
     <ClInclude Include="..\server_config.h" />
     <ClInclude Include="..\user_service.pb.h" />
-    <ClInclude Include="account_verify.h" />
+    <ClInclude Include="client_conn_mgr.h" />
     <ClInclude Include="error_code.h" />
     <ClInclude Include="master_control.h" />
     <ClInclude Include="room.h" />
+    <ClInclude Include="service.h" />
     <ClInclude Include="token_generater.h" />
     <ClInclude Include="server_module.h" />
-    <ClInclude Include="user.h" />
+    <ClInclude Include="user_connection.h" />
     <ClInclude Include="user_client.h" />
     <ClInclude Include="user_list.h" />
-    <ClInclude Include="user_manager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

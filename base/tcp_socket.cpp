@@ -37,8 +37,7 @@ namespace audio_engine
 		virtual std::error_code DisConnect()
 		{
 			std::error_code ec;
-			_socket.shutdown( asio::ip::tcp::socket::shutdown_both, ec );
-			_socket.close( ec );
+			_socket.shutdown( asio::ip::tcp::socket::shutdown_receive, ec );
 			return ec;
 		}
 		virtual void AsyncConnect( std::string ip, int16_t port, ConnectHandle handle )override

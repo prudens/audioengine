@@ -121,6 +121,11 @@ namespace audio_engine
 			:_thread(thread->GetTaskThread())
 		{
 		}
+		STask( TaskThread&thread )
+			:_thread(thread)
+		{
+
+		}
 		template<class F, class... Args>
 		auto AddTask( F&& f, Args&&... args )
 			->std::future < typename std::result_of<F( Args... )>::type >
@@ -145,12 +150,16 @@ namespace audio_engine
 			_thread.AddTask(std::move(t));
 			return res;
 		}
+		TaskThread& GetTaskThread()
+		{
+			return _thread;
+		}
 		void Stop()
 		{
 			_stop = true;
 		}
 	private:
-	    TaskThread& _thread;
+		TaskThread& _thread;
 		bool _stop = false;
 		std::mutex _mutex;
 	};
@@ -162,6 +171,10 @@ namespace audio_engine
 		{
 			_stask = std::make_shared<STask>(pool);
 		}
+		AsyncTask( TaskThread& thread )
+		{
+			_stask = std::make_shared<STask>(thread);
+		}
 		~AsyncTask()
 		{
 			_stask->Stop();
@@ -172,6 +185,10 @@ namespace audio_engine
 			->std::future < typename std::result_of<F( Args... )>::type >
 		{
 			return _stask->AddTask(std::forward<F>(f),std::forward<Args>(args)...);
+		}
+		TaskThread& TaskThread()
+		{
+			return _stask->GetTaskThread();
 		}
 	private:
 		std::shared_ptr<STask> _stask;

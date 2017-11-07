@@ -123,10 +123,10 @@ namespace audio_engine{
 		return true;
 	}
 
-	bool MemberList::Update( std::string user_id, MemberPtr ptr )
+	bool MemberList::Update( ConstMemberPtr ptr )
 	{
 		WriteLock lock( _mutex );
-		auto it = _users.find( user_id );
+		auto it = _users.find( ptr->GetUserID() );
 		if(it == _users.end())
 		{
 			return false;
