@@ -23,14 +23,21 @@ namespace audio_engine{
 		auto it = _rooms.find(roomkey);
 		if(it != _rooms.end())
 		{
-			if(it->second.FindMember(reqLogin.userid()))
+			if(it->second->FindMember(reqLogin.userid()))
 			{
-				// 已经有一个同名用户在里面。
+				// 已经有一个同名用户在里面。后来的用户不能把前面的用户挤掉。
+				return ERR_INVALID_USER_ID;
 			}
 			else
 			{
-				it->second.HandleConnection(conn);
+				it->second->HandleConnection(conn);
 			}
+		}
+		else
+		{
+			Room* room = new Room;
+			_rooms[roomkey] = room;
+			room->HandleConnection( conn );
 		}
 		return ERR_OK;
 	}

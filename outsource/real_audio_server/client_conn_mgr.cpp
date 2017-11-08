@@ -3,7 +3,7 @@
 #include "server_config.h"
 #include "server_module.h"
 #include "master_control.h"
-#define MIN_SUPPORTED_VERSION "20171105"
+#define MIN_SUPPORTED_VERSION 20171105
 
 namespace audio_engine{
 	ClientConnMgr::ClientConnMgr(MasterControl *ctrl)
@@ -51,7 +51,7 @@ namespace audio_engine{
 				printf( "收到客户端新连接：%s:%u\n", ip.c_str(), (uint16_t)port );
 			}
 
-			auto user_conn = std::make_shared<UserConnection>( tcp, _task.TaskThread() );//保证跟上面同一线程
+			auto user_conn = std::make_shared<UserConnection>( tcp, _task.GetTaskThread() );//保证跟上面同一线程
 			user_conn->SetVerifyAccountCB( std::bind( &ClientConnMgr::VerifyAccount, this, std::placeholders::_1,std::placeholders::_2) );
 			user_conn->Start();
 		}
@@ -69,6 +69,7 @@ namespace audio_engine{
 		{
 			auto reqLogin = pb->request_login();
 
+			
 			if(reqLogin.version() < MIN_SUPPORTED_VERSION)
 			{
 				return ERR_NOT_VERSION_SUPPORTED;

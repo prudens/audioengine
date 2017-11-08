@@ -7,6 +7,7 @@ namespace audio_engine{
 		: _proto_packet(std::bind(&UserConnection::RecvPacket,this,std::placeholders::_1, std::placeholders::_2) )
 		, _task( thread )
 	{
+		_tcp_socket = tcp;
 	}
 
 	void UserConnection::SetVerifyAccountCB( std::function<int( RAUserMessagePtr pb, UserConnPtr conn )> cb )

@@ -176,7 +176,8 @@ namespace audio_engine{
 		login_req->set_extend( _extend );
 		login_req->set_devtype( _device_type );
 		login_req->set_state( _user_state );
-		login_req->set_version( "20171028" );
+		login_req->set_version( 20171108 );
+		login_req->set_roomkey( _roomkey );
 		_user_service->SendPacket( pb, 5000ms, [this]( auto pb, auto ec ){
 			if(!ec)
 			{

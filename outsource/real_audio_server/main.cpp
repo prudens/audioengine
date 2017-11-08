@@ -7,6 +7,7 @@ int main( int argc, char** argv )
 	while(running)
 	{
 		Service service;
+		printf( "Æô¶¯·þÎñ\n" );
 		service.Run();
 		std::string cmd;
 		while(true)

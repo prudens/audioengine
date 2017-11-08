@@ -247,19 +247,11 @@ class RequestLogin : public ::google::protobuf::MessageLite /* @@protoc_insertio
   ::std::string* release_extend();
   void set_allocated_extend(::std::string* extend);
 
-  // string version = 4;
+  // int32 version = 4;
   void clear_version();
   static const int kVersionFieldNumber = 4;
-  const ::std::string& version() const;
-  void set_version(const ::std::string& value);
-  #if LANG_CXX11
-  void set_version(::std::string&& value);
-  #endif
-  void set_version(const char* value);
-  void set_version(const char* value, size_t size);
-  ::std::string* mutable_version();
-  ::std::string* release_version();
-  void set_allocated_version(::std::string* version);
+  ::google::protobuf::int32 version() const;
+  void set_version(::google::protobuf::int32 value);
 
   // .audio_engine.DEVICE_TYPE devtype = 5;
   void clear_devtype();
@@ -280,7 +272,7 @@ class RequestLogin : public ::google::protobuf::MessageLite /* @@protoc_insertio
   ::google::protobuf::internal::ArenaStringPtr roomkey_;
   ::google::protobuf::internal::ArenaStringPtr userid_;
   ::google::protobuf::internal::ArenaStringPtr extend_;
-  ::google::protobuf::internal::ArenaStringPtr version_;
+  ::google::protobuf::int32 version_;
   int devtype_;
   ::google::protobuf::int32 state_;
   mutable int _cached_size_;
@@ -1670,57 +1662,18 @@ inline void RequestLogin::set_allocated_extend(::std::string* extend) {
   // @@protoc_insertion_point(field_set_allocated:audio_engine.RequestLogin.extend)
 }
 
-// string version = 4;
+// int32 version = 4;
 inline void RequestLogin::clear_version() {
-  version_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  version_ = 0;
 }
-inline const ::std::string& RequestLogin::version() const {
+inline ::google::protobuf::int32 RequestLogin::version() const {
   // @@protoc_insertion_point(field_get:audio_engine.RequestLogin.version)
-  return version_.GetNoArena();
+  return version_;
 }
-inline void RequestLogin::set_version(const ::std::string& value) {
+inline void RequestLogin::set_version(::google::protobuf::int32 value) {
   
-  version_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  version_ = value;
   // @@protoc_insertion_point(field_set:audio_engine.RequestLogin.version)
-}
-#if LANG_CXX11
-inline void RequestLogin::set_version(::std::string&& value) {
-  
-  version_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:audio_engine.RequestLogin.version)
-}
-#endif
-inline void RequestLogin::set_version(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  
-  version_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:audio_engine.RequestLogin.version)
-}
-inline void RequestLogin::set_version(const char* value, size_t size) {
-  
-  version_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:audio_engine.RequestLogin.version)
-}
-inline ::std::string* RequestLogin::mutable_version() {
-  
-  // @@protoc_insertion_point(field_mutable:audio_engine.RequestLogin.version)
-  return version_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* RequestLogin::release_version() {
-  // @@protoc_insertion_point(field_release:audio_engine.RequestLogin.version)
-  
-  return version_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void RequestLogin::set_allocated_version(::std::string* version) {
-  if (version != NULL) {
-    
-  } else {
-    
-  }
-  version_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), version);
-  // @@protoc_insertion_point(field_set_allocated:audio_engine.RequestLogin.version)
 }
 
 // .audio_engine.DEVICE_TYPE devtype = 5;

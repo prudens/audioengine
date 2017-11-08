@@ -177,8 +177,11 @@ namespace audio_engine
 		}
 		~AsyncTask()
 		{
-			_stask->Stop();
-			_stask.reset();
+			if(_stask)
+			{
+				_stask->Stop();
+				_stask.reset();
+			}
 		}
 		template<class F, class... Args>
 		auto AddTask( F&& f, Args&&... args )
@@ -186,10 +189,18 @@ namespace audio_engine
 		{
 			return _stask->AddTask(std::forward<F>(f),std::forward<Args>(args)...);
 		}
-		TaskThread& TaskThread()
+		TaskThread& GetTaskThread()
 		{
 			return _stask->GetTaskThread();
 		}
+	public:
+		AsyncTask( AsyncTask&&other )
+		{
+			_stask = other._stask;
+			other._stask.reset();
+		}
+		AsyncTask( AsyncTask& ) = delete;
+		AsyncTask& operator = ( AsyncTask& ) = delete;
 	private:
 		std::shared_ptr<STask> _stask;
 	};

@@ -44,6 +44,7 @@ namespace audio_engine{
 		}
 		else if(state == LS_NONE && _user_mgr.GetTargetState() == LS_NONE)
 		{
+			_room_member_list.Clear();
 			_RespondLogout( _user_mgr.GetRoomKey().c_str(), _user_mgr.GetUserID().c_str(), 0 );
 		}
 		else if(_user_mgr.GetTargetState() == LS_LOGINED && state == LS_NONE)

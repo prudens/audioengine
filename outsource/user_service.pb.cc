@@ -235,13 +235,9 @@ RequestLogin::RequestLogin(const RequestLogin& from)
   if (from.extend().size() > 0) {
     extend_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.extend_);
   }
-  version_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.version().size() > 0) {
-    version_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.version_);
-  }
-  ::memcpy(&devtype_, &from.devtype_,
+  ::memcpy(&version_, &from.version_,
     static_cast<size_t>(reinterpret_cast<char*>(&state_) -
-    reinterpret_cast<char*>(&devtype_)) + sizeof(state_));
+    reinterpret_cast<char*>(&version_)) + sizeof(state_));
   // @@protoc_insertion_point(copy_constructor:audio_engine.RequestLogin)
 }
 
@@ -249,10 +245,9 @@ void RequestLogin::SharedCtor() {
   roomkey_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   userid_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   extend_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  version_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&devtype_, 0, static_cast<size_t>(
+  ::memset(&version_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&state_) -
-      reinterpret_cast<char*>(&devtype_)) + sizeof(state_));
+      reinterpret_cast<char*>(&version_)) + sizeof(state_));
   _cached_size_ = 0;
 }
 
@@ -265,7 +260,6 @@ void RequestLogin::SharedDtor() {
   roomkey_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   userid_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   extend_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  version_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 void RequestLogin::SetCachedSize(int size) const {
@@ -295,10 +289,9 @@ void RequestLogin::Clear() {
   roomkey_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   userid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   extend_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  version_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&devtype_, 0, static_cast<size_t>(
+  ::memset(&version_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&state_) -
-      reinterpret_cast<char*>(&devtype_)) + sizeof(state_));
+      reinterpret_cast<char*>(&version_)) + sizeof(state_));
   _internal_metadata_.Clear();
 }
 
@@ -366,16 +359,14 @@ bool RequestLogin::MergePartialFromCodedStream(
         break;
       }
 
-      // string version = 4;
+      // int32 version = 4;
       case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_version()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->version().data(), static_cast<int>(this->version().length()),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "audio_engine.RequestLogin.version"));
+            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &version_)));
         } else {
           goto handle_unusual;
         }
@@ -467,14 +458,9 @@ void RequestLogin::SerializeWithCachedSizes(
       3, this->extend(), output);
   }
 
-  // string version = 4;
-  if (this->version().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->version().data(), static_cast<int>(this->version().length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "audio_engine.RequestLogin.version");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      4, this->version(), output);
+  // int32 version = 4;
+  if (this->version() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->version(), output);
   }
 
   // .audio_engine.DEVICE_TYPE devtype = 5;
@@ -520,10 +506,10 @@ size_t RequestLogin::ByteSizeLong() const {
         this->extend());
   }
 
-  // string version = 4;
-  if (this->version().size() > 0) {
+  // int32 version = 4;
+  if (this->version() != 0) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->version());
   }
 
@@ -571,9 +557,8 @@ void RequestLogin::MergeFrom(const RequestLogin& from) {
 
     extend_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.extend_);
   }
-  if (from.version().size() > 0) {
-
-    version_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.version_);
+  if (from.version() != 0) {
+    set_version(from.version());
   }
   if (from.devtype() != 0) {
     set_devtype(from.devtype());
@@ -603,7 +588,7 @@ void RequestLogin::InternalSwap(RequestLogin* other) {
   roomkey_.Swap(&other->roomkey_);
   userid_.Swap(&other->userid_);
   extend_.Swap(&other->extend_);
-  version_.Swap(&other->version_);
+  swap(version_, other->version_);
   swap(devtype_, other->devtype_);
   swap(state_, other->state_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
@@ -776,57 +761,18 @@ void RequestLogin::set_allocated_extend(::std::string* extend) {
   // @@protoc_insertion_point(field_set_allocated:audio_engine.RequestLogin.extend)
 }
 
-// string version = 4;
+// int32 version = 4;
 void RequestLogin::clear_version() {
-  version_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  version_ = 0;
 }
-const ::std::string& RequestLogin::version() const {
+::google::protobuf::int32 RequestLogin::version() const {
   // @@protoc_insertion_point(field_get:audio_engine.RequestLogin.version)
-  return version_.GetNoArena();
+  return version_;
 }
-void RequestLogin::set_version(const ::std::string& value) {
+void RequestLogin::set_version(::google::protobuf::int32 value) {
   
-  version_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  version_ = value;
   // @@protoc_insertion_point(field_set:audio_engine.RequestLogin.version)
-}
-#if LANG_CXX11
-void RequestLogin::set_version(::std::string&& value) {
-  
-  version_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:audio_engine.RequestLogin.version)
-}
-#endif
-void RequestLogin::set_version(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  
-  version_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:audio_engine.RequestLogin.version)
-}
-void RequestLogin::set_version(const char* value, size_t size) {
-  
-  version_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:audio_engine.RequestLogin.version)
-}
-::std::string* RequestLogin::mutable_version() {
-  
-  // @@protoc_insertion_point(field_mutable:audio_engine.RequestLogin.version)
-  return version_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-::std::string* RequestLogin::release_version() {
-  // @@protoc_insertion_point(field_release:audio_engine.RequestLogin.version)
-  
-  return version_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-void RequestLogin::set_allocated_version(::std::string* version) {
-  if (version != NULL) {
-    
-  } else {
-    
-  }
-  version_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), version);
-  // @@protoc_insertion_point(field_set_allocated:audio_engine.RequestLogin.version)
 }
 
 // .audio_engine.DEVICE_TYPE devtype = 5;

@@ -1,5 +1,11 @@
 #include "room.h"
+#include "server_module.h"
 namespace audio_engine{
+	Room::Room()
+	:_task(ServerModule::GetInstance()->GetThreadPool())
+	,_packet(nullptr)
+	{
+	}
 	bool Room::FindMember(std::string uid)
 	{
 		if(_members.GetMember( uid ) != nullptr)
@@ -9,7 +15,16 @@ namespace audio_engine{
 		return false;
     }
 
-	void Room::JoinMember( ConstMemberPtr member,UserClientPtr new_client )
+	bool Room::FindMember( int64_t token )
+	{
+		if (_members.GetMember(token) != nullptr )
+		{
+			return true;
+		}
+		return false;
+	}
+
+	void Room::JoinMember( ConstMemberPtr member, UserClientPtr new_client )
 	{
 		_members.Add(member);
 		for(auto it = _cache_clients.begin(); it != _cache_clients.end(); it++)
@@ -43,37 +58,70 @@ namespace audio_engine{
 
 	bool Room::HandleConnection( UserConnPtr conn )
 	{
-		UserClientPtr client = CreateUserClient( this, conn );
+		UserClientPtr client = CreateUserClient( this, _task.GetTaskThread(), conn );
 		_cache_clients.push_back( client );
 		return true;
 	}
 
 	std::vector<ConstMemberPtr> Room::GetMemberList()
 	{
-		std::vector<ConstMemberPtr> mem_list( _members.Count() );
+		std::vector<ConstMemberPtr> mem_list;
+		mem_list.reserve( _members.Count() );
 		_members.Traversal( [&mem_list](ConstMemberPtr member)
 		{
-			mem_list.emplace_back( member );
+			mem_list.push_back( member );
 		} );
 		return mem_list;
 	}
 
-	void Room::LeaveMember( int64_t token, UserClientPtr client )
+	void Room::LeaveMember( UserClientPtr client )
 	{
-		_members.Remove( token );
+		if (_members.GetMember(client->Token()) == nullptr)
+		{
+			return;
+		}
+		auto pb = std::make_shared<RAUserMessage>();
+		auto logout = pb->mutable_notify_logout();
+		logout->set_token( client->Token() );
+		auto buf = _packet.Build(pb);
 		for(auto it = _clients.begin(); it != _clients.end(); ++it)
 		{
-			
+			if(*it != client)
+			{
+				( *it )->SendToClient( buf );
+			}
 		}
 		_clients.remove_if( [client]( const UserClientPtr& it ){return it == client; } );
+		_members.Remove( client->Token() );
 
 	}
-	void Room::UpdateUserExtend( std::string extend, UserClient* client )
+	void Room::UpdateUserExtend( RAUserMessagePtr pb, UserClientPtr client )
 	{
-
+		pb->set_sn( 0 );
+		bool ret = _members.Update(client->Token(),pb->update_user_extend().extend());
+		if (!ret)
+		{
+			// log message
+			return;
+		}
+		auto buf = _packet.Build( pb );
+		for (auto it = _clients.begin(); it != _clients.end(); ++it)
+		{
+			( *it )->SendToClient( buf );
+		}
 	}
-	void Room::UpdateUserState( int state, UserClient*client )
-	{
 
+	void Room::UpdateUserState( RAUserMessagePtr pb, UserClientPtr client )
+	{
+		pb->set_sn( 0 );
+		if(!_members.Update( client->Token(), pb->update_user_state().state() ))
+		{
+			return;
+		}
+		auto buf = _packet.Build( pb );
+		for(auto it = _clients.begin(); it != _clients.end(); ++it)
+		{
+			( *it )->SendToClient( buf );
+		}
 	}
 }

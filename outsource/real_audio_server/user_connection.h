@@ -41,7 +41,7 @@ namespace audio_engine{
 		ProtoPacket _proto_packet;
 		bool _first_packet = true;
 		bool _stop = false;
-		IPacketHandler* _packet_handler;
+		IPacketHandler* _packet_handler = nullptr;
 	};
 
 }

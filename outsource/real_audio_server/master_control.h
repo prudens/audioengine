@@ -13,7 +13,7 @@ namespace audio_engine{
 		void Start();
 		int JoinRoom( RAUserMessagePtr pb, UserConnPtr conn );
 	private:
-		typedef std::map<std::string, Room> RoomList;
+		typedef std::map<std::string, Room*> RoomList;
 		RoomList _rooms;
 		ClientConnMgr _conn_mgr;
 	};
