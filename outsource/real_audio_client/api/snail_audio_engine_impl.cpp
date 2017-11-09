@@ -668,16 +668,6 @@ namespace audio_engine{
         }
         std::string struid = uid;
 		return _master_control.KickOff( uid );
-        /*int ec = _media_base_client->IO_KickOff( uid, [=] ( int ec )
-        {
-            int err = TransformErrorCode( ec );
-             auto handle = [=] () {
-                 Log.d( "Call IUserEventHandler::RespondKickOff(%s,%d)\n", struid.c_str(), err );
-                 _handler->RespondKickOff( struid.c_str(), err ); };
-             _host->RecvAsyncEvent( std::move(handle) );
-        } );
-        return TransformErrorCode( ec );*/
-		return ERR_NOT_SUPPORTED;
     }
 
 	void UserModuleImpl::UserEnterRoom( ConstMemberPtr user )

@@ -223,7 +223,6 @@ namespace audio_engine{
 	{
 		WriteLock lock( _mutex );
 		_users.clear();
-		_tokens.clear();
 	}
 
 	size_t MemberList::Count()const

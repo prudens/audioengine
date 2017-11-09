@@ -108,7 +108,15 @@ namespace audio_engine{
 
 	void MasterControl::KickoffUser( int64_t src_token, int64_t dst_token, int ec )
 	{
-		_room_member_list.Remove(dst_token);
+		if (dst_token == _user_mgr.GetToken())
+		{
+			_room_member_list.Clear();
+		}
+		else
+		{
+			_room_member_list.Remove( dst_token );
+		}
+
 	}
 
 	void MasterControl::Login( std::string roomkey, std::string uid )

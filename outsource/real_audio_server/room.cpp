@@ -94,8 +94,15 @@ namespace audio_engine{
 			}
 		}
 
-		_clients.remove_if( [token]( auto v ){ return v->Token() == token; } );
-		_members.Remove( client->Token() );
+		_clients.remove_if( [token]( auto v ){
+			if(v->Token() == token)
+			{
+				v->NotifyKickOff();
+				return true;
+			}
+			return false;
+		} );
+		_members.Remove( token );
 		return true ;
 	}
 

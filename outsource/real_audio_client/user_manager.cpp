@@ -179,9 +179,7 @@ namespace audio_engine{
 
 	void UserManager::DisConnectServer()
 	{
-		Log.d( "UserManager::DisConnectServer()1\n" );
 		_user_service->DisconnectServer();
-		Log.d( "UserManager::DisConnectServer()2\n" );
 		Transform( LS_INIT );
 		
 	}
@@ -339,6 +337,14 @@ namespace audio_engine{
 		{
 			auto kickoff = pb->kickoff_user();
 			_KickOffUserResult( kickoff.src_token(), kickoff.dst_token(), kickoff.error_code());
+			if (kickoff.dst_token() == _token)
+			{
+				_target_state = LS_NONE;
+				_target_state_internel = LS_NONE;
+				_cur_state = LS_NONE;
+				_user_service->DisconnectServer();
+			}
+
 		}
 
 	}

@@ -23,6 +23,7 @@ namespace audio_engine{
 	UserConnection::~UserConnection()
 	{
 		DettachTcp();
+		printf( "¶Ï¿ªÁ¬½Ó\n" );
 	}
 
 	void UserConnection::Start()

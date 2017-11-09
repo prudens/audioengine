@@ -54,6 +54,13 @@ namespace audio_engine{
 				 self->HandleUpdateState( pb );
 			 } );
 		 }
+
+		 if (pb->has_kickoff_user())
+		 {
+			 _task.AddTask( [=]{
+				 self->HandleKickOff( pb );
+			 } );
+		 }
 	}
 
 
@@ -187,6 +194,30 @@ namespace audio_engine{
 		_room->UpdateUserState( pb, self);
 	}
 
+	void UserClient::HandleKickOff( RAUserMessagePtr pb )
+	{
+		auto kickoff = pb->mutable_kickoff_user();
+		if (_token != 0 && kickoff->src_token() != _token)
+		{
+			kickoff->set_error_code(ERR_INVALID_USER_ID);
+		}
+		else if (!_room->FindMember(kickoff->dst_token()))
+		{
+			kickoff->set_error_code( ERR_USER_NOT_FOUND );
+		}
+		else
+		{
+			kickoff->set_error_code( ERR_OK );
+		}
+		_user_conn_ptr->SendPacket( pb );
+		auto self = shared_from_this();
+		int err = _room->HandleKickOff( pb, self );
+		if (err != 0)
+		{
+			//log
+		}
+	}
+
 	void UserClient::SendToClient( RAUserMessagePtr pb )
 	{
 		_user_conn_ptr->SendPacket(pb);
@@ -201,6 +232,14 @@ namespace audio_engine{
 	int64_t UserClient::Token() const
 	{
 		return _token;
+	}
+
+	void UserClient::NotifyKickOff( )
+	{
+		if (_user_conn_ptr)
+		{
+			_user_conn_ptr->DettachTcp();
+		}
 	}
 
 	UserClientPtr CreateUserClient( Room* room, TaskThread& thread, UserConnPtr user )

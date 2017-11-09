@@ -12,13 +12,15 @@ namespace audio_engine
 		void SendToClient( RAUserMessagePtr pb );
 		void SendToClient( BufferPtr buf );
 		int64_t Token()const;
-	public:
+		void NotifyKickOff();
+	private:
 		virtual void HandleError( std::error_code ec );
 		virtual void HandlePacket( RAUserMessagePtr pb );
 		void HandleLogin( RAUserMessagePtr pb );
 		void HandleLogout( RAUserMessagePtr pb );
 		void HandleUpdateExtend( RAUserMessagePtr pb );
 		void HandleUpdateState( RAUserMessagePtr pb );
+		void HandleKickOff( RAUserMessagePtr pb );
 	private:
 		AsyncTask _task;
 		Room*       _room;
