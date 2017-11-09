@@ -599,6 +599,7 @@ namespace audio_engine{
 			signalmgr->_UserLeaveRoom.connect( 1, std::bind( &UserModuleImpl::UserLeaveRoom, this, ph::_1 ) );
 			signalmgr->_UpdateUserExtend.connect( 1, std::bind( &UserModuleImpl::UpdateUserExtend, this, ph::_1, ph::_2, ph::_3 ) );
 			signalmgr->_UpdateUserState.connect( 1, std::bind( &UserModuleImpl::UpdateUserState, this, ph::_1, ph::_2, ph::_3, ph::_4 ) );
+			signalmgr->_KickOffUserResult.connect( 1, std::bind( &UserModuleImpl::KickOffResult, this, ph::_1, ph::_2, ph::_3 ) );
 		}
         _handler = handler;
         _host->EnablePullUserList( true );
@@ -666,6 +667,7 @@ namespace audio_engine{
             return ERR_INVALID_ARGUMENT;
         }
         std::string struid = uid;
+		return _master_control.KickOff( uid );
         /*int ec = _media_base_client->IO_KickOff( uid, [=] ( int ec )
         {
             int err = TransformErrorCode( ec );
@@ -704,20 +706,41 @@ namespace audio_engine{
 		{
 			handle = [=]() {
 				Log.d( "Call IUserEventHandler::RespondSetUserAttr(%s,%s)\n", uid.c_str(), extend.c_str() );
-				_handler->RespondSetUserExtend( uid.c_str(), extend.c_str(),"",ec ); };
+				_handler->RespondSetUserExtend( uid.c_str(), extend.c_str(),ec ); };
 		}
 		else
 		{
 			handle = [=]() {
 				Log.d( "Call IUserEventHandler::NotifyUserAttrChanged(%s)\n", uid.c_str() );
-				_handler->NotifyUserExtendChanged( uid.c_str(), extend.c_str(), "" ); };
+				_handler->NotifyUserExtendChanged( uid.c_str(), extend.c_str() ); };
 		}
 		_host->RecvAsyncEvent( std::move( handle ) );
 	}
 
 	void UserModuleImpl::UpdateUserState( int64_t src_token, int64_t dst_token, int state, int ec )
 	{
-		
+
+	}
+
+	void UserModuleImpl::KickOffResult( int64_t src_token, int64_t dst_token, int ec )
+	{
+		EventHandle handle;
+		auto src_uid = _master_control.GetMemberList()->GetUserID( src_token );
+		auto uid = _master_control.GetMemberList()->GetUserID( dst_token );
+		if(src_uid == _host->_uid)
+		{
+			handle = [=]() {
+				Log.d( "Call IUserEventHandler::RespondKickOff(%s,%d)\n", uid.c_str(), ec );
+				_handler->RespondKickOff( uid.c_str(), ec ); };
+			_host->RecvAsyncEvent( std::move( handle ) );
+		}
+		else
+		{
+			handle = [=]() {
+				Log.d( "Call IUserEventHandler::NotifyKickOff,%d)\n", uid.c_str(), ec );
+				_handler->NotifyKickOff( uid.c_str() ); };
+			_host->RecvAsyncEvent( std::move( handle ) );
+		}
 	}
 
 /////////////////////////////////////////////////////////////////

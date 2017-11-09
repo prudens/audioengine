@@ -110,7 +110,7 @@ namespace audio_engine
 		* @param     const char * name
 		* @param     const char * value
 		*/
-		virtual void NotifyUserExtendChanged( UID uid, const char* name, const char* value )override;
+		virtual void NotifyUserExtendChanged( UID uid, const char* value )override;
 
 		/**
 		* @brief     the sdk start recording audio message, response of the StartRecord().
@@ -186,7 +186,7 @@ namespace audio_engine
 		* @return    void
 		* @param     UID uid
 		*/
-		virtual void NotifyKiceOff( UID uid )override;
+		virtual void NotifyKickOff( UID uid )override;
 
 		/**
 		* @brief     notify caller had a same uid logined on other devices.
@@ -220,11 +220,10 @@ namespace audio_engine
 		* @brief     Called back when SetUserAttr() is called.
 		* @return    void
 		* @param     UID uid
-		* @param     const char * name.passed to SetUserAttr().
 		* @param     const char * value.passed to SetUserAttr().
 		* @param     int ec
 		*/
-		virtual void RespondSetUserExtend( UID uid, const char* name, const char* value, int ec )override;
+		virtual void RespondSetUserExtend( UID uid, const char* value, int ec )override;
 		/**
 		* @brief     Called back when BlockUser() is called.
 		* @return    void

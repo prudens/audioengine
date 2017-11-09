@@ -26,7 +26,7 @@ namespace audio_engine{
 		CMD_IO_STT,                // 语音转文本功能
 		CMD_IO_TS,                 // 打开跟踪说话状态
 		CMD_IO_ECHO,
-		CMD_IO_USER_ATTR,           /// 设置用户属性
+		CMD_IO_USER_EXTEND,           /// 设置用户属性
 		CMD_IO_ROOM_ATTR,          // 设置房间属性
 		CMD_IO_KICK_OFF,
 		CMD_IO_BLOCK,

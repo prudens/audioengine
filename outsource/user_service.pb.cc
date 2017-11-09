@@ -55,6 +55,11 @@ public:
  ::google::protobuf::internal::ExplicitlyConstructed<UpdateUserExtend>
      _instance;
 } _UpdateUserExtend_default_instance_;
+class KickoffUserDefaultTypeInternal {
+public:
+ ::google::protobuf::internal::ExplicitlyConstructed<KickoffUser>
+     _instance;
+} _KickoffUser_default_instance_;
 class UserInfoDefaultTypeInternal {
 public:
  ::google::protobuf::internal::ExplicitlyConstructed<UserInfo>
@@ -95,6 +100,7 @@ PROTOBUF_CONSTEXPR_VAR ::google::protobuf::internal::ParseTable const
   { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
   { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
   { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
+  { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
 };
 
 void TableStruct::InitDefaultsImpl() {
@@ -117,7 +123,9 @@ void TableStruct::InitDefaultsImpl() {
   ::google::protobuf::internal::OnShutdownDestroyMessage(
       &_UpdateUserState_default_instance_);_UpdateUserExtend_default_instance_._instance.DefaultConstruct();
   ::google::protobuf::internal::OnShutdownDestroyMessage(
-      &_UpdateUserExtend_default_instance_);_UserInfo_default_instance_._instance.DefaultConstruct();
+      &_UpdateUserExtend_default_instance_);_KickoffUser_default_instance_._instance.DefaultConstruct();
+  ::google::protobuf::internal::OnShutdownDestroyMessage(
+      &_KickoffUser_default_instance_);_UserInfo_default_instance_._instance.DefaultConstruct();
   ::google::protobuf::internal::OnShutdownDestroyMessage(
       &_UserInfo_default_instance_);_NotifyUserList_default_instance_._instance.DefaultConstruct();
   ::google::protobuf::internal::OnShutdownDestroyMessage(
@@ -141,6 +149,8 @@ void TableStruct::InitDefaultsImpl() {
       ::audio_engine::UpdateUserExtend::internal_default_instance());
   _RAUserMessage_default_instance_._instance.get_mutable()->notify_user_list_ = const_cast< ::audio_engine::NotifyUserList*>(
       ::audio_engine::NotifyUserList::internal_default_instance());
+  _RAUserMessage_default_instance_._instance.get_mutable()->kickoff_user_ = const_cast< ::audio_engine::KickoffUser*>(
+      ::audio_engine::KickoffUser::internal_default_instance());
 }
 
 void InitDefaults() {
@@ -3079,6 +3089,314 @@ void UpdateUserExtend::set_error_code(::google::protobuf::int32 value) {
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int KickoffUser::kSrcTokenFieldNumber;
+const int KickoffUser::kDstTokenFieldNumber;
+const int KickoffUser::kErrorCodeFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+KickoffUser::KickoffUser()
+  : ::google::protobuf::MessageLite(), _internal_metadata_(NULL) {
+  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
+    protobuf_user_5fservice_2eproto::InitDefaults();
+  }
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:audio_engine.KickoffUser)
+}
+KickoffUser::KickoffUser(const KickoffUser& from)
+  : ::google::protobuf::MessageLite(),
+      _internal_metadata_(NULL),
+      _cached_size_(0) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::memcpy(&src_token_, &from.src_token_,
+    static_cast<size_t>(reinterpret_cast<char*>(&error_code_) -
+    reinterpret_cast<char*>(&src_token_)) + sizeof(error_code_));
+  // @@protoc_insertion_point(copy_constructor:audio_engine.KickoffUser)
+}
+
+void KickoffUser::SharedCtor() {
+  ::memset(&src_token_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&error_code_) -
+      reinterpret_cast<char*>(&src_token_)) + sizeof(error_code_));
+  _cached_size_ = 0;
+}
+
+KickoffUser::~KickoffUser() {
+  // @@protoc_insertion_point(destructor:audio_engine.KickoffUser)
+  SharedDtor();
+}
+
+void KickoffUser::SharedDtor() {
+}
+
+void KickoffUser::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const KickoffUser& KickoffUser::default_instance() {
+  protobuf_user_5fservice_2eproto::InitDefaults();
+  return *internal_default_instance();
+}
+
+KickoffUser* KickoffUser::New(::google::protobuf::Arena* arena) const {
+  KickoffUser* n = new KickoffUser;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void KickoffUser::Clear() {
+// @@protoc_insertion_point(message_clear_start:audio_engine.KickoffUser)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  ::memset(&src_token_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&error_code_) -
+      reinterpret_cast<char*>(&src_token_)) + sizeof(error_code_));
+  _internal_metadata_.Clear();
+}
+
+bool KickoffUser::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(&_internal_metadata_,
+          &::google::protobuf::internal::InternalMetadataWithArenaLite::
+              mutable_unknown_fields));
+  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
+      &unknown_fields_string, false);
+  // @@protoc_insertion_point(parse_start:audio_engine.KickoffUser)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // int64 src_token = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &src_token_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // int64 dst_token = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &dst_token_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // int64 error_code = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &error_code_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
+            input, tag, &unknown_fields_stream));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:audio_engine.KickoffUser)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:audio_engine.KickoffUser)
+  return false;
+#undef DO_
+}
+
+void KickoffUser::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:audio_engine.KickoffUser)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // int64 src_token = 1;
+  if (this->src_token() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->src_token(), output);
+  }
+
+  // int64 dst_token = 2;
+  if (this->dst_token() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(2, this->dst_token(), output);
+  }
+
+  // int64 error_code = 3;
+  if (this->error_code() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(3, this->error_code(), output);
+  }
+
+  output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
+                   static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
+  // @@protoc_insertion_point(serialize_end:audio_engine.KickoffUser)
+}
+
+size_t KickoffUser::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:audio_engine.KickoffUser)
+  size_t total_size = 0;
+
+  total_size += (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size();
+
+  // int64 src_token = 1;
+  if (this->src_token() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int64Size(
+        this->src_token());
+  }
+
+  // int64 dst_token = 2;
+  if (this->dst_token() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int64Size(
+        this->dst_token());
+  }
+
+  // int64 error_code = 3;
+  if (this->error_code() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int64Size(
+        this->error_code());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = cached_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void KickoffUser::CheckTypeAndMergeFrom(
+    const ::google::protobuf::MessageLite& from) {
+  MergeFrom(*::google::protobuf::down_cast<const KickoffUser*>(&from));
+}
+
+void KickoffUser::MergeFrom(const KickoffUser& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:audio_engine.KickoffUser)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.src_token() != 0) {
+    set_src_token(from.src_token());
+  }
+  if (from.dst_token() != 0) {
+    set_dst_token(from.dst_token());
+  }
+  if (from.error_code() != 0) {
+    set_error_code(from.error_code());
+  }
+}
+
+void KickoffUser::CopyFrom(const KickoffUser& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:audio_engine.KickoffUser)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool KickoffUser::IsInitialized() const {
+  return true;
+}
+
+void KickoffUser::Swap(KickoffUser* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void KickoffUser::InternalSwap(KickoffUser* other) {
+  using std::swap;
+  swap(src_token_, other->src_token_);
+  swap(dst_token_, other->dst_token_);
+  swap(error_code_, other->error_code_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(_cached_size_, other->_cached_size_);
+}
+
+::std::string KickoffUser::GetTypeName() const {
+  return "audio_engine.KickoffUser";
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// KickoffUser
+
+// int64 src_token = 1;
+void KickoffUser::clear_src_token() {
+  src_token_ = GOOGLE_LONGLONG(0);
+}
+::google::protobuf::int64 KickoffUser::src_token() const {
+  // @@protoc_insertion_point(field_get:audio_engine.KickoffUser.src_token)
+  return src_token_;
+}
+void KickoffUser::set_src_token(::google::protobuf::int64 value) {
+  
+  src_token_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.KickoffUser.src_token)
+}
+
+// int64 dst_token = 2;
+void KickoffUser::clear_dst_token() {
+  dst_token_ = GOOGLE_LONGLONG(0);
+}
+::google::protobuf::int64 KickoffUser::dst_token() const {
+  // @@protoc_insertion_point(field_get:audio_engine.KickoffUser.dst_token)
+  return dst_token_;
+}
+void KickoffUser::set_dst_token(::google::protobuf::int64 value) {
+  
+  dst_token_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.KickoffUser.dst_token)
+}
+
+// int64 error_code = 3;
+void KickoffUser::clear_error_code() {
+  error_code_ = GOOGLE_LONGLONG(0);
+}
+::google::protobuf::int64 KickoffUser::error_code() const {
+  // @@protoc_insertion_point(field_get:audio_engine.KickoffUser.error_code)
+  return error_code_;
+}
+void KickoffUser::set_error_code(::google::protobuf::int64 value) {
+  
+  error_code_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.KickoffUser.error_code)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int UserInfo::kUseridFieldNumber;
 const int UserInfo::kExtendFieldNumber;
 const int UserInfo::kDevtypeFieldNumber;
@@ -3873,6 +4191,7 @@ const int RAUserMessage::kNotifyLogoutFieldNumber;
 const int RAUserMessage::kUpdateUserStateFieldNumber;
 const int RAUserMessage::kUpdateUserExtendFieldNumber;
 const int RAUserMessage::kNotifyUserListFieldNumber;
+const int RAUserMessage::kKickoffUserFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 RAUserMessage::RAUserMessage()
@@ -3933,6 +4252,11 @@ RAUserMessage::RAUserMessage(const RAUserMessage& from)
   } else {
     notify_user_list_ = NULL;
   }
+  if (from.has_kickoff_user()) {
+    kickoff_user_ = new ::audio_engine::KickoffUser(*from.kickoff_user_);
+  } else {
+    kickoff_user_ = NULL;
+  }
   sn_ = from.sn_;
   // @@protoc_insertion_point(copy_constructor:audio_engine.RAUserMessage)
 }
@@ -3959,6 +4283,7 @@ void RAUserMessage::SharedDtor() {
   if (this != internal_default_instance()) delete update_user_state_;
   if (this != internal_default_instance()) delete update_user_extend_;
   if (this != internal_default_instance()) delete notify_user_list_;
+  if (this != internal_default_instance()) delete kickoff_user_;
 }
 
 void RAUserMessage::SetCachedSize(int size) const {
@@ -4021,6 +4346,10 @@ void RAUserMessage::Clear() {
     delete notify_user_list_;
   }
   notify_user_list_ = NULL;
+  if (GetArenaNoVirtual() == NULL && kickoff_user_ != NULL) {
+    delete kickoff_user_;
+  }
+  kickoff_user_ = NULL;
   sn_ = 0;
   _internal_metadata_.Clear();
 }
@@ -4163,6 +4492,18 @@ bool RAUserMessage::MergePartialFromCodedStream(
         break;
       }
 
+      // .audio_engine.KickoffUser kickoff_user = 11;
+      case 11: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(90u /* 90 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_kickoff_user()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -4248,6 +4589,12 @@ void RAUserMessage::SerializeWithCachedSizes(
       10, *this->notify_user_list_, output);
   }
 
+  // .audio_engine.KickoffUser kickoff_user = 11;
+  if (this->has_kickoff_user()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessage(
+      11, *this->kickoff_user_, output);
+  }
+
   output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
                    static_cast<int>((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).size()));
   // @@protoc_insertion_point(serialize_end:audio_engine.RAUserMessage)
@@ -4322,6 +4669,13 @@ size_t RAUserMessage::ByteSizeLong() const {
         *this->notify_user_list_);
   }
 
+  // .audio_engine.KickoffUser kickoff_user = 11;
+  if (this->has_kickoff_user()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        *this->kickoff_user_);
+  }
+
   // int32 sn = 1;
   if (this->sn() != 0) {
     total_size += 1 +
@@ -4375,6 +4729,9 @@ void RAUserMessage::MergeFrom(const RAUserMessage& from) {
   if (from.has_notify_user_list()) {
     mutable_notify_user_list()->::audio_engine::NotifyUserList::MergeFrom(from.notify_user_list());
   }
+  if (from.has_kickoff_user()) {
+    mutable_kickoff_user()->::audio_engine::KickoffUser::MergeFrom(from.kickoff_user());
+  }
   if (from.sn() != 0) {
     set_sn(from.sn());
   }
@@ -4406,6 +4763,7 @@ void RAUserMessage::InternalSwap(RAUserMessage* other) {
   swap(update_user_state_, other->update_user_state_);
   swap(update_user_extend_, other->update_user_extend_);
   swap(notify_user_list_, other->notify_user_list_);
+  swap(kickoff_user_, other->kickoff_user_);
   swap(sn_, other->sn_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(_cached_size_, other->_cached_size_);
@@ -4790,6 +5148,46 @@ void RAUserMessage::set_allocated_notify_user_list(::audio_engine::NotifyUserLis
     
   }
   // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.notify_user_list)
+}
+
+// .audio_engine.KickoffUser kickoff_user = 11;
+bool RAUserMessage::has_kickoff_user() const {
+  return this != internal_default_instance() && kickoff_user_ != NULL;
+}
+void RAUserMessage::clear_kickoff_user() {
+  if (GetArenaNoVirtual() == NULL && kickoff_user_ != NULL) delete kickoff_user_;
+  kickoff_user_ = NULL;
+}
+const ::audio_engine::KickoffUser& RAUserMessage::kickoff_user() const {
+  const ::audio_engine::KickoffUser* p = kickoff_user_;
+  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.kickoff_user)
+  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::KickoffUser*>(
+      &::audio_engine::_KickoffUser_default_instance_);
+}
+::audio_engine::KickoffUser* RAUserMessage::mutable_kickoff_user() {
+  
+  if (kickoff_user_ == NULL) {
+    kickoff_user_ = new ::audio_engine::KickoffUser;
+  }
+  // @@protoc_insertion_point(field_mutable:audio_engine.RAUserMessage.kickoff_user)
+  return kickoff_user_;
+}
+::audio_engine::KickoffUser* RAUserMessage::release_kickoff_user() {
+  // @@protoc_insertion_point(field_release:audio_engine.RAUserMessage.kickoff_user)
+  
+  ::audio_engine::KickoffUser* temp = kickoff_user_;
+  kickoff_user_ = NULL;
+  return temp;
+}
+void RAUserMessage::set_allocated_kickoff_user(::audio_engine::KickoffUser* kickoff_user) {
+  delete kickoff_user_;
+  kickoff_user_ = kickoff_user;
+  if (kickoff_user) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.kickoff_user)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS

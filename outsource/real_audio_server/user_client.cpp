@@ -14,12 +14,16 @@ namespace audio_engine{
 
 	UserClient::~UserClient()
 	{
-		if(_user_conn_ptr)_user_conn_ptr->SetPacketHandler( nullptr );
+		if(_user_conn_ptr)
+		{
+			_user_conn_ptr->DettachTcp();
+		}
 	}
 
 	void UserClient::HandleError( std::error_code ec )
 	{
-
+		auto self = shared_from_this();
+		_room->LeaveMember(self);
 	}
 
 	void UserClient::HandlePacket( RAUserMessagePtr pb )
@@ -106,7 +110,12 @@ namespace audio_engine{
 			member->SetUserExtend( req_login.extend() );
 			member->SetUserState( req_login.state() );
 			auto self = shared_from_this();
-			_room->JoinMember( member, self );
+			bool ret = _room->JoinMember( member, self );
+			if(!ret)
+			{
+				assert( false );
+				//Log. msg 这里不应该出现，肯定是代码出现了问题。
+			}
 		}
 
 	}
@@ -144,7 +153,11 @@ namespace audio_engine{
 			_user_conn_ptr->SendPacket( pb );
 			return;
 		}
-		update_extend->set_error_code( ERR_OK );
+		else
+		{
+			update_extend->set_error_code( ERR_OK );
+			_user_conn_ptr->SendPacket( pb );
+		}
 		auto self = shared_from_this();
 		_room->UpdateUserExtend( pb, self );
 	}
@@ -164,6 +177,11 @@ namespace audio_engine{
 			update_state->set_error_code( ERR_USER_NOT_FOUND );
 			_user_conn_ptr->SendPacket( pb );
 			return;
+		}
+		else
+		{
+			update_state->set_error_code( ERR_OK );
+			_user_conn_ptr->SendPacket( pb );
 		}
 		auto self = shared_from_this();
 		_room->UpdateUserState( pb, self);

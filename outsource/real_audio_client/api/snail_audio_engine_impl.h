@@ -93,6 +93,7 @@ private:
 	void         UserLeaveRoom( int64_t token );
 	void         UpdateUserExtend( int64_t token, std::string extend, int ec );
 	void         UpdateUserState( int64_t src_token, int64_t dst_token, int state, int ec );
+	void         KickOffResult(int64_t src_token, int64_t dst_token, int ec);
 private:
 	MasterControl& _master_control;
     AudioRoomImpl* _host = nullptr;

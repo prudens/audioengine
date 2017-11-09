@@ -183,7 +183,7 @@ namespace audio_engine{
 				{
 					_client_mgr->SetRoomAttr( msg.mid, msg.key, msg.value );
 				}break;
-				case CMD_IO_USER_ATTR:
+				case CMD_IO_USER_EXTEND:
 				{
 					if(!msg.value.empty())
 					{

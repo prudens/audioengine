@@ -1,5 +1,6 @@
 #include "room.h"
 #include "server_module.h"
+#include "error_code.h"
 namespace audio_engine{
 	Room::Room()
 	:_task(ServerModule::GetInstance()->GetThreadPool())
@@ -24,18 +25,30 @@ namespace audio_engine{
 		return false;
 	}
 
-	void Room::JoinMember( ConstMemberPtr member, UserClientPtr new_client )
+	bool Room::JoinMember( ConstMemberPtr member, UserClientPtr new_client )
 	{
-		_members.Add(member);
-		for(auto it = _cache_clients.begin(); it != _cache_clients.end(); it++)
+		bool bfind = false;
+		_cache_client_mutex.lock();
+		for(auto it = _cache_clients.begin();it != _cache_clients.end(); it++)
 		{
 			if( *it == new_client)
 			{
-				_clients.push_back(*it);
+				_members.Add( member );
+				_clients.push_back( new_client );
 				_cache_clients.erase( it );
+				bfind = true;
 				break;
 			}
 		}
+		_cache_client_mutex.unlock();
+
+		if(!bfind)
+		{
+			//Log 
+			return false;
+		}
+
+
 		//通知所有人新用户上线。
 		auto pb = std::make_shared<RAUserMessage>();
 		auto login_ntf = pb->mutable_notify_login();
@@ -54,13 +67,36 @@ namespace audio_engine{
 			auto ptr = *it;
 			ptr->SendToClient(buf);
 		}
+		return true;
 	}
 
 	bool Room::HandleConnection( UserConnPtr conn )
 	{
 		UserClientPtr client = CreateUserClient( this, _task.GetTaskThread(), conn );
+		_cache_client_mutex.lock();
 		_cache_clients.push_back( client );
+		_cache_client_mutex.unlock();
 		return true;
+	}
+
+	bool Room::HandleKickOff( RAUserMessagePtr pb, UserClientPtr client )
+	{
+		pb->set_sn(0);
+		auto kickoff = pb->mutable_kickoff_user();
+		int64_t token = kickoff->dst_token();
+		kickoff->set_error_code(ERR_OK);
+		auto buf = _packet.Build( pb );
+		for(auto it = _clients.begin(); it != _clients.end(); ++it)
+		{
+			if(*it != client)
+			{
+				( *it )->SendToClient( buf );
+			}
+		}
+
+		_clients.remove_if( [token]( auto v ){ return v->Token() == token; } );
+		_members.Remove( client->Token() );
+		return true ;
 	}
 
 	std::vector<ConstMemberPtr> Room::GetMemberList()
@@ -72,6 +108,12 @@ namespace audio_engine{
 			mem_list.push_back( member );
 		} );
 		return mem_list;
+	}
+
+	bool Room::IsEmpty()
+	{
+		std::unique_lock<std::mutex> lock(_cache_client_mutex);
+		return _clients.empty() && _cache_clients.empty();
 	}
 
 	void Room::LeaveMember( UserClientPtr client )
@@ -107,7 +149,8 @@ namespace audio_engine{
 		auto buf = _packet.Build( pb );
 		for (auto it = _clients.begin(); it != _clients.end(); ++it)
 		{
-			( *it )->SendToClient( buf );
+			if(*it != client)
+			    ( *it )->SendToClient( buf );
 		}
 	}
 
@@ -121,7 +164,8 @@ namespace audio_engine{
 		auto buf = _packet.Build( pb );
 		for(auto it = _clients.begin(); it != _clients.end(); ++it)
 		{
-			( *it )->SendToClient( buf );
+			if(*it != client)
+			    ( *it )->SendToClient( buf );
 		}
 	}
 }

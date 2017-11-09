@@ -28,7 +28,7 @@ namespace audio_engine{
 	public:
 		void Start();
 		void RecvPacket( std::error_code ec, RAUserMessagePtr pb );
-		void VerifyFailed( RAUserMessagePtr pb );
+		void VerifyFailed( RAUserMessagePtr pb,int ec );
 		void Send( BufferPtr buf );
 		void DettachTcp();
 		void HandleError( std::error_code ec );

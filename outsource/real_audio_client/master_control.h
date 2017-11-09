@@ -12,17 +12,19 @@ namespace audio_engine{
 		void Terminate();
 
 	protected://UserEventHandler
-		virtual void UpdateLoginState( LoginState state );
-		virtual void UserEnterRoom( ConstMemberPtr user );
-		virtual void UserLeaveRoom( int64_t token );
-		virtual void UpdateUserState( int64_t src_token, int64_t dst_token, int state, int ec );
-		virtual void UpdateUserExtend( int64_t token, std::string extend, int ec );
-		virtual void UpdateUserList( const std::vector<ConstMemberPtr>&users );
+		 void UpdateLoginState( LoginState state );
+		 void UserEnterRoom( ConstMemberPtr user );
+		 void UserLeaveRoom( int64_t token );
+		 void UpdateUserState( int64_t src_token, int64_t dst_token, int state, int ec );
+		 void UpdateUserExtend( int64_t token, std::string extend, int ec );
+		 void UpdateUserList( const std::vector<ConstMemberPtr>&users );
+		 void KickoffUser( int64_t src_token, int64_t dst_token, int ec );
 	public:
 		void Login( std::string roomkey, std::string uid );
 		void Logout();
 		int  GetLoginState();
 		void SetUserExtend( std::string extend );
+		int  KickOff(std::string uid);
 		IUserModuleSignal* GetUserModuleSignal();
 		MemberList*        GetMemberList();
 		boost::signals2::signal<void(std::string roomkey, std::string uid, int ec)> _RespondLogin;

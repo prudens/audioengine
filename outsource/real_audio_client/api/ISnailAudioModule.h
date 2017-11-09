@@ -11,11 +11,10 @@ public:
     * @brief     Called back when SetUserAttr() is called.
     * @return    void
     * @param     UID uid
-    * @param     const char * name.passed to SetUserAttr().
     * @param     const char * value.passed to SetUserAttr().
     * @param     int ec
     */
-    virtual void RespondSetUserExtend( UID uid, const char* name, const char* value, int ec ) {}
+    virtual void RespondSetUserExtend( UID uid, const char* value, int ec ) {}
 
     /**
     * @brief     Notify the user attribute has changed
@@ -24,7 +23,7 @@ public:
     * @param     const char * name
     * @param     const char * value
     */
-    virtual void NotifyUserExtendChanged( UID uid, const char* name, const char* value ) {}
+    virtual void NotifyUserExtendChanged( UID uid, const char* value ) {}
     /**
     * @brief     Notify a new user joined this room.
     * @return    void
@@ -61,7 +60,7 @@ public:
     * @return    void
     * @param     UID uid
     */
-    virtual void NotifyKiceOff( UID uid ) {}
+    virtual void NotifyKickOff( UID uid ) {}
 };
 class IUserModule :public IModule
 {

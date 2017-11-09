@@ -41,6 +41,7 @@ namespace audio_engine{
 			return;
 		}
 		_stop = true;
+		_packet_handler = nullptr;
 		_tcp_socket->DisConnect();//仅仅关闭接收端，发送端不断开，直到发送完成。
 	}
 
@@ -114,7 +115,7 @@ namespace audio_engine{
 			if(err != 0)
 			{
 				_stop = true;
-				VerifyFailed( pb );
+				VerifyFailed( pb, err );
 				return;
 			}
 		}
@@ -128,9 +129,13 @@ namespace audio_engine{
 		}
 	}
 
-	void UserConnection::VerifyFailed( RAUserMessagePtr pb )
+	void UserConnection::VerifyFailed( RAUserMessagePtr pb,int ec )
 	{
-
+		auto res_login = pb->mutable_responed_login();
+		res_login->set_error_code(ec);
+		res_login->set_userid( pb->request_login().userid() );
+		pb->clear_request_login();
+		SendPacket( pb );
 	}
 
 	void UserConnection::HandleError( std::error_code ec )

@@ -31,6 +31,9 @@
 #include <google/protobuf/generated_enum_util.h>
 // @@protoc_insertion_point(includes)
 namespace audio_engine {
+class KickoffUser;
+class KickoffUserDefaultTypeInternal;
+extern KickoffUserDefaultTypeInternal _KickoffUser_default_instance_;
 class NotifyLogin;
 class NotifyLoginDefaultTypeInternal;
 extern NotifyLoginDefaultTypeInternal _NotifyLogin_default_instance_;
@@ -1061,6 +1064,115 @@ class UpdateUserExtend : public ::google::protobuf::MessageLite /* @@protoc_inse
 };
 // -------------------------------------------------------------------
 
+class KickoffUser : public ::google::protobuf::MessageLite /* @@protoc_insertion_point(class_definition:audio_engine.KickoffUser) */ {
+ public:
+  KickoffUser();
+  virtual ~KickoffUser();
+
+  KickoffUser(const KickoffUser& from);
+
+  inline KickoffUser& operator=(const KickoffUser& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  KickoffUser(KickoffUser&& from) noexcept
+    : KickoffUser() {
+    *this = ::std::move(from);
+  }
+
+  inline KickoffUser& operator=(KickoffUser&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const KickoffUser& default_instance();
+
+  static inline const KickoffUser* internal_default_instance() {
+    return reinterpret_cast<const KickoffUser*>(
+               &_KickoffUser_default_instance_);
+  }
+  static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
+    8;
+
+  void Swap(KickoffUser* other);
+  friend void swap(KickoffUser& a, KickoffUser& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline KickoffUser* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  KickoffUser* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CheckTypeAndMergeFrom(const ::google::protobuf::MessageLite& from)
+    PROTOBUF_FINAL;
+  void CopyFrom(const KickoffUser& from);
+  void MergeFrom(const KickoffUser& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  void DiscardUnknownFields();
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(KickoffUser* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::std::string GetTypeName() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // int64 src_token = 1;
+  void clear_src_token();
+  static const int kSrcTokenFieldNumber = 1;
+  ::google::protobuf::int64 src_token() const;
+  void set_src_token(::google::protobuf::int64 value);
+
+  // int64 dst_token = 2;
+  void clear_dst_token();
+  static const int kDstTokenFieldNumber = 2;
+  ::google::protobuf::int64 dst_token() const;
+  void set_dst_token(::google::protobuf::int64 value);
+
+  // int64 error_code = 3;
+  void clear_error_code();
+  static const int kErrorCodeFieldNumber = 3;
+  ::google::protobuf::int64 error_code() const;
+  void set_error_code(::google::protobuf::int64 value);
+
+  // @@protoc_insertion_point(class_scope:audio_engine.KickoffUser)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArenaLite _internal_metadata_;
+  ::google::protobuf::int64 src_token_;
+  ::google::protobuf::int64 dst_token_;
+  ::google::protobuf::int64 error_code_;
+  mutable int _cached_size_;
+  friend struct protobuf_user_5fservice_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
 class UserInfo : public ::google::protobuf::MessageLite /* @@protoc_insertion_point(class_definition:audio_engine.UserInfo) */ {
  public:
   UserInfo();
@@ -1094,7 +1206,7 @@ class UserInfo : public ::google::protobuf::MessageLite /* @@protoc_insertion_po
                &_UserInfo_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    8;
+    9;
 
   void Swap(UserInfo* other);
   friend void swap(UserInfo& a, UserInfo& b) {
@@ -1233,7 +1345,7 @@ class NotifyUserList : public ::google::protobuf::MessageLite /* @@protoc_insert
                &_NotifyUserList_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    9;
+    10;
 
   void Swap(NotifyUserList* other);
   friend void swap(NotifyUserList& a, NotifyUserList& b) {
@@ -1341,7 +1453,7 @@ class RAUserMessage : public ::google::protobuf::MessageLite /* @@protoc_inserti
                &_RAUserMessage_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    10;
+    11;
 
   void Swap(RAUserMessage* other);
   friend void swap(RAUserMessage& a, RAUserMessage& b) {
@@ -1468,6 +1580,15 @@ class RAUserMessage : public ::google::protobuf::MessageLite /* @@protoc_inserti
   ::audio_engine::NotifyUserList* release_notify_user_list();
   void set_allocated_notify_user_list(::audio_engine::NotifyUserList* notify_user_list);
 
+  // .audio_engine.KickoffUser kickoff_user = 11;
+  bool has_kickoff_user() const;
+  void clear_kickoff_user();
+  static const int kKickoffUserFieldNumber = 11;
+  const ::audio_engine::KickoffUser& kickoff_user() const;
+  ::audio_engine::KickoffUser* mutable_kickoff_user();
+  ::audio_engine::KickoffUser* release_kickoff_user();
+  void set_allocated_kickoff_user(::audio_engine::KickoffUser* kickoff_user);
+
   // int32 sn = 1;
   void clear_sn();
   static const int kSnFieldNumber = 1;
@@ -1487,6 +1608,7 @@ class RAUserMessage : public ::google::protobuf::MessageLite /* @@protoc_inserti
   ::audio_engine::UpdateUserState* update_user_state_;
   ::audio_engine::UpdateUserExtend* update_user_extend_;
   ::audio_engine::NotifyUserList* notify_user_list_;
+  ::audio_engine::KickoffUser* kickoff_user_;
   ::google::protobuf::int32 sn_;
   mutable int _cached_size_;
   friend struct protobuf_user_5fservice_2eproto::TableStruct;
@@ -2156,6 +2278,52 @@ inline void UpdateUserExtend::set_error_code(::google::protobuf::int32 value) {
 
 // -------------------------------------------------------------------
 
+// KickoffUser
+
+// int64 src_token = 1;
+inline void KickoffUser::clear_src_token() {
+  src_token_ = GOOGLE_LONGLONG(0);
+}
+inline ::google::protobuf::int64 KickoffUser::src_token() const {
+  // @@protoc_insertion_point(field_get:audio_engine.KickoffUser.src_token)
+  return src_token_;
+}
+inline void KickoffUser::set_src_token(::google::protobuf::int64 value) {
+  
+  src_token_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.KickoffUser.src_token)
+}
+
+// int64 dst_token = 2;
+inline void KickoffUser::clear_dst_token() {
+  dst_token_ = GOOGLE_LONGLONG(0);
+}
+inline ::google::protobuf::int64 KickoffUser::dst_token() const {
+  // @@protoc_insertion_point(field_get:audio_engine.KickoffUser.dst_token)
+  return dst_token_;
+}
+inline void KickoffUser::set_dst_token(::google::protobuf::int64 value) {
+  
+  dst_token_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.KickoffUser.dst_token)
+}
+
+// int64 error_code = 3;
+inline void KickoffUser::clear_error_code() {
+  error_code_ = GOOGLE_LONGLONG(0);
+}
+inline ::google::protobuf::int64 KickoffUser::error_code() const {
+  // @@protoc_insertion_point(field_get:audio_engine.KickoffUser.error_code)
+  return error_code_;
+}
+inline void KickoffUser::set_error_code(::google::protobuf::int64 value) {
+  
+  error_code_ = value;
+  // @@protoc_insertion_point(field_set:audio_engine.KickoffUser.error_code)
+}
+
+// -------------------------------------------------------------------
+
 // UserInfo
 
 // string userid = 1;
@@ -2732,10 +2900,52 @@ inline void RAUserMessage::set_allocated_notify_user_list(::audio_engine::Notify
   // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.notify_user_list)
 }
 
+// .audio_engine.KickoffUser kickoff_user = 11;
+inline bool RAUserMessage::has_kickoff_user() const {
+  return this != internal_default_instance() && kickoff_user_ != NULL;
+}
+inline void RAUserMessage::clear_kickoff_user() {
+  if (GetArenaNoVirtual() == NULL && kickoff_user_ != NULL) delete kickoff_user_;
+  kickoff_user_ = NULL;
+}
+inline const ::audio_engine::KickoffUser& RAUserMessage::kickoff_user() const {
+  const ::audio_engine::KickoffUser* p = kickoff_user_;
+  // @@protoc_insertion_point(field_get:audio_engine.RAUserMessage.kickoff_user)
+  return p != NULL ? *p : *reinterpret_cast<const ::audio_engine::KickoffUser*>(
+      &::audio_engine::_KickoffUser_default_instance_);
+}
+inline ::audio_engine::KickoffUser* RAUserMessage::mutable_kickoff_user() {
+  
+  if (kickoff_user_ == NULL) {
+    kickoff_user_ = new ::audio_engine::KickoffUser;
+  }
+  // @@protoc_insertion_point(field_mutable:audio_engine.RAUserMessage.kickoff_user)
+  return kickoff_user_;
+}
+inline ::audio_engine::KickoffUser* RAUserMessage::release_kickoff_user() {
+  // @@protoc_insertion_point(field_release:audio_engine.RAUserMessage.kickoff_user)
+  
+  ::audio_engine::KickoffUser* temp = kickoff_user_;
+  kickoff_user_ = NULL;
+  return temp;
+}
+inline void RAUserMessage::set_allocated_kickoff_user(::audio_engine::KickoffUser* kickoff_user) {
+  delete kickoff_user_;
+  kickoff_user_ = kickoff_user;
+  if (kickoff_user) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:audio_engine.RAUserMessage.kickoff_user)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

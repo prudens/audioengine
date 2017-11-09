@@ -38,7 +38,7 @@ namespace audio_engine{
 		_user_service.reset();
 	}
 
-	int UserManager::Login( std::string roomkey, std::string userid )
+	void UserManager::Login( std::string roomkey, std::string userid )
 	{
 		_user_id = userid;
 		_roomkey = roomkey;
@@ -46,7 +46,6 @@ namespace audio_engine{
 		_target_state_internel = _target_state;
 		Transform( _cur_state == LS_NONE ? LS_INIT : _cur_state );
 		_try_login_count = 0;
-		return 0;
 	}
 
 	void UserManager::Logout()
@@ -87,7 +86,7 @@ namespace audio_engine{
 		audio_engine::UpdateUserExtend* user_extend = pb->mutable_update_user_extend();
 		user_extend->set_extend( extend );
 		user_extend->set_token( _token );
-		_user_service->SendPacket( pb, 2000ms, [=]( auto pb, auto ec ){
+		_user_service->SendPacket( pb, 5000ms, [=]( auto pb, auto ec ){
 			if(!ec)
 			{
 				RecvPacket( pb );
@@ -107,7 +106,7 @@ namespace audio_engine{
 		user_state->set_state( state );
 		user_state->set_src_token( _token );
 		user_state->set_dst_token( dst_token );
-		_user_service->SendPacket( pb, 2000ms, [=]( auto pb, auto ec ){
+		_user_service->SendPacket( pb, 5s, [=]( auto pb, auto ec ){
 			if(!ec)
 			{
 				RecvPacket(pb);
@@ -115,6 +114,25 @@ namespace audio_engine{
 			else
 			{
 				_UpdateUserState( _token, dst_token, state, ERR_TIME_OUT );
+			}
+		} );
+	}
+
+	void UserManager::KickOffUser( int64_t token )
+	{
+		auto pb = std::make_shared<RAUserMessage>();
+		auto kickoff = pb->mutable_kickoff_user();
+		kickoff->set_src_token(_token);
+		kickoff->set_dst_token( token );
+		_user_service->SendPacket( pb, 5s, [=]( auto pb, auto ec ) 
+		{
+			if(!ec)
+			{
+				RecvPacket( pb );
+			}
+			else
+			{
+				_KickOffUserResult( _token, token, ERR_TIME_OUT );
 			}
 		} );
 	}
@@ -185,6 +203,7 @@ namespace audio_engine{
 			}
 			else
 			{
+				_error_code = ERR_TIME_OUT;
 				if(++_try_login_count > MAX_TRY_LOGIN)
 				{
 					_target_state_internel = LS_NONE;
@@ -316,6 +335,12 @@ namespace audio_engine{
 			}
 		}
 
+		if(pb->has_kickoff_user())
+		{
+			auto kickoff = pb->kickoff_user();
+			_KickOffUserResult( kickoff.src_token(), kickoff.dst_token(), kickoff.error_code());
+		}
+
 	}
 
 	void UserManager::HandleError( std::error_code ec )
@@ -327,6 +352,7 @@ namespace audio_engine{
 			if(++_try_login_count > MAX_TRY_LOGIN)
 			{
 				_target_state_internel = LS_NONE;
+				_error_code = ERR_SERVER_CONNECT_FAILED;
 				Transform( LS_NONE );
 			}
 			else

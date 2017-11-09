@@ -296,9 +296,9 @@ namespace audio_engine{
 		logprint( "[%d]房间属性变化：name:%s,value:%s\n", _mid, name, value );
 	}
 
-	void AudioClient::NotifyUserExtendChanged( UID uid, const char* name, const char* value )
+	void AudioClient::NotifyUserExtendChanged( UID uid, const char* value )
 	{
-		logprint( "[%d]用户(%s)属性变化：name:%s,value:%s\n", _mid, uid, name, value );
+		logprint( "[%d]用户(%s)属性变化：value:%s\n", _mid, uid, value );
 	}
 
 	void AudioClient::NotifyAudioMsgRecordBegin()
@@ -340,7 +340,7 @@ namespace audio_engine{
 		}
 	}
 
-	void AudioClient::NotifyKiceOff( UID uid )
+	void AudioClient::NotifyKickOff( UID uid )
 	{
 		logprint( "[%d]用户（%s）被踢出房间\n", _mid, uid );
 	}
@@ -401,15 +401,15 @@ namespace audio_engine{
 
 	}
 
-	void AudioClient::RespondSetUserExtend( UID uid, const char* name, const char* value, int ec )
+	void AudioClient::RespondSetUserExtend( UID uid, const char* value, int ec )
 	{
 		if(ec == 0)
 		{
-			logprint( "[%d]设置用户（%s）属性(name:%s,value:%s)成功\n", _mid, uid, name, value );
+			logprint( "[%d]用户（%s）设置属性(%s)成功\n", _mid, uid, value );
 		}
 		else
 		{
-			logprint( "[%d]设置用户（%s）属性(name:%s,value:%s)失败，错误码：%d\n", _mid, uid, name, value, ec );
+			logprint( "[%d]用户（%s）设置属性(value:%s)失败，错误码：%d\n", _mid, uid, value, ec );
 		}
 	}
 

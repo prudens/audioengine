@@ -1,6 +1,7 @@
 #include "master_control.h"
-#include "base/log.h"
 #include <boost/signals2.hpp>
+#include "base/log.h"
+#include "SnailAudioEngineHelper.h"
 namespace audio_engine{
 	static audio_engine::Logger Log;
 	MasterControl::MasterControl()
@@ -26,8 +27,11 @@ namespace audio_engine{
 			ph::_1, ph::_2, ph::_3 ) );
 		_user_mgr._UpdateUserState.connect( 0, std::bind( &MasterControl::UpdateUserState, this,
 			ph::_1, ph::_2, ph::_3, ph::_4 ) );
-		auto c = _user_mgr._UpdateUserList.connect(0, std::bind( &MasterControl::UpdateUserList, this,
+	    _user_mgr._UpdateUserList.connect(0, std::bind( &MasterControl::UpdateUserList, this,
 			ph::_1 ) );
+		_user_mgr._KickOffUserResult.connect( 0, std::bind( &MasterControl::KickoffUser, this,
+			ph::_1, ph::_2, ph::_3 ) );
+		
 	}
 
 	void MasterControl::Terminate()
@@ -40,16 +44,16 @@ namespace audio_engine{
 		// 只上报三种情况，登陆成功和失败，登出成功。但是内部要打印具体的操作
 		if(state == LS_LOGINED && _user_mgr.GetTargetState() == LS_LOGINED)
 		{
-			_RespondLogin( _user_mgr.GetRoomKey().c_str(), _user_mgr.GetUserID().c_str(), 0 );
+			_RespondLogin( _user_mgr.GetRoomKey().c_str(), _user_mgr.GetUserID().c_str(), _user_mgr.GetErrorCode() );
 		}
 		else if(state == LS_NONE && _user_mgr.GetTargetState() == LS_NONE)
 		{
 			_room_member_list.Clear();
-			_RespondLogout( _user_mgr.GetRoomKey().c_str(), _user_mgr.GetUserID().c_str(), 0 );
+			_RespondLogout( _user_mgr.GetRoomKey().c_str(), _user_mgr.GetUserID().c_str(), _user_mgr.GetErrorCode() );
 		}
 		else if(_user_mgr.GetTargetState() == LS_LOGINED && state == LS_NONE)
 		{
-			_RespondLogin( _user_mgr.GetRoomKey().c_str(), _user_mgr.GetUserID().c_str(), -2 );
+			_RespondLogin( _user_mgr.GetRoomKey().c_str(), _user_mgr.GetUserID().c_str(), _user_mgr.GetErrorCode() );
 		}
 	}
 
@@ -102,6 +106,11 @@ namespace audio_engine{
 		_room_member_list.UpdateList( users );
 	}
 
+	void MasterControl::KickoffUser( int64_t src_token, int64_t dst_token, int ec )
+	{
+		_room_member_list.Remove(dst_token);
+	}
+
 	void MasterControl::Login( std::string roomkey, std::string uid )
 	{
 		_user_mgr.Login( roomkey, uid );
@@ -132,6 +141,17 @@ namespace audio_engine{
 	void MasterControl::SetUserExtend( std::string extend )
 	{
 		_user_mgr.SetUserExtend( extend );
+	}
+
+	int MasterControl::KickOff( std::string uid )
+	{
+		auto it = _room_member_list.GetMember( uid );
+		if(it == nullptr)
+		{
+			return ERR_USER_NOT_FOUND;
+		}
+		_user_mgr.KickOffUser(it->GetToken());
+		return ERR_OK;
 	}
 
 	audio_engine::IUserModuleSignal* MasterControl::GetUserModuleSignal()

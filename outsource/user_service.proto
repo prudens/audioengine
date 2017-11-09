@@ -78,6 +78,12 @@ message UpdateUserExtend
 	int32 error_code    = 3;
 }
 
+message KickoffUser
+{
+    int64 src_token    = 1;
+	int64 dst_token    = 2;
+	int64 error_code   = 3;
+}
 message UserInfo
 {
   string userid       = 1;       // 用户自定义，如果房间里有重复，就踢掉原先的老用户
@@ -111,4 +117,5 @@ message RAUserMessage
 	UpdateUserState     update_user_state     = 8;
 	UpdateUserExtend    update_user_extend    = 9;
 	NotifyUserList      notify_user_list      = 10;
+	KickoffUser         kickoff_user          = 11;
 }
