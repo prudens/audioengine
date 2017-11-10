@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\api\audio_typedef.cpp">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="src\api\module_debug_impl.cpp">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="src\api\snail_audio_engine_impl.cpp">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sdk\audio_error.cpp">
+      <Filter>sdk</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sdk\client_module.cpp">
+      <Filter>sdk</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sdk\master_control.cpp">
+      <Filter>sdk</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sdk\user_connection.cpp">
+      <Filter>sdk</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sdk\user_list.cpp">
+      <Filter>sdk</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sdk\user_manager.cpp">
+      <Filter>sdk</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\audio_client.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\client_manager.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\engine.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\file_process.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\import_lib.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\io_thread.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\main.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\message_queue.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\packet.cpp">
+      <Filter>sdk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\protobuf_packet.cpp">
+      <Filter>sdk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\server_config.cpp">
+      <Filter>sdk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\user_service.pb.cc">
+      <Filter>sdk</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\api\audio_typedef.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="src\api\IModuleDebuger.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="src\api\IModuleDebuger_OC.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="src\api\ISnailAudioEngine.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="src\api\ISnailAudioModule.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="src\api\module_debug_impl.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="src\api\snail_audio_engine_impl.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="src\api\SnailAudioEngine_OC.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="src\api\SnailAudioEngineHelper.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sdk\audio_error.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sdk\client_module.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sdk\master_control.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sdk\user_connection.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sdk\user_list.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sdk\user_manager.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\audio_client.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\client_manager.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\cmd.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\config.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\engine.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\message_queue.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packet.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\protobuf_packet.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\real_audio_common.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\server_config.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\user_service.pb.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="api">
+      <UniqueIdentifier>{8e8252f4-602e-45b5-9b03-0153ff98fe01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sdk">
+      <UniqueIdentifier>{fb68489b-20be-49d3-a09c-ae7ea255c10c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine_core">
+      <UniqueIdentifier>{dcfb7168-c8da-42b0-b078-20f584473039}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui">
+      <UniqueIdentifier>{dfce92fe-c684-4c75-b92f-a11797c12005}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\user_service.proto">
+      <Filter>sdk</Filter>
+    </None>
+  </ItemGroup>
+</Project>

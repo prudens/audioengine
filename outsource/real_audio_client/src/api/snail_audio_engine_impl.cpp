@@ -5,7 +5,7 @@
 #include "module_debug_impl.h"
 #include "audio_typedef.h" 
 
-#include"../client_module.h"
+#include"../sdk/client_module.h"
 
 #define STR(s) s?s:""
 

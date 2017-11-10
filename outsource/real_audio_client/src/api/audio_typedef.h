@@ -4,7 +4,7 @@
 #include <string>
 #include "SnailAudioEngineHelper.h"
 #include "user_service.pb.h"
-#include "../user_list.h"
+#include "../sdk/user_list.h"
 namespace audio_engine{
         struct AudioSDKCfg
         {

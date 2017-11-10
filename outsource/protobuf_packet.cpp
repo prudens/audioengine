@@ -1,5 +1,4 @@
 #include "protobuf_packet.h"
-#include "./real_audio_client/client_module.h"
 #include "user_service.pb.h"
 
 namespace audio_engine{

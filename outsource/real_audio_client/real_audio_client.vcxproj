@@ -13,50 +13,53 @@
   <ItemGroup>
     <ClCompile Include="..\packet.cpp" />
     <ClCompile Include="..\protobuf_packet.cpp" />
+    <ClCompile Include="..\server_config.cpp" />
     <ClCompile Include="..\user_service.pb.cc" />
-    <ClCompile Include="api\audio_typedef.cpp" />
-    <ClCompile Include="api\module_debug_impl.cpp" />
-    <ClCompile Include="api\snail_audio_engine_impl.cpp" />
-    <ClCompile Include="audio_client.cpp" />
-    <ClCompile Include="audio_error.cpp" />
-    <ClCompile Include="client_manager.cpp" />
-    <ClCompile Include="client_module.cpp" />
-    <ClCompile Include="engine.cpp" />
-    <ClCompile Include="file_process.cpp" />
-    <ClCompile Include="import_lib.cpp" />
-    <ClCompile Include="io_thread.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="master_control.cpp" />
-    <ClCompile Include="message_queue.cpp" />
-    <ClCompile Include="server_config.cpp" />
-    <ClCompile Include="user_list.cpp" />
-    <ClCompile Include="user_manager.cpp" />
-    <ClCompile Include="user_service.cpp" />
+    <ClCompile Include="src\api\audio_typedef.cpp" />
+    <ClCompile Include="src\api\module_debug_impl.cpp" />
+    <ClCompile Include="src\api\snail_audio_engine_impl.cpp" />
+    <ClCompile Include="src\sdk\audio_error.cpp" />
+    <ClCompile Include="src\sdk\client_module.cpp" />
+    <ClCompile Include="src\sdk\master_control.cpp" />
+    <ClCompile Include="src\sdk\user_connection.cpp" />
+    <ClCompile Include="src\sdk\user_list.cpp" />
+    <ClCompile Include="src\sdk\user_manager.cpp" />
+    <ClCompile Include="src\ui\audio_client.cpp" />
+    <ClCompile Include="src\ui\client_manager.cpp" />
+    <ClCompile Include="src\ui\engine.cpp" />
+    <ClCompile Include="src\ui\file_process.cpp" />
+    <ClCompile Include="src\ui\import_lib.cpp" />
+    <ClCompile Include="src\ui\io_thread.cpp" />
+    <ClCompile Include="src\ui\main.cpp" />
+    <ClCompile Include="src\ui\message_queue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\packet.h" />
     <ClInclude Include="..\protobuf_packet.h" />
+    <ClInclude Include="..\real_audio_common.h" />
+    <ClInclude Include="..\server_config.h" />
     <ClInclude Include="..\user_service.pb.h" />
-    <ClInclude Include="api\audio_typedef.h" />
-    <ClInclude Include="api\IModuleDebuger.h" />
-    <ClInclude Include="api\ISnailAudioEngine.h" />
-    <ClInclude Include="api\ISnailAudioModule.h" />
-    <ClInclude Include="api\module_debug_impl.h" />
-    <ClInclude Include="api\SnailAudioEngineHelper.h" />
-    <ClInclude Include="api\snail_audio_engine_impl.h" />
-    <ClInclude Include="audio_client.h" />
-    <ClInclude Include="audio_error.h" />
-    <ClInclude Include="client_manager.h" />
-    <ClInclude Include="client_module.h" />
-    <ClInclude Include="cmd.h" />
-    <ClInclude Include="config.h" />
-    <ClInclude Include="engine.h" />
-    <ClInclude Include="master_control.h" />
-    <ClInclude Include="message_queue.h" />
-    <ClInclude Include="server_config.h" />
-    <ClInclude Include="user_list.h" />
-    <ClInclude Include="user_manager.h" />
-    <ClInclude Include="user_service.h" />
+    <ClInclude Include="src\api\audio_typedef.h" />
+    <ClInclude Include="src\api\IModuleDebuger.h" />
+    <ClInclude Include="src\api\IModuleDebuger_OC.h" />
+    <ClInclude Include="src\api\ISnailAudioEngine.h" />
+    <ClInclude Include="src\api\ISnailAudioModule.h" />
+    <ClInclude Include="src\api\module_debug_impl.h" />
+    <ClInclude Include="src\api\SnailAudioEngineHelper.h" />
+    <ClInclude Include="src\api\SnailAudioEngine_OC.h" />
+    <ClInclude Include="src\api\snail_audio_engine_impl.h" />
+    <ClInclude Include="src\sdk\audio_error.h" />
+    <ClInclude Include="src\sdk\client_module.h" />
+    <ClInclude Include="src\sdk\master_control.h" />
+    <ClInclude Include="src\sdk\user_connection.h" />
+    <ClInclude Include="src\sdk\user_list.h" />
+    <ClInclude Include="src\sdk\user_manager.h" />
+    <ClInclude Include="src\ui\audio_client.h" />
+    <ClInclude Include="src\ui\client_manager.h" />
+    <ClInclude Include="src\ui\cmd.h" />
+    <ClInclude Include="src\ui\config.h" />
+    <ClInclude Include="src\ui\engine.h" />
+    <ClInclude Include="src\ui\message_queue.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\user_service.proto" />
@@ -99,9 +102,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\;..\..\processing\src;../../network/asio/asio/include;../;./api;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\;..\..\processing\src;../../network/asio/asio/include;../;./src/api;./src/</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;_WIN32_WINNT=0x0501;ASIO_STANDALONE; _CRT_SECURE_NO_WARNINGS;PROTOBUF_INLINE_NOT_IN_HEADERS;ASIO_ENABLE_CANCELIO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4251</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

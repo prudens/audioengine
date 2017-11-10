@@ -6,7 +6,7 @@
 #include <boost/signals2.hpp>
 #include "real_audio_common.h"
 #include "protobuf_packet.h"
-#include "user_service.h"
+#include "user_connection.h"
 #include "base/timer.h"
 #include "user_list.h"
 

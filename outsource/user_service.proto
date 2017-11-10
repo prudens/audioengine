@@ -46,7 +46,7 @@ message RequestLogout
 message ResponedLogout
 {
     int64 token = 1;       // 之前登陆下发的token
-	int64 error_code = 2;  // 错误码，尽管可能有错误，但是还是强制退出房间
+	int32 error_code = 2;  // 错误码，尽管可能有错误，但是还是强制退出房间
 }
 
 message NotifyLogin

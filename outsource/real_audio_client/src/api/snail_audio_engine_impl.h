@@ -5,7 +5,7 @@
 #include <memory>
 #include <mutex>
 #include <map>
-#include "../master_control.h"
+#include "../sdk/master_control.h"
 #include "ISnailAudioModule.h"
 #include "ISnailAudioEngine.h"
 

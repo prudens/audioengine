@@ -1490,13 +1490,13 @@ bool ResponedLogout::MergePartialFromCodedStream(
         break;
       }
 
-      // int64 error_code = 2;
+      // int32 error_code = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &error_code_)));
         } else {
           goto handle_unusual;
@@ -1535,9 +1535,9 @@ void ResponedLogout::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->token(), output);
   }
 
-  // int64 error_code = 2;
+  // int32 error_code = 2;
   if (this->error_code() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt64(2, this->error_code(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->error_code(), output);
   }
 
   output->WriteRaw((::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()).data(),
@@ -1558,10 +1558,10 @@ size_t ResponedLogout::ByteSizeLong() const {
         this->token());
   }
 
-  // int64 error_code = 2;
+  // int32 error_code = 2;
   if (this->error_code() != 0) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int64Size(
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->error_code());
   }
 
@@ -1636,15 +1636,15 @@ void ResponedLogout::set_token(::google::protobuf::int64 value) {
   // @@protoc_insertion_point(field_set:audio_engine.ResponedLogout.token)
 }
 
-// int64 error_code = 2;
+// int32 error_code = 2;
 void ResponedLogout::clear_error_code() {
-  error_code_ = GOOGLE_LONGLONG(0);
+  error_code_ = 0;
 }
-::google::protobuf::int64 ResponedLogout::error_code() const {
+::google::protobuf::int32 ResponedLogout::error_code() const {
   // @@protoc_insertion_point(field_get:audio_engine.ResponedLogout.error_code)
   return error_code_;
 }
-void ResponedLogout::set_error_code(::google::protobuf::int64 value) {
+void ResponedLogout::set_error_code(::google::protobuf::int32 value) {
   
   error_code_ = value;
   // @@protoc_insertion_point(field_set:audio_engine.ResponedLogout.error_code)
