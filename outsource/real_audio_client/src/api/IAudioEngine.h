@@ -2,7 +2,7 @@
 #define INTERFACE_SNAIL_AUDIO_ENGINE_H
 #pragma once
 
-#include "SnailAudioEngineHelper.h"
+#include "AudioEngineHelper.h"
 
 extern "C"
 {

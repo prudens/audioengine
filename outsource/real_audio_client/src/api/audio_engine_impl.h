@@ -6,8 +6,8 @@
 #include <mutex>
 #include <map>
 #include "../sdk/master_control.h"
-#include "ISnailAudioModule.h"
-#include "ISnailAudioEngine.h"
+#include "IAudioModule.h"
+#include "IAudioEngine.h"
 
 namespace audio_engine{
 

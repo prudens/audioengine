@@ -6,7 +6,7 @@
 #ifndef SNAIL_AUDIO_ENGINE_OC_H
 #define SNAIL_AUDIO_ENGINE_OC_H
 #import <Foundation/Foundation.h>
-#include "SnailAudioEngineHelper.h"
+#include "AudioEngineHelper.h"
 #ifdef __cplusplus
 extern "C"{
 #endif

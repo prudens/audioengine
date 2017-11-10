@@ -1,7 +1,7 @@
 #include "master_control.h"
 #include <boost/signals2.hpp>
 #include "base/log.h"
-#include "SnailAudioEngineHelper.h"
+#include "AudioEngineHelper.h"
 namespace audio_engine{
 	static audio_engine::Logger Log;
 	MasterControl::MasterControl()

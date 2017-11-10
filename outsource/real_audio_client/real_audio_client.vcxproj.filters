@@ -7,9 +7,6 @@
     <ClCompile Include="src\api\module_debug_impl.cpp">
       <Filter>api</Filter>
     </ClCompile>
-    <ClCompile Include="src\api\snail_audio_engine_impl.cpp">
-      <Filter>api</Filter>
-    </ClCompile>
     <ClCompile Include="src\sdk\audio_error.cpp">
       <Filter>sdk</Filter>
     </ClCompile>
@@ -64,6 +61,33 @@
     <ClCompile Include="..\user_service.pb.cc">
       <Filter>sdk</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine_core\audio_engine_core.cpp">
+      <Filter>engine_core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine_core\audio_mixer.cpp">
+      <Filter>engine_core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine_core\audio_processing.cpp">
+      <Filter>engine_core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine_core\codec_conveter.cpp">
+      <Filter>engine_core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine_core\music_channel.cpp">
+      <Filter>engine_core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine_core\voice_chat_channel.cpp">
+      <Filter>engine_core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine_core\voice_message_channel.cpp">
+      <Filter>engine_core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine_core\audio_neteq.cpp">
+      <Filter>engine_core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\api\audio_engine_impl.cpp">
+      <Filter>api</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\api\audio_typedef.h">
@@ -72,25 +96,7 @@
     <ClInclude Include="src\api\IModuleDebuger.h">
       <Filter>api</Filter>
     </ClInclude>
-    <ClInclude Include="src\api\IModuleDebuger_OC.h">
-      <Filter>api</Filter>
-    </ClInclude>
-    <ClInclude Include="src\api\ISnailAudioEngine.h">
-      <Filter>api</Filter>
-    </ClInclude>
-    <ClInclude Include="src\api\ISnailAudioModule.h">
-      <Filter>api</Filter>
-    </ClInclude>
     <ClInclude Include="src\api\module_debug_impl.h">
-      <Filter>api</Filter>
-    </ClInclude>
-    <ClInclude Include="src\api\snail_audio_engine_impl.h">
-      <Filter>api</Filter>
-    </ClInclude>
-    <ClInclude Include="src\api\SnailAudioEngine_OC.h">
-      <Filter>api</Filter>
-    </ClInclude>
-    <ClInclude Include="src\api\SnailAudioEngineHelper.h">
       <Filter>api</Filter>
     </ClInclude>
     <ClInclude Include="src\sdk\audio_error.h">
@@ -143,6 +149,42 @@
     </ClInclude>
     <ClInclude Include="..\user_service.pb.h">
       <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine_core\audio_engine_core.h">
+      <Filter>engine_core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine_core\audio_mixer.h">
+      <Filter>engine_core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine_core\audio_processing.h">
+      <Filter>engine_core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine_core\codec_conveter.h">
+      <Filter>engine_core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine_core\music_channel.h">
+      <Filter>engine_core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine_core\voice_chat_channel.h">
+      <Filter>engine_core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine_core\voice_message_channel.h">
+      <Filter>engine_core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine_core\audio_neteq.h">
+      <Filter>engine_core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\api\IAudioModule.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="src\api\IAudioEngine.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="src\api\AudioEngineHelper.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="src\api\audio_engine_impl.h">
+      <Filter>api</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

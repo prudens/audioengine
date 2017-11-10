@@ -1,7 +1,7 @@
 #ifndef SNAIL_AUDIO_MODULE_H
 #define SNAIL_AUDIO_MODULE_H
 #pragma once
-#include "SnailAudioEngineHelper.h"
+#include "AudioEngineHelper.h"
 namespace audio_engine{
 
 class IUserEventHandler

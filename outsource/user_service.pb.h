@@ -1155,11 +1155,11 @@ class KickoffUser : public ::google::protobuf::MessageLite /* @@protoc_insertion
   ::google::protobuf::int64 dst_token() const;
   void set_dst_token(::google::protobuf::int64 value);
 
-  // int64 error_code = 3;
+  // int32 error_code = 3;
   void clear_error_code();
   static const int kErrorCodeFieldNumber = 3;
-  ::google::protobuf::int64 error_code() const;
-  void set_error_code(::google::protobuf::int64 value);
+  ::google::protobuf::int32 error_code() const;
+  void set_error_code(::google::protobuf::int32 value);
 
   // @@protoc_insertion_point(class_scope:audio_engine.KickoffUser)
  private:
@@ -1167,7 +1167,7 @@ class KickoffUser : public ::google::protobuf::MessageLite /* @@protoc_insertion
   ::google::protobuf::internal::InternalMetadataWithArenaLite _internal_metadata_;
   ::google::protobuf::int64 src_token_;
   ::google::protobuf::int64 dst_token_;
-  ::google::protobuf::int64 error_code_;
+  ::google::protobuf::int32 error_code_;
   mutable int _cached_size_;
   friend struct protobuf_user_5fservice_2eproto::TableStruct;
 };
@@ -2308,15 +2308,15 @@ inline void KickoffUser::set_dst_token(::google::protobuf::int64 value) {
   // @@protoc_insertion_point(field_set:audio_engine.KickoffUser.dst_token)
 }
 
-// int64 error_code = 3;
+// int32 error_code = 3;
 inline void KickoffUser::clear_error_code() {
-  error_code_ = GOOGLE_LONGLONG(0);
+  error_code_ = 0;
 }
-inline ::google::protobuf::int64 KickoffUser::error_code() const {
+inline ::google::protobuf::int32 KickoffUser::error_code() const {
   // @@protoc_insertion_point(field_get:audio_engine.KickoffUser.error_code)
   return error_code_;
 }
-inline void KickoffUser::set_error_code(::google::protobuf::int64 value) {
+inline void KickoffUser::set_error_code(::google::protobuf::int32 value) {
   
   error_code_ = value;
   // @@protoc_insertion_point(field_set:audio_engine.KickoffUser.error_code)

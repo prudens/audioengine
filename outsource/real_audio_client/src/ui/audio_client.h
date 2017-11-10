@@ -1,7 +1,7 @@
 #pragma once
 #include "message_queue.h"
-#include "api/ISnailAudioEngine.h"
-#include "api/ISnailAudioModule.h"
+#include "api/IAudioEngine.h"
+#include "api/IAudioModule.h"
 #include <vector>
 namespace audio_engine
 {

@@ -1,11 +1,11 @@
-////ä»…ä¾›å†…éƒ¨å¼€å‘äººå‘˜è°ƒè¯•ä½¿ç”¨
+////½ö¹©ÄÚ²¿¿ª·¢ÈËÔ±µ÷ÊÔÊ¹ÓÃ
 
 
 #ifndef INTERFACE_MODULE_DEBUG_H
 #define INTERFACE_MODULE_DEBUG_H
 #pragma once
 
-#include "ISnailAudioEngine.h"
+#include "IAudioEngine.h"
  
 namespace audio_engine{
 
