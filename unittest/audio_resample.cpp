@@ -6,6 +6,11 @@ AudioResample::AudioResample()
 
 }
 
+AudioResample::~AudioResample()
+{
+	delete m_resampler;
+	delete m_push_resample;
+}
 bool AudioResample::ToMono( int16_t*src, int num_samples, int16_t*dst )
 {
     if (!dst || !src || num_samples == 0)
@@ -98,21 +103,25 @@ bool AudioResample::Reset( int32_t inSampleRate, int16_t inChannel, int32_t outS
     m_inChannel = inChannel;
     m_outSamplerate = outSamplerate;
     m_outChannel = outChannel;
-    if (m_inSamplerate == 44100)
-    {
-        inSampleRate = 44000;
-    }
-    if (outSamplerate == 44100)
-    {
-        outSamplerate = 44000;
-    }
+
     size_t channel = std::min(inChannel, outChannel);
-    m_ResampleImpl.Reset( m_inSamplerate, outSamplerate, channel );
-    return false;
+	m_resampler = new webrtc::Resampler();
+	if( 0 != m_resampler->Reset( inSampleRate, outSamplerate, channel ))
+	{
+		delete m_resampler;
+		m_resampler = nullptr;
+		m_push_resample = new webrtc::PushResampler<int16_t>();
+		return m_push_resample->InitializeIfNeeded( inSampleRate, outSamplerate, std::min(m_inChannel,m_outChannel) );
+	}
+    return true;
 }
 
-bool AudioResample::Process( int16_t* inBuf, size_t inSamples, int16_t* outBuf, size_t outSamples )
+int AudioResample::Process( int16_t* inBuf, size_t inSamples, int16_t* outBuf, size_t outSamples )
 {
+	if(!m_push_resample && !m_resampler)
+	{
+		return -1;
+	}
     int16_t*pSrc = inBuf;
     size_t inLen = inSamples;
     if ( m_inChannel == 2 && m_outChannel == 1)
@@ -121,31 +130,25 @@ bool AudioResample::Process( int16_t* inBuf, size_t inSamples, int16_t* outBuf, 
         pSrc = inBuf;
         inLen = inSamples / 2;
     }
-    if ( m_inSamplerate  == 44100)
-    {
-        inLen--;
-        if (m_outChannel == m_inChannel && m_outChannel == 2)
-        {
-            inLen--;
-        }
-    }
-    size_t maxLen;
-    size_t ret = m_ResampleImpl.Push( pSrc, inLen, outBuf,outSamples,maxLen);
+
+    size_t outlen;
+	size_t ret = 0;
+	if(m_resampler)
+	{
+		ret = m_resampler->Push( pSrc, inLen, outBuf, outSamples, outlen );
+	}
+	else
+	{
+		outlen = m_push_resample->Resample( pSrc, inLen, outBuf, outSamples );
+		if(outlen == -1)
+		{
+			return -1;
+		}
+	}
     if ( m_inChannel == 1 && m_outChannel == 2 )
     {
         Tostereo( outBuf, inSamples, outBuf );
     }
-    if (m_outSamplerate == 44100)
-    {
-        if (m_outChannel == 2)
-        {
-            outBuf[maxLen - 1] = outBuf[maxLen - 3];
-            outBuf[maxLen - 2] = outBuf[maxLen - 3];
-        }
-        else
-        {
-            outBuf[maxLen - 1] = outBuf[maxLen - 2];
-        }
-    }
-    return ret == 0;
+
+    return outlen;
 }

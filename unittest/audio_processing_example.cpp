@@ -3,8 +3,8 @@
 #include "webrtc_agc.h"
 #include "webrtc/modules/audio_processing/ns/noise_suppression.h"
 #include "webrtc/common_audio/vad/include/webrtc_vad.h"
+#include "webrtc/common_audio/resampler/include/push_resampler.h"
 #include "audio_resample.h"
-
 void WavFileProcess( std::string inFile, std::string outFile, size_t frametime = 10 /*ms*/, std::function<bool( int16_t*, size_t& )> fn = nullptr )
 {
     assert( fn );
@@ -648,6 +648,37 @@ void test_filter()
     } );
 
 }
+
+void test_webrtc_resampler()
+{
+	std::string infile = "d:/xiangwang.wav"; //"D:\\Users\\zhangnaigan\\Downloads\\TestSignals\\Swept_24.wav";
+	std::string outfile = infile + ".pro.wav";
+	
+	WavReader reader( infile );
+	WavWriter writer( outfile, 44100, reader.NumChannels() );
+	size_t length = reader.NumSamples();
+	//PushResampler<int16_t> resampler;
+	//resampler.InitializeIfNeeded(reader.SampleRate(),44100, reader.NumChannels() );
+	AudioResample resampler;
+	resampler.Reset( reader.SampleRate(), reader.NumChannels(), 44100, reader.NumChannels() );
+	size_t block_size = reader.SampleRate() * reader.NumChannels() / 100; //10ms
+	int16_t* inbuf = new int16_t[block_size];
+	int16_t* outbuf=new int16_t[2048];
+	for(size_t i = 0;; i++)
+	{
+		int read = reader.ReadSamples( block_size, inbuf );
+		if(block_size != read )
+		{
+			break;
+		}
+		i += block_size;
+		//int outlen = resampler.Resample( inbuf, block_size, outbuf, 2048 );
+		int outlen = resampler.Process( inbuf, block_size, outbuf, 2048 );
+		assert(outlen == 441*reader.NumChannels());
+		writer.WriteSamples( outbuf, outlen );
+	}
+}
+
 void test_audio_processing(int argc,char** argv)
 {
    //test_audio_ans();
@@ -666,5 +697,6 @@ void test_audio_processing(int argc,char** argv)
 //    test_audio_mixer();
 //    test_aec_detect();
 //    test_voice_check();
-    test_filter();
+//    test_filter();
+	test_webrtc_resampler();
 }

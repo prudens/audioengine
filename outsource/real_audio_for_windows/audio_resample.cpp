@@ -107,7 +107,7 @@ namespace audio_engine{
 			outSamplerate = 44000;
 		}
 		size_t channel = std::min( inChannel, outChannel );
-		m_ResampleImpl.Reset( m_inSamplerate, outSamplerate, channel );
+		m_resampler.Reset( m_inSamplerate, outSamplerate, channel );
 		return false;
 	}
 
@@ -130,7 +130,7 @@ namespace audio_engine{
 			}
 		}
 		size_t maxLen;
-		size_t ret = m_ResampleImpl.Push( pSrc, inLen, outBuf, outSamples, maxLen );
+		size_t ret = m_resampler.Push( pSrc, inLen, outBuf, outSamples, maxLen );
 		if(m_inChannel == 1 && m_outChannel == 2)
 		{
 			Tostereo( outBuf, inSamples, outBuf );

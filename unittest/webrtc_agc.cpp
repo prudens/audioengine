@@ -1,6 +1,6 @@
 #include "webrtc_agc.h"
 #include "webrtc\modules\audio_processing\agc\legacy\gain_control.h"
-#include "outsource\real_audio_for_windows\audio_resample.h"
+#include "audio_resample.h"
 #include <stdio.h>
 
 WebrtcAgc::WebrtcAgc()
