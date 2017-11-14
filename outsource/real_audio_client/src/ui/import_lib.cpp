@@ -11,8 +11,10 @@
 
 #define PATH_LIB   "../../build/winx/""" PLATFORM "" CONFIGURE
 
+#pragma comment(lib,PATH_LIB "audio_processing.lib")
 
 #pragma comment(lib,PATH_LIB "audio_base.lib")
+#pragma comment(lib,PATH_LIB "audio_device.lib")
 #pragma comment(lib,"libprotobuf-lited.lib")
 #pragma comment(lib, "ws2_32")
 #pragma comment(lib, "strmiids")

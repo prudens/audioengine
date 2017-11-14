@@ -5,5 +5,6 @@ namespace audio_engine
 	{
 	public:
 		AudioMixer();
+		~AudioMixer();
 	};
 }

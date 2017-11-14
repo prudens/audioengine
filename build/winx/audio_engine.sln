@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audio_device", "audio_device.vcxproj", "{30837D62-4B2F-41DC-8204-376064311D73}"
 EndProject
@@ -39,6 +39,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "real_audio_for_windows", "..\..\outsource\real_audio_for_windows\real_audio_for_windows.vcxproj", "{CFDA16B6-B31F-46EB-90BC-4EAFD3EB1CE5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "real_audio_client", "..\..\outsource\real_audio_client\real_audio_client.vcxproj", "{B3780BDA-F699-447E-A998-12ED78C8681A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{30837D62-4B2F-41DC-8204-376064311D73} = {30837D62-4B2F-41DC-8204-376064311D73}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "real_audio_server", "..\..\outsource\real_audio_server\real_audio_server.vcxproj", "{6ACF3FDB-B014-4733-8162-0EB0E4DD48A0}"
 EndProject
@@ -1184,5 +1187,8 @@ Global
 		{DD1029F2-DF6E-4744-956F-F9C3662F85D7} = {087526D0-9917-43BF-9F8C-BB0A7714B572}
 		{0A399DDB-BF0C-4601-AD0D-2B38F23B7D48} = {087526D0-9917-43BF-9F8C-BB0A7714B572}
 		{219EC965-228A-1824-174D-96449D05F88A} = {087526D0-9917-43BF-9F8C-BB0A7714B572}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C56F0239-3C04-4935-AD20-7DB11161CCB5}
 	EndGlobalSection
 EndGlobal
