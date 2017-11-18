@@ -3,11 +3,13 @@
 namespace audio_engine{
 	AudioEngineCore::AudioEngineCore()
 	{
-
+		_encoder = _codec_factory.CreateEncoder( CODEC_OPUS, 0, 16000, 1,3000,20 );
 	}
+
 	AudioEngineCore::~AudioEngineCore()
 	{
-
+		if(_encoder)
+			_encoder->Destroy();
 	}
 
 	void AudioEngineCore::Initialize()
@@ -52,24 +54,44 @@ namespace audio_engine{
 		_audio_device->StopPlayout();
 	}
 
-	void AudioEngineCore::SetAudioDataCallback( IAudioDataCallback* cb )
+	void AudioEngineCore::AddObserver( IAudioDataCallback* cb )
 	{
-		_audio_data_cb_list.insert( cb );
+		_cb_proxy.AddObserver( cb );
 	}
 
-	void AudioEngineCore::RemoveAudioDataCallback( IAudioDataCallback* cb )
+	void AudioEngineCore::RemoveObserver( IAudioDataCallback* cb )
 	{
-		auto it = _audio_data_cb_list.find( cb );
-		if (it != _audio_data_cb_list.end())
-		{
-			_audio_data_cb_list.erase( it );
-		}
+		_cb_proxy.RemoveObserver( cb );
 	}
 
 	void AudioEngineCore::RecordingDataIsAvailable( const void* data, size_t size_in_byte )
 	{
-		auto buf = PreProcess( data, size_in_byte );
+		AudioBufferPtr buf = PreProcess( data, size_in_byte );
+		bool need_silent_filter = _cb_proxy.IsNeedSilentFilter();
+		if ( need_silent_filter )
+		{
+		    buf = _silent_voice_filter.Process( buf );
+		}
+		_cb_proxy.BeforeEncodeData( buf );
+
 		
+		bool need_default_encoder = _cb_proxy.IsNeedDefaultEncode();
+
+		if( need_default_encoder )
+		{
+			int outlen = _encoder->Process(buf->data,buf->length, buf->data, buf->length );
+			if (outlen == 0)
+			{
+				return;
+			}
+			if (outlen < 0)
+			{
+				assert( 0 && "±àÂë³ö´í" );
+				return;
+			}
+			buf->length = outlen;
+			_cb_proxy.PostEncodeData( buf );
+		}
 	}
 
 	size_t AudioEngineCore::NeedMorePlayoutData( void* data, size_t size_in_byte )
@@ -87,34 +109,148 @@ namespace audio_engine{
 		auto buf = std::make_shared<AudioBuffer>();
 		buf->id = 0;
 		buf->ts = TimeStamp();
-		buf->nsamples = size_in_byte/2;
+		buf->length = size_in_byte;
 		buf->channel = _rec_resampler.InChannel();
 		buf->samplerate = _rec_resampler.InSamplerate();
 		memcpy( buf->data, data, size_in_byte );
-		buf->nsamples = size_in_byte / 2;
-		for (auto it:_audio_data_cb_list)
-		{
-			it->CaptureData( buf );
-		}
-		auto outlen = _rec_resampler.Process((int16_t*)data, size_in_byte/2,buf->data,sizeof(buf->data)/2);
+		_cb_proxy.CaptureData( buf );
+		auto outlen = _rec_resampler.Process((int16_t*)data, size_in_byte/2,(int16_t*)buf->data,sizeof(buf->data)/2);
 		assert( outlen != -1 );
-		buf->nsamples = outlen;
+		buf->length = outlen*2;
 		buf->channel = _rec_resampler.OutChannel();
 		buf->samplerate = _rec_resampler.OutSamplerate();
-		bool need_process = false;
-		for(auto it : _audio_data_cb_list)
-		{
-			need_process = it->IsNeedProcess( );
-		}
+		bool need_process = _cb_proxy.IsNeedProcess();
 		if (need_process)
 		{
 			_audio_process.ProcessCaptureStream(buf);
-			for (auto it: _audio_data_cb_list)
-			{
-				it->ProcessData( buf );
-			}
+			_cb_proxy.ProcessData( buf );
 		}
 		return buf;
+	}
+
+
+	void AudioEngineCore::AudioDataCallbackProxy::CaptureData( AudioBufferPtr buffer )
+	{
+		std::lock_guard<std::mutex> lock( _mutex );
+		for (auto cb: _audio_data_cb_list)
+		{
+			cb->CaptureData( buffer );
+		}
+	}
+
+
+
+	bool AudioEngineCore::AudioDataCallbackProxy::IsNeedProcess()
+	{
+		std::lock_guard<std::mutex> lock( _mutex );
+		bool need_process = false;
+		for( auto it : _audio_data_cb_list )
+		{
+			need_process = it->IsNeedProcess();
+		}
+		return need_process;
+	}
+
+
+	void AudioEngineCore::AudioDataCallbackProxy::ProcessData( AudioBufferPtr buf )
+	{
+		std::lock_guard<std::mutex> lock( _mutex );
+		for( auto it : _audio_data_cb_list )
+		{
+			it->ProcessData( buf );
+		}
+	}
+
+
+	bool AudioEngineCore::AudioDataCallbackProxy::IsNeedSilentFilter()
+	{
+		std::lock_guard<std::mutex> lock( _mutex );
+		bool need_silent_filter = true;
+		for( auto it : _audio_data_cb_list )
+		{
+			if( !it->IsNeedSilentFilter() )
+			{
+				need_silent_filter = false;
+			}
+		}
+		return need_silent_filter;
+	}
+
+
+	bool AudioEngineCore::AudioDataCallbackProxy::IsNeedDefaultEncode()
+	{
+		std::lock_guard<std::mutex> lock( _mutex );
+		bool need_default_encoder = false;
+		for( auto it : _audio_data_cb_list )
+		{
+			if( it->IsNeedDefaultEncode() )
+			{
+				need_default_encoder = true;
+				break;
+			}
+		}
+		return need_default_encoder;
+	}
+
+
+	void AudioEngineCore::AudioDataCallbackProxy::BeforeEncodeData( AudioBufferPtr buf )
+	{
+		std::lock_guard<std::mutex> lock( _mutex );
+		for( auto it : _audio_data_cb_list )
+		{
+			it->BeforeEncodeData( buf );
+		}
+	}
+
+	
+	void AudioEngineCore::AudioDataCallbackProxy::PostEncodeData( AudioBufferPtr buf )
+	{
+		std::lock_guard<std::mutex> lock( _mutex );
+		for( auto it : _audio_data_cb_list )
+		{
+			it->PostEncodeData( buf );
+		}
+	}
+
+	bool AudioEngineCore::AudioDataCallbackProxy::DecodeData( AudioBufferPtr buffer )
+	{
+		return false;
+	}
+
+
+	void AudioEngineCore::AudioDataCallbackProxy::AfterDecodeData( AudioBufferPtr buffer )
+	{
+
+	}
+
+
+	void AudioEngineCore::AudioDataCallbackProxy::MixerData( AudioBufferPtr buffer )
+	{
+
+	}
+
+
+	void AudioEngineCore::AudioDataCallbackProxy::PlayoutData( AudioBufferPtr buffer )
+	{
+
+	}
+
+
+	void AudioEngineCore::AudioDataCallbackProxy::AddObserver( IAudioDataCallback* cb )
+	{
+		std::lock_guard<std::mutex> lock( _mutex );
+		_audio_data_cb_list.insert( cb );
+	}
+
+
+	void AudioEngineCore::AudioDataCallbackProxy::RemoveObserver( IAudioDataCallback* cb )
+	{
+		std::lock_guard<std::mutex> lock( _mutex );
+		auto it = _audio_data_cb_list.find( cb );
+		if( it != _audio_data_cb_list.end() )
+		{
+			_audio_data_cb_list.erase( it );
+		}
 	}
 
 }

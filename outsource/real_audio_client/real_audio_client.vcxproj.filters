@@ -70,9 +70,6 @@
     <ClCompile Include="src\engine_core\audio_processing.cpp">
       <Filter>engine_core</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine_core\codec_conveter.cpp">
-      <Filter>engine_core</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine_core\music_channel.cpp">
       <Filter>engine_core</Filter>
     </ClCompile>
@@ -89,6 +86,12 @@
       <Filter>api</Filter>
     </ClCompile>
     <ClCompile Include="src\engine_core\audio_resample.cpp">
+      <Filter>engine_core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine_core\silent_voice_filter.cpp">
+      <Filter>engine_core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine_core\codec_converter.cpp">
       <Filter>engine_core</Filter>
     </ClCompile>
   </ItemGroup>
@@ -162,9 +165,6 @@
     <ClInclude Include="src\engine_core\audio_processing.h">
       <Filter>engine_core</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine_core\codec_conveter.h">
-      <Filter>engine_core</Filter>
-    </ClInclude>
     <ClInclude Include="src\engine_core\music_channel.h">
       <Filter>engine_core</Filter>
     </ClInclude>
@@ -193,6 +193,12 @@
       <Filter>engine_core</Filter>
     </ClInclude>
     <ClInclude Include="src\engine_core\audio_buffer.h">
+      <Filter>engine_core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine_core\silent_voice_filter.h">
+      <Filter>engine_core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine_core\codec_converter.h">
       <Filter>engine_core</Filter>
     </ClInclude>
   </ItemGroup>

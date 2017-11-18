@@ -8,8 +8,8 @@ namespace audio_engine{
 	{
 		int64_t  id;
 		tick_t  ts;
-		int16_t data[kMaxAudioFrameSize];
-		size_t  nsamples;
+		char    data[kMaxAudioFrameSize];
+		size_t  length;
 		int     samplerate;
 		int16_t channel;
 		int     rms;

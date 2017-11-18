@@ -23,8 +23,9 @@
     <ClCompile Include="src\engine_core\audio_neteq.cpp" />
     <ClCompile Include="src\engine_core\audio_processing.cpp" />
     <ClCompile Include="src\engine_core\audio_resample.cpp" />
-    <ClCompile Include="src\engine_core\codec_conveter.cpp" />
+    <ClCompile Include="src\engine_core\codec_converter.cpp" />
     <ClCompile Include="src\engine_core\music_channel.cpp" />
+    <ClCompile Include="src\engine_core\silent_voice_filter.cpp" />
     <ClCompile Include="src\engine_core\voice_chat_channel.cpp" />
     <ClCompile Include="src\engine_core\voice_message_channel.cpp" />
     <ClCompile Include="src\sdk\audio_error.cpp" />
@@ -61,8 +62,9 @@
     <ClInclude Include="src\engine_core\audio_neteq.h" />
     <ClInclude Include="src\engine_core\audio_processing.h" />
     <ClInclude Include="src\engine_core\audio_resample.h" />
-    <ClInclude Include="src\engine_core\codec_conveter.h" />
+    <ClInclude Include="src\engine_core\codec_converter.h" />
     <ClInclude Include="src\engine_core\music_channel.h" />
+    <ClInclude Include="src\engine_core\silent_voice_filter.h" />
     <ClInclude Include="src\engine_core\voice_chat_channel.h" />
     <ClInclude Include="src\engine_core\voice_message_channel.h" />
     <ClInclude Include="src\sdk\audio_error.h" />

@@ -37,7 +37,7 @@ namespace audio_engine{
 		webrtc::AudioFrame af;
 		af.UpdateFrame( buf->id,
 			buf->ts.count(),
-			buf->data,
+			(const int16_t*)buf->data,
 			160,
 			16000,
 			webrtc::AudioFrame::kNormalSpeech,
@@ -49,7 +49,7 @@ namespace audio_engine{
 		{
 			return false;
 		}
-		memcpy( buf->data, af.data_, buf->nsamples * 2 );
+		memcpy( buf->data, af.data_, buf->length );
 		buf->rms = m_apm->level_estimator()->RMS();
 		buf->silent = !m_apm->voice_detection()->stream_has_voice();
 		return true;
@@ -66,7 +66,7 @@ namespace audio_engine{
 		webrtc::AudioFrame af;
 		af.UpdateFrame( 0,
 			buf->ts.count(),
-			buf->data,
+			(const int16_t*)buf->data,
 			160,
 			16000,
 			webrtc::AudioFrame::kNormalSpeech,
